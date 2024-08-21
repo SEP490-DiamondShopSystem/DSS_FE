@@ -1,6 +1,7 @@
 import {Route, Routes} from 'react-router-dom';
 import HomePage from '../pages/Home/HomePage';
 import CouponPage from '../pages/CouponPage/CouponPage';
+import React from 'react';
 
 export const AppRouters = () => {
 	return (
