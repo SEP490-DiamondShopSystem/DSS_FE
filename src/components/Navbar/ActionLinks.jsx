@@ -28,15 +28,15 @@ const ActionLinks = () => {
 						<div className="py-7 no-underline text-black">{link.icon}</div>
 						{link.submenu && (
 							<div>
-								<div className="absolute top-20 hidden group-hover:block hover:block">
+								<div className="absolute z-50 top-20 hidden group-hover:block hover:block">
 									<div className="py-2">
 										<div className="w-4 h-4 left-3 absolute mt-1 bg-white rotate-45"></div>
 									</div>
-									<div className="bg-white p-3.5 w-64">
+									<div className="bg-white p-3.5 flex items-end">
 										{link.sublinks?.map((mySubLink) => (
 											<div>
 												{mySubLink.sublink?.map((sl) => (
-													<li className="text-base text-gray-600 my-2.5 whitespace-nowrap">
+													<li className="text-base text-gray-600 my-2.5 whitespace-nowrap ">
 														<Link
 															to={sl.link}
 															className="hover:text-primary font-normal normal-case"

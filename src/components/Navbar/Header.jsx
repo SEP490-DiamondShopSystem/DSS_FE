@@ -1,70 +1,38 @@
+import {HeartOutlined} from '@ant-design/icons';
+import Search from 'antd/es/input/Search';
 import React, {useState} from 'react';
 import {Link} from 'react-router-dom';
-import NavLinks from './NavLinks';
+import {getLocalStorage, setLocalStorage} from '../../utils/localstorage';
 import Logo from './../../assets/logo-example.png';
 import ActionLinks from './ActionLinks';
-import Search from 'antd/es/input/Search';
-import {HeartOutlined, ShoppingCartOutlined} from '@ant-design/icons';
+import NavLinks from './NavLinks';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faShoppingBag} from '@fortawesome/free-solid-svg-icons';
 
 export const Header = () => {
-	// const [darkMode, setDarkMode] = useState(false);
+	const [activeLink, setActiveLink] = useState(getLocalStorage('header') || '');
 
-	// const toggleDarkMode = () => {
-	// 	setDarkMode(!darkMode);
-	// };
+	const handleLinkClick = (linkName) => {
+		setLocalStorage('header', linkName);
+	};
+
+	console.log(activeLink);
 
 	return (
-		// <header className={`${styles.header} ${darkMode ? styles['dark-mode'] : ''}`}>
-		// 	<div className={styles.container}>
-		// 		{/* Logo */}
-		// 		<div className={styles.leftHeader}>
-		// 			<div className={styles.logo}>
-		// 				<Link to="/">Logo</Link>
-		// 			</div>
-
-		// 			{/* Menu */}
-		// 			<MenuHeader />
-		// 		</div>
-
-		// 		{/* Icons */}
-		// 		<div className={styles.icons}>
-		// 			<div className={styles.icon}>
-		// 				<Search
-		// 					placeholder="Search for product..."
-		// 					onSearch={(value) => console.log(value)}
-		// 					style={{width: 400}}
-		// 				/>
-		// 			</div>
-		// 			<div className={styles.icon}>
-		// 				<HeartOutlined />
-		// 			</div>
-		// 			<div className={styles.icon}>
-		// 				<ShoppingCartOutlined />
-		// 			</div>
-		// 			<div className={styles.icon}>
-		// 				<UserOutlined />
-		// 			</div>
-		// 		</div>
-
-		// 		{/* Dark Mode Toggle */}
-		// 		{/* <button
-		// 			onClick={toggleDarkMode}
-		// 			className={`${styles['dark-mode-toggle']} ${
-		// 				darkMode ? styles['dark-mode'] : ''
-		// 			}`}
-		// 		>
-		// 			{darkMode ? 'Light Mode' : 'Dark Mode'}
-		// 		</button> */}
-		// 	</div>
-		// </header>
 		<nav className="bg-white">
 			<div className="flex items-center font-medium justify-around">
 				<div>
 					<img src={Logo} alt="logo" className="md:cursor-pointer h-9" />
 				</div>
-				<ul className="flex uppercase items-center gap-8 font-[Open sans]">
+				<ul className="flex uppercase items-center gap-8">
 					<li>
-						<Link to="/" className="py-7 px-3 inline-block no-underline text-black">
+						<Link
+							to="/"
+							className={`py-7 px-3 inline-block no-underline ${
+								activeLink === 'Home' ? 'text-primary' : 'text-black'
+							}`}
+							onClick={() => handleLinkClick('Home')}
+						>
 							Home
 						</Link>
 					</li>
@@ -72,7 +40,10 @@ export const Header = () => {
 					<li>
 						<Link
 							to="/promotion"
-							className="py-7 px-3 inline-block no-underline text-black"
+							className={`py-7 px-3 inline-block no-underline ${
+								activeLink === 'Promotion' ? 'text-primary' : 'text-black'
+							}`}
+							onClick={() => handleLinkClick('Promotion')}
 						>
 							Promotion
 						</Link>
@@ -80,7 +51,10 @@ export const Header = () => {
 					<li>
 						<Link
 							to="/contact"
-							className="py-7 px-3 inline-block no-underline text-black"
+							className={`py-7 px-3 inline-block no-underline ${
+								activeLink === 'Contact' ? 'text-primary' : 'text-black'
+							}`}
+							onClick={() => handleLinkClick('Contact')}
 						>
 							Contact
 						</Link>
@@ -104,7 +78,7 @@ export const Header = () => {
 					</li>
 					<li>
 						<Link to="/cart" className="py-7 px-3 inline-block no-underline text-black">
-							<ShoppingCartOutlined />
+							<FontAwesomeIcon icon={faShoppingBag} />
 						</Link>
 					</li>
 					<ActionLinks />
