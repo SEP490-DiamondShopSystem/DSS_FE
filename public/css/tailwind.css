@@ -1171,3 +1171,8 @@ video {
 	padding-top: 2.5rem /* 40px */;
 	padding-bottom: 2.5rem /* 40px */;
 }
+
+.text-primary {
+	--tw-text-opacity: 1;
+	color: rgb(222 201 134 / var(--tw-text-opacity)) /* #dec986 */;
+}

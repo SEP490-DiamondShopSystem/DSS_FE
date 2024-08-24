@@ -1,9 +1,13 @@
-import React from 'react';
+import {Button} from 'antd';
+import React, {useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 import {Header} from '../../components/Navbar/Header';
 import NavbarProfile from '../../components/NavbarProfile';
-import {Button} from 'antd';
+import {removeLocalStorage} from '../../utils/localstorage';
+import LogoutModal from '../LogModal/LogoutModal';
 
 const ProfilePage = () => {
+	const navigate = useNavigate();
 	const orderStatus = [
 		{icon: '', name: 'Total Order', order: 1},
 		{icon: '', name: 'Pending Order', order: 3},
@@ -11,8 +15,16 @@ const ProfilePage = () => {
 		{icon: '', name: 'Complete Order', order: 0},
 	];
 
-	const logoutButton = () => {
-		console.log('Log Out');
+	const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
+
+	const showLogoutModal = () => setIsLogoutModalVisible(true);
+	const hideLogoutModal = () => setIsLogoutModalVisible(false);
+
+	const handleLogout = () => {
+		removeLocalStorage('user');
+		hideLogoutModal();
+
+		navigate('/');
 	};
 
 	return (
@@ -26,7 +38,7 @@ const ProfilePage = () => {
 				<div className="font-semibold w-full px-20 py-10 bg-white">
 					<div className="flex justify-between items-center">
 						<h1 className="text-2xl ">Welcome Mr.Customer</h1>
-						<Button className="bg-primary" onClick={logoutButton}>
+						<Button className="bg-primary" onClick={showLogoutModal}>
 							Logout
 						</Button>
 					</div>
@@ -42,6 +54,11 @@ const ProfilePage = () => {
 					</div>
 				</div>
 			</div>
+			<LogoutModal
+				visible={isLogoutModalVisible}
+				onConfirm={handleLogout}
+				onCancel={hideLogoutModal}
+			/>
 		</div>
 	);
 };

@@ -16,7 +16,7 @@ export const Header = () => {
 		setLocalStorage('header', linkName);
 	};
 
-	console.log(activeLink);
+	console.log(typeof activeLink);
 
 	return (
 		<nav className="bg-white">
