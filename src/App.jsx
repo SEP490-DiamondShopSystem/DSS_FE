@@ -6,10 +6,13 @@ import {AppRouters} from './routes/AppRoutes';
 
 function App() {
 	return (
-		<BrowserRouter>
-			<AppRouters />
-			<ToastContainer limit={3} />
-		</BrowserRouter>
+		<section className="font-[body]">
+			<BrowserRouter>
+				<AppRouters />
+				{/* <AdminRouters /> */}
+				<ToastContainer limit={3} />
+			</BrowserRouter>
+		</section>
 	);
 }
 
