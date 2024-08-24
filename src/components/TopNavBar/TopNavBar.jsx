@@ -7,10 +7,12 @@ import profileImage from './profileImage.jpg'; // Import a sample profile image 
 import {useDispatch} from 'react-redux';
 import {message} from 'antd';
 import {useNavigate} from 'react-router-dom';
-import userLoginSlice from '../../redux/slices/userLoginSlice';
+import {userLoginSlice} from '../../redux/slices/userLoginSlice';
+import {getLocalStorage, removeLocalStorage} from '../../utils/localstorage';
+import {notifySuccess} from '../../utils/toast';
 
 const TopNavbar = () => {
-	const userLocal = JSON.parse(localStorage.getItem('user'));
+	const userLocal = getLocalStorage('user');
 	const user = userLocal?.user;
 
 	const dispatch = useDispatch();
@@ -58,7 +60,7 @@ const TopNavbar = () => {
 	};
 
 	const handleConfirmSignOut = () => {
-		localStorage.removeItem('user');
+		removeLocalStorage('user');
 		dispatch(
 			userLoginSlice.actions.logout({
 				userId: '',
@@ -77,8 +79,8 @@ const TopNavbar = () => {
 				status: '',
 			})
 		);
-		message.success('Logout successful!');
-		navigate('/login');
+		notifySuccess('Logout successful!');
+		navigate('/');
 	};
 
 	return (

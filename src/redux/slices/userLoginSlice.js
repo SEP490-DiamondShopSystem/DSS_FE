@@ -1,59 +1,39 @@
-import {createSlice} from '@reduxjs/toolkit';
+import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import {api} from '../../services/api';
 
-// export const handleLogin = createAsyncThunk(
-// 	'userLoginSlice/handleLogin',
-// 	async ({phone, password}) => {
-// 		console.log(phone, password);
-// 		try {
-// 			const data = await api.post(`/authen/login?type=phone`, {
-// 				phone: phone,
-// 				password: password,
-// 			});
-// 			return data.data;
-// 		} catch (error) {
-// 			console.log(error);
-// 		}
-// 	}
-// );
+export const handleLogin = createAsyncThunk(
+	'userLoginSlice/handleLogin',
+	async ({email, password}) => {
+		try {
+			const data = await api.post(`/login`, {email, password});
+			console.log(data.data);
+
+			return data.data;
+		} catch (error) {
+			console.error(error);
+		}
+	}
+);
 
 export const userLoginSlice = createSlice({
 	name: 'userLoginSlice',
 	initialState: {
 		userInfo: {
-			userId: '',
-			userPhone: '',
-			name: '',
-			email: '',
-			password: '',
-			bio: '',
-			avatar_url: '',
-			gender: '',
-			date_of_birth: '',
-			role: '',
-			accessToken: '',
-			refreshToken: '',
-			last_active_time: null,
-			status: '',
+			token: '',
 		},
 	},
 	reducers: {
-		//handle save state internal
 		setUser: (state, action) => {
 			state.userInfo = action.payload;
-			console.log('setUser', action.payload);
 		},
-		logout: (state, action) => {
-			state.userInfo = action.payload;
-			console.log('logout', action.payload);
+		logout: (state) => {
+			state.userInfo = {}; // or initialState.userInfo;
 		},
 	},
 	extraReducers: (builder) => {
 		builder.addCase(handleLogin.fulfilled, (state, action) => {
-			state.userInfo = action.payload.metadata;
-
-			localStorage.setItem('user', JSON.stringify(action.payload.metadata));
+			state.userInfo = action.payload;
+			localStorage.setItem('user', JSON.stringify(action.payload));
 		});
 	},
 });
-
-export default userLoginSlice;
