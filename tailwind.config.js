@@ -1,11 +1,16 @@
-export default {
-	purge: ['./src/**/*.{js,jsx,ts,tsx}', './index.html'],
-	darkMode: 'class', // or 'media' or 'class'
+module.exports = {
+	mode: 'jit',
+	content: ['./src/**/*.{js,jsx,ts,tsx}'],
 	theme: {
-		extend: {},
-	},
-	variants: {
-		extend: {},
+		extend: {
+			colors: {
+				primary: '#dec986',
+				black: '#000000',
+				gray: '#707070',
+				tintWhite: '#f3f3f3',
+				white: '#ffffff',
+			},
+		},
 	},
 	plugins: [],
 };
