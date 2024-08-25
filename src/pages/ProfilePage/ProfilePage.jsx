@@ -35,7 +35,7 @@ const ProfilePage = () => {
 					<NavbarProfile />
 				</div>
 
-				<div className="font-semibold w-full px-20 py-10 bg-white">
+				<div className="font-semibold w-full px-20 py-10 bg-white rounded-lg">
 					<div className="flex justify-between items-center">
 						<h1 className="text-2xl ">Welcome Mr.Customer</h1>
 						<Button className="bg-primary" onClick={showLogoutModal}>
@@ -44,7 +44,7 @@ const ProfilePage = () => {
 					</div>
 					<div className="flex items-center font-medium justify-around mt-10">
 						{orderStatus.map((status) => (
-							<div className="flex items-center justify-around shadow-xl py-3 px-12 bg-white rounded-lg">
+							<div className="flex items-center justify-around shadow-xl py-3 px-12 bg-white rounded-lg ">
 								<div className="">
 									<img src={status.icon} alt="" className="w-14 h-14 mr-5" />
 								</div>

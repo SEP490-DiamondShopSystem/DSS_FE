@@ -25,20 +25,27 @@ export const api = axios.create({
 });
 
 // Axios response interceptor to handle token expiration and renewal
-// api.interceptors.response.use(
-// 	(response) => {
-// 		return response;
-// 	},
-// 	async (error) => {
-// 		if (error.response.status === 401) {
-// 			console.log('401 error');
-// 			window.location.href = '/login';
-// 		}
-// 		if (error.response.status === 403) {
-// 			console.log('403 error');
-// 			window.location.href = '/permission-denied';
-// 			toast.error('403 error');
-// 		}
-// 		return Promise.reject(error);
-// 	}
-// );
+api.interceptors.response.use(
+	function (response) {
+		// Any status code that lie within the range of 2xx cause this function to trigger
+		return response.data ? response.data : {statusCode: response.status};
+	},
+	function (error) {
+		// Any status code that falls outside the range of 2xx cause this function to trigger
+		let res = {};
+		if (error.response) {
+			// Request made and server responded
+			res.data = error.response.data;
+			res.status = error.response.status;
+			res.header = error.response.header;
+		} else if (error.request) {
+			// The request was made but no response was received
+			console.log(error.request);
+		} else {
+			// Something happened in setting up the require that trigger an Error
+			console.log('Error', error.message);
+		}
+		return res;
+		// return Promise.reject(error);
+	}
+);

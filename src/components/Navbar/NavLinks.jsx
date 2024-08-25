@@ -1,14 +1,17 @@
 import {DownOutlined} from '@ant-design/icons';
-import SubMenu from 'antd/es/menu/SubMenu';
+import {Image} from 'antd';
 import React from 'react';
 import {Link} from 'react-router-dom';
+import Logo from '../../assets/logo-example.png';
 
 const NavLinks = () => {
 	const links = [
 		{
 			name: 'Diamond',
 			ref: 'diamond',
+			col: 2,
 			submenu: true,
+			mess: 'View All Diamond',
 			sublinks: [
 				{
 					Head: 'Shop Diamond by Shape',
@@ -38,7 +41,9 @@ const NavLinks = () => {
 		{
 			name: 'Jewelry',
 			ref: 'jewelry',
+			col: 3,
 			submenu: true,
+			mess: 'View All Jewelry',
 			sublinks: [
 				{
 					Head: 'Earrings',
@@ -85,39 +90,63 @@ const NavLinks = () => {
 			],
 		},
 	];
+
 	return (
 		<>
-			{links.map((link) => (
-				<div>
+			{links.map((link, i) => (
+				<div key={i}>
 					<div className="px-3 text-left group">
-						<h1 className="py-7 no-underline text-black ">
+						<h1 className="py-7 no-underline text-black">
 							{link.name} <DownOutlined />
 						</h1>
 						{link.submenu && (
 							<div>
-								<div className="absolute z-50 top-20 hidden group-hover:block hover:block ">
+								<div className="absolute z-50 top-20 hidden group-hover:block hover:block">
 									<div className="py-2">
-										<div className="w-4 h-4 left-3 absolute mt-1 bg-white rotate-45"></div>
+										<div className="w-4 h-4 left-3 absolute mt-1 bg-white rotate-45 shadow-xl"></div>
 									</div>
 
-									<div className=" bg-white p-3.5 grid grid-cols-3 gap-10 z-50">
-										{link.sublinks?.map((mySubLink) => (
-											<div>
-												<h1 className="text-lg font-semibold">
-													{mySubLink.Head}
-												</h1>
-												{mySubLink.sublink?.map((sl) => (
-													<li className="text-sm text-gray-600 my-2.5 md:cursor-pointer">
-														<Link
-															to={sl.link}
-															className="hover:text-primary font-normal normal-case"
-														>
-															{sl.name}
-														</Link>
-													</li>
-												))}
+									<div className="bg-white z-50 rounded-lg shadow-xl flex">
+										<div
+											className={`p-3.5 ${
+												link.col === 3
+													? 'grid grid-cols-3 gap-10'
+													: 'grid grid-cols-2 gap-10'
+											}`}
+										>
+											{link.sublinks.map((mySubLink, j) => (
+												<div key={j}>
+													<h1 className="text-lg font-semibold">
+														{mySubLink.Head}
+													</h1>
+													<ul>
+														{mySubLink.sublink.map((sl, k) => (
+															<li
+																className="text-sm text-gray-600 my-2.5 md:cursor-pointer"
+																key={k}
+															>
+																<Link
+																	to={sl.link}
+																	className="hover:text-primary font-normal normal-case"
+																>
+																	{sl.name}
+																</Link>
+															</li>
+														))}
+													</ul>
+												</div>
+											))}
+										</div>
+										<div className="flex justify-center items-center p-4 flex-col">
+											<Image
+												src={Logo}
+												alt="Logo"
+												className="max-h-40 max-w-40"
+											/>
+											<div className="normal-case md:cursor-pointer hover:text-primary">
+												{link.mess}
 											</div>
-										))}
+										</div>
 									</div>
 								</div>
 							</div>

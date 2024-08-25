@@ -2,7 +2,6 @@ import React from 'react';
 import {BrowserRouter} from 'react-router-dom';
 import {ToastContainer} from 'react-toastify';
 import './App.css';
-import {AdminRouters} from './routes/AdminRoutes';
 import {AppRouters} from './routes/AppRoutes';
 
 function App() {
@@ -10,7 +9,6 @@ function App() {
 		<section className="font-[body]">
 			<BrowserRouter>
 				<AppRouters />
-				{/* <AdminRouters /> */}
 				<ToastContainer limit={3} />
 			</BrowserRouter>
 		</section>
