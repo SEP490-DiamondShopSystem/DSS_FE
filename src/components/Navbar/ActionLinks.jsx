@@ -4,9 +4,13 @@ import {Link, useNavigate} from 'react-router-dom';
 import LoginModal from '../../pages/LogModal/LoginModal';
 import {getLocalStorage, removeLocalStorage} from '../../utils/localstorage';
 import LogoutModal from '../../pages/LogModal/LogoutModal'; // Import LogoutModal
+import {notifySuccess} from '../../utils/toast';
 
 const ActionLinks = () => {
-	const userLocal = getLocalStorage('user');
+	const token = localStorage.getItem('token');
+
+	console.log(token);
+
 	const navigate = useNavigate();
 
 	const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
@@ -19,7 +23,8 @@ const ActionLinks = () => {
 	const hideLogoutModal = () => setIsLogoutModalVisible(false);
 
 	const handleLogout = () => {
-		removeLocalStorage('user');
+		removeLocalStorage('token');
+		notifySuccess('Logout Successful!');
 		hideLogoutModal();
 		navigate('/');
 	};
@@ -36,8 +41,8 @@ const ActionLinks = () => {
 						{name: 'Information', link: '/info'},
 						{name: 'My Orders', link: '/my-orders'},
 						{
-							name: userLocal.token ? 'Logout' : 'Login',
-							action: userLocal.token ? showLogoutModal : showLoginModal,
+							name: token ? 'Logout' : 'Login',
+							action: token ? showLogoutModal : showLoginModal,
 						},
 					],
 				},

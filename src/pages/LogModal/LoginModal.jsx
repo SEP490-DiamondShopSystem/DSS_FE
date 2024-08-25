@@ -1,14 +1,16 @@
+import {GoogleLogin} from '@react-oauth/google';
 import {Button, Form, Input, Modal} from 'antd';
 import React from 'react';
-import {useDispatch} from 'react-redux';
-import {GoogleLogin} from '@react-oauth/google';
-import {notifyError, notifySuccess} from '../../utils/toast';
-import {handleLogin} from '../../redux/slices/userLoginSlice';
+import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
+import {handleLogin} from '../../redux/slices/userLoginSlice';
+import {notifyError, notifySuccess} from '../../utils/toast';
+import {LoadingUserSelector} from '../../redux/selectors';
 
 const LoginModal = ({visible, onClose}) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	const loading = useSelector(LoadingUserSelector);
 	const [form] = Form.useForm();
 
 	const onFinish = (values) => {
@@ -63,6 +65,7 @@ const LoginModal = ({visible, onClose}) => {
 						<Button
 							htmlType="submit"
 							className="bg-primary text-white hover:bg-primary"
+							loading={loading}
 						>
 							Login
 						</Button>
