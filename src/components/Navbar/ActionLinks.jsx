@@ -1,15 +1,13 @@
 import React, {useState} from 'react';
 import {UserOutlined} from '@ant-design/icons';
 import {Link, useNavigate} from 'react-router-dom';
-import LoginModal from '../../pages/LogModal/LoginModal';
-import {getLocalStorage, removeLocalStorage} from '../../utils/localstorage';
-import LogoutModal from '../../pages/LogModal/LogoutModal'; // Import LogoutModal
+import LoginModal from '../LogModal/LoginModal';
+import {getLocalStorage, removeLocalStorage, setLocalStorage} from '../../utils/localstorage';
+import LogoutModal from '../LogModal/LogoutModal'; // Import LogoutModal
 import {notifySuccess} from '../../utils/toast';
 
 const ActionLinks = () => {
 	const token = localStorage.getItem('token');
-
-	console.log(token);
 
 	const navigate = useNavigate();
 
@@ -29,6 +27,10 @@ const ActionLinks = () => {
 		navigate('/');
 	};
 
+	const handleLinkClick = (page) => {
+		setLocalStorage('lastVisitedPage', page);
+	};
+
 	const links = [
 		{
 			icon: <UserOutlined />,
@@ -36,15 +38,14 @@ const ActionLinks = () => {
 			submenu: true,
 			sublinks: [
 				{
-					sublink: [
-						{name: 'Profile', link: '/profile'},
-						{name: 'Information', link: '/info'},
-						{name: 'My Orders', link: '/my-orders'},
-						{
-							name: token ? 'Logout' : 'Login',
-							action: token ? showLogoutModal : showLoginModal,
-						},
-					],
+					sublink: token
+						? [
+								{name: 'Profile', link: '/profile'},
+								{name: 'Information', link: '/info'},
+								{name: 'My Orders', link: '/my-orders'},
+								{name: 'Logout', action: showLogoutModal},
+						  ]
+						: [{name: 'Login', action: showLoginModal}],
 				},
 			],
 		},
@@ -60,9 +61,9 @@ const ActionLinks = () => {
 							<div>
 								<div className="absolute z-50 top-20 hidden group-hover:block hover:block">
 									<div className="py-2">
-										<div className="w-4 h-4 left-3 absolute mt-1 bg-white rotate-45"></div>
+										<div className="w-4 h-4 left-3 absolute mt-1 bg-white rotate-45 shadow-xl"></div>
 									</div>
-									<div className="bg-white p-3.5 flex flex-col items-start">
+									<div className="bg-white p-3.5 flex flex-col items-start shadow-xl">
 										{link.sublinks?.map((mySubLink, index) => (
 											<div key={index}>
 												{mySubLink.sublink?.map((sl, subIndex) => (
@@ -73,6 +74,9 @@ const ActionLinks = () => {
 														{sl.link ? (
 															<Link
 																to={sl.link}
+																onClick={() =>
+																	handleLinkClick(sl.name)
+																}
 																className="hover:text-primary font-normal normal-case"
 															>
 																{sl.name}
@@ -80,7 +84,7 @@ const ActionLinks = () => {
 														) : (
 															<button
 																onClick={sl.action}
-																className="text-base text-gray-600 my-2.5 whitespace-nowrap bg-transparent border-0 cursor-pointer hover:text-primary font-normal normal-case"
+																className="text-base text-gray-600 my-2.5 whitespace-nowrap bg-transparent border-0 md:cursor-pointer hover:text-primary font-normal normal-case"
 															>
 																{sl.name}
 															</button>

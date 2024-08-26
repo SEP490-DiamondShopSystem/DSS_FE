@@ -1219,3 +1219,57 @@ video {
 .grid-cols-2 {
 	grid-template-columns: repeat(2, minmax(0, 1fr));
 }
+
+.mx-auto {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.mt-4 {
+	margin-top: 1rem /* 16px */;
+}
+
+.text-gray-700 {
+	color: rgb(55 65 81);
+}
+.text-gray-600 {
+	color: rgb(75 85 99);
+}
+
+.mt-2 {
+	margin-top: 0.5rem /* 8px */;
+}
+
+.space-x-4 > :not([hidden]) ~ :not([hidden]) {
+	--tw-space-x-reverse: 0;
+	margin-right: calc(1rem /* 16px */ * var(--tw-space-x-reverse));
+	margin-left: calc(1rem /* 16px */ * calc(1 - var(--tw-space-x-reverse)));
+}
+
+.p-6 {
+	padding: 1.5rem /* 24px */;
+}
+
+.text-xl {
+	font-size: 1.25rem /* 20px */;
+	line-height: 1.75rem /* 28px */;
+}
+
+.py-8 {
+	padding-top: 2rem /* 32px */;
+	padding-bottom: 2rem /* 32px */;
+}
+
+.my-2\.5 {
+	margin-top: 0.625rem /* 10px */;
+	margin-bottom: 0.625rem /* 10px */;
+}
+
+.border-0 {
+	border-width: 0px;
+}
+
+.text-base {
+	font-size: 1rem /* 16px */;
+	line-height: 1.5rem /* 24px */;
+}
