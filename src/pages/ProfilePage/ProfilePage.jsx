@@ -4,7 +4,7 @@ import {useNavigate} from 'react-router-dom';
 import {Header} from '../../components/Navbar/Header';
 import NavbarProfile from '../../components/NavbarProfile';
 import {removeLocalStorage} from '../../utils/localstorage';
-import LogoutModal from '../LogModal/LogoutModal';
+import LogoutModal from '../../components/LogModal/LogoutModal';
 
 const ProfilePage = () => {
 	const navigate = useNavigate();
@@ -29,7 +29,6 @@ const ProfilePage = () => {
 
 	return (
 		<div>
-			<Header />
 			<div className="my-20 min-h-96 flex">
 				<div className="mr-20">
 					<NavbarProfile />

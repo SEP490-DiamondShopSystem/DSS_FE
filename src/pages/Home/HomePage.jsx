@@ -3,13 +3,7 @@ import {Footer} from '../../components/Footer';
 import {Header} from '../../components/Navbar/Header';
 
 const HomePage = () => {
-	return (
-		<div>
-			<Header />
-			HomePage
-			<Footer />
-		</div>
-	);
+	return <div>HomePage</div>;
 };
 
 export default HomePage;
