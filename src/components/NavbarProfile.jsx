@@ -16,12 +16,12 @@ const NavbarProfile = () => {
 		{name: 'Profile', link: '/profile', icon: <FontAwesomeIcon icon={faUser} color="black" />},
 		{
 			name: 'Information',
-			link: '/info',
+			link: '/my-info',
 			icon: <FontAwesomeIcon icon={faReceipt} color="black" />,
 		},
 		{
 			name: 'My Orders',
-			link: '/my-order',
+			link: '/my-orders',
 			icon: <FontAwesomeIcon icon={faShoppingBag} color="black" />,
 		},
 		{name: 'Change Password', icon: <FontAwesomeIcon icon={faKey} color="black" />},
