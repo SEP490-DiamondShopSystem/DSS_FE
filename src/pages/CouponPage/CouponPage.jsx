@@ -1,13 +1,7 @@
 import React from 'react';
-import {Header} from '../../components/Navbar/Header';
 
 const CouponPage = () => {
-	return (
-		<div>
-			<Header />
-			CouponPage
-		</div>
-	);
+	return <div>CouponPage</div>;
 };
 
 export default CouponPage;

@@ -28,6 +28,7 @@ const ActionLinks = () => {
 	};
 
 	const handleLinkClick = (page) => {
+		localStorage.removeItem('header');
 		setLocalStorage('lastVisitedPage', page);
 	};
 
@@ -72,15 +73,15 @@ const ActionLinks = () => {
 														className="text-base text-gray-600 my-2.5 whitespace-nowrap"
 													>
 														{sl.link ? (
-															<Link
-																to={sl.link}
+															<a
+																href={sl.link}
 																onClick={() =>
 																	handleLinkClick(sl.name)
 																}
 																className="hover:text-primary font-normal normal-case"
 															>
 																{sl.name}
-															</Link>
+															</a>
 														) : (
 															<button
 																onClick={sl.action}

@@ -1,10 +1,10 @@
 import {Button} from 'antd';
 import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
-import {Header} from '../../components/Navbar/Header';
+import LogoutModal from '../../components/LogModal/LogoutModal';
 import NavbarProfile from '../../components/NavbarProfile';
 import {removeLocalStorage} from '../../utils/localstorage';
-import LogoutModal from '../../components/LogModal/LogoutModal';
+import {Helmet} from 'react-helmet';
 
 const ProfilePage = () => {
 	const navigate = useNavigate();
@@ -29,6 +29,9 @@ const ProfilePage = () => {
 
 	return (
 		<div>
+			<Helmet>
+				<title>My Profile</title>
+			</Helmet>
 			<div className="my-20 min-h-96 flex">
 				<div className="mr-20">
 					<NavbarProfile />

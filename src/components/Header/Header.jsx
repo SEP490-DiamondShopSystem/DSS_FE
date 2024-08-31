@@ -1,26 +1,24 @@
 import {HeartOutlined} from '@ant-design/icons';
+import {faShoppingBag} from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import Search from 'antd/es/input/Search';
 import React, {useState} from 'react';
 import {Link} from 'react-router-dom';
-import {getLocalStorage, setLocalStorage} from '../../utils/localstorage';
 import Logo from './../../assets/logo-example.png';
 import ActionLinks from './ActionLinks';
 import NavLinks from './NavLinks';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faShoppingBag} from '@fortawesome/free-solid-svg-icons';
 
 export const Header = () => {
-	const [activeLink, setActiveLink] = useState(getLocalStorage('header') || '');
+	const [activeLink, setActiveLink] = useState(localStorage.getItem('header') || '');
 
 	const handleLinkClick = (linkName) => {
-		setLocalStorage('header', linkName);
+		setActiveLink(linkName);
+		localStorage.setItem('header', linkName);
 	};
-
-	console.log(typeof activeLink);
 
 	return (
 		<nav className="bg-white">
-			<div className="flex items-center font-medium justify-around">
+			<div className="flex items-center font-semibold justify-around">
 				<div>
 					<img src={Logo} alt="logo" className="md:cursor-pointer h-9" />
 				</div>
