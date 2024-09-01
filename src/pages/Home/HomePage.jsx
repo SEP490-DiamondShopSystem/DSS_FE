@@ -1,9 +1,9 @@
 import React from 'react';
 
 import {Helmet} from 'react-helmet';
-import Banner from '../../components/Banner';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faHeadphones, faRefresh, faTag, faTruck} from '@fortawesome/free-solid-svg-icons';
+import {BannerDiamond} from './../../components/Banner/Banner';
 
 const list = [
 	{
@@ -34,7 +34,7 @@ const HomePage = () => {
 			<Helmet>
 				<title>Diamond Shop</title>
 			</Helmet>
-			<Banner />
+			<BannerDiamond />
 			<div className="grid grid-cols-4 divide-x-0 my-5">
 				{list.map((list) => (
 					<div className="flex items-center mx-auto">

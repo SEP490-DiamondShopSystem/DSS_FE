@@ -1,13 +1,13 @@
 import React from 'react';
 import {useNavigate} from 'react-router-dom';
 
-const Banner = () => {
+export const BannerDiamond = () => {
 	const navigate = useNavigate();
 	return (
-		<div className="relative bg-gray-800 text-white">
+		<div className="relative bg-gray-800 text-white" style={{height: 900}}>
 			<img
-				className="w-full h-96 object-cover"
-				src="https://via.placeholder.com/1500x500"
+				className="w-full h-full object-cover"
+				src="https://via.placeholder.com/1500x900"
 				alt="Banner"
 			/>
 			<div className="absolute inset-0 flex items-center justify-end text-black ">
@@ -21,12 +21,12 @@ const Banner = () => {
 					</p>
 					<div className="flex items-center justify-end">
 						<button
-							className="mr-10 px-6 py-2 bg-primary rounded-lg uppercase font-semibold hover:bg-second"
+							className="mr-10 px-6 py-2 bg-primary rounded-lg uppercase font-semibold hover:bg-second w-full h-12"
 							onClick={() => navigate('/diamond/search')}
 						>
 							Shop Diamond
 						</button>
-						<button className="px-6 py-2 bg-primary rounded-lg uppercase font-semibold hover:bg-second">
+						<button className="px-6 py-2 bg-primary rounded-lg uppercase font-semibold hover:bg-second w-full h-12">
 							Shop Jewelry
 						</button>
 					</div>
@@ -35,5 +35,3 @@ const Banner = () => {
 		</div>
 	);
 };
-
-export default Banner;

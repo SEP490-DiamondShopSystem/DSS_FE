@@ -1,7 +1,12 @@
 import React from 'react';
+import {useLocation} from 'react-router-dom';
 
-const DiamondSearchPage = () => {
-	return <div>DiamondSearchPage</div>;
-};
+function DiamondSearch() {
+	return (
+		<div>
+			<h1>Diamond Search</h1>
+		</div>
+	);
+}
 
-export default DiamondSearchPage;
+export default DiamondSearch;
