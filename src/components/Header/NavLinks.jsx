@@ -2,7 +2,7 @@ import {DownOutlined} from '@ant-design/icons';
 import {Image} from 'antd';
 import React from 'react';
 import {Link} from 'react-router-dom';
-import Logo from '../../assets/logo-example.png';
+import Logo from '../../assets/logo-short-ex.png';
 
 const NavLinks = () => {
 	const links = [
@@ -137,7 +137,7 @@ const NavLinks = () => {
 												</div>
 											))}
 										</div>
-										<div className="flex justify-center items-center p-4 flex-col">
+										<div className="flex justify-center items-center p-4 flex-col mx-20">
 											<Image
 												src={Logo}
 												alt="Logo"
