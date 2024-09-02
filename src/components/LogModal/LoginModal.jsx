@@ -1,13 +1,14 @@
-import {GoogleLogin} from '@react-oauth/google';
-import {Button, Form, Input, Modal} from 'antd';
 import React from 'react';
+
+import {Button, Form, Input, Modal} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
+import {LoadingUserSelector} from '../../redux/selectors';
 import {handleLogin} from '../../redux/slices/userLoginSlice';
 import {notifyError, notifySuccess} from '../../utils/toast';
-import {LoadingUserSelector} from '../../redux/selectors';
+import {GoogleLoginButton} from '../LoginGoogleButton';
 
-const LoginModal = ({visible, onClose}) => {
+const LoginModal = ({isOpen, onClose}) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const loading = useSelector(LoadingUserSelector);
@@ -40,11 +41,19 @@ const LoginModal = ({visible, onClose}) => {
 	};
 
 	const handleGoogleLoginFailure = (error) => {
+		notifyError('Google login error!');
 		console.error('Google login error:', error);
 	};
 
 	return (
-		<Modal title="Login" visible={visible} onCancel={onClose} footer={null} destroyOnClose>
+		<Modal
+			title="Login"
+			className="text-center font-semibold"
+			open={isOpen}
+			onCancel={onClose}
+			footer={null}
+			destroyOnClose
+		>
 			<Form form={form} layout="vertical" onFinish={onFinish}>
 				<Form.Item
 					name="email"
@@ -64,25 +73,22 @@ const LoginModal = ({visible, onClose}) => {
 					<div className="flex justify-between">
 						<Button
 							htmlType="submit"
-							className="bg-primary text-white hover:bg-primary"
+							type="text"
+							className="bg-primary text-black hover:bg-primary font-semibold w-full mt-5"
 							loading={loading}
 						>
 							Login
 						</Button>
-						<Button
-							onClick={onClose}
-							className="bg-gray-300 text-black hover:bg-gray-400"
-						>
-							Cancel
-						</Button>
 					</div>
 				</Form.Item>
-				<div className="text-center mt-4">
-					<GoogleLogin
-						onSuccess={handleGoogleLogin}
-						onError={handleGoogleLoginFailure}
-						className="w-full"
-					/>
+				<div className="text-center">
+					<p className="my-5">or sign in with</p>
+					<div>
+						<GoogleLoginButton
+							onSuccess={handleGoogleLogin}
+							onError={handleGoogleLoginFailure}
+						/>
+					</div>
 				</div>
 			</Form>
 		</Modal>

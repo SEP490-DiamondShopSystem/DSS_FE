@@ -1525,3 +1525,12 @@ video {
 	--tw-text-opacity: 1;
 	color: rgb(255 237 153 / var(--tw-text-opacity)) /* #ffed99 */;
 }
+
+.block {
+	display: block;
+}
+
+.my-3 {
+	margin-top: 0.75rem /* 12px */;
+	margin-bottom: 0.75rem /* 12px */;
+}

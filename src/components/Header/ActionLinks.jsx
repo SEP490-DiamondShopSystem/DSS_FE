@@ -5,6 +5,7 @@ import LoginModal from '../LogModal/LoginModal';
 import {getLocalStorage, removeLocalStorage, setLocalStorage} from '../../utils/localstorage';
 import LogoutModal from '../LogModal/LogoutModal'; // Import LogoutModal
 import {notifySuccess} from '../../utils/toast';
+import SignInModal from '../LogModal/SignInModal';
 
 const ActionLinks = () => {
 	const token = localStorage.getItem('token');
@@ -13,9 +14,13 @@ const ActionLinks = () => {
 
 	const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
 	const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
+	const [isSignInModalVisible, setIsSignInModalVisible] = useState(false);
 
 	const showLoginModal = () => setIsLoginModalVisible(true);
 	const hideLoginModal = () => setIsLoginModalVisible(false);
+
+	const showSignInModal = () => setIsSignInModalVisible(true);
+	const hideSignInModal = () => setIsSignInModalVisible(false);
 
 	const showLogoutModal = () => setIsLogoutModalVisible(true);
 	const hideLogoutModal = () => setIsLogoutModalVisible(false);
@@ -46,7 +51,10 @@ const ActionLinks = () => {
 								{name: 'My Orders', link: '/my-orders'},
 								{name: 'Logout', action: showLogoutModal},
 						  ]
-						: [{name: 'Login', action: showLoginModal}],
+						: [
+								{name: 'Login', action: showLoginModal},
+								{name: 'SignIn', action: showSignInModal},
+						  ],
 				},
 			],
 		},
@@ -101,12 +109,13 @@ const ActionLinks = () => {
 					</div>
 				</div>
 			))}
-			<LoginModal visible={isLoginModalVisible} onClose={hideLoginModal} />
+			<LoginModal isOpen={isLoginModalVisible} onClose={hideLoginModal} />
 			<LogoutModal
 				visible={isLogoutModalVisible}
 				onConfirm={handleLogout}
 				onCancel={hideLogoutModal}
 			/>
+			<SignInModal isOpen={isSignInModalVisible} onClose={hideSignInModal} />
 		</>
 	);
 };
