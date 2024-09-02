@@ -1534,3 +1534,26 @@ video {
 	margin-top: 0.75rem /* 12px */;
 	margin-bottom: 0.75rem /* 12px */;
 }
+.p-4 {
+	padding: 1rem /* 16px */;
+}
+
+.top-10 {
+	top: 2.5rem /* 40px */;
+}
+
+.top-5 {
+	top: 1.25rem /* 20px */;
+}
+
+.top-14 {
+	top: 3.5rem /* 56px */;
+}
+
+.left-2 {
+	left: 0.5rem /* 8px */;
+}
+
+.top-16 {
+	top: 4rem /* 64px */;
+}

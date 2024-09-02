@@ -1,5 +1,9 @@
 import React from 'react';
-import {useLocation} from 'react-router-dom';
+
+import HomePage from '../Home/HomePage';
+import HomeJewelryPage from '../Home/HomeJewelryPage';
+import ProfilePage from '../ProfilePage/ProfilePage';
+import StepProgressBar from '../../components/StepProgressBar/StepProgressBar';
 
 function DiamondSearch() {
 	return (

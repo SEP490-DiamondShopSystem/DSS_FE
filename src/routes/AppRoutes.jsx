@@ -10,6 +10,7 @@ import MyOrderPage from '../pages/ProfilePage/MyOrderPage';
 import ProfilePage from '../pages/ProfilePage/ProfilePage';
 import PromotionPage from '../pages/PromotionPage/PromotionPage';
 import NotFoundPage from '../pages/NotFoundPage/NotFoundPage';
+import StepProgressBar from '../components/StepProgressBar/StepProgressBar';
 
 export const AppRouters = () => {
 	return (
@@ -18,10 +19,33 @@ export const AppRouters = () => {
 			<Route path="/jewelry" element={<HomeJewelryPage />} />
 			<Route path="/coupons" element={<CouponPage />} />
 			<Route path="/promotion" element={<PromotionPage />} />
-			<Route path="/profile" element={<ProfilePage />} />
-			<Route path="/my-orders" element={<MyOrderPage />} />
-			<Route path="/my-info" element={<MyInfoPage />} />
-			{/* <Route path="/diamond/search" element={<DiamondSearchPage />} /> */}
+			<Route
+				path="/profile"
+				element={
+					<>
+						<StepProgressBar />
+						<ProfilePage />
+					</>
+				}
+			/>
+			<Route
+				path="/my-orders"
+				element={
+					<>
+						<StepProgressBar />
+						<MyOrderPage />
+					</>
+				}
+			/>
+			<Route
+				path="/my-info"
+				element={
+					<>
+						<StepProgressBar />
+						<MyInfoPage />
+					</>
+				}
+			/>
 			<Route path="/diamond-lab/search" element={<DiamondSearch />} />
 
 			<Route path="*" element={<NotFoundPage />} />

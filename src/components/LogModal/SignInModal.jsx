@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {Modal, Button, Input, Form} from 'antd';
 
 const SignInModal = ({isOpen, onClose}) => {
@@ -6,7 +7,7 @@ const SignInModal = ({isOpen, onClose}) => {
 
 	const onFinish = (values) => {
 		console.log('Received values:', values);
-		form.resetFields(); // Correct way to reset fields
+		form.resetFields();
 	};
 
 	return (
