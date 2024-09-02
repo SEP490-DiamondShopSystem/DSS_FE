@@ -9,7 +9,7 @@ import {Toast} from './utils/toast.jsx';
 import {GoogleOAuthProvider} from '@react-oauth/google';
 
 const NEXT_PUBLIC_GOOGLE_CLIENT_ID =
-	'375198830790-6lk26c7frudnqee2b55ge7fkbco1nkma.apps.googleusercontent.com';
+	'650110277911-jg73184eijpoumv7v5t5prd58056586s.apps.googleusercontent.com';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
 	<GoogleOAuthProvider clientId={NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
