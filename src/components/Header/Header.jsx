@@ -2,7 +2,7 @@ import {HeartOutlined} from '@ant-design/icons';
 import {faShoppingBag} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import Search from 'antd/es/input/Search';
-import React, {useState} from 'react';
+import React from 'react';
 import {Link} from 'react-router-dom';
 import Logo from './../../assets/logo-ex.png';
 import ActionLinks from './ActionLinks';

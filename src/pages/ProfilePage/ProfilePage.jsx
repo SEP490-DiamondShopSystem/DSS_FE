@@ -1,10 +1,11 @@
-import {Button} from 'antd';
 import React, {useState} from 'react';
+
+import {Button} from 'antd';
+import {Helmet} from 'react-helmet';
 import {useNavigate} from 'react-router-dom';
 import LogoutModal from '../../components/LogModal/LogoutModal';
 import NavbarProfile from '../../components/NavbarProfile';
 import {removeLocalStorage} from '../../utils/localstorage';
-import {Helmet} from 'react-helmet';
 
 const ProfilePage = () => {
 	const navigate = useNavigate();

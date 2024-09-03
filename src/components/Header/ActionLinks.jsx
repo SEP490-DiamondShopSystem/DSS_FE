@@ -68,9 +68,9 @@ const ActionLinks = () => {
 						<div className="py-7 text-black">{link.icon}</div>
 						{link.submenu && (
 							<div>
-								<div className="absolute z-50 top-20 hidden group-hover:block hover:block">
+								<div className="absolute z-50 top-16 hidden group-hover:block hover:block">
 									<div className="py-2">
-										<div className="w-4 h-4 left-3 absolute mt-1 bg-white rotate-45 shadow-xl"></div>
+										<div className="w-4 h-4 left-2 absolute mt-1 bg-white rotate-45 shadow-xl"></div>
 									</div>
 									<div className="bg-white p-3.5 flex flex-col items-start shadow-xl">
 										{link.sublinks?.map((mySubLink, index) => (
