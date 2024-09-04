@@ -2,7 +2,7 @@ import React from 'react';
 
 import {Modal, Button, Input, Form} from 'antd';
 
-const SignInModal = ({isOpen, onClose}) => {
+const SignUpModal = ({isOpen, onClose}) => {
 	const [form] = Form.useForm();
 
 	const onFinish = (values) => {
@@ -12,7 +12,7 @@ const SignInModal = ({isOpen, onClose}) => {
 
 	return (
 		<Modal
-			title="Sign In"
+			title="Sign Up"
 			className="text-center font-semibold"
 			open={isOpen}
 			onCancel={onClose}
@@ -72,4 +72,4 @@ const SignInModal = ({isOpen, onClose}) => {
 	);
 };
 
-export default SignInModal;
+export default SignUpModal;

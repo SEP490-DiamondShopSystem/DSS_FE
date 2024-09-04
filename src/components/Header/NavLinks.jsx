@@ -1,6 +1,7 @@
+import React from 'react';
+
 import {DownOutlined} from '@ant-design/icons';
 import {Image} from 'antd';
-import React from 'react';
 import {Link} from 'react-router-dom';
 import Logo from '../../assets/logo-short-ex.png';
 

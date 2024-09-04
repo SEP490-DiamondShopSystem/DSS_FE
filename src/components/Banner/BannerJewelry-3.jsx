@@ -25,7 +25,7 @@ export const BannerJewelry3 = () => {
 							Shop Setting
 						</button>
 						<button className="px-6 py-2 bg-primary rounded-lg uppercase font-semibold hover:bg-second w-96 h-12">
-							Shop Diamond
+							Shop Custom Design
 						</button>
 					</div>
 				</div>

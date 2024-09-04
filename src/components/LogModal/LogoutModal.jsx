@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {Button, Modal} from 'antd';
 
 const LogoutModal = ({visible, onConfirm, onCancel}) => {
@@ -13,7 +14,7 @@ const LogoutModal = ({visible, onConfirm, onCancel}) => {
 				</Button>,
 				<Button
 					key="submit"
-					type=""
+					type="text"
 					className="bg-primary text-white hover:bg-primary"
 					onClick={onConfirm}
 				>
