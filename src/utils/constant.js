@@ -34,3 +34,18 @@ export const list = [
 		subtitle: 'Contact us 24 hours a day',
 	},
 ];
+
+export const shape = [
+	'Round',
+	'Princess',
+	'Cushion',
+	'Oval',
+	'Emerald',
+	'Pear',
+	'Asscher',
+	'Heart',
+	'Radiant',
+	'Marquise',
+];
+
+export const metalJewelry = ['White Gold', 'Yellow Gold', 'Platinum'];
