@@ -1,11 +1,12 @@
 import React, {useState} from 'react';
+
 import {UserOutlined} from '@ant-design/icons';
-import {Link, useNavigate} from 'react-router-dom';
-import LoginModal from '../LogModal/LoginModal';
-import {getLocalStorage, removeLocalStorage, setLocalStorage} from '../../utils/localstorage';
-import LogoutModal from '../LogModal/LogoutModal'; // Import LogoutModal
+import {useNavigate} from 'react-router-dom';
+import {removeLocalStorage, setLocalStorage} from '../../utils/localstorage';
 import {notifySuccess} from '../../utils/toast';
-import SignInModal from '../LogModal/SignInModal';
+import LoginModal from '../LogModal/LoginModal';
+import LogoutModal from '../LogModal/LogoutModal'; // Import LogoutModal
+import SignUpModal from '../LogModal/SignUpModal';
 
 const ActionLinks = () => {
 	const token = localStorage.getItem('token');
@@ -53,7 +54,7 @@ const ActionLinks = () => {
 						  ]
 						: [
 								{name: 'Login', action: showLoginModal},
-								{name: 'SignIn', action: showSignInModal},
+								{name: 'Sign Up', action: showSignInModal},
 						  ],
 				},
 			],
@@ -68,7 +69,7 @@ const ActionLinks = () => {
 						<div className="py-7 text-black">{link.icon}</div>
 						{link.submenu && (
 							<div>
-								<div className="absolute z-50 top-16 hidden group-hover:block hover:block">
+								<div className="absolute z-50 top-20 hidden group-hover:block hover:block">
 									<div className="py-2">
 										<div className="w-4 h-4 left-2 absolute mt-1 bg-white rotate-45 shadow-xl"></div>
 									</div>
@@ -115,7 +116,7 @@ const ActionLinks = () => {
 				onConfirm={handleLogout}
 				onCancel={hideLogoutModal}
 			/>
-			<SignInModal isOpen={isSignInModalVisible} onClose={hideSignInModal} />
+			<SignUpModal isOpen={isSignInModalVisible} onClose={hideSignInModal} />
 		</>
 	);
 };
