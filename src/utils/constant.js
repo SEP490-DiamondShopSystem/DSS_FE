@@ -3,6 +3,7 @@ import basic_diamond from '../assets/Diamond_Basics.png';
 import earrings from '../assets/Earrings.png';
 import necklaces from '../assets/Necklaces.png';
 import rings from '../assets/Rings.png';
+import diamond from '../assets/img-diamond.png';
 
 export const jewelries = [
 	{logo: basic_diamond, title: 'Diamond Basics', link: '/jewelry/diamond-jewelry'},
@@ -49,3 +50,22 @@ export const shape = [
 ];
 
 export const metalJewelry = ['White Gold', 'Yellow Gold', 'Platinum'];
+
+export const listDiamond = [
+	{img: diamond, title: '1.01 Carat H-VS2 Princess Cut Diamond', price: '$2,720'},
+	{img: diamond, title: '1.01 Carat H-VS2 Princess Cut Diamond', price: '$2,720'},
+	{img: diamond, title: '1.01 Carat H-VS2 Princess Cut Diamond', price: '$2,720'},
+	{img: diamond, title: '1.01 Carat H-VS2 Princess Cut Diamond', price: '$2,720'},
+	{img: diamond, title: '1.01 Carat H-VS2 Princess Cut Diamond', price: '$2,720'},
+	{img: diamond, title: '1.01 Carat H-VS2 Princess Cut Diamond', price: '$2,720'},
+	{img: diamond, title: '1.01 Carat H-VS2 Princess Cut Diamond', price: '$2,720'},
+	{img: diamond, title: '1.01 Carat H-VS2 Princess Cut Diamond', price: '$2,720'},
+	{img: diamond, title: '1.01 Carat H-VS2 Princess Cut Diamond', price: '$2,720'},
+	{img: diamond, title: '1.01 Carat H-VS2 Princess Cut Diamond', price: '$2,720'},
+	{img: diamond, title: '1.01 Carat H-VS2 Princess Cut Diamond', price: '$2,720'},
+	{img: diamond, title: '1.01 Carat H-VS2 Princess Cut Diamond', price: '$2,720'},
+	{img: diamond, title: '1.01 Carat H-VS2 Princess Cut Diamond', price: '$2,720'},
+	{img: diamond, title: '1.01 Carat H-VS2 Princess Cut Diamond', price: '$2,720'},
+	{img: diamond, title: '1.01 Carat H-VS2 Princess Cut Diamond', price: '$2,720'},
+	{img: diamond, title: '1.01 Carat H-VS2 Princess Cut Diamond', price: '$2,720'},
+];

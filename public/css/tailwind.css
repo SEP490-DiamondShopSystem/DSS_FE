@@ -1461,11 +1461,6 @@ video {
 	border-radius: 9999px;
 }
 
-.mx-auto {
-	margin-left: auto;
-	margin-right: auto;
-}
-
 .text-center {
 	text-align: center;
 }
@@ -1579,4 +1574,57 @@ video {
 
 .ml-10 {
 	margin-left: 2.5rem /* 40px */;
+}
+
+.h-56 {
+	height: 14rem /* 224px */;
+}
+
+.gap-10 {
+	gap: 2.5rem /* 40px */;
+}
+
+.p-5 {
+	padding: 1.25rem /* 20px */;
+}
+
+.px-10 {
+	padding-left: 2.5rem /* 40px */;
+	padding-right: 2.5rem /* 40px */;
+}
+
+.gap-5 {
+	gap: 1.25rem /* 20px */;
+}
+
+.mb-10 {
+	margin-bottom: 2.5rem /* 40px */;
+}
+
+.shadow-lg {
+	--tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+	--tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color),
+		0 4px 6px -4px var(--tw-shadow-color);
+	box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000),
+		var(--tw-shadow);
+}
+
+.object-center {
+	object-position: center;
+}
+
+.gap-2 {
+	gap: 0.5rem /* 8px */;
+}
+
+.mt-16 {
+	margin-top: 4rem /* 64px */;
+}
+
+.pb-5 {
+	padding-bottom: 1.25rem /* 20px */;
+}
+
+.m-10 {
+	margin: 2.5rem /* 40px */;
 }
