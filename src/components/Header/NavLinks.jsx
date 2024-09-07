@@ -145,6 +145,7 @@ const NavLinks = () => {
 												src={Logo}
 												alt="Logo"
 												className="max-h-40 max-w-40"
+												preview={false}
 											/>
 											<Link
 												to={link.link}

@@ -1,142 +1,135 @@
 import {DownOutlined} from '@ant-design/icons';
 import {Select, Slider} from 'antd';
-import React, {useCallback, useEffect, useState} from 'react';
-import {marks, metalJewelry, Shape} from '../../utils/constant';
-import MultiRangeSlider from './MultiRangeSlider/MultiRangePriceSlider';
-import MultiRangePriceSlider from './MultiRangeSlider/MultiRangePriceSlider';
+import React, {useCallback, useState} from 'react';
+import {diamondChoice, genderChoice, marks, metalChoice, Shape} from '../../utils/constant';
 import MultiRangeCaratSlider from './MultiRangeSlider/MultiRangeCaratSlider';
+import MultiRangePriceSlider from './MultiRangeSlider/MultiRangePriceSlider';
 
 export const FilterDiamond = () => {
-	const [values, setValues] = useState({
+	const [filters, setFilters] = useState({
 		shape: '',
-		price: '',
-		carat: '',
+		price: {minPrice: '', maxPrice: ''},
+		carat: {minCarat: '', maxCarat: ''},
 		color: '',
 	});
-	const [price, setPrice] = useState({minPrice: '', maxPrice: ''});
-	const [carats, setCarats] = useState({minCarat: '', maxCarat: ''});
-	const [color, setColor] = useState();
 
-	useEffect(() => {
-		setValues((prev) => ({
+	console.log('filters', filters);
+
+	const handleChange = (type, value) => {
+		setFilters((prev) => ({
 			...prev,
-			price: price,
-			carat: carats,
-			color: color,
+			[type]: value,
 		}));
-	}, [price, carats, color]);
+	};
 
 	const handlePriceChange = useCallback(({min, max}) => {
-		setPrice({
-			minPrice: min,
-			maxPrice: max,
-		});
+		handleChange('price', {minPrice: min, maxPrice: max});
 	}, []);
 
 	const handleCaratChange = useCallback(({min, max}) => {
-		setCarats({
-			minCarat: min,
-			maxCarat: max,
-		});
+		handleChange('carat', {minCarat: min, maxCarat: max});
 	}, []);
 
-	const handleColorChange = (color) => {
-		setColor(color);
-	};
-
-	const handleChange = (e) => {
-		setValues((prev) => ({
-			...prev,
-			shape: e,
-		}));
-	};
-
 	return (
-		<div className="">
-			<div className="p-4 flex items-center">
-				{/* Select Metal Dropdown */}
-				<Select
-					// mode="multiple"
-					placeholder="Shape"
-					allowClear
-					maxTagCount={0}
-					suffixIcon={<DownOutlined />}
-					style={{width: '6%'}}
-					onChange={handleChange}
-					value={values.shape}
-				>
-					{Shape?.map((shape, i) => (
-						<Select.Option key={i} value={shape}>
-							{shape}
-						</Select.Option>
-					))}
-				</Select>
-				{/* Price Range Slider */}
-				<div className="ml-10 my-5">
-					<p className="mb-4">Price:</p>
-					<MultiRangePriceSlider min={0} max={1000} onChange={handlePriceChange} />
-				</div>
-				<div className="ml-10 my-5">
-					<p className="mb-4">Carat:</p>
-					<MultiRangeCaratSlider min={0.5} max={30.0} onChange={handleCaratChange} />
-				</div>
-				<div className="ml-10 my-5 min-w-40">
-					<p className="mb-4">Color:</p>
-					<Slider
-						marks={marks}
-						min={0}
-						max={7}
-						defaultValue={7}
-						onChange={handleColorChange}
-					/>
-				</div>
+		<div className="p-4 flex items-center">
+			<Select
+				placeholder="Shape"
+				allowClear
+				maxTagCount={0}
+				suffixIcon={<DownOutlined />}
+				style={{width: '6%'}}
+				onChange={(value) => handleChange('shape', value)}
+				value={filters.shape}
+			>
+				{Shape?.map((shape, i) => (
+					<Select.Option key={i} value={shape}>
+						{shape}
+					</Select.Option>
+				))}
+			</Select>
+
+			{/* Price Range Slider */}
+			<div className="ml-10 my-5">
+				<p className="mb-4">Price:</p>
+				<MultiRangePriceSlider min={0} max={1000} onChange={handlePriceChange} />
+			</div>
+
+			{/* Carat Range Slider */}
+			<div className="ml-10 my-5">
+				<p className="mb-4">Carat:</p>
+				<MultiRangeCaratSlider min={0.5} max={30.0} onChange={handleCaratChange} />
+			</div>
+
+			{/* Color Slider */}
+			<div className="ml-10 my-5 min-w-40">
+				<p className="mb-4">Color:</p>
+				<Slider
+					marks={marks} // Define your `marks` data
+					min={0}
+					max={7}
+					defaultValue={7}
+					onChange={(value) => handleChange('color', value)}
+				/>
 			</div>
 		</div>
 	);
 };
 
 export const FilterJewelry = () => {
-	const [values, setValues] = useState({min: '', max: ''});
-	const [selectedMetals, setSelectedMetals] = useState([]);
+	const [filters, setFilters] = useState({
+		gender: [],
+		diamond_type: [],
+		metal: [],
+		price: {minPrice: '', maxPrice: ''},
+	});
 
-	const handleRangeChange = useCallback(({min, max}) => {
-		setValues({
-			min: min,
-			max: max,
-		});
-	}, []);
+	console.log(filters);
 
-	console.log(values);
-
-	const handleMetalChange = (selected) => {
-		setSelectedMetals(selected);
+	const handleFilterChange = (type, value) => {
+		setFilters((prev) => ({
+			...prev,
+			[type]: value,
+		}));
 	};
 
+	const handlePriceChange = useCallback(({min, max}) => {
+		setFilters((prev) => ({
+			...prev,
+			price: {minPrice: min, maxPrice: max},
+		}));
+	}, []);
+
 	return (
-		<div className="">
-			<div className="mb-4 p-4 flex items-center">
-				{/* Select Metal Dropdown */}
+		<div className="p-4 flex items-center">
+			{['gender', 'diamond_type', 'metal'].map((filterType, index) => (
 				<Select
+					key={index}
 					mode="multiple"
-					placeholder="Metal"
+					placeholder={filterType.replace('_', ' ').toUpperCase()}
 					allowClear
 					maxTagCount={0}
 					suffixIcon={<DownOutlined />}
-					style={{width: '6%'}}
-					onChange={handleMetalChange}
-					value={selectedMetals}
+					className="h-12 mx-5"
+					style={{width: '10%', lineHeight: 160}}
+					onChange={(value) => handleFilterChange(filterType, value)}
+					value={filters[filterType]}
 				>
-					{metalJewelry?.map((metal, i) => (
-						<Select.Option key={i} value={metal}>
-							{metal}
+					{(filterType === 'gender'
+						? genderChoice
+						: filterType === 'diamond_type'
+						? diamondChoice
+						: metalChoice
+					)?.map((item, i) => (
+						<Select.Option key={i} value={item}>
+							{item}
 						</Select.Option>
 					))}
 				</Select>
-				{/* Price Range Slider */}
-				<div className="ml-10 my-5">
-					<p className="mb-4">Price:</p>
-					<MultiRangeSlider min={0} max={1000} onChange={handleRangeChange} />
-				</div>
+			))}
+
+			<div className="ml-10 my-5">
+				<p className="mb-4">Price:</p>
+				<MultiRangePriceSlider min={0} max={1000} onChange={handlePriceChange} />
 			</div>
 		</div>
 	);
