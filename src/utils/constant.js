@@ -355,3 +355,9 @@ export const listJewelry = [
 		rating: 5,
 	},
 ];
+
+export const genderChoice = ['Woman', 'Man', 'Unisex'];
+
+export const diamondChoice = ['Natural Diamond', 'Lab Grown Diamond'];
+
+export const metalChoice = ['White Gold', 'Yellow Gold', 'Platinum'];

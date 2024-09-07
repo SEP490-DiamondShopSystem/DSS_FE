@@ -27,8 +27,6 @@ export const DiamondList = () => {
 		if (diamondList) setDiamond(diamondList);
 	}, [diamondList]);
 
-	console.log('diamond', diamond);
-
 	const handleGridClick = () => {
 		setChangeGrid(true);
 	};
@@ -62,7 +60,10 @@ export const DiamondList = () => {
 			{changeGrid ? (
 				<div className="transition-all duration-300 grid grid-cols-4 gap-10 mb-20 mt-10">
 					{diamond?.map((diamond, i) => (
-						<div key={i} className=" shadow-lg bg-white rounded-lg">
+						<div
+							key={i}
+							className=" shadow-lg bg-white rounded-lg hover:border-2 cursor-pointer"
+						>
 							<div className="w-80">
 								<div
 									className=" flex justify-center mb-5 "

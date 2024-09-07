@@ -1704,3 +1704,32 @@ video {
 .line-through {
 	text-decoration-line: line-through;
 }
+
+.hover\:border-2:hover {
+	border-width: 2px;
+}
+
+.mx-5 {
+	margin-left: 1.25rem /* 20px */;
+	margin-right: 1.25rem /* 20px */;
+}
+
+.w-32 {
+	width: 8rem /* 128px */;
+}
+
+.h-10 {
+	height: 2.5rem /* 40px */;
+}
+
+.min-w-96 {
+	min-width: 24rem /* 384px */;
+}
+
+.min-w-52 {
+	min-width: 13rem /* 208px */;
+}
+
+.max-w-52 {
+	max-width: 13rem /* 208px */;
+}

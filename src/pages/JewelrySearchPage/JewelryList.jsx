@@ -1,18 +1,17 @@
 import React, {useEffect, useState} from 'react';
 
-import {listJewelry} from '../../utils/constant';
 import {Image} from 'antd';
-import jewelryImg from '../../assets/jewelry.png';
 import {useDispatch, useSelector} from 'react-redux';
+import jewelryImg from '../../assets/jewelry.png';
 import {GetAllJewelrySelector} from '../../redux/selectors';
 import {getAllJewelry} from '../../redux/slices/jewelrySlice';
+import {FilterJewelry} from '../../components/Filter/Filter';
 
 export const JewelryList = () => {
 	const jewelryList = useSelector(GetAllJewelrySelector);
 	const dispatch = useDispatch();
-	const [jewelries, setJewelries] = useState();
 
-	console.log(jewelries);
+	const [jewelries, setJewelries] = useState();
 
 	useEffect(() => {
 		dispatch(getAllJewelry());
@@ -24,9 +23,18 @@ export const JewelryList = () => {
 
 	return (
 		<>
+			<div>
+				<FilterJewelry />
+			</div>
+			<div className="text-2xl flex justify-end mt-10">
+				<p className="p-2">200 Results</p>
+			</div>
 			<div className="transition-all duration-300 grid grid-cols-4 gap-10 mb-20 mt-10">
 				{jewelries?.map((jewelry, i) => (
-					<div key={i} className=" shadow-lg bg-white rounded-lg">
+					<div
+						key={i}
+						className="shadow-lg bg-white rounded-lg hover:border-2 cursor-pointer"
+					>
 						<div className="w-80">
 							<div
 								className=" flex justify-center mb-5 "
@@ -34,7 +42,7 @@ export const JewelryList = () => {
 							>
 								<Image src={jewelryImg} alt={jewelry.title} className="" />
 							</div>
-							<div className="mx-10 my-5">
+							<div className="mx-5 my-5">
 								<p>{jewelry.title}</p>
 								<div className="flex mt-2">
 									<p className="line-through" style={{color: '#b0b0b0'}}>
