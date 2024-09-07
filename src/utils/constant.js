@@ -4,7 +4,10 @@ import earrings from '../assets/Earrings.png';
 import necklaces from '../assets/Necklaces.png';
 import rings from '../assets/Rings.png';
 import diamond from '../assets/img-diamond.png';
-import shadows from '@mui/material/styles/shadows';
+import banner_1 from '../assets/diamond-jewelry.png';
+import banner_2 from '../assets/Diamond_rings.png';
+import banner_3 from '../assets/Lab_Grown_Diamonds.png';
+import jewelry from '../assets/jewelry.png';
 
 export const jewelries = [
 	{logo: basic_diamond, title: 'Diamond Basics', link: '/jewelry/diamond-jewelry'},
@@ -221,3 +224,134 @@ export const marks = {
 	6: 'E',
 	7: 'D',
 };
+
+export const listBanner = [{img: banner_1}, {img: banner_2}, {img: banner_3}];
+
+export const listJewelry = [
+	{
+		img: jewelry,
+		title: 'Classic Four-Prong Solitaire Engagement Ring in 18k White Gold',
+		price: '$600',
+		discountPrice: '$450',
+		rating: 5,
+	},
+	{
+		img: jewelry,
+		title: 'Classic Four-Prong Solitaire Engagement Ring in 18k White Gold',
+		price: '$600',
+		discountPrice: '$450',
+		rating: 5,
+	},
+	{
+		img: jewelry,
+		title: 'Classic Four-Prong Solitaire Engagement Ring in 18k White Gold',
+		price: '$600',
+		discountPrice: '$450',
+		rating: 5,
+	},
+	{
+		img: jewelry,
+		title: 'Classic Four-Prong Solitaire Engagement Ring in 18k White Gold',
+		price: '$600',
+		discountPrice: '$450',
+		rating: 5,
+	},
+	{
+		img: jewelry,
+		title: 'Classic Four-Prong Solitaire Engagement Ring in 18k White Gold',
+		price: '$600',
+		discountPrice: '$450',
+		rating: 5,
+	},
+	{
+		img: jewelry,
+		title: 'Classic Four-Prong Solitaire Engagement Ring in 18k White Gold',
+		price: '$600',
+		discountPrice: '$450',
+		rating: 5,
+	},
+	{
+		img: jewelry,
+		title: 'Classic Four-Prong Solitaire Engagement Ring in 18k White Gold',
+		price: '$600',
+		discountPrice: '$450',
+		rating: 5,
+	},
+	{
+		img: jewelry,
+		title: 'Classic Four-Prong Solitaire Engagement Ring in 18k White Gold',
+		price: '$600',
+		discountPrice: '$450',
+		rating: 5,
+	},
+	{
+		img: jewelry,
+		title: 'Classic Four-Prong Solitaire Engagement Ring in 18k White Gold',
+		price: '$600',
+		discountPrice: '$450',
+		rating: 5,
+	},
+	{
+		img: jewelry,
+		title: 'Classic Four-Prong Solitaire Engagement Ring in 18k White Gold',
+		price: '$600',
+		discountPrice: '$450',
+		rating: 5,
+	},
+	{
+		img: jewelry,
+		title: 'Classic Four-Prong Solitaire Engagement Ring in 18k White Gold',
+		price: '$600',
+		discountPrice: '$450',
+		rating: 5,
+	},
+	{
+		img: jewelry,
+		title: 'Classic Four-Prong Solitaire Engagement Ring in 18k White Gold',
+		price: '$600',
+		discountPrice: '$450',
+		rating: 5,
+	},
+	{
+		img: jewelry,
+		title: 'Classic Four-Prong Solitaire Engagement Ring in 18k White Gold',
+		price: '$600',
+		discountPrice: '$450',
+		rating: 5,
+	},
+	{
+		img: jewelry,
+		title: 'Classic Four-Prong Solitaire Engagement Ring in 18k White Gold',
+		price: '$600',
+		discountPrice: '$450',
+		rating: 5,
+	},
+	{
+		img: jewelry,
+		title: 'Classic Four-Prong Solitaire Engagement Ring in 18k White Gold',
+		price: '$600',
+		discountPrice: '$450',
+		rating: 5,
+	},
+	{
+		img: jewelry,
+		title: 'Classic Four-Prong Solitaire Engagement Ring in 18k White Gold',
+		price: '$600',
+		discountPrice: '$450',
+		rating: 5,
+	},
+	{
+		img: jewelry,
+		title: 'Classic Four-Prong Solitaire Engagement Ring in 18k White Gold',
+		price: '$600',
+		discountPrice: '$450',
+		rating: 5,
+	},
+	{
+		img: jewelry,
+		title: 'Classic Four-Prong Solitaire Engagement Ring in 18k White Gold',
+		price: '$600',
+		discountPrice: '$450',
+		rating: 5,
+	},
+];

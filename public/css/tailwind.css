@@ -1580,10 +1580,6 @@ video {
 	height: 14rem /* 224px */;
 }
 
-.gap-10 {
-	gap: 2.5rem /* 40px */;
-}
-
 .p-5 {
 	padding: 1.25rem /* 20px */;
 }
@@ -1703,4 +1699,8 @@ video {
 
 .w-1\/5 {
 	width: 20%;
+}
+
+.line-through {
+	text-decoration-line: line-through;
 }

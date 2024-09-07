@@ -1,6 +1,7 @@
 import React from 'react';
-import {DiamondList} from './DiamondList';
+
 import {FilterDiamond} from '../../components/Filter/Filter';
+import {DiamondList} from './DiamondList';
 
 const DiamondSearchPage = () => {
 	return (
