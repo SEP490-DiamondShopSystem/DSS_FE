@@ -10,6 +10,9 @@ module.exports = {
 				gray: '#707070',
 				tintWhite: '#f3f3f3',
 				white: '#ffffff',
+				red: '#F65252',
+				green: '#00FF38',
+				blue: '#2898FF',
 			},
 			fontFamily: {
 				body: ['"Open Sans"'],

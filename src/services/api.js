@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 const API = 'https://reqres.in/api';
+const API_MOCK = 'https://669f3824b132e2c136fd0909.mockapi.io/api';
 
 // let accessToken =
 // 	localStorage.getItem('user') && JSON.parse(localStorage.getItem('user')).token.accessToken;
@@ -15,7 +16,7 @@ const API = 'https://reqres.in/api';
 // console.log('userId', userId);
 
 export const api = axios.create({
-	baseURL: API,
+	baseURL: API_MOCK,
 	// headers: {
 	// 	authentication: accessToken,
 	// 	'x-client-id': userId,

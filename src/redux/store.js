@@ -4,6 +4,7 @@ import storage from 'redux-persist/lib/storage';
 
 import {userSlice} from './slices/userSlice';
 import {userLoginSlice} from './slices/userLoginSlice';
+import {diamondSlice} from './slices/diamondSlice';
 
 const rootPersistConfig = {
 	key: 'root',
@@ -14,6 +15,7 @@ const rootPersistConfig = {
 const rootReducer = combineReducers({
 	userSlice: userSlice.reducer,
 	userLoginSlice: userLoginSlice.reducer,
+	diamondSlice: diamondSlice.reducer,
 });
 
 const persistedReducer = persistReducer(rootPersistConfig, rootReducer);

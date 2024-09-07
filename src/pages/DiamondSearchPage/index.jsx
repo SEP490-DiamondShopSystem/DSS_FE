@@ -1,10 +1,11 @@
 import React from 'react';
 import {DiamondList} from './DiamondList';
+import {FilterDiamond} from '../../components/Filter/Filter';
 
 const DiamondSearchPage = () => {
 	return (
-		<div>
-			DiamondSearchPage
+		<div className="m-20">
+			<FilterDiamond />
 			<DiamondList />
 		</div>
 	);

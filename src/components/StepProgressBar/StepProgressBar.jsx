@@ -8,7 +8,7 @@ const {Step} = Steps;
 const steps = [
 	{title: 'Page 1', path: '/profile', imgSrc: '/path-to-image1.png'},
 	{title: 'Page 2', path: '/my-info', imgSrc: '/path-to-image2.png'},
-	{title: 'Page 3', path: '/my-orders', imgSrc: '/path-to-image3.png'},
+	{title: 'Choose a Diamond', path: '/diamond/search', imgSrc: '/path-to-image3.png'},
 ];
 
 const StepProgressBar = () => {
@@ -17,7 +17,7 @@ const StepProgressBar = () => {
 	const currentIndex = steps.findIndex((step) => step.path === currentPath);
 
 	return (
-		<div className="mt-10">
+		<div className="mt-20">
 			<Steps
 				current={currentIndex}
 				direction="horizontal"

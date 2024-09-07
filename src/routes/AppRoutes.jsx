@@ -20,35 +20,19 @@ export const AppRouters = () => {
 			<Route path="/jewelry" element={<HomeJewelryPage />} />
 			<Route path="/coupons" element={<CouponPage />} />
 			<Route path="/promotion" element={<PromotionPage />} />
-			<Route
-				path="/profile"
-				element={
-					<>
-						<StepProgressBar />
-						<ProfilePage />
-					</>
-				}
-			/>
-			<Route
-				path="/my-orders"
-				element={
-					<>
-						<StepProgressBar />
-						<MyOrderPage />
-					</>
-				}
-			/>
-			<Route
-				path="/my-info"
-				element={
-					<>
-						<StepProgressBar />
-						<MyInfoPage />
-					</>
-				}
-			/>
+			<Route path="/profile" element={<ProfilePage />} />
+			<Route path="/my-orders" element={<MyOrderPage />} />
+			<Route path="/my-info" element={<MyInfoPage />} />
 			<Route path="/diamond-lab/search" element={<DiamondLabPage />} />
-			<Route path="/diamond/search" element={<DiamondSearchPage />} />
+			<Route
+				path="/diamond/search"
+				element={
+					<>
+						<StepProgressBar />
+						<DiamondSearchPage />
+					</>
+				}
+			/>
 
 			<Route path="*" element={<NotFoundPage />} />
 		</Routes>
