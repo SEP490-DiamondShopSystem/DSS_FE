@@ -26,7 +26,10 @@ export const BannerDiamond = () => {
 						>
 							Shop Diamond
 						</button>
-						<button className="px-6 py-2 bg-primary rounded-lg uppercase font-semibold hover:bg-second w-full h-12">
+						<button
+							className="px-6 py-2 bg-primary rounded-lg uppercase font-semibold hover:bg-second w-full h-12"
+							onClick={() => navigate('/jewelry')}
+						>
 							Shop Jewelry
 						</button>
 					</div>

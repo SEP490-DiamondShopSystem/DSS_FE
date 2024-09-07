@@ -13,6 +13,7 @@ const NavLinks = () => {
 			col: 2,
 			submenu: true,
 			mess: 'View All Diamond',
+			link: '/diamond/search',
 			sublinks: [
 				{
 					Head: 'Shop Diamond by Shape',
@@ -44,6 +45,7 @@ const NavLinks = () => {
 			ref: 'jewelry',
 			col: 3,
 			submenu: true,
+			link: '/jewelry/search',
 			mess: 'View All Jewelry',
 			sublinks: [
 				{
@@ -144,9 +146,12 @@ const NavLinks = () => {
 												alt="Logo"
 												className="max-h-40 max-w-40"
 											/>
-											<div className="normal-case md:cursor-pointer hover:text-primary">
+											<Link
+												to={link.link}
+												className="normal-case md:cursor-pointer hover:text-primary"
+											>
 												{link.mess}
-											</div>
+											</Link>
 										</div>
 									</div>
 								</div>

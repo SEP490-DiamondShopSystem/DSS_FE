@@ -4,22 +4,15 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {Helmet} from 'react-helmet';
 import {BannerDiamond} from './../../components/Banner/Banner';
 import {list} from '../../utils/constant';
-import {FilterJewelry} from '../../components/Filter/FilterJewelry';
+import {FilterJewelry} from '../../components/Filter/Filter';
 
 const HomePage = () => {
-	const [priceRange, setPriceRange] = useState([0, 100]);
-
-	console.log(priceRange);
-
-	const handleRangeChange = (values) => {
-		setPriceRange(values);
-	};
 	return (
 		<div>
 			<Helmet>
 				<title>Diamond Shop</title>
 			</Helmet>
-			<FilterJewelry />
+
 			<BannerDiamond />
 			<div className="grid grid-cols-4 divide-x-0 my-5">
 				{list.map((list, i) => (
