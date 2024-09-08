@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 
 import {Image} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
-import jewelryImg from '../../assets/jewelry.png';
+import jewelryImg from '../../assets/ring_classic.png';
 import {GetAllJewelrySelector} from '../../redux/selectors';
 import {getAllJewelry} from '../../redux/slices/jewelrySlice';
 import {FilterJewelry} from '../../components/Filter/Filter';
@@ -40,7 +40,12 @@ export const JewelryList = () => {
 								className=" flex justify-center mb-5 "
 								style={{background: '#b8b7b5'}}
 							>
-								<Image src={jewelryImg} alt={jewelry.title} className="" />
+								<Image
+									src={jewelryImg}
+									alt={jewelry.title}
+									className=""
+									preview={false}
+								/>
 							</div>
 							<div className="mx-5 my-5">
 								<p>{jewelry.title}</p>

@@ -6,9 +6,13 @@ import {useLocation} from 'react-router-dom';
 const {Step} = Steps;
 
 const steps = [
-	{title: 'Page 1', path: '/profile', imgSrc: '/path-to-image1.png'},
-	{title: 'Page 2', path: '/my-info', imgSrc: '/path-to-image2.png'},
-	{title: 'Choose a Diamond', path: '/diamond/search', imgSrc: '/path-to-image3.png'},
+	{
+		title: 'Choose a Setting',
+		path: '/jewelry/design-your-own-ring/:id',
+		imgSrc: '/path-to-image1.png',
+	},
+	{title: 'Choose a Diamond', path: '/diamond/search', imgSrc: '/path-to-image2.png'},
+	{title: 'Complete Ring', path: '/diamond/search', imgSrc: '/path-to-image3.png'},
 ];
 
 const StepProgressBar = () => {
@@ -21,7 +25,7 @@ const StepProgressBar = () => {
 			<Steps
 				current={currentIndex}
 				direction="horizontal"
-				style={{width: '600px', margin: '0 auto'}}
+				style={{width: '900px', margin: '0 auto'}}
 				className="bg-white p-4 rounded-full"
 			>
 				{steps.map((step, index) => (
