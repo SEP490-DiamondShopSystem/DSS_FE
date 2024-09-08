@@ -92,6 +92,7 @@ export const DiamondList = () => {
 										src={diamondImg}
 										alt={diamond.title}
 										className="w-full"
+										preview={false}
 									/>
 								</div>
 								<div className="flex justify-between items-center w-4/5 ml-5">

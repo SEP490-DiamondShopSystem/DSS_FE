@@ -224,6 +224,22 @@ export const marks = {
 	6: 'E',
 	7: 'D',
 };
+export const marksCut = {
+	0: 'Good',
+	1: 'Very Good',
+	2: 'Ideal',
+	3: 'Astor ideal',
+};
+export const marksClarity = {
+	0: 'SI2',
+	1: 'SI1',
+	2: 'VS2',
+	3: 'VS1',
+	4: 'VVS2',
+	5: 'VVS1',
+	6: 'IF',
+	7: 'FL',
+};
 
 export const listBanner = [{img: banner_1}, {img: banner_2}, {img: banner_3}];
 
