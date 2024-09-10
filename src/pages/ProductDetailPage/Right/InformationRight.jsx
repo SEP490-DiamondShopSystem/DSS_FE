@@ -10,6 +10,9 @@ const metalType = {
 	priceDiscount: '$465',
 	productDetail:
 		'Show your love with this 14k white gold engagement ring, featuring an east west prong setting for a brilliant solitaire diamond.',
+	clarity: '',
+	cut: '',
+	color: '',
 	options: [
 		{
 			metal: '14k',
@@ -31,7 +34,7 @@ const metalType = {
 		},
 	],
 };
-export const InformationRight = () => {
+export const InformationRight = ({toggleSidebar}) => {
 	const [showDetail, setDetail] = useState(false);
 	const [showSecureShopping, setSecureShopping] = useState(false);
 	const [showProductWarrantly, setProductWarrantly] = useState(false);
@@ -134,6 +137,7 @@ export const InformationRight = () => {
 				<Button
 					type="text"
 					className="border py-7 px-14 font-bold text-lg bg-primary rounded hover:bg-second w-full"
+					onClick={toggleSidebar}
 				>
 					SELECT THIS SETTING
 				</Button>
