@@ -8,7 +8,7 @@ import HomeJewelryPage from '../pages/Home/HomeJewelryPage';
 import HomePage from '../pages/Home/HomePage';
 import NotFoundPage from '../pages/NotFoundPage/NotFoundPage';
 import MyInfoPage from '../pages/ProfilePage/MyInfoPage';
-import MyOrderPage from '../pages/ProfilePage/MyOrderPage';
+import MyOrderPage from '../pages/ProfilePage/MyOrderPage/MyOrderPage';
 import ProfilePage from '../pages/ProfilePage/ProfilePage';
 import PromotionPage from '../pages/PromotionPage/PromotionPage';
 import DiamondSearchPage from '../pages/DiamondSearchPage';

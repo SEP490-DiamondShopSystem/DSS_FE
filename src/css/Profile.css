@@ -1,0 +1,5 @@
+.custom-table-header .ant-table-thead > tr > th {
+	background-color: #dec986 !important;
+	/* color: white; */
+	font-weight: bold; /* Chữ đậm */
+}
