@@ -54,27 +54,27 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal}) => {
 		{
 			title: 'Id',
 			dataIndex: 'id',
-			key: 'id',
+			id: 'id',
 		},
 		{
 			title: 'Name',
 			dataIndex: 'name',
-			key: 'name',
+			id: 'name',
 		},
 		{
 			title: 'Unit Price',
 			dataIndex: 'unitPrice',
-			key: 'unitPrice',
+			id: 'unitPrice',
 		},
 		{
 			title: 'Quantity',
 			dataIndex: 'quantity',
-			key: 'quantity',
+			id: 'quantity',
 		},
 		{
 			title: 'Total Price',
 			dataIndex: 'totalPrice',
-			key: 'totalPrice',
+			id: 'totalPrice',
 		},
 	];
 
@@ -268,10 +268,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal}) => {
 									</Row>
 								</div>
 							))}
-							<Row
-								justify="end"
-								style={{marginTop: 32, backgroundColor: '#f0f0f0', padding: 16}}
-							>
+							<Row justify="end" className="bg-lightGray my-3 p-4">
 								<Col className="mr-10">
 									<Text strong>Total Price:</Text>
 								</Col>
