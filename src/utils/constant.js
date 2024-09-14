@@ -377,3 +377,166 @@ export const genderChoice = ['Woman', 'Man', 'Unisex'];
 export const diamondChoice = ['Natural Diamond', 'Lab Grown Diamond'];
 
 export const metalChoice = ['White Gold', 'Yellow Gold', 'Platinum'];
+
+export const initialData = [
+	{
+		id: '1',
+		orderId: '#0dce',
+		orderTime: 'August 19, 2024',
+		product: 'French Pavé Diamond Engagement Ring in 14k White Gold (1/4 ct. tw.)',
+		price: '$1,020',
+		status: 'Completed',
+	},
+	{
+		id: '2',
+		orderId: '#9dvc',
+		orderTime: 'August 19, 2024',
+		product: 'French Pavé Diamond Engagement Ring in 14k White Gold (1/4 ct. tw.)',
+		price: '$1,020',
+		status: 'Pending',
+	},
+	{
+		id: '3',
+		orderId: '#8ska',
+		orderTime: 'August 19, 2024',
+		product: 'French Pavé Diamond Engagement Ring in 14k White Gold (1/4 ct. tw.)',
+		price: '$1,020',
+		status: 'Completed',
+	},
+	{
+		id: '4',
+		orderId: '#1c4b',
+		orderTime: 'September 12, 2024',
+		product: 'Round Diamond Eternity Ring in Platinum (2 ct. tw.)',
+		price: '$2,500',
+		status: 'Pending',
+	},
+	{
+		id: '5',
+		orderId: '#2b9a',
+		orderTime: 'September 11, 2024',
+		product: 'Petite Micropavé Diamond Engagement Ring in 14k White Gold (1/4 ct. tw.)',
+		price: '$1,250',
+		status: 'Processing',
+	},
+	{
+		id: '6',
+		orderId: '#3d4f',
+		orderTime: 'September 10, 2024',
+		product: 'Emerald-Cut Sapphire Ring in Platinum',
+		price: '$5,600',
+		status: 'Completed',
+	},
+	{
+		id: '7',
+		orderId: '#4e7h',
+		orderTime: 'September 9, 2024',
+		product: 'Cushion-Cut Diamond Ring in 14k Rose Gold',
+		price: '$3,400',
+		status: 'Pending',
+	},
+];
+
+export const initialOrderData = [
+	{
+		id: '1',
+		name: 'Round Diamond 3.5 Carat IF',
+		unitPrice: '3,357,000 ₫',
+		quantity: 1,
+		totalPrice: '3,357,000 ₫',
+	},
+	{
+		id: '1',
+		name: 'Round Diamond 3.5 Carat IF',
+		unitPrice: '3,357,000 ₫',
+		quantity: 1,
+		totalPrice: '3,357,000 ₫',
+	},
+	{
+		id: '1',
+		name: 'Round Diamond 3.5 Carat IF',
+		unitPrice: '3,357,000 ₫',
+		quantity: 1,
+		totalPrice: '3,357,000 ₫',
+	},
+];
+
+// export const initialOrderData = {
+// 	items: [
+// 		{
+// 			id: '1',
+// 			name: 'Round Diamond 3.5 Carat IF',
+// 			unitPrice: '3,357,000 ₫',
+// 			quantity: 1,
+// 			totalPrice: '3,357,000 ₫',
+// 		},
+// 		{
+// 			id: '2',
+// 			name: 'Round Diamond 3.5 Carat IF',
+// 			unitPrice: '3,357,000 ₫',
+// 			quantity: 1,
+// 			totalPrice: '3,357,000 ₫',
+// 		},
+// 		{
+// 			id: '3',
+// 			name: 'Round Diamond 3.5 Carat IF',
+// 			unitPrice: '3,357,000 ₫',
+// 			quantity: 1,
+// 			totalPrice: '3,357,000 ₫',
+// 		},
+// 	],
+// 	additionalData: [
+// 		{
+// 			id: '4',
+// 			name: 'Round Diamond 4.0 Carat IF',
+// 			unitPrice: '4,357,000 ₫',
+// 			quantity: 2,
+// 			totalPrice: '8,714,000 ₫',
+// 		},
+// 		{
+// 			id: '5',
+// 			name: 'Round Diamond 5.0 Carat IF',
+// 			unitPrice: '5,357,000 ₫',
+// 			quantity: 3,
+// 			totalPrice: '16,071,000 ₫',
+// 		},
+// 	],
+// };
+
+export const statusTimeLine = [
+	{
+		status: 'ordered',
+		namePrev: 'Order Placed',
+		nameNext: 'Order Placed',
+		date: '23/08/2024 09:30',
+		description: 'Order is placed',
+	},
+	{
+		status: 'payment',
+		namePrev: 'Payment Info Confirmed',
+		nameNext: 'Payment Info Confirmed',
+		date: '23/08/2024 10:30',
+		description: 'Order payment confirmed',
+	},
+	{
+		status: 'shipping',
+		namePrev: 'To Ship',
+		nameNext: 'Order Shipped Out',
+		date: '23/08/2024 11:30',
+		description: 'Shop is preparing goods',
+	},
+	{
+		status: 'received',
+		namePrev: 'To Receive',
+		nameNext: 'Order Received',
+		date: '23/08/2024 12:30',
+		description: 'Shop has shipped the order',
+	},
+	{
+		status: 'completed',
+		namePrev: 'To Complete',
+		nameNext: 'Order Completed',
+		date: '23/08/2024 13:30',
+		description: 'Customer has received the order',
+	},
+];
