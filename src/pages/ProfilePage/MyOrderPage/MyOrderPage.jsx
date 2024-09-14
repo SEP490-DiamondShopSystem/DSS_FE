@@ -5,27 +5,31 @@ import {Helmet} from 'react-helmet';
 import NavbarProfile from '../../../components/NavbarProfile';
 import {initialData} from '../../../utils/constant';
 import {OrderDetailModal} from './OrderDetailModal';
+import {OrderInvoiceModal} from './OrderInvoiceModal';
 
 const MyOrderPage = () => {
 	const columns = [
 		{
-			title: () => <div className="text-center">Order Id</div>,
+			title: 'Order ID',
 			dataIndex: 'orderId',
+			align: 'center',
 		},
 		{
-			title: () => <div className="text-center">Order Time</div>,
+			title: 'Order Time',
 			dataIndex: 'orderTime',
+			align: 'center',
 		},
 		{
 			title: () => <div className="text-center">Product</div>,
 			dataIndex: 'product',
 		},
 		{
-			title: () => <div className="text-center">Price</div>,
+			title: 'Price',
 			dataIndex: 'price',
+			align: 'center',
 		},
 		{
-			title: () => <div className="text-center">Status</div>,
+			title: 'Status',
 			dataIndex: 'status',
 			render: (status) => {
 				let color = 'red';
@@ -44,6 +48,7 @@ const MyOrderPage = () => {
 					</div>
 				);
 			},
+			align: 'center',
 		},
 		{
 			title: () => <div className="text-center">Action</div>,
@@ -59,26 +64,27 @@ const MyOrderPage = () => {
 							Detail
 						</Button>
 
-						{/* <Popconfirm
-						title="Sure to delete?"
-						onConfirm={() => handleDelete(record.id)}
-					> */}
 						<Button
 							type="text"
 							className="p-2 bg-primary border rounded-lg  transition-colors duration-300"
+							onClick={toggleInvoiceModal}
 						>
 							Invoice
 						</Button>
-						{/* </Popconfirm> */}
 					</>
 				) : null,
+			align: 'center',
 		},
 	];
 	const [dataSource, setDataSource] = useState(initialData);
 	const [openDetail, setOpenDetail] = useState(false);
+	const [openInvoice, setOpenInvoice] = useState(false);
 
 	const toggleDetailModal = () => {
 		setOpenDetail(!openDetail);
+	};
+	const toggleInvoiceModal = () => {
+		setOpenInvoice(!openInvoice);
 	};
 
 	return (
@@ -101,6 +107,7 @@ const MyOrderPage = () => {
 				</div>
 			</div>
 			<OrderDetailModal toggleDetailModal={toggleDetailModal} openDetail={openDetail} />
+			<OrderInvoiceModal toggleInvoiceModal={toggleInvoiceModal} openInvoice={openInvoice} />
 		</div>
 	);
 };

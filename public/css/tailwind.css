@@ -2140,3 +2140,11 @@ video {
 .max-h-8 {
 	max-height: 2rem /* 32px */;
 }
+.bg-second {
+	--tw-bg-opacity: 1;
+	background-color: rgb(255 237 153 / var(--tw-bg-opacity)) /* #ffed99 */;
+}
+
+.mb-5 {
+	margin-bottom: 1.25rem /* 20px */;
+}
