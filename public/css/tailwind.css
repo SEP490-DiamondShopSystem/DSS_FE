@@ -2148,3 +2148,8 @@ video {
 .mb-5 {
 	margin-bottom: 1.25rem /* 20px */;
 }
+
+.mx-4 {
+	margin-left: 1rem /* 16px */;
+	margin-right: 1rem /* 16px */;
+}

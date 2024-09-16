@@ -14,6 +14,7 @@ import PromotionPage from '../pages/PromotionPage/PromotionPage';
 import DiamondSearchPage from '../pages/DiamondSearchPage';
 import JewelrySearchPage from '../pages/JewelrySearchPage';
 import ProductDetailPage from '../pages/ProductDetailPage';
+import DiamondDetailPage from '../pages/DiamonDetailPage';
 
 export const AppRouters = () => {
 	return (
@@ -27,6 +28,7 @@ export const AppRouters = () => {
 			<Route path="/my-info" element={<MyInfoPage />} />
 			<Route path="/diamond-lab/search" element={<DiamondLabPage />} />
 			<Route path="/jewelry/search" element={<JewelrySearchPage />} />
+			<Route path="/diamond-detail/:id" element={<DiamondDetailPage />} />
 			<Route
 				path="/jewelry/design-your-own-ring/:id"
 				element={
