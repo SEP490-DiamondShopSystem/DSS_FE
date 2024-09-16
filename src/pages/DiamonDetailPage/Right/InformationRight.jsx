@@ -5,32 +5,18 @@ import {Button, Rate} from 'antd';
 import React, {useState} from 'react';
 
 const metalType = {
-	name: 'Heirloom Petite Milgrain Engagement Ring IN',
-	price: '$620',
-	priceDiscount: '$465',
-	productDetail:
-		'Show your love with this 14k white gold engagement ring, featuring an east west prong setting for a brilliant solitaire diamond.',
-	clarity: '',
-	cut: '',
-	color: '',
+	name: '1.00 Carat Round Diamond',
+	price: '$465',
+	productDetail: 'This 1.00 round H diamond is sold exclusively on Blue Nile.',
+	GIA_report:
+		'This is the report which documents the specific characteristics of a diamond, issued by the GIA, which is among the most respected organizations in the diamond industry.',
+	ship: 'Monday, August 26',
 	options: [
 		{
-			metal: '14k',
-			metalSelect: '14k White Gold',
-			color: 'gray',
-			ship: 'Monday, August 26',
-		},
-		{
-			metal: '14k',
-			metalSelect: '14k Yellow Gold',
-			color: 'second',
-			ship: 'Friday, August 30',
-		},
-		{
-			metal: '14k',
-			metalSelect: '14k Rose Gold',
-			color: 'red',
-			ship: 'Sunday, August 25',
+			carat: '1.00ct',
+			clarity: 'VS2 Clarity',
+			color: 'H Color',
+			cut: 'Very Good',
 		},
 	],
 };
@@ -49,28 +35,11 @@ export const InformationRight = ({toggleSidebar}) => {
 		setProductWarrantly(!showProductWarrantly);
 	};
 
-	// State to store the selected metal
-	const [selectedMetal, setSelectedMetal] = useState(() => {
-		// Get the saved metal from localStorage, default to first metal if not present
-		const savedMetal = localStorage.getItem('selectedMetal');
-		return savedMetal ? JSON.parse(savedMetal) : metalType.options[0];
-	});
-
-	// Function to handle metal selection
-	const handleSelectMetal = (metal) => {
-		setSelectedMetal(metal);
-		console.log(metal);
-
-		localStorage.setItem('selectedMetal', JSON.stringify(metal));
-	};
-
 	return (
 		<div>
-			<div className="border-b border-tintWhite">
-				<h1 className="text-3xl">
-					{metalType.name} {selectedMetal?.metalSelect}
-				</h1>
-				<div className="my-5 flex">
+			<div className="border-tintWhite">
+				<h1 className="text-3xl">{metalType.name}</h1>
+				{/* <div className="my-5 flex">
 					<Rate
 						allowHalf
 						defaultValue={5}
@@ -78,9 +47,9 @@ export const InformationRight = ({toggleSidebar}) => {
 						disabled
 					/>
 					<p className="ml-5">477 Reviews</p>
-				</div>
+				</div> */}
 				<div className="font-semibold my-2">
-					Ships as a loose diamond by: {selectedMetal?.ship}
+					Ships as a loose diamond by: {metalType?.ship}
 				</div>
 				<div className="flex mb-2">
 					<div className="font-semibold  text-green cursor-pointer">
@@ -91,8 +60,26 @@ export const InformationRight = ({toggleSidebar}) => {
 						Free Overnight Shipping
 					</div>
 				</div>
+				<div>
+					{metalType?.options?.map((metal, i) => (
+						<div className="flex items-center text-sm">
+							<p className="p-2" style={{backgroundColor: '#f7f7f7'}}>
+								{metal.carat}
+							</p>
+							<p className="ml-4 p-2" style={{backgroundColor: '#f7f7f7'}}>
+								{metal.color}
+							</p>
+							<p className="ml-4 p-2" style={{backgroundColor: '#f7f7f7'}}>
+								{metal.clarity}
+							</p>
+							<p className="ml-4 p-2" style={{backgroundColor: '#f7f7f7'}}>
+								{metal.cut}
+							</p>
+						</div>
+					))}
+				</div>
 			</div>
-			<div>
+			{/* <div>
 				<div className="my-5 flex items-center">
 					<div className="font-semibold">Metal Type</div>
 					<div className={`font-semibold text-xl pl-4 text-primary`}>
@@ -118,20 +105,17 @@ export const InformationRight = ({toggleSidebar}) => {
 						))}
 					</div>
 				</div>
-			</div>
+			</div> */}
 			<div className="border-y border-tintWhite py-5 my-5">
 				<div className="flex items-center">
-					<p className="line-through text-gray decoration-gray text-2xl">
-						{metalType.price}
-					</p>
-					<p className="font-semibold pl-2 text-2xl">{metalType.priceDiscount}</p>
-					<div className="text-sm pl-2">(Setting Price)</div>
+					<p className="font-semibold pl-2 text-2xl">{metalType.price}</p>
+					<div className="text-sm pl-2">(Diamond Price)</div>
 				</div>
-				<div>
+				{/* <div>
 					<div className="text-xl pt-2 font-semibold">
 						*Discount code is applied automatically
 					</div>
-				</div>
+				</div> */}
 			</div>
 			<div className="flex justify-between items-center mt-5">
 				<Button
@@ -139,7 +123,7 @@ export const InformationRight = ({toggleSidebar}) => {
 					className="border py-7 px-14 font-bold text-lg bg-primary rounded hover:bg-second w-full"
 					onClick={toggleSidebar}
 				>
-					SELECT THIS SETTING
+					SELECT THIS DIAMOND
 				</Button>
 			</div>
 			<div className="my-10">
@@ -192,7 +176,7 @@ export const InformationRight = ({toggleSidebar}) => {
 				<div className="border-b pb-4 my-4 cursor-pointer" onClick={toggleSecureShopping}>
 					<div className="flex justify-between">
 						<div className="text-black m-4 px-4 rounded-lg focus:outline-none font-semibold">
-							Secure Shopping
+							GIA Grading Report
 						</div>
 						<div className="m-4 px-4 rounded-lg focus:outline-none">
 							{showSecureShopping ? <MinusOutlined /> : <PlusOutlined />}
@@ -204,18 +188,14 @@ export const InformationRight = ({toggleSidebar}) => {
 						}`}
 					>
 						<div className="flex justify-between px-4 py-2">
-							<span>
-								We want to make sure your shopping experience exceeds your
-								expectations, so we have taken measures to guarantee your orders
-								will be safe and secure, from our door to yours.
-							</span>
+							<span>{metalType.GIA_report}</span>
 						</div>
 					</div>
 				</div>
 				<div className="my-4 cursor-pointer" onClick={toggleProductWarrantly}>
 					<div className="flex justify-between">
 						<div className="text-black m-4 px-4 rounded-lg focus:outline-none font-semibold">
-							Lifetime Product Warranty
+							Lifetime Diamond Upgrade Program
 						</div>
 						<div className="m-4 px-4 rounded-lg focus:outline-none">
 							{showProductWarrantly ? <MinusOutlined /> : <PlusOutlined />}
@@ -228,8 +208,10 @@ export const InformationRight = ({toggleSidebar}) => {
 					>
 						<div className="flex justify-between px-4 py-2">
 							<span>
-								We stand behind our products and warrant that all items will be free
-								from manufacturing defects for the life of the products.
+								Blue Nile is pleased to offer a lifetime diamond upgrade program on
+								all certified diamonds. Simply call a Diamond & Jewelry Consultant
+								at 012345678 to learn more about our upgrade program and to select
+								your new diamond.
 							</span>
 						</div>
 					</div>
