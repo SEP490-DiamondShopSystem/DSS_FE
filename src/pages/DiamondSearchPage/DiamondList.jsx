@@ -10,9 +10,11 @@ import {useDispatch, useSelector} from 'react-redux';
 import diamondImg from '../../assets/img-diamond.png';
 import {GetAllDiamondSelector} from '../../redux/selectors';
 import {getAllDiamond} from '../../redux/slices/diamondSlice';
+import {useNavigate} from 'react-router-dom';
 
 export const DiamondList = () => {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const diamondList = useSelector(GetAllDiamondSelector);
 
 	const [changeGrid, setChangeGrid] = useState(false);
@@ -62,7 +64,9 @@ export const DiamondList = () => {
 					{diamond?.map((diamond, i) => (
 						<div
 							key={i}
-							className=" shadow-lg bg-white rounded-lg hover:border-2 cursor-pointer"
+							className=" shadow-lg bg-white border-2 border-white rounded-lg hover:border-2 hover:border-black cursor-pointer"
+							// onClick={() => navigate(`/diamond-detail/${diamond.id}`)}
+							onClick={() => navigate(`/diamond-detail/1`)}
 						>
 							<div className="w-80">
 								<div
@@ -82,7 +86,11 @@ export const DiamondList = () => {
 			) : (
 				<div className="transition-all duration-300 mb-20 mt-10">
 					{diamond?.map((diamond, i) => (
-						<div key={i} className="shadow-lg bg-white rounded-lg">
+						<div
+							key={i}
+							className="shadow-lg bg-white rounded-lg cursor-pointer"
+							onClick={() => navigate(`/diamond-detail/1`)}
+						>
 							<div className="flex w-full my-10 ">
 								<div
 									className="flex justify-center w-1/5"
