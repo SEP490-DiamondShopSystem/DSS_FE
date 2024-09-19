@@ -1,25 +1,47 @@
-import {MinusOutlined, PlusOutlined} from '@ant-design/icons';
-import {faRefresh, faTruck} from '@fortawesome/free-solid-svg-icons';
+import {CheckCircleFilled, MinusOutlined, PlusOutlined} from '@ant-design/icons';
+import {faRefresh, faRing, faTruck} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {Button, Rate} from 'antd';
+import {Button, Rate, Select, Typography} from 'antd';
 import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 
+const {Text} = Typography;
+
 const metalType = {
-	name: '1.00 Carat Round Diamond',
-	price: '$465',
+	jewelryName: 'Petite Nouveau Six-Prong Solitaire Engagement Ring in 14k White Gold',
+	diamondName: '1.01 Carat H-VS2 Excellent Cut Round Diamond',
+	price: '$1,470',
+	priceDiscount: '$1,102',
 	productDetail: 'This 1.00 round H diamond is sold exclusively on Diamond Shop.',
 	ship: 'Monday, August 26',
-	options: [
-		{
-			carat: '1.00ct',
-			clarity: 'VS2 Clarity',
-			color: 'H Color',
-			cut: 'Very Good',
-		},
-	],
+	totalCarat: '1.01 Ct',
+	carat: '1.00ct',
+	clarity: 'VS2 Clarity',
+	color: 'H Color',
+	cut: 'Very Good',
+	stock: '#18395827',
 };
-export const InformationRight = () => {
+
+const ring = [
+	{
+		value: '1',
+		label: '1',
+	},
+	{
+		value: '2',
+		label: '2',
+	},
+	{
+		value: '3',
+		label: '3',
+	},
+	{
+		value: '4',
+		label: '4',
+		disabled: true,
+	},
+];
+export const InformationRight = ({toggleSidebar}) => {
 	const navigate = useNavigate();
 	const [showDetail, setDetail] = useState(false);
 	const [showSecureShopping, setSecureShopping] = useState(false);
@@ -35,11 +57,17 @@ export const InformationRight = () => {
 		setProductWarrantly(!showProductWarrantly);
 	};
 
+	const handleChange = (value) => {
+		console.log('value', value);
+	};
+
 	return (
 		<div>
 			<div className="border-tintWhite">
-				<h1 className="text-3xl">{metalType.name}</h1>
-				{/* <div className="my-5 flex">
+				<h1 className="text-3xl">
+					{metalType.jewelryName} {metalType.diamondName}
+				</h1>
+				<div className="my-5 flex">
 					<Rate
 						allowHalf
 						defaultValue={5}
@@ -47,7 +75,8 @@ export const InformationRight = () => {
 						disabled
 					/>
 					<p className="ml-5">477 Reviews</p>
-				</div> */}
+				</div>
+				<div></div>
 				<div className="font-semibold my-2">
 					Ships as a loose diamond by: {metalType?.ship}
 				</div>
@@ -61,70 +90,80 @@ export const InformationRight = () => {
 					</div>
 				</div>
 				<div>
-					{metalType?.options?.map((metal, i) => (
-						<div className="flex items-center text-sm">
-							<p className="p-2" style={{backgroundColor: '#f7f7f7'}}>
-								{metal.carat}
-							</p>
-							<p className="ml-4 p-2" style={{backgroundColor: '#f7f7f7'}}>
-								{metal.color}
-							</p>
-							<p className="ml-4 p-2" style={{backgroundColor: '#f7f7f7'}}>
-								{metal.clarity}
-							</p>
-							<p className="ml-4 p-2" style={{backgroundColor: '#f7f7f7'}}>
-								{metal.cut}
-							</p>
-						</div>
-					))}
-				</div>
-			</div>
-			{/* <div>
-				<div className="my-5 flex items-center">
-					<div className="font-semibold">Metal Type</div>
-					<div className={`font-semibold text-xl pl-4 text-primary`}>
-						{selectedMetal?.metalSelect}
-					</div>
-				</div>
-				<div>
-					<div className="flex">
-						{metalType?.options?.map((metal, i) => (
-							<div
-								key={i}
-								className={`${
-									selectedMetal?.metalSelect === metal?.metalSelect
-										? 'border'
-										: ''
-								} m-2 py-2 px-4 rounded-lg cursor-pointer`}
-								onClick={() => handleSelectMetal(metal)} // Save selected metal on click
-							>
-								<div className={`rounded-full border-2 p-1 border-${metal.color}`}>
-									{metal.metal}
+					<Text strong style={{fontSize: '18px'}}>
+						Complete Ring:
+					</Text>
+					<div className="mt-5">
+						<div className="flex justify-between mb-2">
+							<div className="flex">
+								<div className="">
+									<CheckCircleFilled className="text-green" />
+								</div>
+								<div>
+									<div className="ml-5">
+										<p style={{width: 400}}>{metalType.diamondName}</p>
+										<p className="" style={{color: '#d2d5d8'}}>
+											{metalType.cut} · {metalType.color} ·{' '}
+											{metalType.clarity} · {metalType.stock}
+										</p>
+										<p className="text-xl font-semibold">{metalType.price}</p>
+									</div>
 								</div>
 							</div>
-						))}
+							<p className="text-primary cursor-pointer">Change Diamond</p>
+						</div>
+						<div className="flex justify-between mb-2">
+							<div className="flex">
+								<div className="">
+									<FontAwesomeIcon icon={faRing} color="#dec986" />
+								</div>
+								<div>
+									<div className="ml-5">
+										<p style={{width: 400}}>{metalType.jewelryName}</p>
+										<p className="" style={{color: '#d2d5d8'}}>
+											{metalType.stock}
+										</p>
+										<p className="text-xl font-semibold">{metalType.price}</p>
+									</div>
+								</div>
+							</div>
+							<p className="text-primary cursor-pointer">Change Setting</p>
+						</div>
+						<div className="flex items-center">
+							<p className="mr-3">Current Ring Size:</p>
+
+							<Select
+								defaultValue="1"
+								style={{
+									width: 120,
+								}}
+								onChange={handleChange}
+								options={ring}
+							/>
+						</div>
 					</div>
 				</div>
-			</div> */}
-			<div className="border-y border-tintWhite py-5 my-5">
-				<div className="flex items-center">
-					<p className="font-semibold pl-2 text-2xl">{metalType.price}</p>
-					<div className="text-sm pl-2">(Diamond Price)</div>
-				</div>
-				{/* <div>
-					<div className="text-xl pt-2 font-semibold">
-						*Discount code is applied automatically
+				<div className="border-y border-tintWhite py-5 my-5">
+					<div className="flex items-center">
+						<p className="line-through text-gray decoration-gray text-2xl">
+							{metalType.price}
+						</p>
+						<p className="font-semibold pl-2 text-2xl">{metalType.priceDiscount}</p>
 					</div>
-				</div> */}
+					<div>
+						<div className="text-xl pt-2 font-semibold">
+							*Discount code is applied automatically
+						</div>
+					</div>
+				</div>
 			</div>
 			<div className="flex justify-between items-center mt-5">
 				<Button
 					type="text"
 					className="border py-7 px-14 font-bold text-lg bg-primary rounded hover:bg-second w-full"
-					// onClick={() => navigate(`/jewelry-detail/${id}`)}
-					onClick={() => navigate(`/jewelry-detail/1`)}
+					onClick={() => navigate('/cart')}
 				>
-					SELECT THIS DIAMOND
+					ADD TO CART
 				</Button>
 			</div>
 			<div className="my-10">
