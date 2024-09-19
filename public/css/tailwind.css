@@ -2199,3 +2199,11 @@ video {
 .mr-3 {
 	margin-right: 0.75rem /* 12px */;
 }
+
+.w-5 {
+	width: 1.25rem /* 20px */;
+}
+
+.h-5 {
+	height: 1.25rem /* 20px */;
+}
