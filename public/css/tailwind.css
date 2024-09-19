@@ -2153,3 +2153,49 @@ video {
 	margin-left: 1rem /* 16px */;
 	margin-right: 1rem /* 16px */;
 }
+
+.border-lightGray {
+	border-color: dddddd;
+}
+
+.border-lightGray1 {
+	border-color: e4e4e4;
+}
+
+.bottom-0 {
+	bottom: 0px;
+}
+
+.right-5 {
+	right: 1.25rem /* 20px */;
+}
+
+.bottom-10 {
+	bottom: 2.5rem /* 40px */;
+}
+
+.px-8 {
+	padding-left: 2rem /* 32px */;
+	padding-right: 2rem /* 32px */;
+}
+
+.overflow-auto {
+	overflow: auto;
+}
+
+.overflow-visible {
+	overflow: visible;
+}
+
+.overflow-y-auto {
+	overflow-y: auto;
+}
+
+.mx-8 {
+	margin-left: 2rem /* 32px */;
+	margin-right: 2rem /* 32px */;
+}
+
+.mr-3 {
+	margin-right: 0.75rem /* 12px */;
+}

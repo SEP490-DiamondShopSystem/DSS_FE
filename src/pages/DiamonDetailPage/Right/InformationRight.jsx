@@ -121,7 +121,7 @@ export const InformationRight = ({toggleSidebar}) => {
 				<Button
 					type="text"
 					className="border py-7 px-14 font-bold text-lg bg-primary rounded hover:bg-second w-full"
-					onClick={toggleSidebar}
+					// onClick={toggleSidebar}
 				>
 					SELECT THIS DIAMOND
 				</Button>
@@ -153,7 +153,7 @@ export const InformationRight = ({toggleSidebar}) => {
 					</div>
 				</div>
 			</div>
-			<div className="border-y mr-36">
+			<div className="border-y ">
 				<div className="border-b pb-4 my-4 cursor-pointer" onClick={toggleDetail}>
 					<div className="flex justify-between">
 						<div className="text-black m-4 px-4 rounded-lg focus:outline-none font-semibold">

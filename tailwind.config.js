@@ -16,6 +16,7 @@ module.exports = {
 				// lightGray: '#e9eaec',
 				offWhite: '#f7f7f7',
 				lightGray: 'dddddd',
+				lightGray1: 'e4e4e4',
 			},
 			fontFamily: {
 				body: ['"Open Sans"'],

@@ -169,7 +169,7 @@ export const InformationRight = ({toggleSidebar}) => {
 					</div>
 				</div>
 			</div>
-			<div className="border-y mr-36">
+			<div className="border-y">
 				<div className="border-b pb-4 my-4 cursor-pointer" onClick={toggleDetail}>
 					<div className="flex justify-between">
 						<div className="text-black m-4 px-4 rounded-lg focus:outline-none font-semibold">
