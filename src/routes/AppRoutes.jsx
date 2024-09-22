@@ -1,21 +1,20 @@
 import React from 'react';
 import {Route, Routes} from 'react-router-dom';
 
-import StepProgressBar from '../components/StepProgressBar/StepProgressBar';
 import CouponPage from '../pages/CouponPage/CouponPage';
+import DiamondDetailPage from '../pages/DiamonDetailPage';
 import DiamondLabPage from '../pages/DiamondLabPage/DiamondLabPage';
+import DiamondSearchPage from '../pages/DiamondSearchPage';
+import FinishProductPage from '../pages/FinishProductPage';
 import HomeJewelryPage from '../pages/Home/HomeJewelryPage';
 import HomePage from '../pages/Home/HomePage';
+import JewelrySearchPage from '../pages/JewelrySearchPage';
 import NotFoundPage from '../pages/NotFoundPage/NotFoundPage';
+import ProductDetailPage from '../pages/ProductDetailPage';
 import MyInfoPage from '../pages/ProfilePage/MyInfoPage';
 import MyOrderPage from '../pages/ProfilePage/MyOrderPage/MyOrderPage';
 import ProfilePage from '../pages/ProfilePage/ProfilePage';
 import PromotionPage from '../pages/PromotionPage/PromotionPage';
-import DiamondSearchPage from '../pages/DiamondSearchPage';
-import JewelrySearchPage from '../pages/JewelrySearchPage';
-import ProductDetailPage from '../pages/ProductDetailPage';
-import DiamondDetailPage from '../pages/DiamonDetailPage';
-import FinishProductPage from '../pages/FinishProductPage';
 
 export const AppRouters = () => {
 	return (
@@ -29,23 +28,31 @@ export const AppRouters = () => {
 			<Route path="/my-info" element={<MyInfoPage />} />
 			<Route path="/diamond-lab/search" element={<DiamondLabPage />} />
 			<Route path="/jewelry/search" element={<JewelrySearchPage />} />
-			<Route path="/diamond-detail/:id" element={<DiamondDetailPage />} />
-			<Route path="/jewelry-detail/:id" element={<FinishProductPage />} />
+			<Route path="/diamond/search" element={<DiamondSearchPage />} />
 			<Route
 				path="/jewelry/design-your-own-ring/:id"
 				element={
 					<>
-						<StepProgressBar />
+						{/* <StepProgressBar1 /> */}
 						<ProductDetailPage />
 					</>
 				}
 			/>
 			<Route
-				path="/diamond/search"
+				path="/diamond-detail/:id"
 				element={
 					<>
-						<StepProgressBar />
-						<DiamondSearchPage />
+						{/* <StepProgressBar1 /> */}
+						<DiamondDetailPage />
+					</>
+				}
+			/>
+			<Route
+				path="/completed-jewelry/:id"
+				element={
+					<>
+						{/* <StepProgressBar1 /> */}
+						<FinishProductPage />
 					</>
 				}
 			/>

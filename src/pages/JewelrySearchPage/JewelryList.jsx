@@ -6,8 +6,10 @@ import jewelryImg from '../../assets/ring_classic.png';
 import {GetAllJewelrySelector} from '../../redux/selectors';
 import {getAllJewelry} from '../../redux/slices/jewelrySlice';
 import {FilterJewelry} from '../../components/Filter/Filter';
+import {useNavigate} from 'react-router-dom';
 
 export const JewelryList = () => {
+	const navigate = useNavigate();
 	const jewelryList = useSelector(GetAllJewelrySelector);
 	const dispatch = useDispatch();
 
@@ -27,17 +29,18 @@ export const JewelryList = () => {
 				<FilterJewelry />
 			</div>
 			<div className="text-2xl flex justify-end mt-10">
-				<p className="p-2">200 Results</p>
+				<p className="p-2">200 Kết quả</p>
 			</div>
 			<div className="transition-all duration-300 grid grid-cols-4 gap-10 mb-20 mt-10">
 				{jewelries?.map((jewelry, i) => (
 					<div
 						key={i}
 						className="shadow-lg bg-white rounded-lg hover:border-2 cursor-pointer"
+						onClick={() => navigate(`/jewelry/design-your-own-ring/${jewelry.id}`)}
 					>
 						<div className="w-80">
 							<div
-								className=" flex justify-center mb-5 "
+								className=" flex justify-center mb-5"
 								style={{background: '#b8b7b5'}}
 							>
 								<Image
