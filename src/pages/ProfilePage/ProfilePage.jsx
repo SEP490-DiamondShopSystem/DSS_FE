@@ -1,11 +1,10 @@
 import React, {useState} from 'react';
 
-import {Button, Table, Tag} from 'antd';
+import {Badge, Button, Table, Tag} from 'antd';
 import {Helmet} from 'react-helmet';
 import {useNavigate} from 'react-router-dom';
 import LogoutModal from '../../components/LogModal/LogoutModal';
 import NavbarProfile from '../../components/NavbarProfile';
-import '../../css/Profile.css';
 import {initialData} from '../../utils/constant';
 import {removeLocalStorage} from '../../utils/localstorage';
 
@@ -109,11 +108,17 @@ const ProfilePage = () => {
 								} hover:border-black`}
 								onClick={() => handleStatusClick(statusItem.status)}
 							>
-								<div className="relative p-3">
-									<img src={statusItem.icon} alt="" className="w-14 h-14" />
-									<p className="absolute top-0 right-1 px-2 py-1 rounded-full text-primary bg-gray">
+								<div className="p-3">
+									<Badge
+										count={statusItem.order}
+										color={status === statusItem.status ? 'green' : '#dec986'}
+									>
+										<img src={statusItem.icon} alt="" className="w-14 h-14" />
+									</Badge>
+
+									{/* <p className="absolute top-0 right-1 px-2 py-1 rounded-full text-primary bg-gray">
 										{statusItem.order}
-									</p>
+									</p> */}
 								</div>
 								<div className="ml-5">{statusItem.name}</div>
 							</div>

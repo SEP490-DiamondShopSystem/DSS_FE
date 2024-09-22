@@ -20,7 +20,7 @@ export const BannerJewelry3 = () => {
 					<div className="flex items-center justify-center">
 						<button
 							className="mr-10 px-6 py-2 bg-primary rounded-lg uppercase font-semibold hover:bg-second w-96 h-12"
-							onClick={() => navigate('/diamond/search')}
+							onClick={() => navigate('/jewelry/search')}
 						>
 							Shop Setting
 						</button>

@@ -1,12 +1,20 @@
 import React from 'react';
-import {CarouselComponent} from '../../components/Carousel';
-import {listBanner} from '../../utils/constant';
+
+import {Steps} from 'antd';
+import {items} from '../../components/StepProgressBar/StepProgressBar-1';
 import {JewelryList} from './JewelryList';
 
 const JewelrySearchPage = () => {
 	return (
-		<div className="mx-20">
-			<CarouselComponent listBanner={listBanner} />
+		<div className="mx-32">
+			{/* <CarouselComponent listBanner={listBanner} /> */}
+			<Steps
+				current={0}
+				percent={50}
+				labelPlacement="horizontal"
+				items={items}
+				className="bg-white p-4 rounded-full my-10"
+			/>
 			<JewelryList />
 		</div>
 	);

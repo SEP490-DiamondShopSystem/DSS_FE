@@ -2207,3 +2207,15 @@ video {
 .h-5 {
 	height: 1.25rem /* 20px */;
 }
+
+.mb-10 {
+	margin-bottom: 2.5rem /* 40px */;
+}
+
+.ml-40 {
+	margin-left: 10rem /* 160px */;
+}
+
+.ml-96 {
+	margin-left: 24rem /* 384px */;
+}

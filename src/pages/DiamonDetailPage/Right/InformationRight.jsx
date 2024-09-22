@@ -121,8 +121,8 @@ export const InformationRight = () => {
 				<Button
 					type="text"
 					className="border py-7 px-14 font-bold text-lg bg-primary rounded hover:bg-second w-full"
-					// onClick={() => navigate(`/jewelry-detail/${id}`)}
-					onClick={() => navigate(`/jewelry-detail/1`)}
+					// onClick={() => navigate(`/completed-jewelry/${id}`)}
+					onClick={() => navigate(`/completed-jewelry/1`)}
 				>
 					SELECT THIS DIAMOND
 				</Button>
