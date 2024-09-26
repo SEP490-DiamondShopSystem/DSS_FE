@@ -1,3 +1,5 @@
+import React, {useEffect, useState} from 'react';
+
 import {
 	AppstoreOutlined,
 	HeartFilled,
@@ -5,7 +7,6 @@ import {
 	UnorderedListOutlined,
 } from '@ant-design/icons';
 import {Image} from 'antd';
-import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import diamondImg from '../../assets/img-diamond.png';
 import {GetAllDiamondSelector} from '../../redux/selectors';
@@ -45,7 +46,7 @@ export const DiamondList = () => {
 	return (
 		<>
 			<div className="text-2xl flex justify-end ">
-				<p className="p-2">200 Results</p>
+				<p className="p-2">200 Kết quả</p>
 				<div
 					className="md:cursor-pointer mx-10 hover:bg-neutral-300 rounded-xl p-2"
 					onClick={handleListClick}

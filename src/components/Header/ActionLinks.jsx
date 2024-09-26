@@ -47,14 +47,14 @@ const ActionLinks = () => {
 				{
 					sublink: token
 						? [
-								{name: 'Profile', link: '/profile'},
-								{name: 'Information', link: '/info'},
-								{name: 'My Orders', link: '/my-orders'},
-								{name: 'Logout', action: showLogoutModal},
+								{name: 'Hồ sơ', link: '/profile'},
+								{name: 'Thông tin', link: '/info'},
+								{name: 'Đơn hàng của tôi', link: '/my-orders'},
+								{name: 'Đăng xuất', action: showLogoutModal},
 						  ]
 						: [
-								{name: 'Login', action: showLoginModal},
-								{name: 'Sign Up', action: showSignInModal},
+								{name: 'Đăng nhập', action: showLoginModal},
+								{name: 'Đăng ký', action: showSignInModal},
 						  ],
 				},
 			],

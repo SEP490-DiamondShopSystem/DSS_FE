@@ -9,14 +9,14 @@ export const Footer = () => {
 	return (
 		<footer className="bg-gray-100 py-8 px-10 w-full bg-white ">
 			<div className="container mx-auto grid grid-cols-4 gap-8">
-				{/* Logo and Address Section */}
+				{/* Logo và Phần Địa Chỉ */}
 				<div>
 					<div>
 						<img src={Logo} alt="logo" className="md:cursor-pointer max-h-24" />
 					</div>
 					<p className="mt-4 text-gray-700">
-						Where Every Diamond Tells a Story – Illuminate Your World with Timeless
-						Elegance from Kim Cuong Shop
+						Nơi Mỗi Viên Kim Cương Kể Câu Chuyện – Thắp Sáng Thế Giới Của Bạn Với Sự
+						Tinh Tế Vĩnh Cửu Từ Cửa Hàng Kim Cương
 					</p>
 					<div className="mt-4">
 						<p className="text-gray-600 mt-2 flex items-center">
@@ -40,36 +40,36 @@ export const Footer = () => {
 					</div>
 				</div>
 
-				{/* About Shop Section */}
+				{/* Phần Giới Thiệu Về Cửa Hàng */}
 				<div>
-					<h2 className="font-bold text-xl">About Shop</h2>
+					<h2 className="font-bold text-xl">Giới Thiệu Về Cửa Hàng</h2>
 					<ul className="mt-4 text-gray-700">
-						<li className="m-2">Return Are Free</li>
-						<li className="m-2">Free Lifetime Warranty</li>
-						<li className="m-2">Free Secure Shipping</li>
-						<li className="m-2">Free Boxes & Gift Cards</li>
-						<li className="m-2">Jewelry Insurance</li>
+						<li className="m-2">Trả Hàng Miễn Phí</li>
+						<li className="m-2">Bảo Hành Trọn Đời Miễn Phí</li>
+						<li className="m-2">Giao Hàng An Toàn Miễn Phí</li>
+						<li className="m-2">Hộp Và Thiệp Miễn Phí</li>
+						<li className="m-2">Bảo Hiểm Trang Sức</li>
 					</ul>
 				</div>
 
-				{/* Related Policy Section */}
+				{/* Phần Chính Sách Liên Quan */}
 				<div>
-					<h2 className="font-bold text-xl">Related Policy</h2>
+					<h2 className="font-bold text-xl">Chính Sách Liên Quan</h2>
 					<ul className="mt-4 text-gray-700">
-						<li className="m-2">Product exchange</li>
-						<li className="m-2">Delivery policy</li>
-						<li className="m-2">Warranty policy</li>
-						<li className="m-2">Buy in installments</li>
-						<li className="m-2">Terms of use</li>
-						<li className="m-2">Privacy policy</li>
-						<li className="m-2">Commitment to jewelry cases</li>
-						<li className="m-2">Commitment to diamonds</li>
+						<li className="m-2">Đổi Sản Phẩm</li>
+						<li className="m-2">Chính Sách Giao Hàng</li>
+						<li className="m-2">Chính Sách Bảo Hành</li>
+						<li className="m-2">Mua Trả Góp</li>
+						<li className="m-2">Điều Khoản Sử Dụng</li>
+						<li className="m-2">Chính Sách Bảo Mật</li>
+						<li className="m-2">Cam Kết Về Vỏ Trang Sức</li>
+						<li className="m-2">Cam Kết Về Kim Cương</li>
 					</ul>
 				</div>
 
-				{/* Contact To Us Section */}
+				{/* Phần Liên Hệ Với Chúng Tôi */}
 				<div>
-					<h2 className="font-bold text-xl">Contact To Us</h2>
+					<h2 className="font-bold text-xl">Liên Hệ Với Chúng Tôi</h2>
 					<div className="flex space-x-4 mt-4">
 						<a href="#" className="text-gray-600 ">
 							<FontAwesomeIcon icon={faFacebook} size="2x" />

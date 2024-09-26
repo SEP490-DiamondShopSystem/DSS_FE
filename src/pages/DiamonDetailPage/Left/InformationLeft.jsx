@@ -12,43 +12,43 @@ export const InformationLeft = () => {
 		<>
 			<div class="bg-gray-50 rounded-lg shadow-md w-full mt-10 pr-36">
 				<div class="flex justify-between px-4 border-b border-tintWhite py-2">
-					<span class="text-gray-600">Certificate</span>
+					<span class="text-gray-600">Giấy chứng nhận</span>
 					{/* <span class="text-gray-800">501290w14</span> */}
 				</div>
 				<div class="flex justify-between px-4 border-b border-tintWhite py-2">
-					<span class="text-gray-600">Stock Number</span>
+					<span class="text-gray-600">Số tồn kho</span>
 					<span class="text-gray-800">22063275</span>
 				</div>
 				<div class="flex justify-between px-4 border-b border-tintWhite py-2">
-					<span class="text-gray-600">Shape</span>
-					<span class="text-gray-800">Round</span>
+					<span class="text-gray-600">Hình dạng</span>
+					<span class="text-gray-800">Tròn</span>
 				</div>
 				<div class="flex justify-between px-4 border-b border-tintWhite py-2">
-					<span class="text-gray-600">Cut</span>
-					<span class="text-gray-800 flex items-center">Excellent</span>
+					<span class="text-gray-600">Độ cắt</span>
+					<span class="text-gray-800 flex items-center">Xuất sắc</span>
 				</div>
 				<div class="flex justify-between px-4 border-b border-tintWhite py-2">
-					<span class="text-gray-600">Color</span>
+					<span class="text-gray-600">Màu sắc</span>
 					<span class="text-gray-800 flex items-center">H</span>
 				</div>
 				<div class="flex justify-between px-4 border-b border-tintWhite py-2">
-					<span class="text-gray-600">Clarity</span>
+					<span class="text-gray-600">Độ trong</span>
 					<span class="text-gray-800 flex items-center">VS2</span>
 				</div>
 				<div class="flex justify-between px-4 border-b border-tintWhite py-2">
-					<span class="text-gray-600">Carat Weight</span>
+					<span class="text-gray-600">Trọng lượng Carat</span>
 					<span class="text-gray-800 flex items-center">1.00</span>
 				</div>
 				<div class="flex justify-between px-4 border-b border-tintWhite py-2">
-					<span class="text-gray-600">Fluorescence</span>
-					<span class="text-gray-800 flex items-center">Medium</span>
+					<span class="text-gray-600">Huỳnh quang</span>
+					<span class="text-gray-800 flex items-center">Trung bình</span>
 				</div>
 				<div
 					class={`flex justify-between ${
 						showMore ? 'border-b border-tintWhite' : ''
 					} px-4  py-2`}
 				>
-					<span class="text-gray-600">Length/Width Ratio</span>
+					<span class="text-gray-600">Tỉ lệ chiều dài/chiều rộng</span>
 					<span class="text-gray-800 flex items-center">1.01</span>
 				</div>
 			</div>
@@ -61,31 +61,31 @@ export const InformationLeft = () => {
 				<div className="bg-gray-50  rounded-lg shadow-md w-full pr-36">
 					{/* <h2 className="text-lg font-semibold">Natural Diamond Information</h2> */}
 					<div className="flex justify-between px-4 border-b border-tintWhite py-2">
-						<span className="text-gray-600">Depth %</span>
+						<span className="text-gray-600">Độ sâu %</span>
 						<span className="text-gray-800">62.9</span>
 					</div>
 					<div className="flex justify-between px-4 border-b border-tintWhite py-2">
-						<span className="text-gray-600">Table %</span>
+						<span className="text-gray-600">Bàn %</span>
 						<span className="text-gray-800">59.0</span>
 					</div>
 					<div className="flex justify-between px-4 border-b border-tintWhite py-2">
-						<span className="text-gray-600">Polish</span>
-						<span className="text-gray-800">Excellent</span>
+						<span className="text-gray-600">Đánh bóng</span>
+						<span className="text-gray-800">Xuất sắc</span>
 					</div>
 					<div className="flex justify-between px-4 border-b border-tintWhite py-2">
-						<span className="text-gray-600">Symmetry</span>
-						<span className="text-gray-800">Excellent</span>
+						<span className="text-gray-600">Đối xứng</span>
+						<span className="text-gray-800">Xuất sắc</span>
 					</div>
 					<div className="flex justify-between px-4 border-b border-tintWhite py-2">
-						<span className="text-gray-600">Girdle</span>
-						<span className="text-gray-800">Slightly Thick</span>
+						<span className="text-gray-600">Vành</span>
+						<span className="text-gray-800">Hơi dày</span>
 					</div>
 					<div className="flex justify-between border-b border-tintWhite px-4 py-2">
-						<span className="text-gray-600">Culet</span>
-						<span className="text-gray-800">None</span>
+						<span className="text-gray-600">Đỉnh</span>
+						<span className="text-gray-800">Không có</span>
 					</div>
 					<div className="flex justify-between px-4 py-2">
-						<span className="text-gray-600">Measurements</span>
+						<span className="text-gray-600">Kích thước</span>
 						<span className="text-gray-800">6.33x6.37x3.99 mm</span>
 					</div>
 				</div>
@@ -95,7 +95,7 @@ export const InformationLeft = () => {
 				onClick={toggleShowMore}
 			>
 				<div className="text-black m-4 px-4 rounded-lg focus:outline-none ">
-					{showMore ? 'Show Less' : 'Show More'}
+					{showMore ? 'Hiện Ít Hơn' : 'Hiện Thêm'}
 				</div>
 				<div className="m-4 px-4 rounded-lg focus:outline-none">
 					{showMore ? <MinusOutlined /> : <PlusOutlined />}

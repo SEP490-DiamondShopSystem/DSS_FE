@@ -58,16 +58,16 @@ const LoginModal = ({isOpen, onClose}) => {
 				<Form.Item
 					name="email"
 					label="Email"
-					rules={[{required: true, message: 'Please enter your email!', type: 'email'}]}
+					rules={[{required: true, message: 'Hãy nhập email của bạn!', type: 'email'}]}
 				>
-					<Input placeholder="Enter your email" />
+					<Input placeholder="Email" />
 				</Form.Item>
 				<Form.Item
 					name="password"
-					label="Password"
-					rules={[{required: true, message: 'Please enter your password!'}]}
+					label="Mật khẩu"
+					rules={[{required: true, message: 'Hãy nhập mật khẩu!'}]}
 				>
-					<Input.Password placeholder="Enter your password" />
+					<Input.Password placeholder="Mật khẩu" />
 				</Form.Item>
 				<Form.Item>
 					<div className="flex justify-between">
@@ -77,13 +77,13 @@ const LoginModal = ({isOpen, onClose}) => {
 							className="bg-primary text-black hover:bg-primary font-semibold w-full mt-5"
 							loading={loading}
 						>
-							Login
+							Đăng nhập
 						</Button>
 					</div>
 				</Form.Item>
 				<div className="text-center">
-					<p className="my-5">or sign in with</p>
-					<div>
+					<p className="my-5">hoặc đăng nhập bằng</p>
+					<div className="w-full flex justify-center items-center">
 						<GoogleLoginButton
 							onSuccess={handleGoogleLogin}
 							onError={handleGoogleLoginFailure}

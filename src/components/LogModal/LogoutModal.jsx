@@ -18,11 +18,11 @@ const LogoutModal = ({visible, onConfirm, onCancel}) => {
 					className="bg-primary text-white hover:bg-primary"
 					onClick={onConfirm}
 				>
-					Logout
+					Đăng xuất
 				</Button>,
 			]}
 		>
-			Are you sure you want to log out?
+			Bạn có chắc chắn muốn đăng xuất không?
 		</Modal>
 	);
 };

@@ -5,17 +5,17 @@ import {Button, Rate} from 'antd';
 import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 
-const metalType = {
-	name: '1.00 Carat Round Diamond',
-	price: '$465',
-	productDetail: 'This 1.00 round H diamond is sold exclusively on Diamond Shop.',
-	ship: 'Monday, August 26',
-	options: [
+const infoMetal = {
+	name: 'Kim cương tròn 1.00 Carat',
+	price: '10.800.000 VND',
+	detailProduct: 'Viên kim cương tròn H 1.00 này chỉ được bán tại Cửa hàng Kim cương.',
+	delivery: 'Thứ hai, 26 tháng 8',
+	tuyChon: [
 		{
 			carat: '1.00ct',
-			clarity: 'VS2 Clarity',
-			color: 'H Color',
-			cut: 'Very Good',
+			doSang: 'VS2 Clarity',
+			mauSac: 'H Color',
+			cat: 'Very Good',
 		},
 	],
 };
@@ -23,121 +23,78 @@ export const InformationRight = () => {
 	const navigate = useNavigate();
 	const [showDetail, setDetail] = useState(false);
 	const [showSecureShopping, setSecureShopping] = useState(false);
-	const [showProductWarrantly, setProductWarrantly] = useState(false);
+	const [showProductWarranty, setProductWarranty] = useState(false);
 
-	const toggleDetail = () => {
+	const handleDetailOpen = () => {
 		setDetail(!showDetail);
 	};
-	const toggleSecureShopping = () => {
+	const handleSecureOpen = () => {
 		setSecureShopping(!showSecureShopping);
 	};
-	const toggleProductWarrantly = () => {
-		setProductWarrantly(!showProductWarrantly);
+	const handleWarrantyOpen = () => {
+		setProductWarranty(!showProductWarranty);
 	};
 
 	return (
 		<div>
 			<div className="border-tintWhite">
-				<h1 className="text-3xl">{metalType.name}</h1>
-				{/* <div className="my-5 flex">
-					<Rate
-						allowHalf
-						defaultValue={5}
-						style={{fontSize: 20, color: '#F9A825'}}
-						disabled
-					/>
-					<p className="ml-5">477 Reviews</p>
-				</div> */}
+				<h1 className="text-3xl">{infoMetal.name}</h1>
 				<div className="font-semibold my-2">
-					Ships as a loose diamond by: {metalType?.ship}
+					Giao hàng như một viên kim cương rời vào: {infoMetal?.delivery}
 				</div>
 				<div className="flex mb-2">
-					<div className="font-semibold  text-green cursor-pointer">
-						Free Overnight Shipping
-					</div>
-
-					<div className="font-semibold pl-2 text-green cursor-pointer">
-						Free Overnight Shipping
+					<div className="font-semibold text-green cursor-pointer">
+						Giao hàng qua đêm miễn phí
 					</div>
 				</div>
 				<div>
-					{metalType?.options?.map((metal, i) => (
-						<div className="flex items-center text-sm">
+					{infoMetal?.tuyChon?.map((kimLoai, i) => (
+						<div className="flex items-center text-sm" key={i}>
 							<p className="p-2" style={{backgroundColor: '#f7f7f7'}}>
-								{metal.carat}
+								{kimLoai.carat}
 							</p>
 							<p className="ml-4 p-2" style={{backgroundColor: '#f7f7f7'}}>
-								{metal.color}
+								{kimLoai.mauSac}
 							</p>
 							<p className="ml-4 p-2" style={{backgroundColor: '#f7f7f7'}}>
-								{metal.clarity}
+								{kimLoai.doSang}
 							</p>
 							<p className="ml-4 p-2" style={{backgroundColor: '#f7f7f7'}}>
-								{metal.cut}
+								{kimLoai.cat}
 							</p>
 						</div>
 					))}
 				</div>
 			</div>
-			{/* <div>
-				<div className="my-5 flex items-center">
-					<div className="font-semibold">Metal Type</div>
-					<div className={`font-semibold text-xl pl-4 text-primary`}>
-						{selectedMetal?.metalSelect}
-					</div>
-				</div>
-				<div>
-					<div className="flex">
-						{metalType?.options?.map((metal, i) => (
-							<div
-								key={i}
-								className={`${
-									selectedMetal?.metalSelect === metal?.metalSelect
-										? 'border'
-										: ''
-								} m-2 py-2 px-4 rounded-lg cursor-pointer`}
-								onClick={() => handleSelectMetal(metal)} // Save selected metal on click
-							>
-								<div className={`rounded-full border-2 p-1 border-${metal.color}`}>
-									{metal.metal}
-								</div>
-							</div>
-						))}
-					</div>
-				</div>
-			</div> */}
+
 			<div className="border-y border-tintWhite py-5 my-5">
 				<div className="flex items-center">
-					<p className="font-semibold pl-2 text-2xl">{metalType.price}</p>
-					<div className="text-sm pl-2">(Diamond Price)</div>
+					<p className="font-semibold pl-2 text-2xl">{infoMetal.price}</p>
+					<div className="text-sm pl-2">(Giá Kim Cương)</div>
 				</div>
-				{/* <div>
-					<div className="text-xl pt-2 font-semibold">
-						*Discount code is applied automatically
-					</div>
-				</div> */}
 			</div>
+
 			<div className="flex justify-between items-center mt-5">
 				<Button
 					type="text"
 					className="border py-7 px-14 font-bold text-lg bg-primary rounded hover:bg-second w-full"
-					// onClick={() => navigate(`/completed-jewelry/${id}`)}
 					onClick={() => navigate(`/completed-jewelry/1`)}
 				>
-					SELECT THIS DIAMOND
+					CHỌN VIÊN KIM CƯƠNG NÀY
 				</Button>
 			</div>
+
 			<div className="my-10">
-				<h2 className="font-bold text-xl pb-3">Your Order Includes:</h2>
+				<h2 className="font-bold text-xl pb-3">Đơn hàng của bạn bao gồm:</h2>
 				<div className="flex bg-offWhite p-5">
 					<div className="p-5 bg-lightGray">
 						<FontAwesomeIcon icon={faTruck} style={{height: 30}} />
 					</div>
 					<div className="flex-col items-center ml-3">
-						<p className="font-semibold">Free Shipping</p>
+						<p className="font-semibold">Miễn phí vận chuyển</p>
 						<p>
-							We're committed to making your entire experience a pleasant one, from
-							shopping to shipping.
+							Chúng tôi cam kết mang đến trải nghiệm tuyệt vời từ mua sắm đến giao
+							hàng.
 						</p>
 					</div>
 				</div>
@@ -146,19 +103,20 @@ export const InformationRight = () => {
 						<FontAwesomeIcon icon={faRefresh} style={{height: 30}} />
 					</div>
 					<div className="flex-col items-center ml-3">
-						<p className="font-semibold">Free Returns</p>
+						<p className="font-semibold">Miễn phí trả hàng</p>
 						<p>
-							We're committed to making your entire experience a pleasant one, from
-							shopping to shipping.
+							Chúng tôi cam kết mang đến trải nghiệm tuyệt vời từ mua sắm đến giao
+							hàng.
 						</p>
 					</div>
 				</div>
 			</div>
-			<div className="border-y ">
-				<div className="border-b pb-4 my-4 cursor-pointer" onClick={toggleDetail}>
+
+			<div className="border-y">
+				<div className="border-b pb-4 my-4 cursor-pointer" onClick={handleDetailOpen}>
 					<div className="flex justify-between">
 						<div className="text-black m-4 px-4 rounded-lg focus:outline-none font-semibold">
-							Product Details
+							Chi tiết sản phẩm
 						</div>
 						<div className="m-4 px-4 rounded-lg focus:outline-none">
 							{showDetail ? <MinusOutlined /> : <PlusOutlined />}
@@ -170,14 +128,15 @@ export const InformationRight = () => {
 						}`}
 					>
 						<div className="flex justify-between px-4 py-2">
-							<span>{metalType.productDetail}</span>
+							<span>{infoMetal.detailProduct}</span>
 						</div>
 					</div>
 				</div>
-				<div className="border-b pb-4 my-4 cursor-pointer" onClick={toggleSecureShopping}>
+
+				<div className="border-b pb-4 my-4 cursor-pointer" onClick={handleSecureOpen}>
 					<div className="flex justify-between">
 						<div className="text-black m-4 px-4 rounded-lg focus:outline-none font-semibold">
-							GIA Grading Report
+							Báo cáo phân loại GIA
 						</div>
 						<div className="m-4 px-4 rounded-lg focus:outline-none">
 							{showSecureShopping ? <MinusOutlined /> : <PlusOutlined />}
@@ -190,33 +149,34 @@ export const InformationRight = () => {
 					>
 						<div className="flex justify-between px-4 py-2">
 							<span>
-								This is the report which documents the specific characteristics of a
-								diamond, issued by the GIA, which is among the most respected
-								organizations in the diamond industry.
+								Đây là báo cáo ghi nhận các đặc điểm cụ thể của viên kim cương, do
+								GIA cấp, một trong những tổ chức được kính trọng nhất trong ngành
+								kim cương.
 							</span>
 						</div>
 					</div>
 				</div>
-				<div className="my-4 cursor-pointer" onClick={toggleProductWarrantly}>
+
+				<div className="my-4 cursor-pointer" onClick={handleWarrantyOpen}>
 					<div className="flex justify-between">
 						<div className="text-black m-4 px-4 rounded-lg focus:outline-none font-semibold">
-							Lifetime Diamond Upgrade Program
+							Chương trình nâng cấp kim cương trọn đời
 						</div>
 						<div className="m-4 px-4 rounded-lg focus:outline-none">
-							{showProductWarrantly ? <MinusOutlined /> : <PlusOutlined />}
+							{showProductWarranty ? <MinusOutlined /> : <PlusOutlined />}
 						</div>
 					</div>
 					<div
 						className={`transition-max-height duration-500 ease-in-out overflow-hidden ${
-							showProductWarrantly ? 'max-h-screen' : 'max-h-0'
+							showProductWarranty ? 'max-h-screen' : 'max-h-0'
 						}`}
 					>
 						<div className="flex justify-between px-4 py-2">
 							<span>
-								Diamond Shop is pleased to offer a lifetime diamond upgrade program
-								on all certified diamonds. Simply call a Diamond & Jewelry
-								Consultant at 012345678 to learn more about our upgrade program and
-								to select your new diamond.
+								Diamond Shop rất vui mừng cung cấp chương trình nâng cấp kim cương
+								trọn đời cho tất cả các viên kim cương được chứng nhận. Gọi cho
+								Chuyên gia Tư vấn Kim cương & Trang sức tại số 012345678 để biết
+								thêm thông tin.
 							</span>
 						</div>
 					</div>

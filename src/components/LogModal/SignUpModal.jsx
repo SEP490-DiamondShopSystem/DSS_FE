@@ -12,7 +12,7 @@ const SignUpModal = ({isOpen, onClose}) => {
 
 	return (
 		<Modal
-			title="Sign Up"
+			title="Đăng ký"
 			className="text-center font-semibold"
 			open={isOpen}
 			onCancel={onClose}
@@ -23,37 +23,37 @@ const SignUpModal = ({isOpen, onClose}) => {
 					label="Email"
 					name="email"
 					rules={[
-						{required: true, message: 'Please enter your email!'},
-						{type: 'email', message: 'Please enter a valid email address!'},
+						{required: true, message: 'Vui lòng nhập email của bạn!'},
+						{type: 'email', message: 'Vui lòng nhập địa chỉ email hợp lệ!'},
 					]}
 				>
-					<Input placeholder="Enter your email" />
+					<Input placeholder="Email" />
 				</Form.Item>
 
 				<Form.Item
-					label="Password"
+					label="Mật khẩu"
 					name="password"
-					rules={[{required: true, message: 'Please enter your password!'}]}
+					rules={[{required: true, message: 'Vui lòng nhập mật khẩu của bạn!'}]}
 				>
-					<Input.Password placeholder="Enter your password" />
+					<Input.Password placeholder="Mật khẩu" />
 				</Form.Item>
 
 				<Form.Item
-					label="Confirm Password"
+					label="Xác nhận mật khẩu"
 					name="confirmPassword"
 					rules={[
-						{required: true, message: 'Please confirm your password!'},
+						{required: true, message: 'Vui lòng xác nhận mật khẩu của bạn!'},
 						({getFieldValue}) => ({
 							validator(_, value) {
 								if (!value || getFieldValue('password') === value) {
 									return Promise.resolve();
 								}
-								return Promise.reject(new Error('The two passwords do not match!'));
+								return Promise.reject(new Error('Hai mật khẩu không khớp nhau!'));
 							},
 						}),
 					]}
 				>
-					<Input.Password placeholder="Confirm your password" />
+					<Input.Password placeholder="Xác nhận mật khẩu của bạn" />
 				</Form.Item>
 				<Form.Item>
 					<div className="flex justify-between">
@@ -63,7 +63,7 @@ const SignUpModal = ({isOpen, onClose}) => {
 							className="bg-primary text-black hover:bg-primary font-semibold w-full"
 							// loading={loading}
 						>
-							Sign In
+							Đăng ký
 						</Button>
 					</div>
 				</Form.Item>
