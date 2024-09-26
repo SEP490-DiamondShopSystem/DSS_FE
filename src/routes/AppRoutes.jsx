@@ -15,6 +15,7 @@ import MyInfoPage from '../pages/ProfilePage/MyInfoPage';
 import MyOrderPage from '../pages/ProfilePage/MyOrderPage/MyOrderPage';
 import ProfilePage from '../pages/ProfilePage/ProfilePage';
 import PromotionPage from '../pages/PromotionPage/PromotionPage';
+import CartPage from '../pages/CartPage/CartPage';
 
 export const AppRouters = () => {
 	return (
@@ -26,6 +27,7 @@ export const AppRouters = () => {
 			<Route path="/profile" element={<ProfilePage />} />
 			<Route path="/my-orders" element={<MyOrderPage />} />
 			<Route path="/my-info" element={<MyInfoPage />} />
+			<Route path="/cart" element={<CartPage />} />
 			<Route path="/diamond-lab/search" element={<DiamondLabPage />} />
 			<Route path="/jewelry/search" element={<JewelrySearchPage />} />
 			<Route path="/diamond/search" element={<DiamondSearchPage />} />
