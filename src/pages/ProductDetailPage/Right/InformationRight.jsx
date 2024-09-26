@@ -5,35 +5,36 @@ import {Button, Rate} from 'antd';
 import React, {useState} from 'react';
 
 const metalType = {
-	name: 'Heirloom Petite Milgrain Engagement Ring IN',
+	name: 'Nhẫn Đính Hôn Heirloom Petite Milgrain',
 	price: '$620',
 	priceDiscount: '$465',
 	productDetail:
-		'Show your love with this 14k white gold engagement ring, featuring an east west prong setting for a brilliant solitaire diamond.',
+		'Thể hiện tình yêu của bạn với chiếc nhẫn đính hôn bằng vàng trắng 14k này, với thiết kế gài kim cương bằng móc theo hướng đông-tây.',
 	clarity: '',
 	cut: '',
 	color: '',
 	options: [
 		{
 			metal: '14k',
-			metalSelect: '14k White Gold',
+			metalSelect: 'Vàng Trắng 14k',
 			color: 'gray',
-			ship: 'Monday, August 26',
+			ship: 'Thứ Hai, 26 tháng 8',
 		},
 		{
 			metal: '14k',
-			metalSelect: '14k Yellow Gold',
+			metalSelect: 'Vàng Vàng 14k',
 			color: 'second',
-			ship: 'Friday, August 30',
+			ship: 'Thứ Sáu, 30 tháng 8',
 		},
 		{
 			metal: '14k',
-			metalSelect: '14k Rose Gold',
+			metalSelect: 'Vàng Hồng 14k',
 			color: 'red',
-			ship: 'Sunday, August 25',
+			ship: 'Chủ Nhật, 25 tháng 8',
 		},
 	],
 };
+
 export const InformationRight = ({toggleSidebar}) => {
 	const [showDetail, setDetail] = useState(false);
 	const [showSecureShopping, setSecureShopping] = useState(false);
@@ -77,24 +78,24 @@ export const InformationRight = ({toggleSidebar}) => {
 						style={{fontSize: 20, color: '#F9A825'}}
 						disabled
 					/>
-					<p className="ml-5">477 Reviews</p>
+					<p className="ml-5">477 Đánh Giá</p>
 				</div>
 				<div className="font-semibold my-2">
-					Ships as a loose diamond by: {selectedMetal?.ship}
+					Giao hàng như kim cương rời vào: {selectedMetal?.ship}
 				</div>
 				<div className="flex mb-2">
 					<div className="font-semibold  text-green cursor-pointer">
-						Free Overnight Shipping
+						Giao Hàng Miễn Phí Ngay
 					</div>
 
 					<div className="font-semibold pl-2 text-green cursor-pointer">
-						Free Overnight Shipping
+						Giao Hàng Miễn Phí Ngay
 					</div>
 				</div>
 			</div>
 			<div>
 				<div className="my-5 flex items-center">
-					<div className="font-semibold">Metal Type</div>
+					<div className="font-semibold">Loại Kim Loại</div>
 					<div className={`font-semibold text-xl pl-4 text-primary`}>
 						{selectedMetal?.metalSelect}
 					</div>
@@ -125,11 +126,11 @@ export const InformationRight = ({toggleSidebar}) => {
 						{metalType.price}
 					</p>
 					<p className="font-semibold pl-2 text-2xl">{metalType.priceDiscount}</p>
-					<div className="text-sm pl-2">(Setting Price)</div>
+					<div className="text-sm pl-2">(Giá Cài Đặt)</div>
 				</div>
 				<div>
 					<div className="text-xl pt-2 font-semibold">
-						*Discount code is applied automatically
+						*Mã giảm giá được áp dụng tự động
 					</div>
 				</div>
 			</div>
@@ -139,20 +140,20 @@ export const InformationRight = ({toggleSidebar}) => {
 					className="border py-7 px-14 font-bold text-lg bg-primary rounded hover:bg-second w-full"
 					onClick={toggleSidebar}
 				>
-					SELECT THIS SETTING
+					CHỌN CÀI ĐẶT NÀY
 				</Button>
 			</div>
 			<div className="my-10">
-				<h2 className="font-bold text-xl pb-3">Your Order Includes:</h2>
+				<h2 className="font-bold text-xl pb-3">Đơn Hàng Của Bạn Bao Gồm:</h2>
 				<div className="flex bg-offWhite p-5">
 					<div className="p-5 bg-lightGray">
 						<FontAwesomeIcon icon={faTruck} style={{height: 30}} />
 					</div>
 					<div className="flex-col items-center ml-3">
-						<p className="font-semibold">Free Shipping</p>
+						<p className="font-semibold">Giao Hàng Miễn Phí</p>
 						<p>
-							We're committed to making your entire experience a pleasant one, from
-							shopping to shipping.
+							Chúng tôi cam kết mang đến trải nghiệm mua sắm và giao hàng hài lòng
+							nhất cho bạn.
 						</p>
 					</div>
 				</div>
@@ -161,10 +162,10 @@ export const InformationRight = ({toggleSidebar}) => {
 						<FontAwesomeIcon icon={faRefresh} style={{height: 30}} />
 					</div>
 					<div className="flex-col items-center ml-3">
-						<p className="font-semibold">Free Returns</p>
+						<p className="font-semibold">Hoàn Trả Miễn Phí</p>
 						<p>
-							We're committed to making your entire experience a pleasant one, from
-							shopping to shipping.
+							Chúng tôi cam kết mang đến trải nghiệm mua sắm và giao hàng hài lòng
+							nhất cho bạn.
 						</p>
 					</div>
 				</div>
@@ -173,7 +174,7 @@ export const InformationRight = ({toggleSidebar}) => {
 				<div className="border-b pb-4 my-4 cursor-pointer" onClick={toggleDetail}>
 					<div className="flex justify-between">
 						<div className="text-black m-4 px-4 rounded-lg focus:outline-none font-semibold">
-							Product Details
+							Chi Tiết Sản Phẩm
 						</div>
 						<div className="m-4 px-4 rounded-lg focus:outline-none">
 							{showDetail ? <MinusOutlined /> : <PlusOutlined />}
@@ -192,7 +193,7 @@ export const InformationRight = ({toggleSidebar}) => {
 				<div className="border-b pb-4 my-4 cursor-pointer" onClick={toggleSecureShopping}>
 					<div className="flex justify-between">
 						<div className="text-black m-4 px-4 rounded-lg focus:outline-none font-semibold">
-							Secure Shopping
+							Mua Sắm An Toàn
 						</div>
 						<div className="m-4 px-4 rounded-lg focus:outline-none">
 							{showSecureShopping ? <MinusOutlined /> : <PlusOutlined />}
@@ -205,9 +206,9 @@ export const InformationRight = ({toggleSidebar}) => {
 					>
 						<div className="flex justify-between px-4 py-2">
 							<span>
-								We want to make sure your shopping experience exceeds your
-								expectations, so we have taken measures to guarantee your orders
-								will be safe and secure, from our door to yours.
+								Chúng tôi cam kết đảm bảo trải nghiệm mua sắm của bạn vượt ngoài
+								mong đợi, với các biện pháp đảm bảo đơn hàng của bạn sẽ an toàn và
+								bảo mật từ cửa nhà chúng tôi đến tay bạn.
 							</span>
 						</div>
 					</div>
@@ -215,7 +216,7 @@ export const InformationRight = ({toggleSidebar}) => {
 				<div className="my-4 cursor-pointer" onClick={toggleProductWarrantly}>
 					<div className="flex justify-between">
 						<div className="text-black m-4 px-4 rounded-lg focus:outline-none font-semibold">
-							Lifetime Product Warranty
+							Đảm Bảo Sản Phẩm
 						</div>
 						<div className="m-4 px-4 rounded-lg focus:outline-none">
 							{showProductWarrantly ? <MinusOutlined /> : <PlusOutlined />}
@@ -228,8 +229,8 @@ export const InformationRight = ({toggleSidebar}) => {
 					>
 						<div className="flex justify-between px-4 py-2">
 							<span>
-								We stand behind our products and warrant that all items will be free
-								from manufacturing defects for the life of the products.
+								Chúng tôi cam kết mang đến cho bạn sản phẩm chất lượng cao nhất, đi
+								kèm với dịch vụ bảo hành chu đáo và tận tâm.
 							</span>
 						</div>
 					</div>

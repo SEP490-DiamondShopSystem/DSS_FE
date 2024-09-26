@@ -23,7 +23,7 @@ export const Header = () => {
 							className={`py-7 px-3 inline-block no-underline text-black`}
 							onClick={() => handleLinkClick('Home')}
 						>
-							Home
+							Trang chủ
 						</Link>
 					</li>
 					<NavLinks />
@@ -33,7 +33,7 @@ export const Header = () => {
 							className={`py-7 px-3 inline-block no-underline text-black`}
 							onClick={() => handleLinkClick('Promotion')}
 						>
-							Promotion
+							Khuyến mãi
 						</Link>
 					</li>
 					<li>
@@ -43,13 +43,13 @@ export const Header = () => {
 							`}
 							onClick={() => handleLinkClick('Contact')}
 						>
-							Contact
+							Liên hệ
 						</Link>
 					</li>
 				</ul>
 				<div>
 					<Search
-						placeholder="Search for product..."
+						placeholder="Tìm kiếm sản phẩm..."
 						onSearch={(value) => console.log(value)}
 						style={{width: 400}}
 					/>

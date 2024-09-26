@@ -53,20 +53,6 @@ export const Sidebar = ({isOpen, toggleSidebar}) => {
 		}
 	}, [shapes]);
 
-	console.log('shapeActive', shapeActive);
-
-	console.log('link', link);
-	console.log('active', active);
-	console.log('activeRcm', activeRcm);
-	console.log('selectedImage', selectedImage);
-
-	// console.log(
-	// 	'className:',
-	// 	`flex border ${
-	// 		active === 'diamond' ? 'border-black' : 'border-white'
-	// 	} p-4 m-5 rounded-lg md:cursor-pointer`
-	// );
-
 	const handleSelect = (url, ac) => {
 		setLink(url);
 		setActive(ac);
@@ -110,16 +96,16 @@ export const Sidebar = ({isOpen, toggleSidebar}) => {
 								onClick={() => setActiveRcm('')}
 							>
 								<ArrowLeftOutlined />
-								Back
+								Quay lại
 							</Button>
 							<div className="">
 								<h1 className="text-3xl font-semibold">
-									Expert-Recommended Diamonds
+									Kim Cương Được Khuyến Nghị
 								</h1>
 								<p className="">
-									These diamonds have been carefully handpicked for your ring.
-									These are the best choices for your setting based on price and
-									diamond characteristics.
+									Các viên kim cương này đã được chọn lựa kỹ càng cho nhẫn của
+									bạn. Đây là những lựa chọn tốt nhất cho thiết lập của bạn dựa
+									trên giá và đặc điểm kim cương.
 								</p>
 							</div>
 							<div className="my-5">
@@ -183,7 +169,7 @@ export const Sidebar = ({isOpen, toggleSidebar}) => {
 									type="text"
 									className=" bg-primary w-full text-lg font-semibold p-5"
 								>
-									ADD THIS DIAMOND
+									THÊM KIM CƯƠNG NÀY
 								</Button>
 							</div>
 						</div>
@@ -193,9 +179,10 @@ export const Sidebar = ({isOpen, toggleSidebar}) => {
 						<div className="mt-10">
 							<div className="p-4">
 								<h2 className="text-xl font-semibold">
-									Add one of the options below to complete your setting
+									Thêm một trong các tùy chọn dưới đây để hoàn thành thiết lập của
+									bạn
 								</h2>
-								<p>Choose a diamond to finish your ring.</p>
+								<p>Chọn một viên kim cương để hoàn thành nhẫn của bạn.</p>
 							</div>
 							<div>
 								<div
@@ -208,9 +195,10 @@ export const Sidebar = ({isOpen, toggleSidebar}) => {
 										<FontAwesomeIcon icon={faGem} />
 									</div>
 									<div>
-										<p className="font-bold">Diamond</p>
+										<p className="font-bold">Kim Cương</p>
 										<span className="text-tintWhite">
-											Explore and select different diamond for your setting.
+											Khám phá và chọn lựa kim cương khác cho thiết lập của
+											bạn.
 										</span>
 									</div>
 								</div>
@@ -224,10 +212,10 @@ export const Sidebar = ({isOpen, toggleSidebar}) => {
 										<FontAwesomeIcon icon={faGem} />
 									</div>
 									<div>
-										<p className="font-bold">Recommended Diamond</p>
+										<p className="font-bold">Kim Cương Khuyến Nghị</p>
 										<span className="text-tintWhite">
-											Explore diamonds that have been carefully handpicked for
-											your ring.
+											Khám phá các viên kim cương đã được chọn lọc kỹ càng cho
+											nhẫn của bạn.
 										</span>
 									</div>
 								</div>
@@ -241,31 +229,20 @@ export const Sidebar = ({isOpen, toggleSidebar}) => {
 										<FontAwesomeIcon icon={faShoppingBag} />
 									</div>
 									<div>
-										<p className="font-bold">Add to Cart</p>
+										<p className="font-bold">Xem Giỏ Hàng</p>
 										<span className="text-tintWhite">
-											Happy with this setting? Add to cart now.
+											Xem và chỉnh sửa các mục trong giỏ hàng của bạn.
 										</span>
 									</div>
 								</div>
 							</div>
 						</div>
-						<div className="mx-5 absolute bottom-10" style={{width: '90%'}}>
-							<Button
-								onClick={() => {
-									if (link === '') {
-										handleSelectDiamondRcm('diamondRcm');
-									} else {
-										navigate(link);
-									}
-								}}
-								type="text"
-								className=" bg-primary w-full text-lg font-semibold p-5"
-							>
-								CONTINUE
-							</Button>
-						</div>
 					</>
 				)}
+
+				<div className="absolute top-0 right-0 p-4 cursor-pointer" onClick={toggleSidebar}>
+					<RightOutlined />
+				</div>
 			</div>
 		</>
 	);

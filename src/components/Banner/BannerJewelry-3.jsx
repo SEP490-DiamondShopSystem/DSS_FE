@@ -11,21 +11,21 @@ export const BannerJewelry3 = () => {
 			<div className="absolute inset-0 flex items-center justify-center text-black ">
 				<div className="text-center" style={{maxWidth: 600}}>
 					{/* <h2 className="text-xl font-bold mb-4 uppercase">Design Your Own Jewelry</h2> */}
-					<h2 className="text-4xl mb-4">Design Your Own Jewelry</h2>
+					<h2 className="text-4xl mb-4">Tự Thiết Kế Trang Sức Của Bạn</h2>
 					<p className="mb-4">
-						Bring your moment to life with a handcrafted design. Our expert artisans
-						will pour their passion into every detail of your beautiful custom piece.
-						Find your style below.
+						Mang khoảnh khắc của bạn trở nên sống động với thiết kế thủ công. Các nghệ
+						nhân chuyên nghiệp của chúng tôi sẽ đổ đầy đam mê vào từng chi tiết của món
+						đồ tùy chỉnh đẹp đẽ của bạn. Tìm phong cách của bạn bên dưới.
 					</p>
 					<div className="flex items-center justify-center">
 						<button
 							className="mr-10 px-6 py-2 bg-primary rounded-lg uppercase font-semibold hover:bg-second w-96 h-12"
 							onClick={() => navigate('/jewelry/search')}
 						>
-							Shop Setting
+							Mua Vỏ Nhẫn
 						</button>
 						<button className="px-6 py-2 bg-primary rounded-lg uppercase font-semibold hover:bg-second w-96 h-12">
-							Shop Custom Design
+							Mua Thiết Kế Tùy Chỉnh
 						</button>
 					</div>
 				</div>

@@ -8,17 +8,17 @@ import {useNavigate} from 'react-router-dom';
 const {Text} = Typography;
 
 const metalType = {
-	jewelryName: 'Petite Nouveau Six-Prong Solitaire Engagement Ring in 14k White Gold',
-	diamondName: '1.01 Carat H-VS2 Excellent Cut Round Diamond',
-	price: '$1,470',
-	priceDiscount: '$1,102',
-	productDetail: 'This 1.00 round H diamond is sold exclusively on Diamond Shop.',
-	ship: 'Monday, August 26',
+	jewelryName: 'Nhẫn Đính Hôn Petite Nouveau Six-Prong Solitaire trong Vàng Trắng 14k',
+	diamondName: 'Kim Cương Tròn 1.01 Carat H-VS2 Cắt Xuất Sắc',
+	price: '1.470 USD',
+	priceDiscount: '1.102 USD',
+	productDetail: 'Kim cương tròn 1.00 H này được bán độc quyền tại Diamond Shop.',
+	ship: 'Thứ Hai, ngày 26 tháng 8',
 	totalCarat: '1.01 Ct',
 	carat: '1.00ct',
-	clarity: 'VS2 Clarity',
-	color: 'H Color',
-	cut: 'Very Good',
+	clarity: 'Độ Sáng VS2',
+	color: 'Màu H',
+	cut: 'Rất Tốt',
 	stock: '#18395827',
 };
 
@@ -41,6 +41,7 @@ const ring = [
 		disabled: true,
 	},
 ];
+
 export const InformationRight = ({toggleSidebar}) => {
 	const navigate = useNavigate();
 	const [showDetail, setDetail] = useState(false);
@@ -74,24 +75,24 @@ export const InformationRight = ({toggleSidebar}) => {
 						style={{fontSize: 20, color: '#F9A825'}}
 						disabled
 					/>
-					<p className="ml-5">477 Reviews</p>
+					<p className="ml-5">477 Đánh Giá</p>
 				</div>
 				<div></div>
 				<div className="font-semibold my-2">
-					Ships as a loose diamond by: {metalType?.ship}
+					Giao hàng như kim cương lỏng vào: {metalType?.ship}
 				</div>
 				<div className="flex mb-2">
-					<div className="font-semibold  text-green cursor-pointer">
-						Free Overnight Shipping
+					<div className="font-semibold text-green cursor-pointer">
+						Giao hàng miễn phí qua đêm
 					</div>
 
 					<div className="font-semibold pl-2 text-green cursor-pointer">
-						Free Overnight Shipping
+						Giao hàng miễn phí qua đêm
 					</div>
 				</div>
 				<div>
 					<Text strong style={{fontSize: '18px'}}>
-						Complete Ring:
+						Nhẫn Hoàn Chỉnh:
 					</Text>
 					<div className="mt-5">
 						<div className="flex justify-between mb-2">
@@ -110,7 +111,7 @@ export const InformationRight = ({toggleSidebar}) => {
 									</div>
 								</div>
 							</div>
-							<p className="text-primary cursor-pointer">Change Diamond</p>
+							<p className="text-primary cursor-pointer">Thay Đổi Kim Cương</p>
 						</div>
 						<div className="flex justify-between mb-2">
 							<div className="flex">
@@ -127,10 +128,10 @@ export const InformationRight = ({toggleSidebar}) => {
 									</div>
 								</div>
 							</div>
-							<p className="text-primary cursor-pointer">Change Setting</p>
+							<p className="text-primary cursor-pointer">Thay Đổi Vỏ</p>
 						</div>
 						<div className="flex items-center">
-							<p className="mr-3">Current Ring Size:</p>
+							<p className="mr-3">Kích Cỡ Nhẫn Hiện Tại:</p>
 
 							<Select
 								defaultValue="1"
@@ -152,7 +153,7 @@ export const InformationRight = ({toggleSidebar}) => {
 					</div>
 					<div>
 						<div className="text-xl pt-2 font-semibold">
-							*Discount code is applied automatically
+							*Mã giảm giá được áp dụng tự động
 						</div>
 					</div>
 				</div>
@@ -163,20 +164,20 @@ export const InformationRight = ({toggleSidebar}) => {
 					className="border py-7 px-14 font-bold text-lg bg-primary rounded hover:bg-second w-full"
 					onClick={() => navigate('/cart')}
 				>
-					ADD TO CART
+					THÊM VÀO GIỎ
 				</Button>
 			</div>
 			<div className="my-10">
-				<h2 className="font-bold text-xl pb-3">Your Order Includes:</h2>
+				<h2 className="font-bold text-xl pb-3">Đơn Hàng Của Bạn Bao Gồm:</h2>
 				<div className="flex bg-offWhite p-5">
 					<div className="p-5 bg-lightGray">
 						<FontAwesomeIcon icon={faTruck} style={{height: 30}} />
 					</div>
 					<div className="flex-col items-center ml-3">
-						<p className="font-semibold">Free Shipping</p>
+						<p className="font-semibold">Giao Hàng Miễn Phí</p>
 						<p>
-							We're committed to making your entire experience a pleasant one, from
-							shopping to shipping.
+							Chúng tôi cam kết mang đến cho bạn trải nghiệm toàn diện, từ mua sắm đến
+							giao hàng.
 						</p>
 					</div>
 				</div>
@@ -185,10 +186,10 @@ export const InformationRight = ({toggleSidebar}) => {
 						<FontAwesomeIcon icon={faRefresh} style={{height: 30}} />
 					</div>
 					<div className="flex-col items-center ml-3">
-						<p className="font-semibold">Free Returns</p>
+						<p className="font-semibold">Hoàn Trả Miễn Phí</p>
 						<p>
-							We're committed to making your entire experience a pleasant one, from
-							shopping to shipping.
+							Chúng tôi cam kết mang đến cho bạn trải nghiệm toàn diện, từ mua sắm đến
+							giao hàng.
 						</p>
 					</div>
 				</div>
@@ -197,7 +198,7 @@ export const InformationRight = ({toggleSidebar}) => {
 				<div className="border-b pb-4 my-4 cursor-pointer" onClick={toggleDetail}>
 					<div className="flex justify-between">
 						<div className="text-black m-4 px-4 rounded-lg focus:outline-none font-semibold">
-							Product Details
+							Chi Tiết Sản Phẩm
 						</div>
 						<div className="m-4 px-4 rounded-lg focus:outline-none">
 							{showDetail ? <MinusOutlined /> : <PlusOutlined />}
@@ -216,7 +217,7 @@ export const InformationRight = ({toggleSidebar}) => {
 				<div className="border-b pb-4 my-4 cursor-pointer" onClick={toggleSecureShopping}>
 					<div className="flex justify-between">
 						<div className="text-black m-4 px-4 rounded-lg focus:outline-none font-semibold">
-							GIA Grading Report
+							Báo Cáo Đánh Giá GIA
 						</div>
 						<div className="m-4 px-4 rounded-lg focus:outline-none">
 							{showSecureShopping ? <MinusOutlined /> : <PlusOutlined />}
@@ -228,18 +229,14 @@ export const InformationRight = ({toggleSidebar}) => {
 						}`}
 					>
 						<div className="flex justify-between px-4 py-2">
-							<span>
-								This is the report which documents the specific characteristics of a
-								diamond, issued by the GIA, which is among the most respected
-								organizations in the diamond industry.
-							</span>
+							<span>Hàng Chính Hãng và Được Bảo Đảm</span>
 						</div>
 					</div>
 				</div>
-				<div className="my-4 cursor-pointer" onClick={toggleProductWarrantly}>
+				<div className="border-b pb-4 my-4 cursor-pointer" onClick={toggleProductWarrantly}>
 					<div className="flex justify-between">
 						<div className="text-black m-4 px-4 rounded-lg focus:outline-none font-semibold">
-							Lifetime Diamond Upgrade Program
+							Bảo Hành Sản Phẩm
 						</div>
 						<div className="m-4 px-4 rounded-lg focus:outline-none">
 							{showProductWarrantly ? <MinusOutlined /> : <PlusOutlined />}
@@ -251,12 +248,7 @@ export const InformationRight = ({toggleSidebar}) => {
 						}`}
 					>
 						<div className="flex justify-between px-4 py-2">
-							<span>
-								Diamond Shop is pleased to offer a lifetime diamond upgrade program
-								on all certified diamonds. Simply call a Diamond & Jewelry
-								Consultant at 012345678 to learn more about our upgrade program and
-								to select your new diamond.
-							</span>
+							<span>Được bảo hành toàn diện, an tâm và tin cậy khi mua hàng.</span>
 						</div>
 					</div>
 				</div>

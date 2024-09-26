@@ -13,18 +13,18 @@ const NavbarProfile = () => {
 	};
 
 	const links = [
-		{name: 'Profile', link: '/profile', icon: <FontAwesomeIcon icon={faUser} color="black" />},
+		{name: 'Hồ sơ', link: '/profile', icon: <FontAwesomeIcon icon={faUser} color="black" />},
 		{
-			name: 'Information',
+			name: 'Thông tin',
 			link: '/my-info',
 			icon: <FontAwesomeIcon icon={faReceipt} color="black" />,
 		},
 		{
-			name: 'My Orders',
+			name: 'Đơn hàng của tôi',
 			link: '/my-orders',
 			icon: <FontAwesomeIcon icon={faShoppingBag} color="black" />,
 		},
-		{name: 'Change Password', icon: <FontAwesomeIcon icon={faKey} color="black" />},
+		{name: 'Thay đổi mật khẩu', icon: <FontAwesomeIcon icon={faKey} color="black" />},
 	];
 
 	return (
@@ -35,7 +35,7 @@ const NavbarProfile = () => {
 						key={index}
 						className={`text-left md:cursor-pointer px-10 py-5 flex ${
 							active === link.name ? 'text-primary' : 'text-black'
-						} ${active === link.name ? 'text-lg' : ''}`}
+						} `}
 					>
 						<div className="mr-5">{link.icon}</div>
 						<div>

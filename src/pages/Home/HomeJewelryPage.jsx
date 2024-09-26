@@ -10,12 +10,12 @@ const HomeJewelryPage = () => {
 	return (
 		<div>
 			<Helmet>
-				<title>Jewelry: Shop Fine Jewelry Online | Diamond Shop</title>
+				<title>Trang Sức: Mua Sắm Trang Sức Cao Cấp | Cửa Hàng Kim Cương</title>
 			</Helmet>
 			<BannerJewelry />
 			<div className="bg-white">
 				<h2 className="text-center w-full py-10 uppercase font-semibold text-3xl">
-					Get Inspired
+					Lấy Cảm Hứng
 				</h2>
 				<div className="grid grid-cols-4 py-5">
 					{jewelries?.map((jewelry) => (
@@ -36,12 +36,12 @@ const HomeJewelryPage = () => {
 			<div className="bg-primary flex justify-center items-center h-80 p-20 my-10">
 				<div className="p-9" style={{width: 1300}}>
 					<h1 className="text-3xl" style={{fontWeight: 500}}>
-						The perfect pieces for every moment.
+						Những món trang sức hoàn hảo cho mọi khoảnh khắc.
 					</h1>
 					<p style={{width: 761}} className="mt-5">
-						Whether you’re treating yourself or celebrating something special, our
-						inspiring selection of high-quality designs means you’ll always find just
-						the right thing.
+						Dù bạn tự thưởng cho bản thân hay kỷ niệm điều gì đó đặc biệt, bộ sưu tập
+						trang sức chất lượng cao của chúng tôi sẽ đảm bảo bạn luôn tìm thấy món đồ
+						phù hợp.
 					</p>
 				</div>
 			</div>

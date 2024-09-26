@@ -1,10 +1,9 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect, useRef, useCallback} from 'react';
 import {Badge, Button, Divider, Space} from 'antd';
 import {Helmet} from 'react-helmet';
 import {useNavigate} from 'react-router-dom';
 import LogoutModal from '../../components/LogModal/LogoutModal';
 import NavbarProfile from '../../components/NavbarProfile';
-import {initialData} from '../../utils/constant';
 import {removeLocalStorage} from '../../utils/localstorage';
 
 const detailGroups = {
@@ -14,12 +13,23 @@ const detailGroups = {
 			jewelry_price: 10069000,
 			status: 'Completed',
 			items: [
-				{id: 86, name: 'Round Diamond 3.5 Carat IF', unitPrice: 3357000},
-				{id: 87, name: 'Round Diamond 3.5 Carat VVS1', unitPrice: 4467000},
+				{
+					id: 86,
+					name: 'Round Diamond 3.5 Carat IF',
+					unitPrice: 3357000,
+					orderTime: '26/09/2024',
+				},
+				{
+					id: 87,
+					name: 'Round Diamond 3.5 Carat VVS1',
+					unitPrice: 4467000,
+					orderTime: '26/09/2024',
+				},
 				{
 					id: 88,
 					name: 'Petite Solitaire Engagement Ring In 14k White Gold',
 					unitPrice: 2245000,
+					orderTime: '26/09/2024',
 				},
 			],
 		},
@@ -27,12 +37,23 @@ const detailGroups = {
 			jewelry_price: 10069000,
 			status: 'Waiting for manufacture',
 			items: [
-				{id: 89, name: 'Round Diamond 3.5 Carat IF', unitPrice: 3357000},
-				{id: 90, name: 'Round Diamond 3.5 Carat VVS1', unitPrice: 4467000},
+				{
+					id: 89,
+					name: 'Round Diamond 3.5 Carat IF',
+					unitPrice: 3357000,
+					orderTime: '26/09/2024',
+				},
+				{
+					id: 90,
+					name: 'Round Diamond 3.5 Carat VVS1',
+					unitPrice: 4467000,
+					orderTime: '26/09/2024',
+				},
 				{
 					id: 91,
 					name: 'Petite Solitaire Engagement Ring In 14k White Gold',
 					unitPrice: 2245000,
+					orderTime: '26/09/2024',
 				},
 			],
 		},
@@ -40,57 +61,22 @@ const detailGroups = {
 };
 
 const ProfilePage = () => {
-	const columns = [
-		{
-			title: () => <div className="text-center">Order Id</div>,
-			dataIndex: 'orderId',
-		},
-		{
-			title: () => <div className="text-center">Order Time</div>,
-			dataIndex: 'orderTime',
-		},
-		{
-			title: () => <div className="text-center">Product</div>,
-			dataIndex: 'product',
-		},
-		{
-			title: () => <div className="text-center">Price</div>,
-			dataIndex: 'price',
-		},
-		{
-			title: () => <div className="text-center">Status</div>,
-			dataIndex: 'status',
-			render: (status) => {
-				let color = 'red';
-				if (status === 'Completed') {
-					color = 'green';
-				} else if (status === 'Pending') {
-					color = 'warning';
-				} else if (status === 'Processing') {
-					color = 'processing';
-				}
-				return (
-					<div className="text-center">
-						<Tag className="text-center" color={color}>
-							{status.toUpperCase()}
-						</Tag>
-					</div>
-				);
-			},
-		},
-	];
-
-	const navigate = useNavigate();
-
-	const orderStatus = [
-		{icon: '', name: 'Total Order', status: 'All', order: 1},
-		{icon: '', name: 'Pending Order', status: 'Waiting for manufacture', order: 3},
-		{icon: '', name: 'Processing Order', status: 'Processing', order: 4},
-		{icon: '', name: 'Complete Order', status: 'Completed', order: 10},
-	];
-
 	const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
 	const [status, setStatus] = useState('All');
+	const [currentPage, setCurrentPage] = useState(1);
+	const [itemsPerPage] = useState(3);
+	const [visibleGroups, setVisibleGroups] = useState([]);
+	const [filteredData, setFilteredData] = useState(detailGroups.groups); // Added filteredData state
+	const navigate = useNavigate();
+	const observer = useRef();
+
+	const orderStatus = [
+		{icon: '', name: 'Tổng đơn hàng', status: 'All', order: 1},
+		{icon: '', name: 'Đơn hàng đang chờ xử lý', status: 'Waiting for manufacture', order: 3},
+		{icon: '', name: 'Đơn hàng đang xử lý', status: 'Processing', order: 4},
+		{icon: '', name: 'Hoàn tất đơn hàng', status: 'Completed', order: 10},
+	];
+
 	const showLogoutModal = () => setIsLogoutModalVisible(true);
 	const hideLogoutModal = () => setIsLogoutModalVisible(false);
 
@@ -100,20 +86,47 @@ const ProfilePage = () => {
 		navigate('/');
 	};
 
-	// Filtering logic based on selected status
-	const filteredData =
-		status === 'All'
-			? detailGroups.groups
-			: detailGroups.groups.filter((order) => order.status === status);
-
+	// Handle status change
 	const handleStatusClick = (newStatus) => {
 		setStatus(newStatus);
+		setCurrentPage(1);
 	};
+
+	// Filter data when status or itemsPerPage change
+	useEffect(() => {
+		const newFilteredData =
+			status === 'All'
+				? detailGroups.groups
+				: detailGroups.groups.filter((order) => order.status === status);
+		setFilteredData(newFilteredData);
+		setVisibleGroups(newFilteredData.slice(0, itemsPerPage)); // Reset visibleGroups when filter changes
+	}, [status, itemsPerPage]);
+
+	// Handle infinite scrolling
+	const lastElementRef = useCallback(
+		(node) => {
+			if (observer.current) observer.current.disconnect();
+			observer.current = new IntersectionObserver((entries) => {
+				if (entries[0].isIntersecting && currentPage * itemsPerPage < filteredData.length) {
+					setCurrentPage((prevPage) => prevPage + 1);
+				}
+			});
+			if (node) observer.current.observe(node);
+		},
+		[currentPage, filteredData.length, itemsPerPage]
+	);
+
+	// Update visible groups based on current page and filtered data
+	useEffect(() => {
+		if (status !== 'All') {
+			setVisibleGroups(filteredData.slice(0, currentPage * itemsPerPage));
+		}
+	}, [currentPage, filteredData, status, itemsPerPage]);
 
 	return (
 		<div>
 			<Helmet>
-				<title>My Profile</title>
+				<title>Hồ sơ của tôi</title>
 			</Helmet>
 			<div className="my-20 min-h-96 flex">
 				<div className="mr-20">
@@ -122,9 +135,9 @@ const ProfilePage = () => {
 
 				<div className="font-semibold w-full px-20 py-10 bg-white rounded-lg">
 					<div className="flex justify-between items-center">
-						<h1 className="text-2xl">Welcome Mr.Customer</h1>
-						<Button type="text" className="bg-primary" onClick={showLogoutModal}>
-							Logout
+						<h1 className="text-2xl">Chào mừng Khách hàng</h1>
+						<Button danger onClick={showLogoutModal}>
+							Đăng xuất
 						</Button>
 					</div>
 					<div className="flex items-center font-medium justify-between mt-10">
@@ -156,90 +169,94 @@ const ProfilePage = () => {
 								<p style={{width: '10%'}} className="flex justify-center">
 									Id
 								</p>
-								<p style={{width: '10%'}} className="flex justify-center">
-									Order Time
+								<p
+									style={{width: '20%'}}
+									className="flex justify-center text-center"
+								>
+									Thời gian đặt hàng
 								</p>
 								<p style={{width: '40%'}} className="flex justify-center">
-									Product
+									Sản phẩm
 								</p>
 								<p style={{width: '10%'}} className="flex justify-center">
-									Price
+									Giá
 								</p>
 								<p style={{width: '20%'}} className="flex justify-center">
-									Status
+									Trạng thái
 								</p>
 							</div>
 						</div>
 						<div className="w-full">
-							{filteredData.map((gr, i) => (
-								<div key={i} className="border mb-5 p-5 rounded">
-									{gr.items.map((item, j) => (
-										<div key={j}>
-											<div className="w-full flex items-center text-lg">
-												<p
-													style={{width: '10%'}}
-													className="flex justify-center"
-												>
-													{item.id}
-												</p>
-												<p
-													style={{width: '10%'}}
-													className="flex justify-center"
-												>
-													{item.id}
-												</p>
-												<p style={{width: '40%'}} className="flex my-2">
-													{item.name}
-												</p>
-												<p
-													style={{width: '10%'}}
-													className="flex justify-center my-2"
-												>
-													{item.unitPrice.toLocaleString()} ₫
-												</p>
-												<p
-													style={{width: '20%'}}
-													className="flex justify-center"
-												>
-													{gr.status}
-												</p>
+							{visibleGroups.length === 0 ? (
+								<div className="text-center text-lg font-semibold mt-10">
+									Không có hàng
+								</div>
+							) : (
+								visibleGroups.map((gr, i) => (
+									<div key={i} className="border mb-5 p-5 rounded">
+										{gr.items.map((item, j) => (
+											<div key={j}>
+												<div className="w-full flex items-center text-lg">
+													<p
+														style={{width: '10%'}}
+														className="flex justify-center"
+													>
+														{item.id}
+													</p>
+													<p
+														style={{width: '20%'}}
+														className="flex justify-center"
+													>
+														{item.orderTime}
+													</p>
+													<p style={{width: '40%'}} className="flex my-2">
+														{item.name}
+													</p>
+													<p
+														style={{width: '10%'}}
+														className="flex justify-center my-2"
+													>
+														{item.unitPrice.toLocaleString()} ₫
+													</p>
+													<p
+														style={{width: '20%'}}
+														className="flex justify-center"
+													>
+														{gr.status}
+													</p>
+												</div>
+												<Divider />
 											</div>
-											<Divider />
-										</div>
-									))}
-									<Space
-										wrap
-										className="flex justify-end items-center text-lg font-semibold"
-									>
-										{gr.status === 'Completed' ? (
-											<>
-												<Button danger>Yêu Cầu Trả Hàng</Button>
-											</>
-										) : (
-											<>
-												<Button danger>Hủy Đơn</Button>
-												<Button>Liên Hệ Shop</Button>
-												<Button disabled>Đã Nhận Hàng</Button>
-											</>
-										)}
-
-										<div className="flex items-center">
-											<p>Tổng giá:</p>
-											<p className="ml-3">
-												{detailGroups.total_price.toLocaleString()} ₫
+										))}
+										<div className="flex items-center justify-end">
+											<p className="font-semibold">Giá trang sức</p>
+											<p className="text-2xl font-semibold text-red-600 ml-5">
+												{gr.jewelry_price.toLocaleString()} ₫
 											</p>
 										</div>
-									</Space>
+									</div>
+								))
+							)}
+							{visibleGroups.length < filteredData.length && (
+								<div ref={lastElementRef} className="text-center mt-5">
+									<p>Đang tải thêm dữ liệu...</p>
 								</div>
-							))}
+							)}
 						</div>
+						{status === 'All' && (
+							<div className="text-end bg-primary p-5 rounded-lg">
+								<p className="text-2xl font-semibold text-red-600">
+									Tổng giá: {detailGroups.total_price.toLocaleString()} ₫
+								</p>
+							</div>
+						)}
 					</div>
 				</div>
 			</div>
 			<LogoutModal
-				visible={isLogoutModalVisible}
-				onConfirm={handleLogout}
+				isVisible={isLogoutModalVisible}
 				onCancel={hideLogoutModal}
+				onLogout={handleLogout}
 			/>
 		</div>
 	);

@@ -8,15 +8,15 @@ import Logo from '../../assets/logo-short-ex.png';
 const NavLinks = () => {
 	const links = [
 		{
-			name: 'Diamond',
+			name: 'Kim Cương',
 			ref: 'diamond',
 			col: 2,
 			submenu: true,
-			mess: 'View All Diamond',
+			mess: 'Xem Tất Cả Kim Cương',
 			link: '/diamond/search',
 			sublinks: [
 				{
-					Head: 'Shop Diamond by Shape',
+					Head: 'Mua Kim Cương Theo Hình Dạng',
 					sublink: [
 						{name: 'Round', link: '/'},
 						{name: 'Princess', link: '/'},
@@ -31,41 +31,41 @@ const NavLinks = () => {
 					],
 				},
 				{
-					Head: 'Build Your Own Jewelry',
+					Head: 'Tạo Trang Sức Của Bạn',
 					sublink: [
-						{name: 'Ring', link: '/'},
-						{name: 'Earrings', link: '/'},
-						{name: 'Pendant', link: '/'},
+						{name: 'Nhẫn', link: '/'},
+						{name: 'Bông Tai', link: '/'},
+						{name: 'Mặt Dây Chuyền', link: '/'},
 					],
 				},
 			],
 		},
 		{
-			name: 'Jewelry',
+			name: 'Trang Sức',
 			ref: 'jewelry',
 			col: 3,
 			submenu: true,
 			link: '/jewelry/search',
-			mess: 'View All Jewelry',
+			mess: 'Xem Tất Cả Trang Sức',
 			sublinks: [
 				{
-					Head: 'Earrings',
+					Head: 'Bông Tai',
 					sublink: [
-						{name: 'Design Your Own Earrings', link: '/'},
-						{name: 'Diamond Earrings', link: '/'},
-						{name: 'Stud Earrings', link: '/'},
+						{name: 'Tự Thiết Kế Bông Tai', link: '/'},
+						{name: 'Bông Tai Kim Cương', link: '/'},
+						{name: 'Bông Tai Đinh', link: '/'},
 					],
 				},
 				{
-					Head: 'Rings',
+					Head: 'Nhẫn',
 					sublink: [
-						{name: 'Diamond Rings', link: '/'},
-						{name: 'Wedding Rings', link: '/'},
-						{name: 'Engagement Rings', link: '/'},
+						{name: 'Nhẫn Kim Cương', link: '/'},
+						{name: 'Nhẫn Cưới', link: '/'},
+						{name: 'Nhẫn Đính Hôn', link: '/'},
 					],
 				},
 				{
-					Head: 'Designers Jewelry',
+					Head: 'Trang Sức Thiết Kế',
 					sublink: [
 						{name: 'Monica Rich Kosann', link: '/'},
 						{name: 'Zac Zac Posen', link: '/'},
@@ -75,19 +75,19 @@ const NavLinks = () => {
 					],
 				},
 				{
-					Head: 'Necklaces',
+					Head: 'Dây Chuyền',
 					sublink: [
-						{name: 'Design Your Own Pendant', link: '/'},
-						{name: 'Diamond Necklaces', link: '/'},
+						{name: 'Tự Thiết Kế Mặt Dây Chuyền', link: '/'},
+						{name: 'Dây Chuyền Kim Cương', link: '/'},
 					],
 				},
 				{
-					Head: 'Jewelry',
+					Head: 'Trang Sức',
 					sublink: [
-						{name: 'Lab Grown Diamond Jewelry', link: '/'},
-						{name: 'Birthstone Jewelry', link: '/'},
-						{name: 'Designer Jewelry', link: '/'},
-						{name: 'New Arrivals', link: '/'},
+						{name: 'Trang Sức Kim Cương Nhân Tạo', link: '/'},
+						{name: 'Trang Sức Đá Sinh Nhật', link: '/'},
+						{name: 'Trang Sức Thiết Kế', link: '/'},
+						{name: 'Sản Phẩm Mới', link: '/'},
 					],
 				},
 			],
