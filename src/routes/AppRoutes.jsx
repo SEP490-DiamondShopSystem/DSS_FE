@@ -1,9 +1,10 @@
 import React from 'react';
 import {Route, Routes} from 'react-router-dom';
 
+import CartPage from '../pages/CartPage/CartPage';
 import CouponPage from '../pages/CouponPage/CouponPage';
+import CustomizePage from '../pages/Customize';
 import DiamondDetailPage from '../pages/DiamonDetailPage';
-import DiamondLabPage from '../pages/DiamondLabPage/DiamondLabPage';
 import DiamondSearchPage from '../pages/DiamondSearchPage';
 import FinishProductPage from '../pages/FinishProductPage';
 import HomeJewelryPage from '../pages/Home/HomeJewelryPage';
@@ -15,7 +16,6 @@ import MyInfoPage from '../pages/ProfilePage/MyInfoPage';
 import MyOrderPage from '../pages/ProfilePage/MyOrderPage/MyOrderPage';
 import ProfilePage from '../pages/ProfilePage/ProfilePage';
 import PromotionPage from '../pages/PromotionPage/PromotionPage';
-import CartPage from '../pages/CartPage/CartPage';
 
 export const AppRouters = () => {
 	return (
@@ -28,37 +28,13 @@ export const AppRouters = () => {
 			<Route path="/my-orders" element={<MyOrderPage />} />
 			<Route path="/my-info" element={<MyInfoPage />} />
 			<Route path="/cart" element={<CartPage />} />
-			<Route path="/diamond-lab/search" element={<DiamondLabPage />} />
 			<Route path="/jewelry/search" element={<JewelrySearchPage />} />
 			<Route path="/diamond/search" element={<DiamondSearchPage />} />
-			<Route
-				path="/jewelry/design-your-own-ring/:id"
-				element={
-					<>
-						{/* <StepProgressBar1 /> */}
-						<ProductDetailPage />
-					</>
-				}
-			/>
-			<Route
-				path="/diamond-detail/:id"
-				element={
-					<>
-						{/* <StepProgressBar1 /> */}
-						<DiamondDetailPage />
-					</>
-				}
-			/>
-			<Route
-				path="/completed-jewelry/:id"
-				element={
-					<>
-						{/* <StepProgressBar1 /> */}
-						<FinishProductPage />
-					</>
-				}
-			/>
-
+			<Route path="/jewelry/design-your-own-ring/:id" element={<ProductDetailPage />} />
+			<Route path="/diamond-detail/:id" element={<DiamondDetailPage />} />
+			<Route path="/completed-jewelry/:id" element={<FinishProductPage />} />
+			//Customize
+			<Route path="/customize" element={<CustomizePage />} />
 			<Route path="*" element={<NotFoundPage />} />
 		</Routes>
 	);

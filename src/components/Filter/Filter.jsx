@@ -136,13 +136,13 @@ export const FilterDiamond = () => {
 };
 
 // Component for filtering jewelry items
-export const FilterJewelry = () => {
-	const [filters, setFilters] = useState({
-		gender: [],
-		diamond_type: [],
-		metal: [],
-		price: {minPrice: 0, maxPrice: 1000}, // Initialize with default price range
-	});
+export const FilterJewelry = ({handleFilter, setFilters, filters}) => {
+	// const [filters, setFilters] = useState({
+	// 	gender: [],
+	// 	diamond_type: [],
+	// 	metal: [],
+	// 	price: {minPrice: 0, maxPrice: 1000}, // Initialize with default price range
+	// });
 
 	const filterTypes = ['gender', 'diamond_type', 'metal'];
 	// Logs current filters state

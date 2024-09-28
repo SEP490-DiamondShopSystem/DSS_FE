@@ -237,6 +237,21 @@ export const Sidebar = ({isOpen, toggleSidebar}) => {
 								</div>
 							</div>
 						</div>
+						<div className="mx-5 absolute bottom-10" style={{width: '90%'}}>
+							<Button
+								onClick={() => {
+									if (link === '') {
+										handleSelectDiamondRcm('diamondRcm');
+									} else {
+										navigate(link);
+									}
+								}}
+								type="text"
+								className=" bg-primary w-full text-lg font-semibold p-5"
+							>
+								CONTINUE
+							</Button>
+						</div>
 					</>
 				)}
 

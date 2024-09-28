@@ -10,26 +10,26 @@ import {OrderInvoiceModal} from './OrderInvoiceModal';
 const MyOrderPage = () => {
 	const columns = [
 		{
-			title: 'Order ID',
+			title: 'ID',
 			dataIndex: 'orderId',
 			align: 'center',
 		},
 		{
-			title: 'Order Time',
+			title: 'Thời gian đặt hàng',
 			dataIndex: 'orderTime',
 			align: 'center',
 		},
 		{
-			title: () => <div className="text-center">Product</div>,
+			title: () => <div className="text-center">Sản phẩm</div>,
 			dataIndex: 'product',
 		},
 		{
-			title: 'Price',
+			title: 'Giá',
 			dataIndex: 'price',
 			align: 'center',
 		},
 		{
-			title: 'Status',
+			title: 'Trạng thái',
 			dataIndex: 'status',
 			render: (status) => {
 				let color = 'red';
@@ -51,7 +51,7 @@ const MyOrderPage = () => {
 			align: 'center',
 		},
 		{
-			title: () => <div className="text-center">Action</div>,
+			// title: () => <div className="text-center">Action</div>,
 			dataIndex: 'action',
 			render: (_, record) =>
 				dataSource.length >= 1 ? (

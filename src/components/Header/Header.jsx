@@ -29,6 +29,15 @@ export const Header = () => {
 					<NavLinks />
 					<li>
 						<Link
+							to="/customize"
+							className={`py-7 px-3 inline-block no-underline text-black`}
+							onClick={() => handleLinkClick('Promotion')}
+						>
+							Đặt trang sức
+						</Link>
+					</li>
+					<li>
+						<Link
 							to="/promotion"
 							className={`py-7 px-3 inline-block no-underline text-black`}
 							onClick={() => handleLinkClick('Promotion')}
@@ -36,7 +45,7 @@ export const Header = () => {
 							Khuyến mãi
 						</Link>
 					</li>
-					<li>
+					{/* <li>
 						<Link
 							to="/contact"
 							className={`py-7 px-3 inline-block no-underline text-black
@@ -45,7 +54,7 @@ export const Header = () => {
 						>
 							Liên hệ
 						</Link>
-					</li>
+					</li> */}
 				</ul>
 				<div>
 					<Search

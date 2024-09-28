@@ -2219,3 +2219,8 @@ video {
 .ml-96 {
 	margin-left: 24rem /* 384px */;
 }
+
+.hover\:bg-white:hover {
+	--tw-bg-opacity: 1;
+	background-color: rgb(255 255 255 / var(--tw-bg-opacity)) /* #ffffff */;
+}

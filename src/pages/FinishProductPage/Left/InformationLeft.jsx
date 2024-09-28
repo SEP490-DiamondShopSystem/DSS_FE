@@ -16,7 +16,7 @@ export const InformationLeft = () => {
 					{/* <span class="text-gray-800">501290w14</span> */}
 				</div>
 				<div class="flex justify-between px-4 border-b border-tintWhite py-2">
-					<span class="text-gray-600">Số Lượng Cổ Phiếu</span>
+					<span class="text-gray-600">Mã Định Danh</span>
 					<span class="text-gray-800">22063275</span>
 				</div>
 				<div class="flex justify-between px-4 border-b border-tintWhite py-2">

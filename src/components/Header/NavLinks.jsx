@@ -31,7 +31,7 @@ const NavLinks = () => {
 					],
 				},
 				{
-					Head: 'Tạo Trang Sức Của Bạn',
+					Head: 'Thiết Kế Trang Sức Của Bạn',
 					sublink: [
 						{name: 'Nhẫn', link: '/'},
 						{name: 'Bông Tai', link: '/'},
