@@ -15,6 +15,7 @@ const JewelrySearchPage = () => {
 				items={items}
 				className="bg-white p-4 rounded-full my-10"
 			/>
+
 			<JewelryList />
 		</div>
 	);

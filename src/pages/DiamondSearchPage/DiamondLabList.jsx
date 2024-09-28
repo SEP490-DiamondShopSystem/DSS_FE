@@ -14,7 +14,7 @@ import {getAllDiamond} from '../../redux/slices/diamondSlice';
 import {useNavigate} from 'react-router-dom';
 import {FilterDiamond} from '../../components/Filter/Filter';
 
-export const DiamondList = () => {
+export const DiamondLabList = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const diamondList = useSelector(GetAllDiamondSelector);

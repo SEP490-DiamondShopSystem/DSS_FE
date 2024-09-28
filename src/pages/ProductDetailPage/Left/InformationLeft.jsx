@@ -12,7 +12,7 @@ export const InformationLeft = () => {
 		<>
 			<div className="bg-gray-50 rounded-lg shadow-md w-full mt-10 pr-36">
 				<div className="flex justify-between px-4 border-b border-tintWhite py-2">
-					<span className="text-gray-600">Số Lượng Kho</span>
+					<span className="text-gray-600">Mã Định Danh</span>
 					<span className="text-gray-800">501290w14</span>
 				</div>
 				<div className="flex justify-between px-4 border-b border-tintWhite py-2">

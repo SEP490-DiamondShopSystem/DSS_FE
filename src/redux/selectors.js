@@ -7,3 +7,4 @@ export const GetAllDiamondSelector = (state) => state.diamondSlice.diamonds;
 
 //JEWELRY
 export const GetAllJewelrySelector = (state) => state.jewelrySlice.jewelries;
+export const LoadingJewelrySelector = (state) => state.jewelrySlice.loading;
