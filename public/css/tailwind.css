@@ -2234,3 +2234,12 @@ video {
 	border-start-end-radius: 0.5rem /* 8px */;
 	border-end-end-radius: 0.5rem /* 8px */;
 }
+
+.mt-6 {
+	margin-top: 1.5rem /* 24px */;
+}
+
+.py-4 {
+	padding-top: 1rem /* 16px */;
+	padding-bottom: 1rem /* 16px */;
+}

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {DownOutlined} from '@ant-design/icons';
+import {DownOutlined, ReloadOutlined} from '@ant-design/icons';
 import {Button, Select, Slider} from 'antd';
 import {useLocation} from 'react-router-dom';
 import {
@@ -59,7 +59,7 @@ export const FilterDiamond = ({filters, setFilters, handleReset}) => {
 	};
 
 	return (
-		<div className="py-4">
+		<div className="py-4 ">
 			<div className="flex items-center">
 				<Select
 					placeholder="SHAPE"
@@ -141,8 +141,10 @@ export const FilterDiamond = ({filters, setFilters, handleReset}) => {
 					/>
 				</div>
 			</div>
-			<div>
-				<Button onClick={handleReset}>Tạo lại</Button>
+			<div className="ml-8 mt-6">
+				<Button onClick={handleReset} danger>
+					<ReloadOutlined />
+				</Button>
 			</div>
 		</div>
 	);
