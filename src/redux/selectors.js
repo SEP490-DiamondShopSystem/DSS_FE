@@ -4,6 +4,7 @@ export const UserInfoSelector = (state) => state.userLoginSlice.userInfo;
 
 //DIAMOND
 export const GetAllDiamondSelector = (state) => state.diamondSlice.diamonds;
+export const LoadingDiamondSelector = (state) => state.diamondSlice.loading;
 
 //JEWELRY
 export const GetAllJewelrySelector = (state) => state.jewelrySlice.jewelries;

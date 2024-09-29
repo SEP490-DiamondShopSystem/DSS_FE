@@ -1,27 +1,35 @@
-import {DownOutlined} from '@ant-design/icons';
-import {Select, Slider} from 'antd';
-import React, {useCallback, useState} from 'react';
+import React from 'react';
+
+import {DownOutlined, ReloadOutlined} from '@ant-design/icons';
+import {Button, Select, Slider} from 'antd';
+import {useLocation} from 'react-router-dom';
 import {
-	diamondChoice,
 	genderChoice,
 	marks,
 	marksClarity,
 	marksCut,
 	metalChoice,
 	Shape,
+	typeChoice,
 } from '../../utils/constant';
 
-export const FilterDiamond = () => {
-	const [filters, setFilters] = useState({
-		shape: '',
-		price: {minPrice: '', maxPrice: ''},
-		carat: {minCarat: '', maxCarat: ''},
-		color: {minColor: '', maxColor: ''},
-		clarity: {minClarity: '', maxClarity: ''},
-		cut: {minCut: '', maxCut: ''},
-	});
-
+export const FilterDiamond = ({filters, setFilters, handleReset}) => {
 	console.log('filters', filters);
+	const location = useLocation();
+
+	// useEffect(() => {
+	// 	const params = new URLSearchParams(location.search);
+	// 	const shapeFromURL = params.get('shape');
+
+	// 	console.log(shapeFromURL);
+
+	// 	if (shapeFromURL) {
+	// 		setFilters((prev) => ({
+	// 			...prev,
+	// 			shape: shapeFromURL,
+	// 		}));
+	// 	}
+	// }, [location.search, setFilters]);
 
 	const handleChange = (type, value) => {
 		setFilters((prev) => ({
@@ -30,12 +38,14 @@ export const FilterDiamond = () => {
 		}));
 	};
 
+	console.log(filters.color);
+
 	const handlePriceChange = (value) => {
-		handleChange('color', {minPrice: value[0], maxPrice: value[1]});
+		handleChange('price', {minPrice: value[0], maxPrice: value[1]});
 	};
 
 	const handleCaratChange = (value) => {
-		handleChange('color', {minCarat: value[0], maxCarat: value[1]});
+		handleChange('carat', {minCarat: value[0], maxCarat: value[1]});
 	};
 
 	const handleColorChange = (value) => {
@@ -45,11 +55,11 @@ export const FilterDiamond = () => {
 		handleChange('clarity', {minClarity: value[0], maxClarity: value[1]});
 	};
 	const handleCutChange = (value) => {
-		handleChange('color', {minCut: value[0], maxCut: value[1]});
+		handleChange('cut', {minCut: value[0], maxCut: value[1]});
 	};
 
 	return (
-		<div className="p-4">
+		<div className="py-4 ">
 			<div className="flex items-center">
 				<Select
 					placeholder="SHAPE"
@@ -74,9 +84,9 @@ export const FilterDiamond = () => {
 					<p className="mb-4">Price:</p>
 					<Slider
 						range
-						defaultValue={[0, 1000]}
-						min={0}
-						max={1000}
+						value={[filters.price.minPrice, filters.price.maxPrice]} // Sử dụng value thay vì defaultValue
+						min={0} // Đặt giá trị tối thiểu
+						max={1000} // Đặt giá trị tối đa
 						onChange={handlePriceChange}
 					/>
 				</div>
@@ -86,7 +96,7 @@ export const FilterDiamond = () => {
 					<p className="mb-4">Carat:</p>
 					<Slider
 						range
-						defaultValue={[0.5, 30.0]}
+						value={[filters.carat.minCarat, filters.carat.maxCarat]}
 						step={0.1}
 						min={0.5}
 						max={30.0}
@@ -104,7 +114,7 @@ export const FilterDiamond = () => {
 						marks={marks} // Define your `marks` data
 						min={0}
 						max={7}
-						defaultValue={[0, 7]}
+						value={[filters.color.minColor, filters.color.maxColor]}
 						onChange={handleColorChange}
 					/>
 				</div>
@@ -115,7 +125,7 @@ export const FilterDiamond = () => {
 						marks={marksClarity} // Define your `marks` data
 						min={0}
 						max={7}
-						defaultValue={[0, 7]}
+						value={[filters.clarity.minClarity, filters.clarity.maxClarity]}
 						onChange={handleClarityChange}
 					/>
 				</div>
@@ -126,10 +136,15 @@ export const FilterDiamond = () => {
 						marks={marksCut} // Define your `marks` data
 						min={0}
 						max={3}
-						defaultValue={[0, 3]}
+						value={[filters.cut.minCut, filters.cut.maxCut]}
 						onChange={handleCutChange}
 					/>
 				</div>
+			</div>
+			<div className="ml-8 mt-6">
+				<Button onClick={handleReset} danger>
+					<ReloadOutlined />
+				</Button>
 			</div>
 		</div>
 	);
@@ -144,7 +159,7 @@ export const FilterJewelry = ({handleFilter, setFilters, filters}) => {
 	// 	price: {minPrice: 0, maxPrice: 1000}, // Initialize with default price range
 	// });
 
-	const filterTypes = ['gender', 'diamond_type', 'metal'];
+	const filterTypes = ['gender', 'type', 'metal'];
 	// Logs current filters state
 	console.log(filters);
 
@@ -164,16 +179,16 @@ export const FilterJewelry = ({handleFilter, setFilters, filters}) => {
 		}));
 	};
 
-	// Data mapping based on filter type (gender, diamond type, or metal)
+	// Data mapping based on filter type (gender,  type, or metal)
 	const filterOptions = {
 		gender: genderChoice,
-		diamond_type: diamondChoice,
+		type: typeChoice,
 		metal: metalChoice,
 	};
 
 	// Render the filter UI
 	return (
-		<div className="p-4 flex items-center">
+		<div wrap className="p-4 flex items-center">
 			{/* Render Select components for each filter type */}
 			{filterTypes.map((filterType) => (
 				<Select

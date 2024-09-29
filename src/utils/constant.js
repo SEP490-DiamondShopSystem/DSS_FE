@@ -372,9 +372,9 @@ export const listJewelry = [
 	},
 ];
 
-export const genderChoice = ['Woman', 'Man', 'Unisex'];
+export const genderChoice = ['Nam', 'Nữ'];
 
-export const diamondChoice = ['Natural Diamond', 'Lab Grown Diamond'];
+export const typeChoice = ['Nhẫn', 'Bông tai', 'Dây chuyền'];
 
 export const metalChoice = ['White Gold', 'Yellow Gold', 'Platinum'];
 
