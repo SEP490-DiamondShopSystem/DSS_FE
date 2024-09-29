@@ -2,10 +2,12 @@ import React from 'react';
 
 import {DownOutlined} from '@ant-design/icons';
 import {Image} from 'antd';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom'; // Thay thế useHistory bằng useNavigate
 import Logo from '../../assets/logo-short-ex.png';
 
 const NavLinks = () => {
+	const navigate = useNavigate(); // Sử dụng useNavigate thay cho useHistory
+
 	const links = [
 		{
 			name: 'Kim Cương',
@@ -18,16 +20,16 @@ const NavLinks = () => {
 				{
 					Head: 'Mua Kim Cương Theo Hình Dạng',
 					sublink: [
-						{name: 'Round', link: '/'},
-						{name: 'Princess', link: '/'},
-						{name: 'Cushion', link: '/'},
-						{name: 'Oval', link: '/'},
-						{name: 'Emerald', link: '/'},
-						{name: 'Pear', link: '/'},
-						{name: 'Asscher', link: '/'},
-						{name: 'Heart', link: '/'},
-						{name: 'Radiant', link: '/'},
-						{name: 'Marquise', link: '/'},
+						{name: 'Round', link: '/diamond/search'},
+						{name: 'Princess', link: '/diamond/search'},
+						{name: 'Cushion', link: '/diamond/search'},
+						{name: 'Oval', link: '/diamond/search'},
+						{name: 'Emerald', link: '/diamond/search'},
+						{name: 'Pear', link: '/diamond/search'},
+						{name: 'Asscher', link: '/diamond/search'},
+						{name: 'Heart', link: '/diamond/search'},
+						{name: 'Radiant', link: '/diamond/search'},
+						{name: 'Marquise', link: '/diamond/search'},
 					],
 				},
 				{
@@ -40,59 +42,11 @@ const NavLinks = () => {
 				},
 			],
 		},
-		{
-			name: 'Trang Sức',
-			ref: 'jewelry',
-			col: 3,
-			submenu: true,
-			link: '/jewelry/search',
-			mess: 'Xem Tất Cả Trang Sức',
-			sublinks: [
-				{
-					Head: 'Bông Tai',
-					sublink: [
-						{name: 'Tự Thiết Kế Bông Tai', link: '/'},
-						{name: 'Bông Tai Kim Cương', link: '/'},
-						{name: 'Bông Tai Đinh', link: '/'},
-					],
-				},
-				{
-					Head: 'Nhẫn',
-					sublink: [
-						{name: 'Nhẫn Kim Cương', link: '/'},
-						{name: 'Nhẫn Cưới', link: '/'},
-						{name: 'Nhẫn Đính Hôn', link: '/'},
-					],
-				},
-				{
-					Head: 'Trang Sức Thiết Kế',
-					sublink: [
-						{name: 'Monica Rich Kosann', link: '/'},
-						{name: 'Zac Zac Posen', link: '/'},
-						{name: 'Bella Vaughan', link: '/'},
-						{name: 'Blue Nile Studio', link: '/'},
-						{name: 'The Gallery Collection™', link: '/'},
-					],
-				},
-				{
-					Head: 'Dây Chuyền',
-					sublink: [
-						{name: 'Tự Thiết Kế Mặt Dây Chuyền', link: '/'},
-						{name: 'Dây Chuyền Kim Cương', link: '/'},
-					],
-				},
-				{
-					Head: 'Trang Sức',
-					sublink: [
-						{name: 'Trang Sức Kim Cương Nhân Tạo', link: '/'},
-						{name: 'Trang Sức Đá Sinh Nhật', link: '/'},
-						{name: 'Trang Sức Thiết Kế', link: '/'},
-						{name: 'Sản Phẩm Mới', link: '/'},
-					],
-				},
-			],
-		},
 	];
+
+	const handleShapeClick = (shape) => {
+		localStorage.setItem('selectedShape', shape);
+	};
 
 	return (
 		<>
@@ -128,12 +82,15 @@ const NavLinks = () => {
 																className="text-sm text-gray-600 my-2.5 md:cursor-pointer"
 																key={k}
 															>
-																<Link
-																	to={sl.link}
+																<a
+																	href={sl.link} // link with shape filter
 																	className="hover:text-primary font-normal normal-case"
+																	onClick={() =>
+																		handleShapeClick(sl.name)
+																	}
 																>
 																	{sl.name}
-																</Link>
+																</a>
 															</li>
 														))}
 													</ul>

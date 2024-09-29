@@ -22,6 +22,24 @@ export const DiamondLabList = () => {
 	const [changeGrid, setChangeGrid] = useState(false);
 	const [like, setLike] = useState(false);
 	const [diamond, setDiamond] = useState();
+	const [filters, setFilters] = useState({
+		shape: '',
+		price: {minPrice: 0, maxPrice: 1000},
+		carat: {minCarat: 0.5, maxCarat: 30.0},
+		color: {minColor: 0, maxColor: 7},
+		clarity: {minClarity: 0, maxClarity: 7},
+		cut: {minCut: 0, maxCut: 3},
+	});
+
+	useEffect(() => {
+		const savedShape = localStorage.getItem('selectedShape');
+		if (savedShape) {
+			setFilters((prevFilters) => ({
+				...prevFilters,
+				shape: savedShape,
+			}));
+		}
+	}, []);
 
 	useEffect(() => {
 		dispatch(getAllDiamond());
@@ -44,9 +62,20 @@ export const DiamondLabList = () => {
 		}));
 	};
 
+	const handleReset = () => {
+		setFilters({
+			shape: '',
+			price: {minPrice: 0, maxPrice: 1000},
+			carat: {minCarat: 0.5, maxCarat: 30.0},
+			color: {minColor: 0, maxColor: 7},
+			clarity: {minClarity: 0, maxClarity: 7},
+			cut: {minCut: 0, maxCut: 3},
+		});
+	};
+
 	return (
 		<div>
-			<FilterDiamond />
+			<FilterDiamond setFilters={setFilters} filters={filters} handleReset={handleReset} />
 			<div className="text-2xl flex justify-end ">
 				<p className="p-2">200 Kết quả</p>
 				<div

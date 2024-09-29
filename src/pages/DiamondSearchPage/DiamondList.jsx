@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-
 import {
 	AppstoreOutlined,
 	HeartFilled,
@@ -20,8 +19,28 @@ export const DiamondList = () => {
 	const diamondList = useSelector(GetAllDiamondSelector);
 
 	const [changeGrid, setChangeGrid] = useState(false);
-	const [like, setLike] = useState(false);
-	const [diamond, setDiamond] = useState();
+	const [like, setLike] = useState({});
+	const [diamond, setDiamond] = useState([]);
+	const [filters, setFilters] = useState({
+		shape: '',
+		price: {minPrice: 0, maxPrice: 1000},
+		carat: {minCarat: 0.5, maxCarat: 30.0},
+		color: {minColor: 0, maxColor: 7},
+		clarity: {minClarity: 0, maxClarity: 7},
+		cut: {minCut: 0, maxCut: 3},
+	});
+
+	console.log(filters);
+
+	useEffect(() => {
+		const savedShape = localStorage.getItem('selectedShape');
+		if (savedShape) {
+			setFilters((prevFilters) => ({
+				...prevFilters,
+				shape: savedShape,
+			}));
+		}
+	}, []);
 
 	useEffect(() => {
 		dispatch(getAllDiamond());
@@ -38,17 +57,29 @@ export const DiamondList = () => {
 		setChangeGrid(false);
 	};
 
-	const handleHeartClick = (i) => {
-		setLike((prev) => ({
-			[i]: !prev[i],
+	const handleHeartClick = (id) => {
+		setLike((prevLike) => ({
+			...prevLike,
+			[id]: !prevLike[id],
 		}));
+	};
+
+	const handleReset = () => {
+		setFilters({
+			shape: '',
+			price: {minPrice: 0, maxPrice: 1000},
+			carat: {minCarat: 0.5, maxCarat: 30.0},
+			color: {minColor: 0, maxColor: 7},
+			clarity: {minClarity: 0, maxClarity: 7},
+			cut: {minCut: 0, maxCut: 3},
+		});
 	};
 
 	return (
 		<div>
-			<FilterDiamond />
+			<FilterDiamond setFilters={setFilters} filters={filters} handleReset={handleReset} />
 			<div className="text-2xl flex justify-end ">
-				<p className="p-2">200 Kết quả</p>
+				<p className="p-2">{diamond.length} Kết quả</p>
 				<div
 					className="md:cursor-pointer mx-10 hover:bg-neutral-300 rounded-xl p-2"
 					onClick={handleListClick}
@@ -64,23 +95,22 @@ export const DiamondList = () => {
 			</div>
 			{changeGrid ? (
 				<div className="transition-all duration-300 grid grid-cols-4 gap-10 mb-20 mt-10">
-					{diamond?.map((diamond, i) => (
+					{diamond.map((diamondItem, i) => (
 						<div
-							key={i}
-							className=" shadow-lg bg-white border-2 border-white rounded-lg hover:border-2 hover:border-black cursor-pointer"
-							// onClick={() => navigate(`/diamond-detail/${diamond.id}`)}
-							onClick={() => navigate(`/diamond-detail/1`)}
+							key={diamondItem.id}
+							className="shadow-lg bg-white border-2 border-white rounded-lg hover:border-2 hover:border-black cursor-pointer"
+							onClick={() => navigate(`/diamond-detail/${diamondItem.id}`)}
 						>
 							<div className="w-80">
 								<div
-									className=" flex justify-center mb-5 "
+									className="flex justify-center mb-5"
 									style={{background: '#b8b7b5'}}
 								>
-									<Image src={diamondImg} alt={diamond.title} className="" />
+									<Image src={diamondImg} alt={diamondItem.title} />
 								</div>
 								<div className="mx-10 my-5">
-									<p>{diamond.title}</p>
-									<p style={{color: '#707070'}}>{diamond.price}</p>
+									<p>{diamondItem.title}</p>
+									<p style={{color: '#707070'}}>{diamondItem.price}</p>
 								</div>
 							</div>
 						</div>
@@ -88,43 +118,48 @@ export const DiamondList = () => {
 				</div>
 			) : (
 				<div className="transition-all duration-300 mb-20 mt-10">
-					{diamond?.map((diamond, i) => (
+					{diamond.map((diamondItem, i) => (
 						<div
-							key={i}
+							key={diamondItem.id}
 							className="shadow-lg bg-white rounded-lg cursor-pointer"
-							onClick={() => navigate(`/diamond-detail/1`)}
+							onClick={() => navigate(`/diamond-detail/${diamondItem.id}`)}
 						>
-							<div className="flex w-full my-10 ">
+							<div className="flex w-full my-10">
 								<div
 									className="flex justify-center w-1/5"
 									style={{background: '#b8b7b5'}}
 								>
 									<Image
 										src={diamondImg}
-										alt={diamond.title}
+										alt={diamondItem.title}
 										className="w-full"
 										preview={false}
 									/>
 								</div>
 								<div className="flex justify-between items-center w-4/5 ml-5">
-									<p className="text-xl w-1/5 text-center">{diamond.shape}</p>
-									<p className="text-xl w-1/5 text-center">{diamond.carat}</p>
+									<p className="text-xl w-1/5 text-center">{diamondItem.shape}</p>
+									<p className="text-xl w-1/5 text-center">{diamondItem.carat}</p>
 									<p className="text-xl w-1/5 text-center">
-										{diamond?.cut === '' ? '-' : diamond.cut}
+										{diamondItem.cut || '-'}
 									</p>
-									<p className="text-xl w-1/5 text-center">{diamond.color}</p>
-									<p className="text-xl w-1/5 text-center">{diamond.clarity}</p>
+									<p className="text-xl w-1/5 text-center">{diamondItem.color}</p>
+									<p className="text-xl w-1/5 text-center">
+										{diamondItem.clarity}
+									</p>
 									<p
 										className="text-xl w-1/5 text-center"
 										style={{color: '#707070'}}
 									>
-										{diamond.price}
+										{diamondItem.price}
 									</p>
 									<p
 										className="text-xl w-1/5 text-center cursor-pointer"
-										onClick={() => handleHeartClick(i)}
+										onClick={(e) => {
+											e.stopPropagation(); // Ngăn chặn sự kiện onClick khác
+											handleHeartClick(diamondItem.id);
+										}}
 									>
-										{like[i] ? (
+										{like[diamondItem.id] ? (
 											<HeartFilled color="#F65252" />
 										) : (
 											<HeartOutlined />
