@@ -2,20 +2,20 @@ import React from 'react';
 
 import {DownOutlined} from '@ant-design/icons';
 import {Image} from 'antd';
-import {Link, useNavigate} from 'react-router-dom'; // Thay thế useHistory bằng useNavigate
+import {Link, useNavigate} from 'react-router-dom';
 import Logo from '../../assets/logo-short-ex.png';
 
 const NavLinks = () => {
-	const navigate = useNavigate(); // Sử dụng useNavigate thay cho useHistory
+	const navigate = useNavigate();
 
 	const links = [
 		{
-			name: 'Kim Cương',
+			name: 'Sản Phẩm',
 			ref: 'diamond',
 			col: 2,
 			submenu: true,
-			mess: 'Xem Tất Cả Kim Cương',
-			link: '/diamond/search',
+			mess: 'Xem Sản Phẩm',
+			link: '/jewelry',
 			sublinks: [
 				{
 					Head: 'Mua Kim Cương Theo Hình Dạng',
@@ -36,16 +36,62 @@ const NavLinks = () => {
 					Head: 'Thiết Kế Trang Sức Của Bạn',
 					sublink: [
 						{name: 'Nhẫn', link: '/'},
-						{name: 'Bông Tai', link: '/'},
+						{name: 'Bông Tai', link: '/jewelry/design-your-own-earrings'},
 						{name: 'Mặt Dây Chuyền', link: '/'},
 					],
 				},
 			],
 		},
+		// {
+		// 	name: 'Trang Sức',
+		// 	ref: 'jewelry',
+		// 	col: 3,
+		// 	submenu: true,
+		// 	link: '/jewelry/all-jewelry',
+		// 	mess: 'Xem Tất Cả Trang Sức',
+		// 	sublinks: [
+		// 		{
+		// 			Head: 'Bông Tai',
+		// 			sublink: [
+		// 				{
+		// 					name: 'Tự Thiết Kế Bông Tai',
+		// 					link: '/jewelry/design-your-own-earrings',
+		// 				},
+		// 				{name: 'Bông Tai Kim Cương', link: '/'},
+		// 				{name: 'Bông Tai Đinh', link: '/'},
+		// 			],
+		// 		},
+		// 		{
+		// 			Head: 'Nhẫn',
+		// 			sublink: [
+		// 				{name: 'Nhẫn Kim Cương', link: '/'},
+		// 				{name: 'Nhẫn Cưới', link: '/'},
+		// 				{name: 'Nhẫn Đính Hôn', link: '/'},
+		// 			],
+		// 		},
+		// 		{
+		// 			Head: 'Trang Sức Thiết Kế',
+		// 			sublink: [
+		// 				{name: 'Monica Rich Kosann', link: '/'},
+		// 				{name: 'Zac Zac Posen', link: '/'},
+		// 				{name: 'Bella Vaughan', link: '/'},
+		// 				{name: 'Blue Nile Studio', link: '/'},
+		// 				{name: 'The Gallery Collection™', link: '/'},
+		// 			],
+		// 		},
+		// 		{
+		// 			Head: 'Dây Chuyền',
+		// 			sublink: [
+		// 				{name: 'Tự Thiết Kế Mặt Dây Chuyền', link: '/'},
+		// 				{name: 'Dây Chuyền Kim Cương', link: '/'},
+		// 			],
+		// 		},
+		// 	],
+		// },
 	];
 
-	const handleShapeClick = (shape) => {
-		localStorage.setItem('selectedShape', shape);
+	const handleClick = (shape) => {
+		localStorage.setItem('selected', shape);
 	};
 
 	return (
@@ -86,7 +132,7 @@ const NavLinks = () => {
 																	href={sl.link} // link with shape filter
 																	className="hover:text-primary font-normal normal-case"
 																	onClick={() =>
-																		handleShapeClick(sl.name)
+																		handleClick(sl.name)
 																	}
 																>
 																	{sl.name}
@@ -104,12 +150,12 @@ const NavLinks = () => {
 												className="max-h-40 max-w-40"
 												preview={false}
 											/>
-											<Link
-												to={link.link}
+											<a
+												href={link.link}
 												className="normal-case md:cursor-pointer hover:text-primary"
 											>
 												{link.mess}
-											</Link>
+											</a>
 										</div>
 									</div>
 								</div>

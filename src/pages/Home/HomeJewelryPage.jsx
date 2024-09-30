@@ -10,7 +10,7 @@ const HomeJewelryPage = () => {
 	return (
 		<div>
 			<Helmet>
-				<title>Trang Sức: Mua Sắm Trang Sức Cao Cấp | Cửa Hàng Kim Cương</title>
+				<title>Trang Sức: Mua Sắm Trang Sức Cao Cấp | Diamond Shop</title>
 			</Helmet>
 			<BannerJewelry />
 			<div className="bg-white">
@@ -46,7 +46,6 @@ const HomeJewelryPage = () => {
 				</div>
 			</div>
 			<BannerJewelry3 />
-			<div></div>
 		</div>
 	);
 };

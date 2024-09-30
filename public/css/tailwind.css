@@ -2243,3 +2243,7 @@ video {
 	padding-top: 1rem /* 16px */;
 	padding-bottom: 1rem /* 16px */;
 }
+
+.mr-32 {
+	margin-right: 8rem /* 128px */;
+}

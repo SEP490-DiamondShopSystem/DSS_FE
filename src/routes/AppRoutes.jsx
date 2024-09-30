@@ -17,19 +17,21 @@ import MyOrderPage from '../pages/ProfilePage/MyOrderPage/MyOrderPage';
 import ProfilePage from '../pages/ProfilePage/ProfilePage';
 import PromotionPage from '../pages/PromotionPage/PromotionPage';
 import ProductPage from '../pages/ProductPage';
+import HomeEarringPage from '../pages/Home/HomeEarringPage';
 
 export const AppRouters = () => {
 	return (
 		<Routes>
 			<Route path="/" element={<HomePage />} />
 			<Route path="/jewelry" element={<HomeJewelryPage />} />
+			<Route path="/jewelry/design-your-own-earrings" element={<HomeEarringPage />} />
 			<Route path="/coupons" element={<CouponPage />} />
 			<Route path="/promotion" element={<PromotionPage />} />
 			<Route path="/profile" element={<ProfilePage />} />
 			<Route path="/my-orders" element={<MyOrderPage />} />
 			<Route path="/my-info" element={<MyInfoPage />} />
 			<Route path="/cart" element={<CartPage />} />
-			<Route path="/products" element={<ProductPage />} />
+			<Route path="/jewelry/all-jewelry" element={<ProductPage />} />
 			<Route path="/jewelry/search" element={<JewelrySearchPage />} />
 			<Route path="/diamond/search" element={<DiamondSearchPage />} />
 			<Route path="/jewelry/design-your-own-ring/:id" element={<ProductDetailPage />} />
