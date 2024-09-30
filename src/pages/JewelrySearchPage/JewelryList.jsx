@@ -18,10 +18,20 @@ export const JewelryList = () => {
 	const [jewelries, setJewelries] = useState();
 	const [filters, setFilters] = useState({
 		gender: [],
-		diamond_type: [],
+		type: [],
 		metal: [],
 		price: {minPrice: 0, maxPrice: 1000}, // Initialize with default price range
 	});
+
+	useEffect(() => {
+		const saved = localStorage.getItem('jewelryType');
+		if (saved) {
+			setFilters((prevFilters) => ({
+				...prevFilters,
+				type: saved,
+			}));
+		}
+	}, []);
 
 	console.log(filters);
 
@@ -33,10 +43,19 @@ export const JewelryList = () => {
 		if (jewelryList) setJewelries(jewelryList);
 	}, [jewelryList]);
 
+	const handleReset = () => {
+		localStorage.removeItem('jewelryType');
+		setFilters({gender: [], type: [], metal: [], price: {minPrice: 0, maxPrice: 1000}});
+	};
+
 	return (
 		<>
 			<div>
-				<FilterJewelry setFilters={setFilters} filters={filters} />
+				<FilterJewelry
+					setFilters={setFilters}
+					filters={filters}
+					handleReset={handleReset}
+				/>
 			</div>
 
 			{loading ? (

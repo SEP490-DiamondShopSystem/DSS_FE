@@ -38,7 +38,7 @@ export const FilterDiamond = ({filters, setFilters, handleReset}) => {
 		}));
 	};
 
-	console.log(filters.color);
+	console.log(filters.shape);
 
 	const handlePriceChange = (value) => {
 		handleChange('price', {minPrice: value[0], maxPrice: value[1]});
@@ -151,19 +151,9 @@ export const FilterDiamond = ({filters, setFilters, handleReset}) => {
 };
 
 // Component for filtering jewelry items
-export const FilterJewelry = ({handleFilter, setFilters, filters}) => {
-	// const [filters, setFilters] = useState({
-	// 	gender: [],
-	// 	diamond_type: [],
-	// 	metal: [],
-	// 	price: {minPrice: 0, maxPrice: 1000}, // Initialize with default price range
-	// });
-
+export const FilterJewelry = ({handleFilter, setFilters, filters, handleReset}) => {
 	const filterTypes = ['gender', 'type', 'metal'];
-	// Logs current filters state
-	console.log(filters);
 
-	// General handler for updating specific filter type (e.g., gender, diamond_type, metal)
 	const handleFilterChange = (filterType, selectedValues) => {
 		setFilters((prevFilters) => ({
 			...prevFilters,
@@ -171,15 +161,13 @@ export const FilterJewelry = ({handleFilter, setFilters, filters}) => {
 		}));
 	};
 
-	// Specialized handler for updating price range
 	const handlePriceChange = (value) => {
 		setFilters((prevFilters) => ({
 			...prevFilters,
-			price: {minPrice: value[0], maxPrice: value[1]}, // Update min and max price
+			price: {minPrice: value[0], maxPrice: value[1]},
 		}));
 	};
 
-	// Data mapping based on filter type (gender,  type, or metal)
 	const filterOptions = {
 		gender: genderChoice,
 		type: typeChoice,
@@ -189,7 +177,6 @@ export const FilterJewelry = ({handleFilter, setFilters, filters}) => {
 	// Render the filter UI
 	return (
 		<div wrap className="p-4 flex items-center">
-			{/* Render Select components for each filter type */}
 			{filterTypes.map((filterType) => (
 				<Select
 					key={filterType} // Use the filter type as key
@@ -222,6 +209,11 @@ export const FilterJewelry = ({handleFilter, setFilters, filters}) => {
 					defaultValue={[0, 1000]} // Default price range
 					onChange={handlePriceChange} // Handle price change
 				/>
+			</div>
+			<div className="ml-8 mt-6">
+				<Button onClick={handleReset} danger>
+					<ReloadOutlined />
+				</Button>
 			</div>
 		</div>
 	);

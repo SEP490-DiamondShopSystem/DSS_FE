@@ -20,8 +20,20 @@ export const ProductList = () => {
 		gender: [],
 		type: [],
 		metal: [],
-		price: {minPrice: 0, maxPrice: 1000}, // Initialize with default price range
+		price: {minPrice: 0, maxPrice: 1000},
 	});
+
+	console.log(filters);
+
+	useEffect(() => {
+		const saved = localStorage.getItem('jewelry');
+		if (saved) {
+			setFilters((prevFilters) => ({
+				...prevFilters,
+				type: saved,
+			}));
+		}
+	}, []);
 
 	console.log(filters);
 
@@ -33,10 +45,19 @@ export const ProductList = () => {
 		if (jewelryList) setJewelries(jewelryList);
 	}, [jewelryList]);
 
+	const handleReset = () => {
+		localStorage.removeItem('jewelry');
+		setFilters({gender: [], type: [], metal: [], price: {minPrice: 0, maxPrice: 1000}});
+	};
+
 	return (
 		<>
 			<div className="mt-10">
-				<FilterJewelry setFilters={setFilters} filters={filters} />
+				<FilterJewelry
+					setFilters={setFilters}
+					filters={filters}
+					handleReset={handleReset}
+				/>
 			</div>
 
 			{loading ? (

@@ -38,7 +38,7 @@ export const DiamondList = () => {
 	const [visibleDiamonds, setVisibleDiamonds] = useState([]);
 
 	useEffect(() => {
-		const savedShape = localStorage.getItem('selectedShape');
+		const savedShape = localStorage.getItem('selected');
 		if (savedShape) {
 			setFilters((prevFilters) => ({
 				...prevFilters,
@@ -83,6 +83,7 @@ export const DiamondList = () => {
 	};
 
 	const handleReset = () => {
+		localStorage.removeItem('selected');
 		setFilters({
 			shape: '',
 			price: {minPrice: 0, maxPrice: 1000},

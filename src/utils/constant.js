@@ -11,10 +11,10 @@ import jewelry from '../assets/jewelry.png';
 
 export const jewelries = [
 	{logo: basic_diamond, title: 'Diamond Basics', link: '/jewelry/diamond-jewelry'},
-	{logo: necklaces, title: 'Necklaces', link: '/jewelry/necklaces'},
-	{logo: earrings, title: 'Earrings', link: '/jewelry/earrings'},
+	{logo: necklaces, title: 'Dây chuyền', link: '/jewelry/design-your-own-necklaces'},
+	{logo: earrings, title: 'Bông tai', link: '/jewelry/design-your-own-earrings'},
 	// { logo: basic_diamond, title: "Bracelets" },
-	{logo: rings, title: 'Rings', link: '/jewelry/rings'},
+	{logo: rings, title: 'Nhẫn', link: '/jewelry/design-your-own-rings'},
 ];
 
 export const list = [
