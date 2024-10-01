@@ -1,8 +1,11 @@
 import React, {useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 
 const CartPage = () => {
 	const [ringSize, setRingSize] = useState('');
 	const [promo, setPromo] = useState('');
+	const navigate = useNavigate();
+
 
 	const handleRingSizeChange = (event) => {
 		setRingSize(event.target.value);
@@ -134,8 +137,10 @@ const CartPage = () => {
 				<button
 					className="mr-10 px-6 py-2 bg-primary rounded-lg uppercase font-semibold hover:bg-second w-full h-12"
 					style={{padding: '13px 0px 11px 0px'}}
+					onClick={() => navigate(`/checkout`)}
 				>
 					Check Out
+					
 				</button>
 			</div>
 		</div>

@@ -18,6 +18,7 @@ import ProfilePage from '../pages/ProfilePage/ProfilePage';
 import PromotionPage from '../pages/PromotionPage/PromotionPage';
 import ProductPage from '../pages/ProductPage';
 import HomeEarringPage from '../pages/Home/HomeEarringPage';
+import CheckOutPage from '../pages/CheckOutPage/CheckOutPage';
 
 export const AppRouters = () => {
 	return (
@@ -28,6 +29,7 @@ export const AppRouters = () => {
 			<Route path="/coupons" element={<CouponPage />} />
 			<Route path="/promotion" element={<PromotionPage />} />
 			<Route path="/profile" element={<ProfilePage />} />
+			<Route path="/checkout" element={<CheckOutPage />} />
 			<Route path="/my-orders" element={<MyOrderPage />} />
 			<Route path="/my-info" element={<MyInfoPage />} />
 			<Route path="/cart" element={<CartPage />} />
