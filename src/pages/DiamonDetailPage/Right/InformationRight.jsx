@@ -19,7 +19,7 @@ const infoMetal = {
 		},
 	],
 };
-export const InformationRight = () => {
+export const InformationRight = ({diamondChoice, toggleSidebar}) => {
 	const navigate = useNavigate();
 	const [showDetail, setDetail] = useState(false);
 	const [showSecureShopping, setSecureShopping] = useState(false);
@@ -75,13 +75,23 @@ export const InformationRight = () => {
 			</div>
 
 			<div className="flex justify-between items-center mt-5">
-				<Button
-					type="text"
-					className="border py-7 px-14 font-bold text-lg bg-primary rounded hover:bg-second w-full"
-					onClick={() => navigate(`/completed-jewelry/1`)}
-				>
-					CHỌN VIÊN KIM CƯƠNG NÀY
-				</Button>
+				{diamondChoice.length > 0 ? (
+					<Button
+						type="text"
+						className="border py-7 px-14 font-bold text-lg bg-primary rounded hover:bg-second w-full"
+						onClick={toggleSidebar}
+					>
+						CHỌN VIÊN KIM CƯƠNG NÀY
+					</Button>
+				) : (
+					<Button
+						type="text"
+						className="border py-7 px-14 font-bold text-lg bg-primary rounded hover:bg-second w-full"
+						onClick={() => navigate(`/completed-jewelry/1`)}
+					>
+						CHỌN VIÊN KIM CƯƠNG NÀY
+					</Button>
+				)}
 			</div>
 
 			<div className="my-10">

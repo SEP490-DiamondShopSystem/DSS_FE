@@ -33,9 +33,9 @@ export const DiamondList = () => {
 		clarity: {minClarity: 0, maxClarity: 7},
 		cut: {minCut: 0, maxCut: 3},
 	});
-
 	const [hasMore, setHasMore] = useState(true);
 	const [visibleDiamonds, setVisibleDiamonds] = useState([]);
+	const [diamondChoice, setDiamondChoice] = useState(localStorage.getItem('diamondChoice') || '');
 
 	useEffect(() => {
 		const savedShape = localStorage.getItem('selected');
@@ -94,9 +94,18 @@ export const DiamondList = () => {
 		});
 	};
 
+	const handleDiamondChoiceClick = (id) => {
+		navigate(`/diamond-detail/${id}`);
+		localStorage.setItem('diamondChoice', 'Kim Cương');
+	};
+	const handleJewelryChoiceClick = (id) => {
+		navigate(`/diamond-detail/${id}`);
+	};
+
 	return (
 		<div>
 			<FilterDiamond setFilters={setFilters} filters={filters} handleReset={handleReset} />
+
 			{loading ? (
 				<div className="flex items-center justify-center my-10">
 					<ReactLoading height={'10%'} width={'10%'} type="spin" color="#dec986" />
@@ -131,8 +140,10 @@ export const DiamondList = () => {
 									<div
 										key={diamondItem.id}
 										className="shadow-lg bg-white border-2 border-white rounded-lg hover:border-2 hover:border-black cursor-pointer"
-										onClick={() =>
-											navigate(`/diamond-detail/${diamondItem.id}`)
+										onClick={
+											diamondChoice.length > 0
+												? () => handleDiamondChoiceClick(diamondItem.id)
+												: () => handleJewelryChoiceClick(diamondItem.id)
 										}
 									>
 										<div className="w-80">
@@ -154,12 +165,14 @@ export const DiamondList = () => {
 							</div>
 						) : (
 							<div className="transition-all duration-300 mb-20 mt-10">
-								{visibleDiamonds.map((diamondItem) => (
+								{visibleDiamonds.map((diamondItem, i) => (
 									<div
-										key={diamondItem.id}
+										key={i + 1}
 										className="shadow-lg bg-white rounded-lg cursor-pointer"
-										onClick={() =>
-											navigate(`/diamond-detail/${diamondItem.id}`)
+										onClick={
+											diamondChoice.length > 0
+												? () => handleDiamondChoiceClick(diamondItem.id)
+												: () => handleJewelryChoiceClick(diamondItem.id)
 										}
 									>
 										<div className="flex w-full my-10">

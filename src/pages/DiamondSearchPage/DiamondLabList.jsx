@@ -33,12 +33,11 @@ export const DiamondLabList = () => {
 		clarity: {minClarity: 0, maxClarity: 7},
 		cut: {minCut: 0, maxCut: 3},
 	});
-
 	const [hasMore, setHasMore] = useState(true);
 	const [visibleDiamonds, setVisibleDiamonds] = useState([]);
 
 	useEffect(() => {
-		const savedShape = localStorage.getItem('selectedShape');
+		const savedShape = localStorage.getItem('selected');
 		if (savedShape) {
 			setFilters((prevFilters) => ({
 				...prevFilters,
@@ -83,6 +82,7 @@ export const DiamondLabList = () => {
 	};
 
 	const handleReset = () => {
+		localStorage.removeItem('selected');
 		setFilters({
 			shape: '',
 			price: {minPrice: 0, maxPrice: 1000},
@@ -93,9 +93,14 @@ export const DiamondLabList = () => {
 		});
 	};
 
+	const handleDetailDiamondClick = (id) => {
+		navigate(`/diamond-detail/${id}`);
+	};
+
 	return (
 		<div>
 			<FilterDiamond setFilters={setFilters} filters={filters} handleReset={handleReset} />
+
 			{loading ? (
 				<div className="flex items-center justify-center my-10">
 					<ReactLoading height={'10%'} width={'10%'} type="spin" color="#dec986" />
@@ -130,9 +135,7 @@ export const DiamondLabList = () => {
 									<div
 										key={diamondItem.id}
 										className="shadow-lg bg-white border-2 border-white rounded-lg hover:border-2 hover:border-black cursor-pointer"
-										onClick={() =>
-											navigate(`/diamond-detail/${diamondItem.id}`)
-										}
+										onClick={() => handleDetailDiamondClick(diamondItem.id)}
 									>
 										<div className="w-80">
 											<div
@@ -153,13 +156,11 @@ export const DiamondLabList = () => {
 							</div>
 						) : (
 							<div className="transition-all duration-300 mb-20 mt-10">
-								{visibleDiamonds.map((diamondItem) => (
+								{visibleDiamonds.map((diamondItem, i) => (
 									<div
-										key={diamondItem.id}
+										key={i + 1}
 										className="shadow-lg bg-white rounded-lg cursor-pointer"
-										onClick={() =>
-											navigate(`/diamond-detail/${diamondItem.id}`)
-										}
+										onClick={() => handleDetailDiamondClick(diamondItem.id)}
 									>
 										<div className="flex w-full my-10">
 											<div

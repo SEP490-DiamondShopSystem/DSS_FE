@@ -2247,3 +2247,7 @@ video {
 .mr-32 {
 	margin-right: 8rem /* 128px */;
 }
+
+.border-lightGray1 {
+	border-color: e4e4e4;
+}

@@ -4,12 +4,12 @@ import {Image} from 'antd';
 import ReactLoading from 'react-loading';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
-import jewelryImg from '../../assets/ring_classic.png';
-import {FilterAllJewelry} from '../../components/Filter/Filter';
-import {GetAllJewelrySelector, LoadingJewelrySelector} from '../../redux/selectors';
-import {getAllJewelry} from '../../redux/slices/jewelrySlice';
+import jewelryImg from '../../../assets/ring_classic.png';
+import {FilterJewelry} from '../../../components/Filter/Filter';
+import {GetAllJewelrySelector, LoadingJewelrySelector} from '../../../redux/selectors';
+import {getAllJewelry} from '../../../redux/slices/jewelrySlice';
 
-export const ProductList = () => {
+export const EarringList = () => {
 	const navigate = useNavigate();
 	const jewelryList = useSelector(GetAllJewelrySelector);
 	const loading = useSelector(LoadingJewelrySelector);
@@ -18,22 +18,9 @@ export const ProductList = () => {
 	const [jewelries, setJewelries] = useState();
 	const [filters, setFilters] = useState({
 		gender: [],
-		type: [],
 		metal: [],
 		price: {minPrice: 0, maxPrice: 1000},
 	});
-
-	console.log(filters);
-
-	useEffect(() => {
-		const saved = localStorage.getItem('jewelry');
-		if (saved) {
-			setFilters((prevFilters) => ({
-				...prevFilters,
-				type: saved,
-			}));
-		}
-	}, []);
 
 	console.log(filters);
 
@@ -46,14 +33,14 @@ export const ProductList = () => {
 	}, [jewelryList]);
 
 	const handleReset = () => {
-		localStorage.removeItem('jewelry');
-		setFilters({gender: [], type: [], metal: [], price: {minPrice: 0, maxPrice: 1000}});
+		localStorage.removeItem('jewelryType');
+		setFilters({gender: [], metal: [], price: {minPrice: 0, maxPrice: 1000}});
 	};
 
 	return (
 		<>
-			<div className="mt-10">
-				<FilterAllJewelry
+			<div>
+				<FilterJewelry
 					setFilters={setFilters}
 					filters={filters}
 					handleReset={handleReset}
@@ -75,7 +62,9 @@ export const ProductList = () => {
 								key={i}
 								className="shadow-lg bg-white rounded-lg hover:border-2 cursor-pointer"
 								onClick={() =>
-									navigate(`/jewelry/design-your-own-ring/${jewelry.id}`)
+									navigate(
+										`/jewelry/design-your-own-earrings/setting/${jewelry.id}`
+									)
 								}
 							>
 								<div className="w-80">

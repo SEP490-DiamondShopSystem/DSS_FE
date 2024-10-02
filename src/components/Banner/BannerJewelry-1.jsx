@@ -5,6 +5,13 @@ import Logo from '../../assets/diamond-jewelry.png';
 
 export const BannerJewelry = () => {
 	const navigate = useNavigate();
+
+	const handleNavigateJewelry = () => {
+		navigate('/jewelry/all-jewelry');
+		localStorage.setItem('jewelryChoice', 'jewelry choice');
+		localStorage.removeItem('diamondChoice');
+	};
+
 	return (
 		<div className="relative bg-gray-800 text-white" style={{height: 630}}>
 			<img className="w-full h-full object-cover" src={Logo} alt="Banner" />
@@ -20,7 +27,7 @@ export const BannerJewelry = () => {
 					<div className="flex items-center justify-end">
 						<button
 							className="mr-10 px-6 py-2 bg-primary rounded uppercase font-semibold hover:bg-second w-full h-12"
-							onClick={() => navigate('/jewelry/all-jewelry')}
+							onClick={handleNavigateJewelry}
 						>
 							Xem Tất Cả Trang Sức
 						</button>
