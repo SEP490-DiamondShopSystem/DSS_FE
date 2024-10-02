@@ -3,8 +3,10 @@ import {faRefresh, faTruck} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {Button, Rate} from 'antd';
 import React, {useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 
 const metalType = {
+	id: 12212,
 	name: 'Nhẫn Đính Hôn Heirloom Petite Milgrain',
 	price: '$620',
 	priceDiscount: '$465',
@@ -35,7 +37,9 @@ const metalType = {
 	],
 };
 
-export const InformationRight = ({toggleSidebar}) => {
+export const InformationRight = ({toggleSidebar, diamondChoice}) => {
+	const navigate = useNavigate();
+
 	const [showDetail, setDetail] = useState(false);
 	const [showSecureShopping, setSecureShopping] = useState(false);
 	const [showProductWarrantly, setProductWarrantly] = useState(false);
@@ -63,6 +67,10 @@ export const InformationRight = ({toggleSidebar}) => {
 		console.log(metal);
 
 		localStorage.setItem('selectedMetal', JSON.stringify(metal));
+	};
+
+	const handleChoiceClick = (id) => {
+		navigate(`/completed-jewelry/${id}`);
 	};
 
 	return (
@@ -138,7 +146,11 @@ export const InformationRight = ({toggleSidebar}) => {
 				<Button
 					type="text"
 					className="border py-7 px-14 font-bold text-lg bg-primary rounded hover:bg-second w-full"
-					onClick={toggleSidebar}
+					onClick={
+						diamondChoice.length === 0
+							? toggleSidebar
+							: () => handleChoiceClick(metalType.id)
+					}
 				>
 					CHỌN CÀI ĐẶT NÀY
 				</Button>

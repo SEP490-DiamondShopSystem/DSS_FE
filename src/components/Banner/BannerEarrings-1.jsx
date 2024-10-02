@@ -8,7 +8,8 @@ export const BannerEarrings = () => {
 
 	const handleEarringDesignClick = () => {
 		localStorage.setItem('jewelryType', 'Bông tai');
-		navigate('/jewelry/search');
+		localStorage.removeItem('diamondChoice');
+		navigate('/jewelry/design-your-own-earrings/setting/all');
 	};
 	return (
 		<div className="relative bg-gray-800 text-white">

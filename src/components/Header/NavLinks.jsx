@@ -12,11 +12,18 @@ const NavLinks = () => {
 		{
 			name: 'Sản Phẩm',
 			ref: 'diamond',
-			col: 2,
+			col: 3,
 			submenu: true,
 			mess: 'Xem Sản Phẩm',
 			link: '/jewelry',
 			sublinks: [
+				{
+					Head: 'Sản Phẩm',
+					sublink: [
+						{name: 'Trang Sức', link: '/jewelry/all-jewelry'},
+						{name: 'Kim Cương', link: '/diamond/search'},
+					],
+				},
 				{
 					Head: 'Mua Kim Cương Theo Hình Dạng',
 					sublink: [
@@ -90,8 +97,28 @@ const NavLinks = () => {
 		// },
 	];
 
-	const handleClick = (shape) => {
-		localStorage.setItem('selected', shape);
+	const handleClick = (shape, type, diamond, jewelry) => {
+		if (shape) {
+			localStorage.setItem('selected', shape);
+			localStorage.removeItem('jewelryType');
+			localStorage.removeItem('diamondChoice');
+			localStorage.removeItem('jewelryChoice');
+		}
+		if (type) {
+			localStorage.setItem('jewelryType', type);
+			localStorage.removeItem('selected');
+			localStorage.removeItem('diamondChoice');
+			localStorage.removeItem('jewelryChoice');
+		}
+		if (jewelry) {
+			localStorage.setItem('jewelryChoice', jewelry);
+			localStorage.removeItem('diamondChoice');
+		}
+		if (diamond) {
+			localStorage.setItem('diamondChoice', diamond);
+			localStorage.removeItem('jewelryChoice');
+			localStorage.removeItem('jewelryType');
+		}
 	};
 
 	return (
@@ -129,11 +156,49 @@ const NavLinks = () => {
 																key={k}
 															>
 																<a
-																	href={sl.link} // link with shape filter
+																	href={sl.link}
 																	className="hover:text-primary font-normal normal-case"
-																	onClick={() =>
-																		handleClick(sl.name)
-																	}
+																	onClick={() => {
+																		if (
+																			mySubLink.Head ===
+																			'Mua Kim Cương Theo Hình Dạng'
+																		) {
+																			handleClick(
+																				sl.name,
+																				null,
+																				null,
+																				null
+																			);
+																		} else if (
+																			mySubLink.Head ===
+																			'Thiết Kế Trang Sức Của Bạn'
+																		) {
+																			handleClick(
+																				null,
+																				sl.name,
+																				null,
+																				null
+																			);
+																		} else if (
+																			sl.name === 'Trang Sức'
+																		) {
+																			handleClick(
+																				null,
+																				null,
+																				null,
+																				sl.name
+																			);
+																		} else if (
+																			sl.name === 'Kim Cương'
+																		) {
+																			handleClick(
+																				null,
+																				null,
+																				sl.name,
+																				null
+																			);
+																		}
+																	}}
 																>
 																	{sl.name}
 																</a>

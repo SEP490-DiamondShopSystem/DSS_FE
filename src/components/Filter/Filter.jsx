@@ -14,7 +14,6 @@ import {
 } from '../../utils/constant';
 
 export const FilterDiamond = ({filters, setFilters, handleReset}) => {
-	console.log('filters', filters);
 	const location = useLocation();
 
 	// useEffect(() => {
@@ -37,8 +36,6 @@ export const FilterDiamond = ({filters, setFilters, handleReset}) => {
 			[type]: value,
 		}));
 	};
-
-	console.log(filters.shape);
 
 	const handlePriceChange = (value) => {
 		handleChange('price', {minPrice: value[0], maxPrice: value[1]});
@@ -84,9 +81,9 @@ export const FilterDiamond = ({filters, setFilters, handleReset}) => {
 					<p className="mb-4">Price:</p>
 					<Slider
 						range
-						value={[filters.price.minPrice, filters.price.maxPrice]} // Sử dụng value thay vì defaultValue
-						min={0} // Đặt giá trị tối thiểu
-						max={1000} // Đặt giá trị tối đa
+						value={[filters.price.minPrice, filters.price.maxPrice]}
+						min={0}
+						max={1000}
 						onChange={handlePriceChange}
 					/>
 				</div>
@@ -111,7 +108,7 @@ export const FilterDiamond = ({filters, setFilters, handleReset}) => {
 					<p className="my-4">Color:</p>
 					<Slider
 						range
-						marks={marks} // Define your `marks` data
+						marks={marks}
 						min={0}
 						max={7}
 						value={[filters.color.minColor, filters.color.maxColor]}
@@ -122,7 +119,7 @@ export const FilterDiamond = ({filters, setFilters, handleReset}) => {
 					<p className="my-4">Clarity:</p>
 					<Slider
 						range
-						marks={marksClarity} // Define your `marks` data
+						marks={marksClarity}
 						min={0}
 						max={7}
 						value={[filters.clarity.minClarity, filters.clarity.maxClarity]}
@@ -133,7 +130,7 @@ export const FilterDiamond = ({filters, setFilters, handleReset}) => {
 					<p className="my-4">Cut:</p>
 					<Slider
 						range
-						marks={marksCut} // Define your `marks` data
+						marks={marksCut}
 						min={0}
 						max={3}
 						value={[filters.cut.minCut, filters.cut.maxCut]}
@@ -151,7 +148,7 @@ export const FilterDiamond = ({filters, setFilters, handleReset}) => {
 };
 
 // Component for filtering jewelry items
-export const FilterJewelry = ({handleFilter, setFilters, filters, handleReset}) => {
+export const FilterAllJewelry = ({handleFilter, setFilters, filters, handleReset}) => {
 	const filterTypes = ['gender', 'type', 'metal'];
 
 	const handleFilterChange = (filterType, selectedValues) => {
@@ -190,7 +187,72 @@ export const FilterJewelry = ({handleFilter, setFilters, filters, handleReset}) 
 					onChange={(value) => handleFilterChange(filterType, value)} // Handle filter change
 					value={filters[filterType]} // Current selected value for the filter
 				>
-					{/* Render options dynamically based on the filter type */}
+					{filterOptions[filterType]?.map((item, i) => (
+						<Select.Option key={i} value={item}>
+							{item}
+						</Select.Option>
+					))}
+				</Select>
+			))}
+
+			{/* Price Range Slider */}
+			<div className="ml-10 min-w-44">
+				<p className="mb-4">Price:</p>
+				<Slider
+					range
+					min={0}
+					max={1000}
+					defaultValue={[0, 1000]} // Default price range
+					onChange={handlePriceChange} // Handle price change
+				/>
+			</div>
+			<div className="ml-8 mt-6">
+				<Button onClick={handleReset} danger>
+					<ReloadOutlined />
+				</Button>
+			</div>
+		</div>
+	);
+};
+
+export const FilterJewelry = ({handleFilter, setFilters, filters, handleReset}) => {
+	const filterTypes = ['gender', 'metal'];
+
+	const handleFilterChange = (filterType, selectedValues) => {
+		setFilters((prevFilters) => ({
+			...prevFilters,
+			[filterType]: selectedValues,
+		}));
+	};
+
+	const handlePriceChange = (value) => {
+		setFilters((prevFilters) => ({
+			...prevFilters,
+			price: {minPrice: value[0], maxPrice: value[1]},
+		}));
+	};
+
+	const filterOptions = {
+		gender: genderChoice,
+		metal: metalChoice,
+	};
+
+	// Render the filter UI
+	return (
+		<div wrap className="p-4 flex items-center">
+			{filterTypes.map((filterType) => (
+				<Select
+					key={filterType} // Use the filter type as key
+					mode="multiple"
+					placeholder={filterType.replace('_', ' ').toUpperCase()} // Display filter type in uppercase
+					allowClear
+					maxTagCount={0}
+					suffixIcon={<DownOutlined />} // Dropdown arrow icon
+					className="h-12 mx-5"
+					style={{width: '10%'}}
+					onChange={(value) => handleFilterChange(filterType, value)} // Handle filter change
+					value={filters[filterType]} // Current selected value for the filter
+				>
 					{filterOptions[filterType]?.map((item, i) => (
 						<Select.Option key={i} value={item}>
 							{item}

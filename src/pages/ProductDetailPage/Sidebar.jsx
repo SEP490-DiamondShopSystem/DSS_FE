@@ -45,6 +45,7 @@ export const Sidebar = ({isOpen, toggleSidebar}) => {
 	const [active, setActive] = useState('diamond');
 	const [shapeActive, setShapeActive] = useState();
 	const [selectedImage, setSelectedImage] = useState('');
+	const [jewelryChoice, setJewelryChoice] = useState(localStorage.getItem('jewelryChoice') || '');
 
 	useEffect(() => {
 		if (shapes.length > 0) {
@@ -219,22 +220,24 @@ export const Sidebar = ({isOpen, toggleSidebar}) => {
 										</span>
 									</div>
 								</div>
-								<div
-									className={`flex border-2 ${
-										active === 'addToCart' ? 'border-black' : 'border-white'
-									} p-4 m-5 rounded-lg md:cursor-pointer`}
-									onClick={() => handleSelect('/cart', 'addToCart')}
-								>
-									<div className="pr-5">
-										<FontAwesomeIcon icon={faShoppingBag} />
+								{jewelryChoice && jewelryChoice.length > 0 && (
+									<div
+										className={`flex border-2 ${
+											active === 'addToCart' ? 'border-black' : 'border-white'
+										} p-4 m-5 rounded-lg md:cursor-pointer`}
+										onClick={() => handleSelect('/cart', 'addToCart')}
+									>
+										<div className="pr-5">
+											<FontAwesomeIcon icon={faShoppingBag} />
+										</div>
+										<div>
+											<p className="font-bold">Thêm Vào Giỏ Hàng</p>
+											<span className="text-tintWhite">
+												Xem và chỉnh sửa các mục trong giỏ hàng của bạn.
+											</span>
+										</div>
 									</div>
-									<div>
-										<p className="font-bold">Xem Giỏ Hàng</p>
-										<span className="text-tintWhite">
-											Xem và chỉnh sửa các mục trong giỏ hàng của bạn.
-										</span>
-									</div>
-								</div>
+								)}
 							</div>
 						</div>
 						<div className="mx-5 absolute bottom-10" style={{width: '90%'}}>
@@ -247,9 +250,9 @@ export const Sidebar = ({isOpen, toggleSidebar}) => {
 									}
 								}}
 								type="text"
-								className=" bg-primary w-full text-lg font-semibold p-5"
+								className=" bg-primary w-full text-lg font-semibold p-5 uppercase"
 							>
-								CONTINUE
+								Tiếp tục
 							</Button>
 						</div>
 					</>

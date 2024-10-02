@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
+
 import {useNavigate} from 'react-router-dom';
 
 const CartPage = () => {
 	const [ringSize, setRingSize] = useState('');
 	const [promo, setPromo] = useState('');
 	const navigate = useNavigate();
-
 
 	const handleRingSizeChange = (event) => {
 		setRingSize(event.target.value);
@@ -83,7 +83,7 @@ const CartPage = () => {
 								alt="Loose Diamond"
 								className="w-32 h-32 object-cover rounded-lg border"
 							/>
-						</div>				
+						</div>
 						<div className="flex-1  mx-5">
 							<p className="mb-1 text-gray-800 font-semibold">
 								Lab-Grown 1.55 Carat Round Diamond
@@ -140,7 +140,6 @@ const CartPage = () => {
 					onClick={() => navigate(`/checkout`)}
 				>
 					Check Out
-					
 				</button>
 			</div>
 		</div>
