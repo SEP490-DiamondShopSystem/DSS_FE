@@ -18,20 +18,9 @@ export const RingList = () => {
 	const [jewelries, setJewelries] = useState();
 	const [filters, setFilters] = useState({
 		gender: [],
-		type: [],
 		metal: [],
 		price: {minPrice: 0, maxPrice: 1000},
 	});
-
-	useEffect(() => {
-		const saved = localStorage.getItem('jewelryType');
-		if (saved) {
-			setFilters((prevFilters) => ({
-				...prevFilters,
-				type: saved,
-			}));
-		}
-	}, []);
 
 	console.log(filters);
 

@@ -11,33 +11,35 @@ import FinishProductPage from '../pages/FinishProductPage';
 import HomeEarringPage from '../pages/Home/HomeEarringPage';
 import HomeJewelryPage from '../pages/Home/HomeJewelryPage';
 import HomePage from '../pages/Home/HomePage';
-import RingSearchPage from '../pages/ProductPage/RingSearchPage';
+import HomePendantPage from '../pages/Home/HomePendantPage';
+import HomeRingPage from '../pages/Home/HomeRingPage';
 import NotFoundPage from '../pages/NotFoundPage/NotFoundPage';
 import ProductDetailPage from '../pages/ProductDetailPage';
 import ProductPage from '../pages/ProductPage';
+import EarringSearchPage from '../pages/ProductPage/EarringSearchPage';
+import PendantSearchPage from '../pages/ProductPage/PendantSearchPage';
+import RingSearchPage from '../pages/ProductPage/RingSearchPage';
+import ChangePassword from '../pages/ProfilePage/ChangePassword';
 import MyInfoPage from '../pages/ProfilePage/MyInfoPage';
 import MyOrderPage from '../pages/ProfilePage/MyOrderPage/MyOrderPage';
 import ProfilePage from '../pages/ProfilePage/ProfilePage';
 import PromotionPage from '../pages/PromotionPage/PromotionPage';
-import PendantSearchPage from '../pages/ProductPage/PendantSearchPage';
-import EarringSearchPage from '../pages/ProductPage/EarringSearchPage';
-import ChangePassword from '../pages/ProfilePage/ChangePassword';
 
 export const AppRouters = () => {
 	return (
 		<Routes>
+			//HOME
 			<Route path="/" element={<HomePage />} />
 			<Route path="/jewelry" element={<HomeJewelryPage />} />
 			<Route path="/jewelry/design-your-own-earrings" element={<HomeEarringPage />} />
-			<Route path="/coupons" element={<CouponPage />} />
-			<Route path="/promotion" element={<PromotionPage />} />
+			<Route path="/jewelry/design-your-own-pendants" element={<HomePendantPage />} />
+			<Route path="/jewelry/design-your-own-rings" element={<HomeRingPage />} />
+			//PROFILE
 			<Route path="/profile" element={<ProfilePage />} />
-			<Route path="/checkout" element={<CheckOutPage />} />
 			<Route path="/my-orders" element={<MyOrderPage />} />
 			<Route path="/my-info" element={<MyInfoPage />} />
 			<Route path="/change-password" element={<ChangePassword />} />
-			<Route path="/cart" element={<CartPage />} />
-			<Route path="/jewelry/all-jewelry" element={<ProductPage />} />
+			//DESIGN
 			<Route path="/jewelry/design-your-own-rings/setting/all" element={<RingSearchPage />} />
 			<Route
 				path="/jewelry/design-your-own-pendants/setting/all"
@@ -47,7 +49,7 @@ export const AppRouters = () => {
 				path="/jewelry/design-your-own-earrings/setting/all"
 				element={<EarringSearchPage />}
 			/>
-			<Route path="/diamond/search" element={<DiamondSearchPage />} />
+			//DETAIL
 			<Route
 				path="/jewelry/design-your-own-rings/setting/:id"
 				element={<ProductDetailPage />}
@@ -64,6 +66,14 @@ export const AppRouters = () => {
 			<Route path="/completed-jewelry/:id" element={<FinishProductPage />} />
 			//Customize
 			<Route path="/customize" element={<CustomizePage />} />
+			//
+			<Route path="/cart" element={<CartPage />} />
+			<Route path="/jewelry/all-jewelry" element={<ProductPage />} />
+			<Route path="/diamond/search" element={<DiamondSearchPage />} />
+			<Route path="/checkout" element={<CheckOutPage />} />
+			<Route path="/coupons" element={<CouponPage />} />
+			<Route path="/promotion" element={<PromotionPage />} />
+			//NOT FOUND
 			<Route path="*" element={<NotFoundPage />} />
 		</Routes>
 	);
