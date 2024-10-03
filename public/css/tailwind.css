@@ -2251,3 +2251,7 @@ video {
 .border-lightGray1 {
 	border-color: e4e4e4;
 }
+
+.max-w-md {
+	max-width: 28rem /* 448px */;
+}

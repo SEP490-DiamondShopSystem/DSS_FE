@@ -21,6 +21,7 @@ import ProfilePage from '../pages/ProfilePage/ProfilePage';
 import PromotionPage from '../pages/PromotionPage/PromotionPage';
 import PendantSearchPage from '../pages/ProductPage/PendantSearchPage';
 import EarringSearchPage from '../pages/ProductPage/EarringSearchPage';
+import ChangePassword from '../pages/ProfilePage/ChangePassword';
 
 export const AppRouters = () => {
 	return (
@@ -34,6 +35,7 @@ export const AppRouters = () => {
 			<Route path="/checkout" element={<CheckOutPage />} />
 			<Route path="/my-orders" element={<MyOrderPage />} />
 			<Route path="/my-info" element={<MyInfoPage />} />
+			<Route path="/change-password" element={<ChangePassword />} />
 			<Route path="/cart" element={<CartPage />} />
 			<Route path="/jewelry/all-jewelry" element={<ProductPage />} />
 			<Route path="/jewelry/design-your-own-rings/setting/all" element={<RingSearchPage />} />
