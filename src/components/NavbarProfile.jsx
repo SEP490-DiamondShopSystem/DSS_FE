@@ -24,7 +24,11 @@ const NavbarProfile = () => {
 			link: '/my-orders',
 			icon: <FontAwesomeIcon icon={faShoppingBag} color="black" />,
 		},
-		{name: 'Thay đổi mật khẩu', icon: <FontAwesomeIcon icon={faKey} color="black" />},
+		{
+			name: 'Thay đổi mật khẩu',
+			link: '/change-password',
+			icon: <FontAwesomeIcon icon={faKey} color="black" />,
+		},
 	];
 
 	return (

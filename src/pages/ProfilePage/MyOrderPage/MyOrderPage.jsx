@@ -90,7 +90,7 @@ const MyOrderPage = () => {
 	return (
 		<div>
 			<Helmet>
-				<title>My Order</title>
+				<title>Đơn Hàng Của Tôi</title>
 			</Helmet>
 			<div className="my-20 min-h-96 flex z-50">
 				<div className="mr-20">

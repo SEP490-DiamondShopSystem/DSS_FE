@@ -126,7 +126,7 @@ const ProfilePage = () => {
 	return (
 		<div>
 			<Helmet>
-				<title>Hồ sơ của tôi</title>
+				<title>Hồ Sơ Của Tôi</title>
 			</Helmet>
 			<div className="my-20 min-h-96 flex">
 				<div className="mr-20">
