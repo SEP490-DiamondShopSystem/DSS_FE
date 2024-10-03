@@ -18,11 +18,7 @@ export const Header = () => {
 				</div>
 				<ul className="flex uppercase items-center gap-8">
 					<li>
-						<Link
-							to="/"
-							className={`py-7 px-3 inline-block no-underline text-black`}
-							onClick={() => handleLinkClick('Home')}
-						>
+						<Link to="/" className={`py-7 px-3 inline-block no-underline text-black`}>
 							Trang chủ
 						</Link>
 					</li>
@@ -31,7 +27,6 @@ export const Header = () => {
 						<Link
 							to="/customize"
 							className={`py-7 px-3 inline-block no-underline text-black`}
-							onClick={() => handleLinkClick('Promotion')}
 						>
 							Đặt trang sức
 						</Link>
@@ -40,7 +35,6 @@ export const Header = () => {
 						<Link
 							to="/promotion"
 							className={`py-7 px-3 inline-block no-underline text-black`}
-							onClick={() => handleLinkClick('Promotion')}
 						>
 							Khuyến mãi
 						</Link>
@@ -56,13 +50,13 @@ export const Header = () => {
 						</Link>
 					</li> */}
 				</ul>
-				<div>
+				{/* <div>
 					<Search
 						placeholder="Tìm kiếm sản phẩm..."
 						onSearch={(value) => console.log(value)}
 						style={{width: 400}}
 					/>
-				</div>
+				</div> */}
 				<ul className="flex uppercase items-center gap-8 font-[Open sans]">
 					<li>
 						<Link

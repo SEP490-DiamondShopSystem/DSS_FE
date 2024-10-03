@@ -20,7 +20,7 @@ const NavLinks = () => {
 				{
 					Head: 'Sản Phẩm',
 					sublink: [
-						{name: 'Trang Sức', link: '/jewelry/all-jewelry'},
+						{name: 'Trang Sức Kim Cương Đính Sẵn', link: '/jewelry/all-jewelry'},
 						{name: 'Kim Cương', link: '/diamond/search'},
 					],
 				},
@@ -42,9 +42,9 @@ const NavLinks = () => {
 				{
 					Head: 'Thiết Kế Trang Sức Của Bạn',
 					sublink: [
-						{name: 'Nhẫn', link: '/'},
+						{name: 'Nhẫn', link: '/jewelry/design-your-own-rings'},
 						{name: 'Bông Tai', link: '/jewelry/design-your-own-earrings'},
-						{name: 'Mặt Dây Chuyền', link: '/'},
+						{name: 'Dây Chuyền', link: '/jewelry/design-your-own-pendants'},
 					],
 				},
 			],
