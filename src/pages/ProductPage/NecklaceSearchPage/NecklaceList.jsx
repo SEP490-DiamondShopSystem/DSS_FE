@@ -9,7 +9,7 @@ import {FilterJewelry} from '../../../components/Filter/Filter';
 import {GetAllJewelrySelector, LoadingJewelrySelector} from '../../../redux/selectors';
 import {getAllJewelry} from '../../../redux/slices/jewelrySlice';
 
-export const PendantList = () => {
+export const NecklaceList = () => {
 	const navigate = useNavigate();
 	const jewelryList = useSelector(GetAllJewelrySelector);
 	const loading = useSelector(LoadingJewelrySelector);
@@ -63,7 +63,7 @@ export const PendantList = () => {
 								className="shadow-lg bg-white rounded-lg hover:border-2 cursor-pointer"
 								onClick={() =>
 									navigate(
-										`/jewelry/design-your-own-pendants/setting/${jewelry.id}`
+										`/jewelry/design-your-own-necklaces/setting/${jewelry.id}`
 									)
 								}
 							>

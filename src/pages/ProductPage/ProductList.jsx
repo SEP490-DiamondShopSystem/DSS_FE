@@ -74,9 +74,7 @@ export const ProductList = () => {
 							<div
 								key={i}
 								className="shadow-lg bg-white rounded-lg hover:border-2 cursor-pointer"
-								onClick={() =>
-									navigate(`/jewelry/design-your-own-ring/${jewelry.id}`)
-								}
+								onClick={() => navigate(`/jewelry/diamond-jewelry/${jewelry.id}`)}
 							>
 								<div className="w-80">
 									<div

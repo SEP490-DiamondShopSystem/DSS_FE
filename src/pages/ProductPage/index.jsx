@@ -1,9 +1,8 @@
 import React from 'react';
 
-import {ProductList} from './ProductList';
-import {Steps} from 'antd';
-import {listBanner} from '../../utils/constant';
 import {CarouselComponent} from '../../components/Carousel';
+import {listBanner} from '../../utils/constant';
+import {ProductList} from './ProductList';
 
 const ProductPage = () => {
 	return (

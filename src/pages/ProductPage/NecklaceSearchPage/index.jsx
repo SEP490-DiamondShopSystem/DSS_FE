@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 
 import {Steps} from 'antd';
-import {PendantList} from './PendantList';
+import {NecklaceList} from './NecklaceList';
 
-const PendantSearchPage = () => {
+const NecklaceSearchPage = () => {
 	const [jewelryType, setJewelryType] = useState(localStorage.getItem('jewelryType') || '');
 	const [diamondChoice, setDiamondChoice] = useState(localStorage.getItem('diamondChoice') || '');
 
@@ -50,9 +50,9 @@ const PendantSearchPage = () => {
 				/>
 			)}
 
-			<PendantList />
+			<NecklaceList />
 		</div>
 	);
 };
 
-export default PendantSearchPage;
+export default NecklaceSearchPage;

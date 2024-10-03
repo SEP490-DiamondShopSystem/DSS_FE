@@ -37,7 +37,7 @@ const metalType = {
 	],
 };
 
-export const InformationRight = ({toggleSidebar, diamondChoice}) => {
+export const InformationRight = () => {
 	const navigate = useNavigate();
 
 	const [showDetail, setDetail] = useState(false);
@@ -145,14 +145,9 @@ export const InformationRight = ({toggleSidebar, diamondChoice}) => {
 			<div className="flex justify-between items-center mt-5">
 				<Button
 					type="text"
-					className="border py-7 px-14 font-bold text-lg bg-primary rounded hover:bg-second w-full"
-					onClick={
-						diamondChoice.length === 0
-							? toggleSidebar
-							: () => handleChoiceClick(metalType.id)
-					}
+					className="border py-7 px-14 font-bold text-lg bg-primary rounded hover:bg-second w-full uppercase"
 				>
-					CHỌN CÀI ĐẶT NÀY
+					Thêm vào giỏ hàng
 				</Button>
 			</div>
 			<div className="my-10">

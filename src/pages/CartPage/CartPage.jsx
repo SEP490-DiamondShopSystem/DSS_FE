@@ -16,9 +16,9 @@ const CartPage = () => {
 	};
 
 	return (
-		<div className="flex justify-between p-8 bg-gray-50 min-h-screen">
+		<div className="flex justify-between p-8 bg-gray-50 min-h-screen w-full">
 			{/* Left Segment: Engagement Ring, Loose Diamond, Promotions */}
-			<div className="flex-1 lg:mr-8 space-y-8">
+			<div className="flex-1 lg:mr-8 space-y-8" style={{width: '70%'}}>
 				{/* Engagement Ring Section */}
 				<div className="bg-white p-6 mx-5 my-5 border rounded-lg shadow-md">
 					<h2 className="text-xl font-semibold mb-2 border-b pb-2">
@@ -119,7 +119,10 @@ const CartPage = () => {
 			</div>
 
 			{/* Right Segment: Checkout Summary */}
-			<div className=" lg:mt-0 flex-shrink-0 w-full lg:w-1/3 bg-gray-50 p-6 mx-5 my-5 border rounded-lg shadow-md lg:sticky lg:top-8">
+			<div
+				className=" lg:mt-0 flex-shrink-0 w-full lg:w-1/3 bg-gray-50 p-6 mx-5 my-5 border rounded-lg shadow-md lg:sticky lg:top-8"
+				style={{width: '30%'}}
+			>
 				<div className="bg-white p-4 mx-5 my-5 rounded-lg shadow-md space-y-6">
 					<div className="space-y-4">
 						<p className="flex justify-between text-gray-700">

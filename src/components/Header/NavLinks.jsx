@@ -12,18 +12,11 @@ const NavLinks = () => {
 		{
 			name: 'Sản Phẩm',
 			ref: 'diamond',
-			col: 3,
+			col: 2,
 			submenu: true,
 			mess: 'Xem Sản Phẩm',
 			link: '/jewelry',
 			sublinks: [
-				{
-					Head: 'Sản Phẩm',
-					sublink: [
-						{name: 'Trang Sức Kim Cương Đính Sẵn', link: '/jewelry/all-jewelry'},
-						{name: 'Kim Cương', link: '/diamond/search'},
-					],
-				},
 				{
 					Head: 'Mua Kim Cương Theo Hình Dạng',
 					sublink: [
@@ -40,11 +33,19 @@ const NavLinks = () => {
 					],
 				},
 				{
+					Head: 'Sản Phẩm',
+					sublink: [
+						{name: 'Trang Sức Kim Cương Đính Sẵn', link: '/jewelry/all-jewelry'},
+						{name: 'Kim Cương', link: '/diamond/search'},
+					],
+				},
+
+				{
 					Head: 'Thiết Kế Trang Sức Của Bạn',
 					sublink: [
 						{name: 'Nhẫn', link: '/jewelry/design-your-own-rings'},
 						{name: 'Bông Tai', link: '/jewelry/design-your-own-earrings'},
-						{name: 'Dây Chuyền', link: '/jewelry/design-your-own-pendants'},
+						{name: 'Dây Chuyền', link: '/jewelry/design-your-own-necklaces'},
 					],
 				},
 			],
