@@ -13,9 +13,9 @@ export const Header = () => {
 	return (
 		<nav className="bg-white">
 			<div className="flex items-center font-semibold justify-around">
-				<div>
+				<Link to={'/'}>
 					<img src={Logo} alt="logo" className="md:cursor-pointer max-h-12" />
-				</div>
+				</Link>
 				<ul className="flex uppercase items-center gap-8">
 					<li>
 						<Link to="/" className={`py-7 px-3 inline-block no-underline text-black`}>

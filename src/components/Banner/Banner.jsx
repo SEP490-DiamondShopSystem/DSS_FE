@@ -3,6 +3,21 @@ import {useNavigate} from 'react-router-dom';
 
 export const BannerDiamond = () => {
 	const navigate = useNavigate();
+	const handleDiamondShopClick = () => {
+		navigate('/diamond/search');
+		localStorage.setItem('diamondChoice', 'Diamond Choice');
+		localStorage.removeItem('jewelryChoice');
+		localStorage.removeItem('jewelryType');
+		localStorage.removeItem('selected');
+	};
+	const handleJewelryShopClick = () => {
+		navigate('/jewelry/all-jewelry');
+		localStorage.removeItem('jewelryChoice');
+		localStorage.removeItem('diamondChoice');
+		localStorage.removeItem('jewelryType');
+		localStorage.removeItem('selected');
+		localStorage.removeItem('jewelry');
+	};
 	return (
 		<div className="relative bg-gray-800 text-white" style={{height: 900}}>
 			<img
@@ -22,13 +37,13 @@ export const BannerDiamond = () => {
 					<div className="flex items-center justify-end">
 						<button
 							className="mr-10 px-6 py-2 bg-primary rounded-lg uppercase font-semibold hover:bg-second w-full h-12"
-							onClick={() => navigate('/diamond/search')}
+							onClick={handleDiamondShopClick}
 						>
 							Mua Kim Cương
 						</button>
 						<button
 							className="px-6 py-2 bg-primary rounded-lg uppercase font-semibold hover:bg-second w-full h-12"
-							onClick={() => navigate('/jewelry')}
+							onClick={handleJewelryShopClick}
 						>
 							Mua Trang Sức
 						</button>

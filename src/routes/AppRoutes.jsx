@@ -11,19 +11,20 @@ import FinishProductPage from '../pages/FinishProductPage';
 import HomeEarringPage from '../pages/Home/HomeEarringPage';
 import HomeJewelryPage from '../pages/Home/HomeJewelryPage';
 import HomePage from '../pages/Home/HomePage';
-import HomePendantPage from '../pages/Home/HomePendantPage';
+import HomeNecklacePage from '../pages/Home/HomeNecklacePage';
 import HomeRingPage from '../pages/Home/HomeRingPage';
 import NotFoundPage from '../pages/NotFoundPage/NotFoundPage';
 import ProductDetailPage from '../pages/ProductDetailPage';
 import ProductPage from '../pages/ProductPage';
 import EarringSearchPage from '../pages/ProductPage/EarringSearchPage';
-import PendantSearchPage from '../pages/ProductPage/PendantSearchPage';
+import NecklaceSearchPage from '../pages/ProductPage/NecklaceSearchPage';
 import RingSearchPage from '../pages/ProductPage/RingSearchPage';
 import ChangePassword from '../pages/ProfilePage/ChangePassword';
 import MyInfoPage from '../pages/ProfilePage/MyInfoPage';
 import MyOrderPage from '../pages/ProfilePage/MyOrderPage/MyOrderPage';
 import ProfilePage from '../pages/ProfilePage/ProfilePage';
 import PromotionPage from '../pages/PromotionPage/PromotionPage';
+import JewelryDetailPage from '../pages/JewelryDetailPage';
 
 export const AppRouters = () => {
 	return (
@@ -32,7 +33,7 @@ export const AppRouters = () => {
 			<Route path="/" element={<HomePage />} />
 			<Route path="/jewelry" element={<HomeJewelryPage />} />
 			<Route path="/jewelry/design-your-own-earrings" element={<HomeEarringPage />} />
-			<Route path="/jewelry/design-your-own-pendants" element={<HomePendantPage />} />
+			<Route path="/jewelry/design-your-own-necklaces" element={<HomeNecklacePage />} />
 			<Route path="/jewelry/design-your-own-rings" element={<HomeRingPage />} />
 			//PROFILE
 			<Route path="/profile" element={<ProfilePage />} />
@@ -42,8 +43,8 @@ export const AppRouters = () => {
 			//DESIGN
 			<Route path="/jewelry/design-your-own-rings/setting/all" element={<RingSearchPage />} />
 			<Route
-				path="/jewelry/design-your-own-pendants/setting/all"
-				element={<PendantSearchPage />}
+				path="/jewelry/design-your-own-necklaces/setting/all"
+				element={<NecklaceSearchPage />}
 			/>
 			<Route
 				path="/jewelry/design-your-own-earrings/setting/all"
@@ -55,13 +56,14 @@ export const AppRouters = () => {
 				element={<ProductDetailPage />}
 			/>
 			<Route
-				path="/jewelry/design-your-own-pendants/setting/:id"
+				path="/jewelry/design-your-own-necklaces/setting/:id"
 				element={<ProductDetailPage />}
 			/>
 			<Route
 				path="/jewelry/design-your-own-earrings/setting/:id"
 				element={<ProductDetailPage />}
 			/>
+			<Route path="/jewelry/diamond-jewelry/:id" element={<JewelryDetailPage />} />
 			<Route path="/diamond-detail/:id" element={<DiamondDetailPage />} />
 			<Route path="/completed-jewelry/:id" element={<FinishProductPage />} />
 			//Customize

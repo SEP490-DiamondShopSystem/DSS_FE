@@ -19,12 +19,12 @@ export const BannerRing3 = () => {
 					</p>
 					<div className="flex items-center justify-center">
 						<button
-							className="mr-10 px-6 py-2 bg-primary rounded-lg uppercase font-semibold hover:bg-second w-96 h-12"
+							className="mr-10 px-6 py-2 bg-primary rounded-lg uppercase font-semibold hover:bg-second w-full h-12"
 							onClick={() => navigate('/jewelry/search')}
 						>
 							Mua Vỏ Nhẫn
 						</button>
-						<button className="px-6 py-2 bg-primary rounded-lg uppercase font-semibold hover:bg-second w-96 h-12">
+						<button className="px-6 py-2 bg-primary rounded-lg uppercase font-semibold hover:bg-second w-full h-12">
 							Mua Thiết Kế Tùy Chỉnh
 						</button>
 					</div>

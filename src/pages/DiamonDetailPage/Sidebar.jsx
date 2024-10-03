@@ -105,12 +105,12 @@ export const Sidebar = ({isOpen, toggleSidebar}) => {
 						</div>
 						<div
 							className={`flex border-2 ${
-								active === 'pendant' ? 'border-black' : 'border-white'
+								active === 'necklace' ? 'border-black' : 'border-white'
 							} p-4 m-5 rounded-lg md:cursor-pointer`}
 							onClick={() =>
 								handleSelect(
-									'/jewelry/design-your-own-pendants/setting/all',
-									'pendant',
+									'/jewelry/design-your-own-necklaces/setting/all',
+									'necklace',
 									'Dây Chuyền'
 								)
 							}
