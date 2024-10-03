@@ -1,7 +1,19 @@
 import React from 'react';
 import {FaRegAddressBook, FaRegEnvelope, FaPhoneAlt} from 'react-icons/fa';
+import {Form, Input, Button, Radio, message} from 'antd';
 
 const CheckoutPage = () => {
+	// Form submission handler
+	const onFinish = (values) => {
+		console.log('Form Values:', values);
+		message.success('Order placed successfully!');
+	};
+
+	const onFinishFailed = (errorInfo) => {
+		console.log('Failed:', errorInfo);
+		message.error('Please check the form fields and try again.');
+	};
+
 	return (
 		<div className="min-h-screen flex justify-center items-center bg-gray-100">
 			<div className="container mx-auto p-4 flex flex-col md:flex-row md:space-x-6 gap-4 justify-around">
@@ -12,142 +24,201 @@ const CheckoutPage = () => {
 							<h2 className="text-2xl font-semibold text-gray-800 mb-6">
 								Billing and Shipping
 							</h2>
-							<form className="space-y-6">
+							<Form
+								layout="vertical"
+								className="space-y-6"
+								onFinish={onFinish}
+								onFinishFailed={onFinishFailed}
+							>
 								<div className="flex flex-col md:flex-row gap-y-4 md:gap-x-4">
-									<div className="w-full md:w-1/2">
-										<label className="block text-sm font-medium text-gray-600 mb-2">
-											<FaRegAddressBook className="inline-block mr-2" />
-											First Name <span className="text-red-500">*</span>
-										</label>
-										<input
-											type="text"
-											className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 transition duration-150 ease-in-out"
-											placeholder="First Name"
-										/>
+									<div className="w-full md:w-1/2 p-1">
+										<Form.Item
+											label={
+												<>
+													<FaRegAddressBook className="inline-block mr-2" />
+													First Name
+												</>
+											}
+											name="firstName"
+											rules={[
+												{
+													required: true,
+													message: 'Please enter your first name',
+												},
+											]}
+										>
+											<Input placeholder="First Name" />
+										</Form.Item>
 									</div>
-									<div className="w-full md:w-1/2">
-										<label className="block text-sm font-medium text-gray-600 mb-2">
-											<FaRegAddressBook className="inline-block mr-2" />
-											Last Name <span className="text-red-500">*</span>
-										</label>
-										<input
-											type="text"
-											className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 transition duration-150 ease-in-out"
-											placeholder="Last Name"
-										/>
+									<div className="w-full md:w-1/2 p-1">
+										<Form.Item
+											label={
+												<>
+													<FaRegAddressBook className="inline-block mr-2" />
+													Last Name
+												</>
+											}
+											name="lastName"
+											rules={[
+												{
+													required: true,
+													message: 'Please enter your last name',
+												},
+											]}
+										>
+											<Input placeholder="Last Name" />
+										</Form.Item>
 									</div>
 								</div>
 
-								<div className="mb-4">
-									<label className="block text-sm font-medium text-gray-600 mb-2">
-										Country <span className="text-red-500">*</span>
-									</label>
-									<input
-										type="text"
-										className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 transition duration-150 ease-in-out"
-										placeholder="Country"
-									/>
-								</div>
-								<div className="mb-4">
-									<label className="block text-sm font-medium text-gray-600 mb-2">
-										Street Address <span className="text-red-500">*</span>
-									</label>
-									<input
-										type="text"
-										className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 transition duration-150 ease-in-out"
-										placeholder="Street Address"
-									/>
-								</div>
+								<Form.Item
+									label="Country"
+									name="country"
+									rules={[{required: true, message: 'Please enter your country'}]}
+									className="p-1"
+								>
+									<Input placeholder="Country" />
+								</Form.Item>
+
+								<Form.Item
+									label="Street Address"
+									name="streetAddress"
+									className="p-1"
+									rules={[
+										{
+											required: true,
+											message: 'Please enter your street address',
+										},
+									]}
+								>
+									<Input placeholder="Street Address" />
+								</Form.Item>
+
 								<div className="flex flex-col md:flex-row md:space-x-4 gap-4">
-									<div className="md:w-1/2 mb-4">
-										<label className="block text-sm font-medium text-gray-600 mb-2">
-											City <span className="text-red-500">*</span>
-										</label>
-										<input
-											type="text"
-											className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 transition duration-150 ease-in-out"
-											placeholder="City"
-										/>
+									<div className="w-full md:w-1/2  p-1">
+										<Form.Item
+											label="City"
+											name="city"
+											rules={[
+												{required: true, message: 'Please enter your city'},
+											]}
+										>
+											<Input placeholder="City" />
+										</Form.Item>
 									</div>
-									<div className="md:w-1/2 mb-4">
-										<label className="block text-sm font-medium text-gray-600 mb-2">
-											Postcode ZIP <span className="text-red-500">*</span>
-										</label>
-										<input
-											type="text"
-											className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 transition duration-150 ease-in-out"
-											placeholder="Postcode ZIP"
-										/>
+									<div className="w-full md:w-1/2 p-1">
+										<Form.Item
+											label="Postcode ZIP"
+											name="postcode"
+											rules={[
+												{
+													required: true,
+													message: 'Please enter your postcode',
+												},
+											]}
+										>
+											<Input placeholder="Postcode ZIP" />
+										</Form.Item>
 									</div>
 								</div>
+
 								<div className="flex flex-col md:flex-row md:space-x-4 gap-4">
-									<div className="mb-4">
-										<label className="block text-sm font-medium text-gray-600 mb-2">
-											<FaPhoneAlt className="inline-block mr-2" />
-											Phone <span className="text-red-500">*</span>
-										</label>
-										<input
-											type="tel"
-											className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 transition duration-150 ease-in-out"
-											placeholder="Phone"
-										/>
+									<div className="w-full md:w-1/2 p-1">
+										<Form.Item
+											label={
+												<>
+													<FaPhoneAlt className="inline-block mr-2" />
+													Phone
+												</>
+											}
+											name="phone"
+											rules={[
+												{
+													required: true,
+													message: 'Please enter your phone number',
+												},
+											]}
+										>
+											<Input placeholder="Phone" />
+										</Form.Item>
 									</div>
-									<div className="mb-4">
-										<label className="block text-sm font-medium text-gray-600 mb-2">
-											<FaRegEnvelope className="inline-block mr-2" />
-											Email Address <span className="text-red-500">*</span>
-										</label>
-										<input
-											type="email"
-											className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 transition duration-150 ease-in-out"
-											placeholder="Email"
-										/>
+									<div className="w-full md:w-1/2 p-1">
+										<Form.Item
+											label={
+												<>
+													<FaRegEnvelope className="inline-block mr-2" />
+													Email Address
+												</>
+											}
+											name="email"
+											rules={[
+												{
+													required: true,
+													type: 'email',
+													message: 'Please enter a valid email address',
+												},
+											]}
+										>
+											<Input placeholder="Email" />
+										</Form.Item>
 									</div>
 								</div>
-								<div>
-									<label className="block text-sm font-medium text-gray-600 mb-2">
-										Order Notes (optional)
-									</label>
-									<textarea
-										className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 transition duration-150 ease-in-out"
-										placeholder="Order Notes"
-									></textarea>
-								</div>
-							</form>
+
+								<Form.Item
+									label="Order Notes (optional)"
+									name="notes"
+									className="p-1"
+								>
+									<Input.TextArea placeholder="Order Notes" />
+								</Form.Item>
+							</Form>
 						</div>
 					</div>
+
 					<div className="my-6">
 						{/* Payment Method */}
 						<div className="md:w-1/3 bg-white p-6 rounded-lg shadow-lg space-y-6 mt-6 md:mt-0 transition-shadow duration-300 hover:shadow-2xl">
 							<h2 className="text-2xl font-semibold text-gray-800 mb-6">
 								Payment Method
 							</h2>
-							<div className="space-y-4">
-								{[
-									'Credit Card',
-									'Interest-Free Monthly Installments',
-									'Pay on Delivery',
-									'PayPal',
-								].map((method, index) => (
-									<div
-										key={index}
-										className="p-4 border border-gray-300 rounded-lg hover:bg-gray-100 transition duration-200"
+							<Form.Item
+								name="paymentMethod"
+								rules={[
+									{required: true, message: 'Please select a payment method'},
+								]}
+								className="py-3"
+							>
+								<Radio.Group className="flex flex-col">
+									<Radio
+										value="creditCard"
+										className="border p-4 rounded-md hover:border-blue-500 transition duration-300 mb-4"
 									>
-										<input
-											type="radio"
-											id={method.replace(/\s+/g, '-').toLowerCase()}
-											name="payment"
-											className="mr-2 focus:ring-yellow-400"
-										/>
-										<label htmlFor={method.replace(/\s+/g, '-').toLowerCase()}>
-											{method}
-										</label>
-									</div>
-								))}
-							</div>
+										Credit Card
+									</Radio>
+									<Radio
+										value="installments"
+										className="border p-4 rounded-md hover:border-blue-500 transition duration-300 mb-4"
+									>
+										Interest-Free Monthly Installments
+									</Radio>
+									<Radio
+										value="delivery"
+										className="border p-4 rounded-md hover:border-blue-500 transition duration-300 mb-4"
+									>
+										Pay on Delivery
+									</Radio>
+									<Radio
+										value="paypal"
+										className="border p-4 rounded-md hover:border-blue-500 transition duration-300"
+									>
+										PayPal
+									</Radio>
+								</Radio.Group>
+							</Form.Item>
 						</div>
 					</div>
 				</div>
+
 				{/* Order Summary */}
 				<div className="md:w-1/3 bg-white p-6 rounded-lg shadow-lg md:mt-0 transition-shadow duration-300 hover:shadow-2xl">
 					<div className="flex justify-between">
@@ -228,49 +299,63 @@ const CheckoutPage = () => {
 							</div>
 						</div>
 
-						{/* Promo Code */}
-						<div className="flex flex-col space-y-2 py-5 border-b border-gray-300">
-							<label
-								htmlFor="promo-code"
-								className="text-sm font-medium text-gray-600"
-							>
-								Promo Code
-							</label>
-							<input
-								type="text"
-								id="promo-code"
-								className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
-								placeholder="Enter promo code"
-							/>
+						<div className="bg-white p-6 rounded-lg shadow-lg space-y-4">
+							{/* Promo Code Section */}
+							<Form.Item label="Promo Code" name="promoCode">
+								<Input
+									placeholder="Enter promo code"
+									className="w-full p-3 border rounded-md"
+								/>
+							</Form.Item>
+
+							{/* Total and Savings Section */}
+							<div className="p-4 border rounded-lg bg-gray-50">
+								<div className="flex justify-between font-semibold text-lg text-gray-800 mb-2">
+									<span>Total:</span>
+									<span>$4,632</span>
+								</div>
+								<div className="text-sm text-gray-600 mb-4">
+									or interest-free installments from $1,544 / mo.
+								</div>
+								<div className="flex items-center space-x-2 text-sm text-gray-600">
+									<span>🚚</span>
+									<span>Free Overnight Shipping, Hassle-Free Returns</span>
+								</div>
+								<div className="flex items-center space-x-2 text-sm text-gray-600">
+									<span>📅</span>
+									<span>
+										Ships by: For an exact shipping date, please select a ring
+										size first.
+									</span>
+								</div>
+								<div className="text-green-600 font-semibold text-base mt-4">
+									Total Savings $368
+								</div>
+							</div>
+
+							{/* Order Button Section */}
+							<div className="flex justify-center">
+							<Form.Item>
+								<Button type="primary" htmlType="submit" className="w-full">
+									Place Order
+								</Button>
+							</Form.Item>
 						</div>
 
-						{/* Total */}
-						<div className="flex justify-between font-semibold text-gray-800 my-5">
-							<span>Total</span>
-							<span>$4,632</span>
-						</div>
-						<button
-							className="mr-10 px-6 py-2 bg-primary rounded-lg uppercase font-semibold hover:bg-second w-full h-12"
-							style={{padding: '13px 0px 11px 0px'}}
-							onClick={() => navigate(`/checkout`)}
-						>
-							Place Order
-						</button>
-
-						{/* Additional Information */}
-						<div className="text-sm text-gray-500 space-y-2">
-							<p>Free Overnight Shipping, Hassle-Free Returns</p>
-							<p>
-								24/7 Customer Service:{' '}
-								<a href="tel:1-800-242-2728" className="text-yellow-500">
-									1-800-242-2728
-								</a>
-							</p>
-							<p>
-								<a href="#" className="text-yellow-500 hover:underline">
-									Chat With Us
-								</a>
-							</p>
+							{/* Customer Service Section */}
+							<div className="text-center text-sm text-gray-600 mt-6">
+								24/7 Customer Service
+								<div className="mt-2 flex items-center justify-center space-x-4">
+									<div className="flex items-center space-x-1">
+										<span>📞</span>
+										<span>1-800-242-2728</span>
+									</div>
+									<div className="flex items-center space-x-1">
+										<span>💬</span>
+										<span className="text-blue-600">Chat With Us</span>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
