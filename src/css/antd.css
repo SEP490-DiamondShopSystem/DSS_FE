@@ -44,10 +44,31 @@
 	border-color: #dec986 !important; /* Màu viền cho dot 'finish' cuối cùng */
 }
 
-.ant-steps-icon {
-	color: black !important; /* Ẩn icon */
-}
-
 /* .ant-steps-item-title {
 	font-weight: 700 !important;
 } */
+
+.ant-radio-wrapper .ant-radio-checked .ant-radio-inner {
+	border-color: #dec986 !important;
+}
+
+.ant-radio-wrapper .ant-radio-checked .ant-radio-inner::after {
+	background-color: #dec986 !important;
+}
+.ant-steps-item-active::before {
+	background-color: #dec986 !important;
+}
+.anticon {
+	color: black !important;
+}
+.ant-steps-item-finish:not(:last-of-type) .ant-steps-item-icon {
+	background-color: #dec986 !important;
+	border-color: #dec986 !important;
+}
+
+:where(.css-dev-only-do-not-override-1gwfwyx).ant-radio-wrapper
+	.ant-radio-checked
+	.ant-radio-inner {
+	background-color: #dec986 !important;
+	border-color: black !important;
+}
