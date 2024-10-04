@@ -5,15 +5,13 @@ import * as fabric from 'fabric';
 
 const {Option} = Select; // Correctly import Option
 
-export const Engrave = ({setStep}) => {
+export const Engrave = ({setStep, textValue, setTextValue, setImageData, imageData}) => {
 	const canvasRef = useRef(null);
 	const [canvas, setCanvas] = useState(null);
-	const [textValue, setTextValue] = useState('Your Text Here');
 	const [fontSize, setFontSize] = useState(30);
 	const [fontFamily, setFontFamily] = useState('Arial');
 	const [textObject, setTextObject] = useState(null);
-	const [imageData, setImageData] = useState(null); // State to store the image data
-	const [isUploading, setIsUploading] = useState(false); // State to track upload status
+	const [isUploading, setIsUploading] = useState(false);
 
 	useEffect(() => {
 		const fabricCanvas = new fabric.Canvas(canvasRef.current, {
@@ -27,8 +25,8 @@ export const Engrave = ({setStep}) => {
 		imgElement.src = ring; // Path to the image in assets
 		imgElement.onload = () => {
 			const fabricImg = new fabric.Image(imgElement);
-			fabricImg.scaleToWidth(300);
-			fabricImg.set({left: 100, top: 100, selectable: false}); // Image cannot be selected
+			fabricImg.scaleToWidth(500);
+			fabricImg.set({left: 0, top: 0, selectable: false}); // Image cannot be selected
 			fabricCanvas.add(fabricImg); // Add image to canvas
 			fabricCanvas.renderAll(); // Render the canvas
 
@@ -133,7 +131,7 @@ export const Engrave = ({setStep}) => {
 						className="ml-5 w-16"
 					/>
 				</div>
-				<div>
+				<div className="mb-10">
 					<label>Font Family:</label>
 					<Select
 						value={fontFamily}
@@ -146,9 +144,12 @@ export const Engrave = ({setStep}) => {
 						<Option value="Times New Roman">Times New Roman</Option>
 					</Select>
 				</div>
-				<canvas ref={canvasRef} />
+				<canvas ref={canvasRef} className="border" />
 			</div>
-			<div className="flex justify-between items-center mt-10">
+			<div className="text-red my-10">
+				*Cần phải upload hình mới có thể thiết kế chữ khắc thành công
+			</div>
+			<div className="flex justify-between items-center">
 				<Button
 					type="text"
 					className="bg-primary w-32 uppercase font-semibold"
@@ -174,7 +175,7 @@ export const Engrave = ({setStep}) => {
 				<Button
 					type="text"
 					className="bg-primary w-32 uppercase font-semibold"
-					onClick={() => setStep(2)}
+					onClick={() => setStep(3)}
 					disabled={!imageData || isUploading}
 				>
 					Tiếp Tục
