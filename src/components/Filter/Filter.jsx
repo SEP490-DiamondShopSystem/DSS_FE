@@ -173,7 +173,7 @@ export const FilterAllJewelry = ({handleFilter, setFilters, filters, handleReset
 
 	// Render the filter UI
 	return (
-		<div wrap className="p-4 flex items-center">
+		<div wrap className="py-4 flex items-center">
 			{filterTypes.map((filterType) => (
 				<Select
 					key={filterType} // Use the filter type as key

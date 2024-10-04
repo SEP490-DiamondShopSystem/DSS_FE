@@ -1710,10 +1710,6 @@ video {
 	margin-right: 1.25rem /* 20px */;
 }
 
-.w-32 {
-	width: 8rem /* 128px */;
-}
-
 .h-10 {
 	height: 2.5rem /* 40px */;
 }
@@ -2281,4 +2277,22 @@ video {
 
 .leading-4 {
 	line-height: 1rem /* 16px */;
+}
+.w-2\/3 {
+	width: 66.666667%;
+}
+
+.w-1\/3 {
+	width: 33.333333%;
+}
+
+.w-1\/2 {
+	width: 50%;
+}
+.gap-x-8 {
+	column-gap: 2rem /* 32px */;
+}
+
+.gap-y-4 {
+	row-gap: 1rem /* 16px */;
 }

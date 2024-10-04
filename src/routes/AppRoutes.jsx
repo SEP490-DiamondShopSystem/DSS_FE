@@ -4,15 +4,17 @@ import {Route, Routes} from 'react-router-dom';
 import CartPage from '../pages/CartPage/CartPage';
 import CheckOutPage from '../pages/CheckOutPage/CheckOutPage';
 import CouponPage from '../pages/CouponPage/CouponPage';
-import CustomizePage from '../pages/Customize';
+import ChooseJewelrySetting from '../pages/Customize/ChooseJewelrySetting';
+import JewelryCustomDetail from '../pages/Customize/JewelryDetailPage';
 import DiamondDetailPage from '../pages/DiamonDetailPage';
 import DiamondSearchPage from '../pages/DiamondSearchPage';
 import FinishProductPage from '../pages/FinishProductPage';
 import HomeEarringPage from '../pages/Home/HomeEarringPage';
 import HomeJewelryPage from '../pages/Home/HomeJewelryPage';
-import HomePage from '../pages/Home/HomePage';
 import HomeNecklacePage from '../pages/Home/HomeNecklacePage';
+import HomePage from '../pages/Home/HomePage';
 import HomeRingPage from '../pages/Home/HomeRingPage';
+import JewelryDetailPage from '../pages/JewelryDetailPage';
 import NotFoundPage from '../pages/NotFoundPage/NotFoundPage';
 import ProductDetailPage from '../pages/ProductDetailPage';
 import ProductPage from '../pages/ProductPage';
@@ -24,7 +26,6 @@ import MyInfoPage from '../pages/ProfilePage/MyInfoPage';
 import MyOrderPage from '../pages/ProfilePage/MyOrderPage/MyOrderPage';
 import ProfilePage from '../pages/ProfilePage/ProfilePage';
 import PromotionPage from '../pages/PromotionPage/PromotionPage';
-import JewelryDetailPage from '../pages/JewelryDetailPage';
 
 export const AppRouters = () => {
 	return (
@@ -67,7 +68,10 @@ export const AppRouters = () => {
 			<Route path="/diamond-detail/:id" element={<DiamondDetailPage />} />
 			<Route path="/completed-jewelry/:id" element={<FinishProductPage />} />
 			//Customize
-			<Route path="/customize" element={<CustomizePage />} />
+			<Route path="/customize/choose-jewelry" element={<ChooseJewelrySetting />} />
+			<Route path="/customize/choose-jewelry/:id" element={<JewelryCustomDetail />} />
+			<Route path="/customize/choose-diamond" element={<ChooseJewelrySetting />} />
+			<Route path="/customize/choose-diamond/:id" element={<ChooseJewelrySetting />} />
 			//
 			<Route path="/cart" element={<CartPage />} />
 			<Route path="/jewelry/all-jewelry" element={<ProductPage />} />

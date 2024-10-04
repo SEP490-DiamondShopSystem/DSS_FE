@@ -102,7 +102,7 @@ const NavLinks = () => {
 		if (shape) {
 			localStorage.setItem('selected', shape);
 			localStorage.removeItem('jewelryType');
-			localStorage.removeItem('diamondChoice');
+			localStorage.setItem('diamondChoice', 'Kim Cương');
 			localStorage.removeItem('jewelryChoice');
 		}
 		if (type) {
@@ -181,7 +181,8 @@ const NavLinks = () => {
 																				null
 																			);
 																		} else if (
-																			sl.name === 'Trang Sức'
+																			sl.name ===
+																			'Trang Sức Kim Cương Đính Sẵn'
 																		) {
 																			handleClick(
 																				null,

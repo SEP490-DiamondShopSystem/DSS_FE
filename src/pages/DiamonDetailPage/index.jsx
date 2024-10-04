@@ -22,18 +22,36 @@ const DiamondDetailPage = () => {
 			title: 'Hoàn Thành',
 		},
 	];
+	const itemsDiamond = [
+		{
+			title: `Chọn Kim Cương`,
+		},
+		{
+			title: `Chọn ${jewelryType}`,
+		},
+		{
+			title: 'Hoàn Thành',
+		},
+	];
 	const toggleSidebar = () => {
 		setIsSidebarOpen(!isSidebarOpen);
 	};
 	return (
 		<>
 			<div className="mx-6 md:mx-32">
-				{diamondChoice.length === 0 && (
+				{diamondChoice.length === 0 ? (
 					<Steps
 						current={1}
 						percent={100}
 						labelPlacement="horizontal"
 						items={items}
+						className="bg-white p-4 rounded-full mt-10"
+					/>
+				) : (
+					<Steps
+						current={0}
+						labelPlacement="horizontal"
+						items={itemsDiamond}
 						className="bg-white p-4 rounded-full mt-10"
 					/>
 				)}
