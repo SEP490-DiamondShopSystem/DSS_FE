@@ -2296,3 +2296,11 @@ video {
 .gap-y-4 {
 	row-gap: 1rem /* 16px */;
 }
+
+.w-52 {
+	width: 13rem /* 208px */;
+}
+
+.w-72 {
+	width: 18rem /* 288px */;
+}

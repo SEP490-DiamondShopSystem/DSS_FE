@@ -13,8 +13,12 @@ const JewelryCustomDetail = () => {
 	const [metal, setMetal] = useState('');
 	const [shape, setShape] = useState('');
 	const [engrave, setEngrave] = useState('');
+	const [textValue, setTextValue] = useState('Your Text Here');
+	const [imageData, setImageData] = useState(null);
 
 	console.log(shape);
+	console.log('textValue', textValue);
+	console.log('imageData', imageData);
 
 	console.log('metal', metal);
 	const items = [
@@ -76,11 +80,21 @@ const JewelryCustomDetail = () => {
 								shape={shape}
 								setEngrave={setEngrave}
 								engrave={engrave}
+								setTextValue={setTextValue}
+								textValue={textValue}
+								imageData={imageData}
+								setImageData={setImageData}
 							/>
 						</div>
 
 						<div className="w-1/2">
-							<DetailMetal />
+							<DetailMetal
+								imageData={imageData}
+								textValue={textValue}
+								shape={shape}
+								metal={metal}
+								size={size}
+							/>
 						</div>
 					</div>
 				</>
