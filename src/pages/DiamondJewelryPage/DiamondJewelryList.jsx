@@ -4,12 +4,12 @@ import {Image} from 'antd';
 import ReactLoading from 'react-loading';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
-import jewelryImg from '../../../assets/ring_classic.png';
-import {GetAllJewelrySelector, LoadingJewelrySelector} from '../../../redux/selectors';
-import {getAllJewelry} from '../../../redux/slices/jewelrySlice';
-import {FilterAllJewelry} from '../../../components/Filter/Filter';
+import jewelryImg from '../../assets/ring_classic.png';
+import {FilterDiamondJewelry} from '../../components/Filter/Filter';
+import {GetAllJewelrySelector, LoadingJewelrySelector} from '../../redux/selectors';
+import {getAllJewelry} from '../../redux/slices/jewelrySlice';
 
-export const ProductList = () => {
+export const DiamondJewelryList = () => {
 	const navigate = useNavigate();
 	const jewelryList = useSelector(GetAllJewelrySelector);
 	const loading = useSelector(LoadingJewelrySelector);
@@ -53,7 +53,7 @@ export const ProductList = () => {
 	return (
 		<>
 			<div className="mt-10">
-				<FilterAllJewelry
+				<FilterDiamondJewelry
 					setFilters={setFilters}
 					filters={filters}
 					handleReset={handleReset}
@@ -66,15 +66,15 @@ export const ProductList = () => {
 				</div>
 			) : (
 				<>
-					{/* <div className="text-2xl flex justify-end mt-10">
+					<div className="text-2xl flex justify-end mt-10">
 						<p className="p-2">200 Kết quả</p>
-					</div> */}
+					</div>
 					<div className="transition-all duration-300 grid grid-cols-4 gap-10 mb-20 mt-10">
 						{jewelries?.map((jewelry, i) => (
 							<div
 								key={i}
 								className="shadow-lg bg-white rounded-lg hover:border-2 cursor-pointer"
-								onClick={() => navigate(`/customize/diamond-jewelry/${jewelry.id}`)}
+								onClick={() => navigate(`/jewelry/diamond-jewelry/${jewelry.id}`)}
 							>
 								<div className="w-80">
 									<div

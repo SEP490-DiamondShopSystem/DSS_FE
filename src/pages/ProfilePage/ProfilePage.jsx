@@ -5,6 +5,8 @@ import {useNavigate} from 'react-router-dom';
 import LogoutModal from '../../components/LogModal/LogoutModal';
 import NavbarProfile from '../../components/NavbarProfile';
 import {removeLocalStorage} from '../../utils/localstorage';
+import {useDispatch} from 'react-redux';
+import {logout} from '../../redux/slices/userLoginSlice';
 
 const detailGroups = {
 	total_price: 20138000,
@@ -61,15 +63,16 @@ const detailGroups = {
 };
 
 const ProfilePage = () => {
-	const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
+	const navigate = useNavigate();
+	const observer = useRef();
+	const dispatch = useDispatch();
+
+	// const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
 	const [status, setStatus] = useState('All');
 	const [currentPage, setCurrentPage] = useState(1);
 	const [itemsPerPage] = useState(3);
 	const [visibleGroups, setVisibleGroups] = useState([]);
 	const [filteredData, setFilteredData] = useState(detailGroups.groups); // Added filteredData state
-	const navigate = useNavigate();
-	const observer = useRef();
-
 	const orderStatus = [
 		{icon: '', name: 'Tổng đơn hàng', status: 'All', order: 1},
 		{icon: '', name: 'Đơn hàng đang chờ xử lý', status: 'Waiting for manufacture', order: 3},
@@ -77,14 +80,15 @@ const ProfilePage = () => {
 		{icon: '', name: 'Hoàn tất đơn hàng', status: 'Completed', order: 10},
 	];
 
-	const showLogoutModal = () => setIsLogoutModalVisible(true);
-	const hideLogoutModal = () => setIsLogoutModalVisible(false);
+	// const showLogoutModal = () => setIsLogoutModalVisible(true);
+	// const hideLogoutModal = () => setIsLogoutModalVisible(false);
 
-	const handleLogout = () => {
-		removeLocalStorage('user');
-		hideLogoutModal();
-		navigate('/');
-	};
+	// const handleLogout = () => {
+	// 	dispatch(logout());
+	// 	notifySuccess('Logout Successful!');
+	// 	hideLogoutModal();
+	// 	navigate('/');
+	// };
 
 	// Handle status change
 	const handleStatusClick = (newStatus) => {
@@ -136,9 +140,9 @@ const ProfilePage = () => {
 				<div className="font-semibold w-full px-20 py-10 bg-white rounded-lg">
 					<div className="flex justify-between items-center">
 						<h1 className="text-2xl">Chào mừng Khách hàng</h1>
-						<Button danger onClick={showLogoutModal}>
+						{/* <Button danger onClick={showLogoutModal}>
 							Đăng xuất
-						</Button>
+						</Button> */}
 					</div>
 					<div className="flex items-center font-medium justify-between mt-10">
 						{orderStatus.map((statusItem) => (
@@ -253,11 +257,11 @@ const ProfilePage = () => {
 					</div>
 				</div>
 			</div>
-			<LogoutModal
+			{/* <LogoutModal
 				isVisible={isLogoutModalVisible}
 				onCancel={hideLogoutModal}
 				onLogout={handleLogout}
-			/>
+			/> */}
 		</div>
 	);
 };

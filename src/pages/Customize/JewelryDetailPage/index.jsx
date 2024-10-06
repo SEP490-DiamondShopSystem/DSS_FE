@@ -6,21 +6,30 @@ import {InformationLeft} from './Left/InformationLeft';
 import {InformationRight} from './Right/InformationRight';
 import {ChoiceMetal} from './ChoiceMetal';
 import {DetailMetal} from './DetailMetal/DetailMetal';
+import {ChoiceMetalDiamond} from '../DiamondDetailPage/ChoiceMetal';
 
 const JewelryCustomDetail = () => {
-	const [step, setStep] = useState(0);
-	const [size, setSize] = useState('');
-	const [metal, setMetal] = useState('');
-	const [shape, setShape] = useState('');
-	const [engrave, setEngrave] = useState('');
-	const [textValue, setTextValue] = useState('Your Text Here');
+	const [stepChoose, setStepChoose] = useState(0);
 	const [imageData, setImageData] = useState(null);
+	const [customizeJewelry, setCustomizeJewelry] = useState({
+		size: '',
+		metal: '',
+		shape: '',
+		textValue: 'Your Text Here',
+	});
+	const [customizeDiamond, setCustomizeDiamond] = useState({
+		caratFrom: '',
+		caratTo: '',
+		color: '',
+		shape: '',
+		clarity: '',
+	});
 
-	console.log(shape);
-	console.log('textValue', textValue);
+	console.log(customizeDiamond);
+
+	console.log('customizeJewelry', customizeJewelry);
 	console.log('imageData', imageData);
 
-	console.log('metal', metal);
 	const items = [
 		{
 			title: `Chọn Trang Sức`,
@@ -34,12 +43,15 @@ const JewelryCustomDetail = () => {
 	];
 
 	const handleSizeChange = (e) => {
-		setSize(e.target.value);
+		setCustomizeJewelry((prev) => ({
+			...prev,
+			size: e.target.value,
+		}));
 	};
 
 	return (
 		<div className="mx-32">
-			{step === 0 && (
+			{stepChoose === 0 && (
 				<>
 					<Steps
 						current={0}
@@ -56,14 +68,14 @@ const JewelryCustomDetail = () => {
 						<div className="w-full md:w-1/2 p-6 md:pr-32">
 							<InformationRight
 								handleSizeChange={handleSizeChange}
-								setStep={setStep}
-								size={size}
+								setStepChoose={setStepChoose}
+								customizeJewelry={customizeJewelry}
 							/>
 						</div>
 					</div>
 				</>
 			)}
-			{step === 1 && (
+			{stepChoose === 1 && (
 				<>
 					<Steps
 						current={0}
@@ -74,26 +86,38 @@ const JewelryCustomDetail = () => {
 					<div className="flex w-full bg-white my-10 md:my-20 rounded-lg shadow-lg">
 						<div className="w-1/2">
 							<ChoiceMetal
-								setMetal={setMetal}
-								metal={metal}
-								setShape={setShape}
-								shape={shape}
-								setEngrave={setEngrave}
-								engrave={engrave}
-								setTextValue={setTextValue}
-								textValue={textValue}
 								imageData={imageData}
 								setImageData={setImageData}
+								setCustomizeJewelry={setCustomizeJewelry}
+								customizeJewelry={customizeJewelry}
+								setStepChoose={setStepChoose}
 							/>
 						</div>
 
 						<div className="w-1/2">
 							<DetailMetal
 								imageData={imageData}
-								textValue={textValue}
-								shape={shape}
-								metal={metal}
-								size={size}
+								customizeJewelry={customizeJewelry}
+							/>
+						</div>
+					</div>
+				</>
+			)}
+			{stepChoose === 2 && (
+				<>
+					<Steps current={1} items={items} className="bg-white p-4 rounded-full my-10" />
+					<div className="flex w-full bg-white my-10 md:my-20 rounded-lg shadow-lg">
+						<div className="w-1/2">
+							<ChoiceMetalDiamond
+								setCustomizeDiamond={setCustomizeDiamond}
+								customizeDiamond={customizeDiamond}
+							/>
+						</div>
+
+						<div className="w-1/2">
+							<DetailMetal
+								imageData={imageData}
+								customizeJewelry={customizeJewelry}
 							/>
 						</div>
 					</div>

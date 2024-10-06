@@ -16,9 +16,12 @@ const CartPage = () => {
 	};
 
 	return (
-		<div className="flex justify-between p-8 bg-gray-50 min-h-screen w-full">
+		<div className="flex justify-between p-8 bg-gray-50 min-h-screen mx-32 my-20">
 			{/* Left Segment: Engagement Ring, Loose Diamond, Promotions */}
-			<div className="flex-1 lg:mr-8 space-y-8" style={{width: '70%'}}>
+			<div
+				className="flex-1 lg:mr-8 space-y-8 shadow-lg bg-white rounded-lg"
+				style={{width: '70%'}}
+			>
 				{/* Engagement Ring Section */}
 				<div className="bg-white p-6 mx-5 my-5 border rounded-lg shadow-md">
 					<h2 className="text-xl font-semibold mb-2 border-b pb-2">
@@ -120,7 +123,7 @@ const CartPage = () => {
 
 			{/* Right Segment: Checkout Summary */}
 			<div
-				className=" lg:mt-0 flex-shrink-0 w-full lg:w-1/3 bg-gray-50 p-6 mx-5 my-5 border rounded-lg shadow-md lg:sticky lg:top-8"
+				className=" lg:mt-0 flex-shrink-0 w-full lg:w-1/3 bg-gray-50 p-6 mx-5 shadow-lg bg-white rounded-lg lg:sticky lg:top-8"
 				style={{width: '30%'}}
 			>
 				<div className="bg-white p-4 mx-5 my-5 rounded-lg shadow-md space-y-6">
