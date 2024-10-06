@@ -35,7 +35,7 @@ const NavLinks = () => {
 				{
 					Head: 'Sản Phẩm',
 					sublink: [
-						{name: 'Trang Sức Kim Cương Đính Sẵn', link: '/jewelry/all-jewelry'},
+						{name: 'Trang Sức Kim Cương Đính Sẵn', link: '/jewelry/diamond-jewelry'},
 						{name: 'Kim Cương', link: '/diamond/search'},
 					],
 				},
@@ -119,6 +119,7 @@ const NavLinks = () => {
 			localStorage.setItem('diamondChoice', diamond);
 			localStorage.removeItem('jewelryChoice');
 			localStorage.removeItem('jewelryType');
+			localStorage.removeItem('selected');
 		}
 	};
 

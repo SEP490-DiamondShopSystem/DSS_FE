@@ -6,7 +6,7 @@ import platinum from '../../../../../assets/platinum.png';
 import {Button, Image, Radio} from 'antd';
 import {notifyError} from '../../../../../utils/toast';
 
-export const Metal = ({setStep, metal, setMetal}) => {
+export const Metal = ({setStep, customizeJewelry, setCustomizeJewelry}) => {
 	const metalItems = [
 		{
 			id: 1,
@@ -26,11 +26,14 @@ export const Metal = ({setStep, metal, setMetal}) => {
 
 	const onChange = (e) => {
 		console.log('radio checked', e.target.value);
-		setMetal(e.target.value);
+		setCustomizeJewelry((prev) => ({
+			...prev,
+			metal: e.target.value,
+		}));
 	};
 
 	const handleNextStep = () => {
-		if (metal.length > 0) {
+		if (customizeJewelry?.metal.length > 0) {
 			setStep(1);
 		} else {
 			notifyError('Vui lòng chọn vật liệu!');
@@ -42,7 +45,7 @@ export const Metal = ({setStep, metal, setMetal}) => {
 			<div>
 				{metalItems?.map((item) => (
 					<div key={item.id}>
-						<Radio.Group onChange={onChange} value={metal}>
+						<Radio.Group onChange={onChange} value={customizeJewelry.metal}>
 							<Radio value={item.name}>
 								<div
 									className="flex items-center justify-between"
@@ -70,7 +73,7 @@ export const Metal = ({setStep, metal, setMetal}) => {
 				<Button
 					type="text"
 					className="bg-primary w-48 uppercase font-semibold"
-					disabled={metal.length === 0}
+					disabled={customizeJewelry.metal.length === 0}
 					onClick={handleNextStep}
 				>
 					Tiếp tục

@@ -5,6 +5,7 @@ import {faRefresh, faTruck} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {Button} from 'antd';
 import {useNavigate} from 'react-router-dom';
+import {notifyError} from '../../../../utils/toast';
 
 const metalType = {
 	id: 12212,
@@ -38,7 +39,7 @@ const metalType = {
 	],
 };
 
-export const InformationRight = ({handleSizeChange, setStep, size}) => {
+export const InformationRight = ({handleSizeChange, setStepChoose, customizeJewelry}) => {
 	const navigate = useNavigate();
 
 	const [showDetail, setDetail] = useState(false);
@@ -70,6 +71,14 @@ export const InformationRight = ({handleSizeChange, setStep, size}) => {
 		localStorage.setItem('selectedMetal', JSON.stringify(metal));
 	};
 
+	const handleNextStep = () => {
+		if (customizeJewelry.size !== '') {
+			setStepChoose(1);
+		} else {
+			notifyError('Vui lòng chọn kích thước nhẫn!');
+		}
+	};
+
 	return (
 		<div>
 			<div className="border-b border-tintWhite">
@@ -97,10 +106,10 @@ export const InformationRight = ({handleSizeChange, setStep, size}) => {
 						<div className="flex items-center">
 							<p className="mr-5">Kích thước nhẫn:</p>
 							<select
-								className="w-28 border-2 rounded-lg p-2"
+								className="w-34 border-2 rounded-lg p-2"
 								onChange={handleSizeChange}
 							>
-								{/* <option label="Chọn kích thước">5</option> */}
+								<option value={''}>--Chọn size--</option>
 								<option value={5}>5</option>
 								<option value={6}>6</option>
 								<option value={7}>7</option>
@@ -110,7 +119,7 @@ export const InformationRight = ({handleSizeChange, setStep, size}) => {
 					</div>
 				</div>
 			</div>
-			<div className="border-y border-tintWhite py-5 my-5">
+			{/* <div className="border-y border-tintWhite py-5 my-5">
 				<div className="flex items-center">
 					<p className="line-through text-gray decoration-gray text-2xl">
 						{metalType.price}
@@ -123,12 +132,12 @@ export const InformationRight = ({handleSizeChange, setStep, size}) => {
 						*Mã giảm giá được áp dụng tự động
 					</div>
 				</div>
-			</div>
+			</div> */}
 			<div className="flex justify-between items-center mt-5">
 				<Button
 					type="text"
 					className="border py-7 px-14 font-bold text-lg bg-primary rounded hover:bg-second w-full uppercase"
-					onClick={() => setStep(1)}
+					onClick={handleNextStep}
 				>
 					Chọn Cài Đặt Này
 				</Button>

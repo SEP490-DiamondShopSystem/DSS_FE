@@ -1,12 +1,18 @@
 import React from 'react';
-
 import {Modal, Button, Input, Form} from 'antd';
 
 const SignUpModal = ({isOpen, onClose}) => {
 	const [form] = Form.useForm();
 
 	const onFinish = (values) => {
-		console.log('Received values:', values);
+		// Combine firstName and lastName into fullName object
+		const fullName = {
+			firstName: values.firstName,
+			lastName: values.lastName,
+		};
+
+		console.log('Received values:', {...values, fullName});
+
 		form.resetFields();
 	};
 
@@ -19,6 +25,25 @@ const SignUpModal = ({isOpen, onClose}) => {
 			footer={null}
 		>
 			<Form form={form} layout="vertical" onFinish={onFinish}>
+				{/* First Name */}
+				<Form.Item
+					label="Họ"
+					name="lastName"
+					rules={[{required: true, message: 'Vui lòng nhập họ của bạn!'}]}
+				>
+					<Input placeholder="Họ" />
+				</Form.Item>
+
+				{/* Last Name */}
+				<Form.Item
+					label="Tên"
+					name="firstName"
+					rules={[{required: true, message: 'Vui lòng nhập tên của bạn!'}]}
+				>
+					<Input placeholder="Tên" />
+				</Form.Item>
+
+				{/* Email */}
 				<Form.Item
 					label="Email"
 					name="email"
@@ -30,6 +55,7 @@ const SignUpModal = ({isOpen, onClose}) => {
 					<Input placeholder="Email" />
 				</Form.Item>
 
+				{/* Password */}
 				<Form.Item
 					label="Mật khẩu"
 					name="password"
@@ -38,9 +64,11 @@ const SignUpModal = ({isOpen, onClose}) => {
 					<Input.Password placeholder="Mật khẩu" />
 				</Form.Item>
 
+				{/* Confirm Password */}
 				<Form.Item
 					label="Xác nhận mật khẩu"
 					name="confirmPassword"
+					dependencies={['password']}
 					rules={[
 						{required: true, message: 'Vui lòng xác nhận mật khẩu của bạn!'},
 						({getFieldValue}) => ({
@@ -55,13 +83,14 @@ const SignUpModal = ({isOpen, onClose}) => {
 				>
 					<Input.Password placeholder="Xác nhận mật khẩu của bạn" />
 				</Form.Item>
+
+				{/* Submit Button */}
 				<Form.Item>
 					<div className="flex justify-between">
 						<Button
 							htmlType="submit"
 							type="text"
 							className="bg-primary text-black hover:bg-primary font-semibold w-full"
-							// loading={loading}
 						>
 							Đăng ký
 						</Button>

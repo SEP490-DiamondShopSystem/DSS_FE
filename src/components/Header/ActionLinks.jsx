@@ -7,11 +7,14 @@ import {notifySuccess} from '../../utils/toast';
 import LoginModal from '../LogModal/LoginModal';
 import LogoutModal from '../LogModal/LogoutModal'; // Import LogoutModal
 import SignUpModal from '../LogModal/SignUpModal';
+import {useDispatch} from 'react-redux';
+import {logout} from '../../redux/slices/userLoginSlice';
 
 const ActionLinks = () => {
 	const token = localStorage.getItem('token');
 
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 
 	const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
 	const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
@@ -27,7 +30,7 @@ const ActionLinks = () => {
 	const hideLogoutModal = () => setIsLogoutModalVisible(false);
 
 	const handleLogout = () => {
-		removeLocalStorage('token');
+		dispatch(logout());
 		notifySuccess('Logout Successful!');
 		hideLogoutModal();
 		navigate('/');

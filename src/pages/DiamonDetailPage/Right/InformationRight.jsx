@@ -48,19 +48,19 @@ export const InformationRight = ({diamondChoice, toggleSidebar}) => {
 					</div>
 				</div>
 				<div>
-					{infoMetal?.tuyChon?.map((kimLoai, i) => (
+					{infoMetal?.tuyChon?.map((metal, i) => (
 						<div className="flex items-center text-sm" key={i}>
 							<p className="p-2" style={{backgroundColor: '#f7f7f7'}}>
-								{kimLoai.carat}
+								{metal.carat}
 							</p>
 							<p className="ml-4 p-2" style={{backgroundColor: '#f7f7f7'}}>
-								{kimLoai.mauSac}
+								{metal.mauSac}
 							</p>
 							<p className="ml-4 p-2" style={{backgroundColor: '#f7f7f7'}}>
-								{kimLoai.doSang}
+								{metal.doSang}
 							</p>
 							<p className="ml-4 p-2" style={{backgroundColor: '#f7f7f7'}}>
-								{kimLoai.cat}
+								{metal.cat}
 							</p>
 						</div>
 					))}

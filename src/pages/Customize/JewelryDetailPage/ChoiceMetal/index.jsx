@@ -6,16 +6,11 @@ import {Shape} from './Choose/Shape';
 import {Engrave} from './Choose/Engrave';
 
 export const ChoiceMetal = ({
-	setMetal,
-	metal,
-	shape,
-	setShape,
-	engrave,
-	setEngrave,
-	textValue,
-	setTextValue,
 	setImageData,
 	imageData,
+	setCustomizeJewelry,
+	customizeJewelry,
+	setStepChoose,
 }) => {
 	const [steps, setStep] = useState(0);
 
@@ -37,29 +32,35 @@ export const ChoiceMetal = ({
 			</div>
 			{steps === 0 && (
 				<div className="mx-20">
-					<Metal setStep={setStep} metal={metal} setMetal={setMetal} />
+					<Metal
+						setStep={setStep}
+						customizeJewelry={customizeJewelry}
+						setCustomizeJewelry={setCustomizeJewelry}
+					/>
 				</div>
 			)}
 			{steps === 1 && (
 				<div className="mx-20">
-					<Shape setStep={setStep} shape={shape} setShape={setShape} />
+					<Shape
+						setStep={setStep}
+						customizeJewelry={customizeJewelry}
+						setCustomizeJewelry={setCustomizeJewelry}
+					/>
 				</div>
 			)}
 			{steps === 2 && (
 				<div className="mx-20">
 					<Engrave
-						setStep={setStep}
-						engrave={engrave}
-						setEngrave={setEngrave}
-						setTextValue={setTextValue}
-						textValue={textValue}
-						imageData={imageData}
 						setImageData={setImageData}
+						imageData={imageData}
+						setStep={setStep}
+						customizeJewelry={customizeJewelry}
+						setCustomizeJewelry={setCustomizeJewelry}
 					/>
 				</div>
 			)}
 			{steps === 3 && (
-				<div className="mx-20">
+				<div className="mx-20 my-auto">
 					<div className="my-10 shadow-lg p-10 rounded-lg">
 						<div className="text-center">
 							Chọn vỏ thành công. Vui lòng kiểm tra lại lựa chọn của bạn và tiếp tục
@@ -78,7 +79,11 @@ export const ChoiceMetal = ({
 									Quay lại
 								</Button>
 							</div>
-							<Button type="text" className="bg-primary border">
+							<Button
+								type="text"
+								className="bg-primary border"
+								onClick={() => setStepChoose(2)}
+							>
 								Xác Nhận
 							</Button>
 						</div>

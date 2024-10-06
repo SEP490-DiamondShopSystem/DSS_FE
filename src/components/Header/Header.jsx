@@ -25,7 +25,7 @@ export const Header = () => {
 					<NavLinks />
 					<li>
 						<Link
-							to="/customize/choose-jewelry"
+							to="/customize/diamond-jewelry"
 							className={`py-7 px-3 inline-block no-underline text-black`}
 						>
 							Đặt trang sức

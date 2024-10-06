@@ -26,6 +26,7 @@ import MyInfoPage from '../pages/ProfilePage/MyInfoPage';
 import MyOrderPage from '../pages/ProfilePage/MyOrderPage/MyOrderPage';
 import ProfilePage from '../pages/ProfilePage/ProfilePage';
 import PromotionPage from '../pages/PromotionPage/PromotionPage';
+import DiamondJewelryPage from '../pages/DiamondJewelryPage';
 
 export const AppRouters = () => {
 	return (
@@ -64,14 +65,13 @@ export const AppRouters = () => {
 				path="/jewelry/design-your-own-earrings/setting/:id"
 				element={<ProductDetailPage />}
 			/>
+			<Route path="/jewelry/diamond-jewelry" element={<DiamondJewelryPage />} />
 			<Route path="/jewelry/diamond-jewelry/:id" element={<JewelryDetailPage />} />
 			<Route path="/diamond-detail/:id" element={<DiamondDetailPage />} />
 			<Route path="/completed-jewelry/:id" element={<FinishProductPage />} />
 			//Customize
-			<Route path="/customize/choose-jewelry" element={<ChooseJewelrySetting />} />
-			<Route path="/customize/choose-jewelry/:id" element={<JewelryCustomDetail />} />
-			<Route path="/customize/choose-diamond" element={<ChooseJewelrySetting />} />
-			<Route path="/customize/choose-diamond/:id" element={<ChooseJewelrySetting />} />
+			<Route path="/customize/diamond-jewelry" element={<ChooseJewelrySetting />} />
+			<Route path="/customize/diamond-jewelry/:id" element={<JewelryCustomDetail />} />
 			//
 			<Route path="/cart" element={<CartPage />} />
 			<Route path="/jewelry/all-jewelry" element={<ProductPage />} />
