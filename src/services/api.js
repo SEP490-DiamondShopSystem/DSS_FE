@@ -16,7 +16,7 @@ const API_MOCK = 'https://669f3824b132e2c136fd0909.mockapi.io/api';
 // console.log('userId', userId);
 
 export const api = axios.create({
-	baseURL: API,
+	baseURL: API_MOCK,
 	headers: {
 		// Authorization: `Bearer ${token}`,
 	},
