@@ -31,18 +31,15 @@ import PromotionPage from '../pages/PromotionPage/PromotionPage';
 export const AppRouters = () => {
 	return (
 		<Routes>
-			//HOME
 			<Route path="/" element={<HomePage />} />
 			<Route path="/jewelry" element={<HomeJewelryPage />} />
 			<Route path="/jewelry/design-your-own-earrings" element={<HomeEarringPage />} />
 			<Route path="/jewelry/design-your-own-necklaces" element={<HomeNecklacePage />} />
 			<Route path="/jewelry/design-your-own-rings" element={<HomeRingPage />} />
-			//PROFILE
 			<Route path="/profile" element={<ProfilePage />} />
 			<Route path="/my-orders" element={<MyOrderPage />} />
 			<Route path="/my-info" element={<MyInfoPage />} />
 			<Route path="/change-password" element={<ChangePassword />} />
-			//DESIGN
 			<Route path="/jewelry/design-your-own-rings/setting/all" element={<RingSearchPage />} />
 			<Route
 				path="/jewelry/design-your-own-necklaces/setting/all"
@@ -52,7 +49,6 @@ export const AppRouters = () => {
 				path="/jewelry/design-your-own-earrings/setting/all"
 				element={<EarringSearchPage />}
 			/>
-			//DETAIL
 			<Route
 				path="/jewelry/design-your-own-rings/setting/:id"
 				element={<ProductDetailPage />}
@@ -69,17 +65,15 @@ export const AppRouters = () => {
 			<Route path="/jewelry/diamond-jewelry/:id" element={<JewelryDetailPage />} />
 			<Route path="/diamond-detail/:id" element={<DiamondDetailPage />} />
 			<Route path="/completed-jewelry/:id" element={<FinishProductPage />} />
-			//Customize
 			<Route path="/customize/diamond-jewelry" element={<ChooseJewelrySetting />} />
 			<Route path="/customize/diamond-jewelry/:id" element={<JewelryCustomDetail />} />
-			//
+
 			<Route path="/cart" element={<CartPage />} />
 			<Route path="/jewelry/all-jewelry" element={<ProductPage />} />
 			<Route path="/diamond/search" element={<DiamondSearchPage />} />
 			<Route path="/checkout" element={<CheckoutPage />} />
 			<Route path="/coupons" element={<CouponPage />} />
 			<Route path="/promotion" element={<PromotionPage />} />
-			//NOT FOUND
 			<Route path="*" element={<NotFoundPage />} />
 		</Routes>
 	);
