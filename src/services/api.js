@@ -1,55 +1,50 @@
 import axios from 'axios';
 
-const API = 'https://reqres.in/api';
 const API_MOCK = 'https://669f3824b132e2c136fd0909.mockapi.io/api';
+const API = 'https://reqres.in/api';
 
-// let accessToken =
-// 	localStorage.getItem('user') && JSON.parse(localStorage.getItem('user')).token.accessToken;
-
-// let refreshToken =
-// 	localStorage.getItem('user') && JSON.parse(localStorage.getItem('user')).token.refreshToken;
-
-// let userId = localStorage.getItem('user') && JSON.parse(localStorage.getItem('user')).user.id;
-
-// console.log('accessToken', accessToken);
-// console.log('refreshToken', refreshToken);
-// console.log('userId', userId);
-
+// Khởi tạo axios instance
 export const api = axios.create({
 	baseURL: API,
 	headers: {
-		// Authorization: `Bearer ${token}`,
+		'Content-Type': 'application/json',
 	},
-	// headers: {
-	// 	authentication: accessToken,
-	// 	'x-client-id': userId,
-	// 	refresh: refreshToken,
-	// 	'ngrok-skip-browser-warning': 'true', // Add this line for ngrok skip browser warning
-	// },
 });
 
-// Axios response interceptor to handle token expiration and renewal
+// Thêm interceptor để tự động thêm token vào mỗi request
+api.interceptors.request.use(
+	(config) => {
+		const token = localStorage.getItem('token');
+		if (token) {
+			config.headers.Authorization = `Bearer ${token}`;
+		}
+		return config;
+	},
+	(error) => {
+		return Promise.reject(error);
+	}
+);
+
+// Axios response interceptor để xử lý token expired và refresh
 api.interceptors.response.use(
-	function (response) {
-		// Any status code that lie within the range of 2xx cause this function to trigger
+	(response) => {
+		// Bất kỳ mã trạng thái nào nằm trong phạm vi 2xx sẽ kích hoạt chức năng này
 		return response.data ? response.data : {statusCode: response.status};
 	},
-	function (error) {
-		// Any status code that falls outside the range of 2xx cause this function to trigger
+	(error) => {
+		// Bất kỳ mã trạng thái nào nằm ngoài phạm vi 2xx sẽ kích hoạt chức năng này
 		let res = {};
 		if (error.response) {
-			// Request made and server responded
+			// Yêu cầu đã được gửi và server đã phản hồi
 			res.data = error.response.data;
 			res.status = error.response.status;
-			res.header = error.response.header;
 		} else if (error.request) {
-			// The request was made but no response was received
+			// Yêu cầu đã được gửi nhưng không có phản hồi nào
 			console.log(error.request);
 		} else {
-			// Something happened in setting up the require that trigger an Error
+			// Một điều gì đó đã xảy ra khi thiết lập yêu cầu
 			console.log('Error', error.message);
 		}
-		return res;
-		// return Promise.reject(error);
+		return Promise.reject(res);
 	}
 );

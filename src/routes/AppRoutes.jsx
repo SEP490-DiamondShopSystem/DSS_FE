@@ -2,11 +2,12 @@ import React from 'react';
 import {Route, Routes} from 'react-router-dom';
 
 import CartPage from '../pages/CartPage/CartPage';
-import CheckOutPage from '../pages/CheckOutPage/CheckOutPage';
+import CheckoutPage from '../pages/CheckoutPage/CheckoutPage';
 import CouponPage from '../pages/CouponPage/CouponPage';
 import ChooseJewelrySetting from '../pages/Customize/ChooseJewelrySetting';
 import JewelryCustomDetail from '../pages/Customize/JewelryDetailPage';
 import DiamondDetailPage from '../pages/DiamonDetailPage';
+import DiamondJewelryPage from '../pages/DiamondJewelryPage';
 import DiamondSearchPage from '../pages/DiamondSearchPage';
 import FinishProductPage from '../pages/FinishProductPage';
 import HomeEarringPage from '../pages/Home/HomeEarringPage';
@@ -26,7 +27,6 @@ import MyInfoPage from '../pages/ProfilePage/MyInfoPage';
 import MyOrderPage from '../pages/ProfilePage/MyOrderPage/MyOrderPage';
 import ProfilePage from '../pages/ProfilePage/ProfilePage';
 import PromotionPage from '../pages/PromotionPage/PromotionPage';
-import DiamondJewelryPage from '../pages/DiamondJewelryPage';
 
 export const AppRouters = () => {
 	return (
@@ -76,7 +76,7 @@ export const AppRouters = () => {
 			<Route path="/cart" element={<CartPage />} />
 			<Route path="/jewelry/all-jewelry" element={<ProductPage />} />
 			<Route path="/diamond/search" element={<DiamondSearchPage />} />
-			<Route path="/checkout" element={<CheckOutPage />} />
+			<Route path="/checkout" element={<CheckoutPage />} />
 			<Route path="/coupons" element={<CouponPage />} />
 			<Route path="/promotion" element={<PromotionPage />} />
 			//NOT FOUND

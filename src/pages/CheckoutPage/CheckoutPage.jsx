@@ -335,12 +335,12 @@ const CheckoutPage = () => {
 
 							{/* Order Button Section */}
 							<div className="flex justify-center">
-							<Form.Item>
-								<Button type="primary" htmlType="submit" className="w-full">
-									Place Order
-								</Button>
-							</Form.Item>
-						</div>
+								<Form.Item>
+									<Button type="primary" htmlType="submit" className="w-full">
+										Place Order
+									</Button>
+								</Form.Item>
+							</div>
 
 							{/* Customer Service Section */}
 							<div className="text-center text-sm text-gray-600 mt-6">
