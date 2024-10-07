@@ -18,21 +18,6 @@ const NavLinks = () => {
 			link: '/jewelry',
 			sublinks: [
 				{
-					Head: 'Mua Kim Cương Theo Hình Dạng',
-					sublink: [
-						{name: 'Round', link: '/diamond/search'},
-						{name: 'Princess', link: '/diamond/search'},
-						{name: 'Cushion', link: '/diamond/search'},
-						{name: 'Oval', link: '/diamond/search'},
-						{name: 'Emerald', link: '/diamond/search'},
-						{name: 'Pear', link: '/diamond/search'},
-						{name: 'Asscher', link: '/diamond/search'},
-						{name: 'Heart', link: '/diamond/search'},
-						{name: 'Radiant', link: '/diamond/search'},
-						{name: 'Marquise', link: '/diamond/search'},
-					],
-				},
-				{
 					Head: 'Sản Phẩm',
 					sublink: [
 						{name: 'Trang Sức Kim Cương Đính Sẵn', link: '/jewelry/diamond-jewelry'},
@@ -46,6 +31,21 @@ const NavLinks = () => {
 						{name: 'Nhẫn', link: '/jewelry/design-your-own-rings'},
 						{name: 'Bông Tai', link: '/jewelry/design-your-own-earrings'},
 						{name: 'Dây Chuyền', link: '/jewelry/design-your-own-necklaces'},
+					],
+				},
+				{
+					Head: 'Mua Kim Cương Theo Hình Dạng',
+					sublink: [
+						{name: 'Round', link: '/diamond/search'},
+						{name: 'Princess', link: '/diamond/search'},
+						{name: 'Cushion', link: '/diamond/search'},
+						{name: 'Oval', link: '/diamond/search'},
+						{name: 'Emerald', link: '/diamond/search'},
+						{name: 'Pear', link: '/diamond/search'},
+						{name: 'Asscher', link: '/diamond/search'},
+						{name: 'Heart', link: '/diamond/search'},
+						{name: 'Radiant', link: '/diamond/search'},
+						{name: 'Marquise', link: '/diamond/search'},
 					],
 				},
 			],
