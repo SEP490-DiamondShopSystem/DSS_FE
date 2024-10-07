@@ -23,7 +23,7 @@ export const DiamondJewelryList = () => {
 		price: {minPrice: 0, maxPrice: 1000},
 	});
 
-	console.log(filters);
+	console.log(jewelryList);
 
 	useEffect(() => {
 		const saved = localStorage.getItem('jewelry');
@@ -50,7 +50,7 @@ export const DiamondJewelryList = () => {
 		setFilters({gender: [], type: [], metal: [], price: {minPrice: 0, maxPrice: 1000}});
 	};
 
-	if (jewelryList) return <div>Loading...</div>;
+	if (!jewelryList) return <div>Loading...</div>;
 	return (
 		<>
 			<div className="mt-10">
