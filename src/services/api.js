@@ -5,7 +5,7 @@ const API = 'https://reqres.in/api';
 
 // Khởi tạo axios instance
 export const api = axios.create({
-	baseURL: API,
+	baseURL: API_MOCK,
 	headers: {
 		'Content-Type': 'application/json',
 	},
