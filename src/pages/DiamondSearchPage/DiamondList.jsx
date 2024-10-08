@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 
+
 import {
 	AppstoreOutlined,
 	HeartFilled,
@@ -13,6 +14,8 @@ import {GetAllDiamondSelector, LoadingDiamondSelector} from '../../redux/selecto
 import {getAllDiamond} from '../../redux/slices/diamondSlice';
 import {useNavigate} from 'react-router-dom';
 import {FilterDiamond} from '../../components/Filter/Filter';
+import BannerShape from '../../components/Banner/BannerShape';
+
 import InfiniteScroll from 'react-infinite-scroll-component';
 import ReactLoading from 'react-loading';
 
