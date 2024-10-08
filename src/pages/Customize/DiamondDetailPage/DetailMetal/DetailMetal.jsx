@@ -1,15 +1,15 @@
 import {Divider, Image} from 'antd';
 import React from 'react';
 
-export const DetailMetal = ({customizeDiamond, imageData}) => {
+export const DetailMetalDiamond = ({customizeJewelry, imageData, customizeDiamond}) => {
 	return (
 		<div className="my-10 mx-20">
 			<div>
-				<h1 className="text-center text-2xl font-semibold">Lựa chọn của bạn</h1>
+				<h1 className="text-center text-2xl font-semibold">Thông số vỏ của bạn</h1>
 			</div>
 			<div className="flex items-center justify-between mt-10">
 				<p className="font-semibold">ID</p>
-				<p>JW1234</p>
+				<p>123456</p>
 			</div>
 			<Divider />
 			<div className="flex items-center justify-between">
@@ -18,33 +18,18 @@ export const DetailMetal = ({customizeDiamond, imageData}) => {
 			</div>
 			<Divider />
 			<div className="flex items-center justify-between">
-				<p className="font-semibold">Các hình dáng phù hợp:</p>
-				<p>Round, Heart, Oval</p>
-			</div>
-			<Divider />
-			<div className="flex items-center justify-between">
-				<p className="font-semibold">Kích thước vỏ:</p>
-				<p>{customizeDiamond.size}</p>
-			</div>
-			<Divider />
-			<div className="flex items-center justify-between">
-				<p className="font-semibold">Vật liệu có sẵn:</p>
-				<p>14K gold, 14k rose gold, 18k gold, platinum</p>
+				<p className="font-semibold text-primary">Kích thước vỏ:</p>
+				<p>{customizeJewelry.size}</p>
 			</div>
 			<Divider />
 			<div className="flex items-center justify-between">
 				<p className="font-semibold text-primary">Vật liệu đã chọn:</p>
-				<p>{customizeDiamond.metal}</p>
+				<p>{customizeJewelry.metal}</p>
 			</div>
 			<Divider />
 			<div className="flex items-center justify-between">
 				<p className="font-semibold text-primary">Hình dạng vỏ đã chọn:</p>
-				<p>{customizeDiamond.shape}</p>
-			</div>
-			<Divider />
-			<div className="flex items-center justify-between">
-				<p className="font-semibold text-primary">Chữ khắc:</p>
-				<p>{customizeDiamond.textValue}</p>
+				<p>{customizeJewelry.shape}</p>
 			</div>
 			<Divider />
 			<div className="flex items-center justify-between">
@@ -52,6 +37,32 @@ export const DetailMetal = ({customizeDiamond, imageData}) => {
 				<p className="h-16 w-16">
 					<Image src={imageData} alt={imageData} />
 				</p>
+			</div>
+			<Divider />
+			<div>
+				<h1 className="text-center text-2xl font-semibold">Thông số kim cương</h1>
+			</div>
+			<Divider />
+			<div className="flex items-center justify-between">
+				<p className="font-semibold text-primary">Carat Weight:</p>
+				<p>
+					{customizeDiamond.caratFrom} - {customizeDiamond.caratTo}
+				</p>
+			</div>
+			<Divider />
+			<div className="flex items-center justify-between">
+				<p className="font-semibold text-primary">Cut:</p>
+				<p>{customizeDiamond.cut}</p>
+			</div>
+			<Divider />
+			<div className="flex items-center justify-between">
+				<p className="font-semibold text-primary">Color:</p>
+				<p>{customizeDiamond.color}</p>
+			</div>
+			<Divider />
+			<div className="flex items-center justify-between">
+				<p className="font-semibold text-primary">Clarity:</p>
+				<p>{customizeDiamond.clarity}</p>
 			</div>
 			<Divider />
 			<div className="flex items-center justify-between">

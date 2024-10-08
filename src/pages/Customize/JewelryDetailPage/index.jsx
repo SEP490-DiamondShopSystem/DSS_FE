@@ -7,6 +7,7 @@ import {InformationRight} from './Right/InformationRight';
 import {ChoiceMetal} from './ChoiceMetal';
 import {DetailMetal} from './DetailMetal/DetailMetal';
 import {ChoiceMetalDiamond} from '../DiamondDetailPage/ChoiceMetal';
+import {DetailMetalDiamond} from '../DiamondDetailPage/DetailMetal/DetailMetal';
 
 const JewelryCustomDetail = () => {
 	const [stepChoose, setStepChoose] = useState(0);
@@ -115,9 +116,10 @@ const JewelryCustomDetail = () => {
 						</div>
 
 						<div className="w-1/2">
-							<DetailMetal
+							<DetailMetalDiamond
 								imageData={imageData}
 								customizeJewelry={customizeJewelry}
+								customizeDiamond={customizeDiamond}
 							/>
 						</div>
 					</div>
