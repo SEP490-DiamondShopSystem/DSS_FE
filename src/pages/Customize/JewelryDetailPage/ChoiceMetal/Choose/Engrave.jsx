@@ -1,5 +1,6 @@
 import React, {useEffect, useState, useRef} from 'react';
-import {Button, Input, Select} from 'antd';
+import {Button, Input, Modal, Select} from 'antd';
+import {SketchPicker} from 'react-color'; // Import color picker component
 import ring from '../../../../../assets/emerald-ring.png'; // Path to the image
 import * as fabric from 'fabric';
 
@@ -16,8 +17,10 @@ export const Engrave = ({
 	const [canvas, setCanvas] = useState(null);
 	const [fontSize, setFontSize] = useState(30);
 	const [fontFamily, setFontFamily] = useState('Arial');
+	const [textColor, setTextColor] = useState('#000'); // New state for text color
 	const [textObject, setTextObject] = useState(null);
 	const [isUploading, setIsUploading] = useState(false);
+	const [isModalOpen, setIsModalOpen] = useState(false);
 
 	useEffect(() => {
 		const fabricCanvas = new fabric.Canvas(canvasRef.current, {
@@ -42,7 +45,7 @@ export const Engrave = ({
 				top: 250,
 				fontSize: fontSize,
 				fontFamily: fontFamily,
-				fill: '#000',
+				fill: textColor,
 				editable: true, // Allow editing
 			});
 
@@ -62,10 +65,11 @@ export const Engrave = ({
 				text: customizeJewelry.textValue,
 				fontSize: fontSize,
 				fontFamily: fontFamily,
+				fill: textColor, // Update text color
 			});
 			canvas.renderAll(); // Render the canvas again after text changes
 		}
-	}, [customizeJewelry.textValue, fontSize, fontFamily, textObject, canvas]);
+	}, [customizeJewelry.textValue, fontSize, fontFamily, textColor, textObject, canvas]);
 
 	// Function to export image from canvas and save to state
 	const handleExportImage = () => {
@@ -83,8 +87,9 @@ export const Engrave = ({
 	};
 
 	// Function to upload image data to Azure
+	// Function to upload image data to Azure
 	const uploadImage = async () => {
-		if (!customizeJewelry.imageData) return; // Ensure there's image data to upload
+		if (!imageData) return; // Ensure there's image data to upload
 
 		setIsUploading(true); // Start the upload process
 		try {
@@ -92,21 +97,22 @@ export const Engrave = ({
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
-					// Include any other necessary headers like Authorization if needed
 				},
-				body: JSON.stringify({image: customizeJewelry.imageData}), // Sending the image data
+				body: JSON.stringify({image: imageData}), // Sending the image data
 			});
 
 			if (response.ok) {
 				const result = await response.json();
 				console.log('Image uploaded successfully:', result);
+				setIsModalOpen(false); // Đóng modal sau khi upload thành công
 			} else {
 				console.error('Error uploading image:', response.statusText);
 			}
 		} catch (error) {
 			console.error('Error uploading image:', error);
 		} finally {
-			setIsUploading(false); // End the upload process
+			setIsUploading(false);
+			setIsModalOpen(false); // Đảm bảo modal được đóng dù thành công hay thất bại
 		}
 	};
 
@@ -115,12 +121,28 @@ export const Engrave = ({
 		setFontFamily(value);
 	};
 
+	// Handler for text color change
+	const handleColorChange = (color) => {
+		setTextColor(color.hex);
+	};
+
+	// Handler for curved text toggle
+
 	const handleTextChange = (e) => {
 		setCustomizeJewelry((prev) => ({
 			...prev,
 			textValue: e.target.value,
 		}));
 	};
+
+	const showModal = () => {
+		setIsModalOpen(true);
+	};
+
+	const handleCancel = () => {
+		setIsModalOpen(false);
+	};
+
 	return (
 		<div className="mt-10">
 			<div>
@@ -143,6 +165,10 @@ export const Engrave = ({
 						className="ml-5 w-16"
 					/>
 				</div>
+				<div className="flex items-center my-5">
+					<label>Font Color:</label>
+					<SketchPicker color={textColor} onChange={handleColorChange} className="ml-5" />
+				</div>
 				<div className="mb-10">
 					<label>Font Family:</label>
 					<Select
@@ -154,8 +180,18 @@ export const Engrave = ({
 						<Option value="Arial">Arial</Option>
 						<Option value="Courier">Courier</Option>
 						<Option value="Times New Roman">Times New Roman</Option>
+						<Option value="Verdana">Verdana</Option>
+						<Option value="Georgia">Georgia</Option>
+						<Option value="Impact">Impact</Option>
+						<Option value="Lora">Lora</Option>
 					</Select>
 				</div>
+				{/* <div className="flex items-center mb-5">
+					<label>Curved Text:</label>
+					<Button onClick={handleCurvedTextToggle} className="ml-5">
+						{isCurved ? 'Remove Curve' : 'Apply Curve'}
+					</Button>
+				</div> */}
 				<canvas ref={canvasRef} className="border" />
 			</div>
 			<div className="text-red my-10">
@@ -174,25 +210,46 @@ export const Engrave = ({
 					className="bg-primary w-32 uppercase font-semibold"
 					onClick={handleExportImage}
 				>
-					Xuất Hình
+					Hoàn Thành
 				</Button>
 				<Button
 					type="text"
 					className="bg-primary w-32 uppercase font-semibold"
-					onClick={uploadImage}
+					onClick={showModal}
 					disabled={!imageData || isUploading}
 				>
-					Upload Hình
+					Tải Hình
 				</Button>
 				<Button
 					type="text"
 					className="bg-primary w-32 uppercase font-semibold"
 					onClick={() => setStep(3)}
-					disabled={!imageData || isUploading}
 				>
 					Tiếp Tục
 				</Button>
 			</div>
+			<Modal
+				title="Xác nhận upload hình"
+				open={isModalOpen}
+				onCancel={handleCancel}
+				onOk={async () => {
+					await uploadImage();
+				}}
+			>
+				<div className="text-red">
+					<h3>
+						Hình này sẽ được upload lên hệ thống, bạn có chắc chắn là hình ảnh đã thiết
+						kế xong?
+					</h3>
+					{imageData && (
+						<img
+							src={imageData}
+							alt="Preview"
+							className="w-full border-2 border-red-600"
+						/>
+					)}
+				</div>
+			</Modal>
 		</div>
 	);
 };

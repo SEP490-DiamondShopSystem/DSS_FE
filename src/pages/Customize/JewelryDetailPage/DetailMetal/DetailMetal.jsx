@@ -46,11 +46,6 @@ export const DetailMetal = ({customizeJewelry, imageData}) => {
 			</div>
 			<Divider />
 			<div className="flex items-center justify-between">
-				<p className="font-semibold text-primary">Chữ khắc:</p>
-				<p>{customizeJewelry.textValue}</p>
-			</div>
-			<Divider />
-			<div className="flex items-center justify-between">
 				<p className="font-semibold text-primary">Hình:</p>
 				<p className="h-16 w-16">
 					<Image src={imageData} alt={imageData} />
@@ -60,11 +55,6 @@ export const DetailMetal = ({customizeJewelry, imageData}) => {
 			<div className="flex items-center justify-between">
 				<p className="font-semibold">Tổng cộng:</p>
 				<p className="font-semibold">$2,040</p>
-			</div>
-			<Divider />
-			<div className="flex items-center justify-between">
-				<p className="font-semibold">Ngày vận chuyển dự kiến:</p>
-				<p style={{color: '#c0c0c0'}}>7 ngày 2 giờ sau khi thanh toán thành công</p>
 			</div>
 		</div>
 	);
