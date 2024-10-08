@@ -31,20 +31,20 @@ const BannerShape = () => {
   };
 
   return (
-    <div className="diamond-banner-container py-10 bg-gray-50">
-      <h2 className="text-center text-3xl font-bold mb-8 text-gray-800">Explore Diamonds</h2>
-      <div className="flex justify-center flex-wrap space-x-6">
+    <div className="diamond-banner-container py-10 bg-gray-50 px-4 md:px-10 lg:px-20 mt-8 pt-8"> {/* Added top margin and padding */}
+      <h2 className="text-center text-3xl font-bold m-5 text-gray-800">Explore Diamonds</h2> {/* Increased margin-bottom */}
+      <div className="flex justify-around gap-6"> {/* Use gap for consistent spacing */}
         {diamondShapes.map((shape) => (
           <div
             key={shape.value}
             className="diamond-shape-box cursor-pointer transition-transform duration-300 transform hover:scale-105"
             onClick={() => handleShapeClick(shape.value)}
           >
-            <div className="bg-white shadow-md rounded-lg p-4 flex flex-col items-center">
-              <div className="shape-image-placeholder h-24 w-24 flex items-center justify-center">
-                <img src={shape.image} alt={shape.label} className="w-24 h-24 object-contain" />
+            <div className="bg-white shadow-md rounded-lg p-6 flex flex-col items-center"> {/* Increased padding inside box */}
+              <div className="shape-image-placeholder h-28 w-28 flex items-center justify-center mb-4"> {/* Increased size and added margin-bottom */}
+                <img src={shape.image} alt={shape.label} className="w-full h-full object-contain" />
               </div>
-              <p className="text-center mt-4 text-lg font-medium text-gray-700">{shape.label}</p>
+              <p className="text-center text-lg font-medium text-gray-700">{shape.label}</p>
             </div>
           </div>
         ))}
@@ -54,3 +54,4 @@ const BannerShape = () => {
 };
 
 export default BannerShape;
+
