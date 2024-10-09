@@ -2,6 +2,9 @@ import React, {useState} from 'react';
 
 import {Button, Steps} from 'antd';
 import {Carat} from './Choose/Carat';
+import {Cut} from './Choose/Cut';
+import {Color} from './Choose/Color';
+import {Clarity} from './Choose/Clarity';
 
 export const ChoiceMetalDiamond = ({setCustomizeDiamond, customizeDiamond}) => {
 	const [steps, setStep] = useState(0);
@@ -11,10 +14,13 @@ export const ChoiceMetalDiamond = ({setCustomizeDiamond, customizeDiamond}) => {
 			title: 'Carat Weight',
 		},
 		{
-			title: 'Shape - Cut',
+			title: 'Cut',
 		},
 		{
-			title: 'Color - Clarity',
+			title: 'Color',
+		},
+		{
+			title: 'Clarity',
 		},
 	];
 	return (
@@ -31,14 +37,39 @@ export const ChoiceMetalDiamond = ({setCustomizeDiamond, customizeDiamond}) => {
 					/>
 				</div>
 			)}
-			{steps === 1 && <div className="mx-20"></div>}
-			{steps === 2 && <div className="mx-20"></div>}
+			{steps === 1 && (
+				<div className="mx-20">
+					<Cut
+						setStep={setStep}
+						customizeDiamond={customizeDiamond}
+						setCustomizeDiamond={setCustomizeDiamond}
+					/>
+				</div>
+			)}
+			{steps === 2 && (
+				<div className="mx-20">
+					<Color
+						setStep={setStep}
+						customizeDiamond={customizeDiamond}
+						setCustomizeDiamond={setCustomizeDiamond}
+					/>
+				</div>
+			)}
 			{steps === 3 && (
+				<div className="mx-20">
+					<Clarity
+						setStep={setStep}
+						customizeDiamond={customizeDiamond}
+						setCustomizeDiamond={setCustomizeDiamond}
+					/>
+				</div>
+			)}
+			{steps === 4 && (
 				<div className="mx-20">
 					<div className="my-10 shadow-lg p-10 rounded-lg">
 						<div className="text-center">
 							Chọn kim cương thành công. Vui lòng kiểm tra lại lựa chọn của bạn để
-							tiếp tục!
+							hoàn tất!
 						</div>
 						<div className="flex items-center justify-between mt-10">
 							<div className="flex items-center ">

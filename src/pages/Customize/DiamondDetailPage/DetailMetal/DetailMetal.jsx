@@ -45,9 +45,7 @@ export const DetailMetalDiamond = ({customizeJewelry, imageData, customizeDiamon
 			<Divider />
 			<div className="flex items-center justify-between">
 				<p className="font-semibold text-primary">Carat Weight:</p>
-				<p>
-					{customizeDiamond.caratFrom} - {customizeDiamond.caratTo}
-				</p>
+				<p>{customizeDiamond.carat}</p>
 			</div>
 			<Divider />
 			<div className="flex items-center justify-between">

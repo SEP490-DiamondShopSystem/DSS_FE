@@ -19,10 +19,9 @@ const JewelryCustomDetail = () => {
 		textValue: 'Your Text Here',
 	});
 	const [customizeDiamond, setCustomizeDiamond] = useState({
-		caratFrom: '',
-		caratTo: '',
+		carat: '',
 		color: '',
-		shape: '',
+		cut: '',
 		clarity: '',
 	});
 

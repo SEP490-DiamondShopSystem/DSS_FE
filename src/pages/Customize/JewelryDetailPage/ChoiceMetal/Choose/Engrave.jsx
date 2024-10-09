@@ -165,10 +165,6 @@ export const Engrave = ({
 						className="ml-5 w-16"
 					/>
 				</div>
-				<div className="flex items-center my-5">
-					<label>Font Color:</label>
-					<SketchPicker color={textColor} onChange={handleColorChange} className="ml-5" />
-				</div>
 				<div className="mb-10">
 					<label>Font Family:</label>
 					<Select
@@ -186,6 +182,11 @@ export const Engrave = ({
 						<Option value="Lora">Lora</Option>
 					</Select>
 				</div>
+				<div className="flex items-center my-5">
+					<label>Font Color:</label>
+					<SketchPicker color={textColor} onChange={handleColorChange} className="ml-5" />
+				</div>
+
 				{/* <div className="flex items-center mb-5">
 					<label>Curved Text:</label>
 					<Button onClick={handleCurvedTextToggle} className="ml-5">

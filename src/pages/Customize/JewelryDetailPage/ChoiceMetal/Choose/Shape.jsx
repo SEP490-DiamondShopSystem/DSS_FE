@@ -1,13 +1,13 @@
 import React from 'react';
-import round from '../../../../../assets/round-ring.png';
-import princess from '../../../../../assets/princess-ring.png';
-import cushion from '../../../../../assets/cushion-ring.png';
-import emerald from '../../../../../assets/emerald-ring.png';
-import oval from '../../../../../assets/oval-ring.png';
-import radiant from '../../../../../assets/radiant-ring.png';
+import round from '../../../../../assets/diamondShapes/round.png';
+import princess from '../../../../../assets/diamondShapes/princess.png';
+import cushion from '../../../../../assets/diamondShapes/cushionSquare.png';
+import emerald from '../../../../../assets/diamondShapes/emerald.png';
+import oval from '../../../../../assets/diamondShapes/oval.png';
+import radiant from '../../../../../assets/diamondShapes/radiant.png';
 import asscher from '../../../../../assets/asscher-ring.png';
-import marquise from '../../../../../assets/marquise-ring.png';
-import heart from '../../../../../assets/heart-ring.png';
+import marquise from '../../../../../assets/diamondShapes/marquise.png';
+import heart from '../../../../../assets/diamondShapes/heart.png';
 import {Button, Image, Radio} from 'antd';
 
 export const Shape = ({setStep, customizeJewelry, setCustomizeJewelry}) => {
@@ -56,7 +56,7 @@ export const Shape = ({setStep, customizeJewelry, setCustomizeJewelry}) => {
 								<div className="flex justify-between items-center">
 									<div className="mx-5 my-5">
 										<Image
-											preview={true}
+											preview={false}
 											src={item.image}
 											height={80}
 											width={80}
