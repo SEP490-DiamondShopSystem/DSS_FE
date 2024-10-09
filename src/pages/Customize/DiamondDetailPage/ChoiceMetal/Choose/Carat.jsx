@@ -1,11 +1,8 @@
 import React from 'react';
 
-import gold from '../../../../../assets/gold.png';
-import rose_gold from '../../../../../assets/rose-gold.png';
-import platinum from '../../../../../assets/platinum.png';
-import {Button, Image, Input, Radio} from 'antd';
-import {notifyError} from '../../../../../utils/toast';
+import {Button, Image, Input} from 'antd';
 import caratImage from '../../../../../assets/carat-weight.png';
+import {notifyError} from '../../../../../utils/toast';
 
 export const Carat = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 	const onChange = (e) => {
@@ -17,16 +14,12 @@ export const Carat = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 	};
 
 	const handleNextStep = () => {
-		const {caratFrom, caratTo} = customizeDiamond;
+		const {carat} = customizeDiamond;
 
-		// Check if caratFrom is less than 0.05 and caratTo is greater than 2
-		if (caratFrom < 0.05 || caratTo > 2) {
+		if (carat < 0.05 || carat > 2) {
 			notifyError('Vui lòng chọn giới hạn carat hợp lệ!'); // Show an error
 		}
-		// Check if caratTo is less than caratFrom
-		else if (caratTo < caratFrom) {
-			notifyError('Giá trị "To" không thể nhỏ hơn "From"!'); // Show an error
-		}
+
 		// If all conditions are valid, move to the next step
 		else {
 			setStep(1);
@@ -40,16 +33,9 @@ export const Carat = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 			</div>
 			<div className="flex items-center justify-center">
 				<Input
-					addonBefore="From"
-					name="caratFrom"
-					value={customizeDiamond.caratFrom}
-					className="w-32"
-					onChange={onChange}
-				/>
-				<Input
-					addonBefore="To"
-					name="caratTo"
-					value={customizeDiamond.caratTo}
+					addonBefore="Carat"
+					name="carat"
+					value={customizeDiamond.carat}
 					className="w-32 ml-10"
 					onChange={onChange}
 				/>
@@ -58,7 +44,7 @@ export const Carat = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 				<Button
 					type="text"
 					className="bg-primary w-48 uppercase font-semibold"
-					disabled={customizeDiamond.caratFrom.length === 0}
+					disabled={customizeDiamond.carat?.length === 0}
 					onClick={handleNextStep}
 				>
 					Tiếp tục
