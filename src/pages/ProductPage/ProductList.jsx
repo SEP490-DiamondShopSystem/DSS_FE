@@ -23,8 +23,6 @@ export const ProductList = () => {
 		price: {minPrice: 0, maxPrice: 1000},
 	});
 
-	console.log(filters);
-
 	useEffect(() => {
 		const saved = localStorage.getItem('jewelry');
 		if (saved) {
@@ -34,8 +32,6 @@ export const ProductList = () => {
 			}));
 		}
 	}, []);
-
-	console.log(filters);
 
 	useEffect(() => {
 		dispatch(getAllJewelry());
@@ -66,43 +62,56 @@ export const ProductList = () => {
 				</div>
 			) : (
 				<>
-					<div className="text-2xl flex justify-end mt-10">
-						<p className="p-2">200 Kết quả</p>
-					</div>
-					<div className="transition-all duration-300 grid grid-cols-4 gap-10 mb-20 mt-10">
-						{jewelries?.map((jewelry, i) => (
-							<div
-								key={i}
-								className="shadow-lg bg-white rounded-lg hover:border-2 cursor-pointer"
-								onClick={() => navigate(`/jewelry/diamond-jewelry/${jewelry.id}`)}
-							>
-								<div className="w-80">
+					{!Array.isArray(jewelries) || jewelries.length === 0 ? (
+						<div className="flex items-center justify-center my-10">
+							<p className="text-2xl">Chưa có sản phẩm nào</p>
+						</div>
+					) : (
+						<>
+							<div className="text-2xl flex justify-end mt-10">
+								<p className="p-2">{jewelries.length} Kết quả</p>
+							</div>
+							<div className="transition-all duration-300 grid grid-cols-4 gap-10 mb-20 mt-10">
+								{jewelries?.map((jewelry, i) => (
 									<div
-										className=" flex justify-center mb-5"
-										style={{background: '#b8b7b5'}}
+										key={i}
+										className="shadow-lg bg-white rounded-lg hover:border-2 cursor-pointer"
+										onClick={() =>
+											navigate(`/jewelry/diamond-jewelry/${jewelry.id}`)
+										}
 									>
-										<Image
-											src={jewelryImg}
-											alt={jewelry.title}
-											className=""
-											preview={false}
-										/>
-									</div>
-									<div className="mx-5 my-5">
-										<p>{jewelry.title}</p>
-										<div className="flex mt-2">
-											<p className="line-through" style={{color: '#b0b0b0'}}>
-												{jewelry.price}
-											</p>
-											<p className="ml-5 " style={{color: '#707070'}}>
-												{jewelry.discountPrice}
-											</p>
+										<div className="w-80">
+											<div
+												className="flex justify-center mb-5"
+												style={{background: '#b8b7b5'}}
+											>
+												<Image
+													src={jewelry.Thumbnail || jewelryImg}
+													alt={jewelry.Name}
+													className=""
+													preview={false}
+												/>
+											</div>
+											<div className="mx-5 my-5">
+												<p>{jewelry.Name}</p>
+												<div className="flex mt-2">
+													<p
+													// className="line-through"
+													// style={{color: '#b0b0b0'}}
+													>
+														{jewelry.Price}
+													</p>
+													{/* <p className="ml-5 " style={{color: '#707070'}}>
+														{jewelry.discountPrice}
+													</p> */}
+												</div>
+											</div>
 										</div>
 									</div>
-								</div>
+								))}
 							</div>
-						))}
-					</div>
+						</>
+					)}
 				</>
 			)}
 		</>

@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 
-
 import {
 	AppstoreOutlined,
 	HeartFilled,
@@ -197,16 +196,16 @@ export const DiamondList = () => {
 												{diamondItem.shape}
 											</p>
 											<p className="text-xl w-1/5 text-center">
-												{diamondItem.carat}
+												{diamondItem.Carat}
 											</p>
 											<p className="text-xl w-1/5 text-center">
-												{diamondItem.cut || '-'}
+												{diamondItem.Cut || '-'}
 											</p>
 											<p className="text-xl w-1/5 text-center">
-												{diamondItem.color}
+												{diamondItem.Color}
 											</p>
 											<p className="text-xl w-1/5 text-center">
-												{diamondItem.clarity}
+												{diamondItem.Clarity}
 											</p>
 											<p
 												className="text-xl w-1/5 text-center"

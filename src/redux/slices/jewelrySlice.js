@@ -5,8 +5,25 @@ export const getAllJewelry = createAsyncThunk(
 	'jewelrySlice/getAllJewelry',
 	async (_, {rejectWithValue}) => {
 		try {
-			const response = await api.get(`/all_jewelry`);
-			// console.log(response);
+			const response = await api.get(`/Jewelry/All`);
+			// const response = await api.get(`/all_jewelry`);
+			console.log(response);
+
+			return response;
+		} catch (error) {
+			console.log('Error: ', JSON.stringify(error.response.data));
+			return rejectWithValue(error.response.data);
+		}
+	}
+);
+
+export const getAllJewelryModel = createAsyncThunk(
+	'jewelrySlice/getAllJewelryModel',
+	async (_, {rejectWithValue}) => {
+		try {
+			const response = await api.get(`/JewelryModel/All`);
+			// const response = await api.get(`/all_jewelry`);
+			console.log(response);
 
 			return response;
 		} catch (error) {
@@ -20,6 +37,7 @@ export const jewelrySlice = createSlice({
 	name: 'jewelrySlice',
 	initialState: {
 		jewelries: null,
+		jewelriesModel: null,
 		loading: false,
 		error: null,
 	},
@@ -38,6 +56,17 @@ export const jewelrySlice = createSlice({
 				state.jewelries = action.payload;
 			})
 			.addCase(getAllJewelry.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload;
+			})
+			.addCase(getAllJewelryModel.pending, (state) => {
+				state.loading = true;
+			})
+			.addCase(getAllJewelryModel.fulfilled, (state, action) => {
+				state.loading = false;
+				state.jewelriesModel = action.payload;
+			})
+			.addCase(getAllJewelryModel.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload;
 			});

@@ -5,7 +5,7 @@ export const getAllDiamond = createAsyncThunk(
 	'diamondSlice/getAllDiamond',
 	async (_, {rejectWithValue}) => {
 		try {
-			const response = await api.get(`/all_diamond`);
+			const response = await api.get(`/Diamond/All`);
 			console.log(response);
 
 			return response;

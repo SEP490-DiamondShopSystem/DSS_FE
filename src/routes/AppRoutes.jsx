@@ -69,7 +69,7 @@ export const AppRouters = () => {
 			<Route path="/customize/diamond-jewelry/:id" element={<JewelryCustomDetail />} />
 
 			<Route path="/cart" element={<CartPage />} />
-			<Route path="/jewelry/all-jewelry" element={<ProductPage />} />
+			<Route path="/jewelry/setting/all" element={<ProductPage />} />
 			<Route path="/diamond/search" element={<DiamondSearchPage />} />
 			<Route path="/checkout" element={<CheckoutPage />} />
 			<Route path="/coupons" element={<CouponPage />} />
