@@ -1,9 +1,10 @@
 import {MinusOutlined, PlusOutlined} from '@ant-design/icons';
 import {faRefresh, faTruck} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {Button, Rate} from 'antd';
+import {Button, message, Rate, Select} from 'antd';
 import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
+import {convertToVietnamDate, formatPrice} from '../../../utils';
 
 const metalType = {
 	id: 12212,
@@ -15,7 +16,7 @@ const metalType = {
 	clarity: '',
 	cut: '',
 	color: '',
-	options: [
+	optionsMetal: [
 		{
 			metal: '14k',
 			metalSelect: 'Vàng Trắng 14k',
@@ -35,14 +36,34 @@ const metalType = {
 			ship: 'Chủ Nhật, 25 tháng 8',
 		},
 	],
+	optionsWidth: [
+		{
+			width: '2.00',
+		},
+		{
+			width: '3.00',
+		},
+		{
+			width: '4.00',
+		},
+		{
+			width: '5.00',
+		},
+	],
 };
 
-export const InformationRight = () => {
+export const InformationRight = ({
+	selectedMetal,
+	setSelectedMetal,
+	diamondJewelry,
+	size,
+	setSize,
+}) => {
 	const navigate = useNavigate();
 
 	const [showDetail, setDetail] = useState(false);
 	const [showSecureShopping, setSecureShopping] = useState(false);
-	const [showProductWarrantly, setProductWarrantly] = useState(false);
+	const [showProductWarranty, setProductWarranty] = useState(false);
 
 	const toggleDetail = () => {
 		setDetail(!showDetail);
@@ -50,15 +71,13 @@ export const InformationRight = () => {
 	const toggleSecureShopping = () => {
 		setSecureShopping(!showSecureShopping);
 	};
-	const toggleProductWarrantly = () => {
-		setProductWarrantly(!showProductWarrantly);
+	const toggleProductWarranty = () => {
+		setProductWarranty(!showProductWarranty);
 	};
 
-	// State to store the selected metal
-	const [selectedMetal, setSelectedMetal] = useState(() => {
-		// Get the saved metal from localStorage, default to first metal if not present
-		const savedMetal = localStorage.getItem('selectedMetal');
-		return savedMetal ? JSON.parse(savedMetal) : metalType.options[0];
+	const [selectedWidth, setSelectedWidth] = useState(() => {
+		const savedWidth = localStorage.getItem('selectedWidth');
+		return savedWidth ? JSON.parse(savedWidth) : metalType.optionsWidth[0];
 	});
 
 	// Function to handle metal selection
@@ -69,15 +88,63 @@ export const InformationRight = () => {
 		localStorage.setItem('selectedMetal', JSON.stringify(metal));
 	};
 
-	const handleChoiceClick = (id) => {
-		navigate(`/completed-jewelry/${id}`);
+	const handleSelectWidth = (width) => {
+		setSelectedWidth(width);
+		console.log(width);
+
+		localStorage.setItem('selectedWidth', JSON.stringify(width));
+	};
+
+	const handleChange = (value) => {
+		setSize(value);
+	};
+
+	const handleAddCart = () => {
+		if (size === '') return message.warning('Vui lòng chọn kích thước nhẫn!');
+		const data = {
+			JewelryId: diamondJewelry.Id,
+			JewelryName: diamondJewelry.Name,
+			Size: size,
+			Width: selectedWidth.width,
+			Metal: selectedMetal.Name,
+			JewelryThumbnail: diamondJewelry.Thumbnail,
+		};
+
+		// Get the existing cart from localStorage
+		const existingCart = localStorage.getItem('cart');
+
+		// Initialize cart as an empty array
+		let cart = [];
+
+		// Attempt to parse the existing cart data
+		try {
+			cart = existingCart ? JSON.parse(existingCart) : [];
+
+			// Check if cart is an array; if not, reset it
+			if (!Array.isArray(cart)) {
+				cart = [];
+			}
+		} catch (error) {
+			// Log error if parsing fails and reset cart
+			console.error('Error parsing cart data:', error);
+			cart = [];
+		}
+
+		// Add the current jewelry item to the cart
+		cart.push(data);
+
+		// Save the updated cart back to localStorage
+		localStorage.setItem('cart', JSON.stringify(cart));
+
+		// Thông báo thành công khi sản phẩm được thêm vào
+		message.success('Sản phẩm đã được thêm vào giỏ hàng!');
 	};
 
 	return (
 		<div>
 			<div className="border-b border-tintWhite">
 				<h1 className="text-3xl">
-					{metalType.name} {selectedMetal?.metalSelect}
+					{diamondJewelry.Name} {selectedMetal?.Name}
 				</h1>
 				<div className="my-5 flex">
 					<Rate
@@ -89,9 +156,9 @@ export const InformationRight = () => {
 					<p className="ml-5">477 Đánh Giá</p>
 				</div>
 				<div className="font-semibold my-2">
-					Giao hàng như kim cương rời vào: {selectedMetal?.ship}
+					Ngày Giao Hàng Dự Kiến: {convertToVietnamDate(diamondJewelry?.ShippingDate)}
 				</div>
-				<div className="flex mb-2">
+				{/* <div className="flex mb-2">
 					<div className="font-semibold  text-green cursor-pointer">
 						Giao Hàng Miễn Phí Ngay
 					</div>
@@ -99,41 +166,81 @@ export const InformationRight = () => {
 					<div className="font-semibold pl-2 text-green cursor-pointer">
 						Giao Hàng Miễn Phí Ngay
 					</div>
-				</div>
+				</div> */}
 			</div>
 			<div>
 				<div className="my-5 flex items-center">
 					<div className="font-semibold">Loại Kim Loại</div>
 					<div className={`font-semibold text-xl pl-4 text-primary`}>
-						{selectedMetal?.metalSelect}
+						{selectedMetal?.Name}
 					</div>
 				</div>
 				<div>
 					<div className="flex">
-						{metalType?.options?.map((metal, i) => (
+						{diamondJewelry?.Metal?.map((metal, i) => (
 							<div
 								key={i}
 								className={`${
 									selectedMetal?.metalSelect === metal?.metalSelect
 										? 'border border-black'
 										: 'border border-white'
-								} m-2 py-2 px-4 rounded-lg cursor-pointer`}
+								} m-2 py-2 px-4 rounded-lg cursor-pointer hover:bg-offWhite`}
 								onClick={() => handleSelectMetal(metal)} // Save selected metal on click
 							>
-								<div className={`rounded-full border-2 p-1 border-${metal.color}`}>
-									{metal.metal}
-								</div>
+								<div className={`rounded-full  p-1`}>{metal.Name}</div>
 							</div>
 						))}
+					</div>
+				</div>
+				<div className="my-5 flex items-center">
+					<div className="font-semibold">Độ dài</div>
+					<div className={`font-semibold text-xl pl-4 text-primary`}>
+						{selectedWidth?.width}mm
+					</div>
+				</div>
+				<div>
+					<div className="flex">
+						{metalType?.optionsWidth?.map((metal, i) => (
+							<div
+								key={i}
+								className={`${
+									selectedWidth?.width === metal?.width
+										? 'border border-black'
+										: 'border border-white'
+								} m-2 py-2 px-4 rounded-lg cursor-pointer hover:bg-offWhite`}
+								onClick={() => handleSelectWidth(metal)} // Save selected metal on click
+							>
+								<div className={`rounded-full p-1`}>{metal.width}</div>
+							</div>
+						))}
+					</div>
+				</div>
+				<div className="my-5 flex items-center">
+					<div className="font-semibold">Chọn kích thước nhẫn:</div>
+					<div className={`font-semibold text-xl pl-4 text-primary`}>
+						<Select
+							defaultValue=""
+							style={{width: 120}}
+							onChange={handleChange}
+							options={[
+								{value: '', label: 'Chọn size'},
+								{value: '1', label: '1'},
+								{value: '2', label: '2'},
+								{value: '3', label: '3'},
+								{value: '4', label: '4'},
+							]}
+						/>
 					</div>
 				</div>
 			</div>
 			<div className="border-y border-tintWhite py-5 my-5">
 				<div className="flex items-center">
-					<p className="line-through text-gray decoration-gray text-2xl">
+					{/* <p className="line-through text-gray decoration-gray text-2xl">
 						{metalType.price}
+					</p> */}
+					<p className="font-semibold pl-2 text-2xl">
+						{formatPrice(diamondJewelry.Price)}
 					</p>
-					<p className="font-semibold pl-2 text-2xl">{metalType.priceDiscount}</p>
 					<div className="text-sm pl-2">(Giá Cài Đặt)</div>
 				</div>
 				<div>
@@ -146,8 +253,9 @@ export const InformationRight = () => {
 				<Button
 					type="text"
 					className="border py-7 px-14 font-bold text-lg bg-primary rounded hover:bg-second w-full uppercase"
+					onClick={handleAddCart}
 				>
-					Thêm vào giỏ hàng
+					Thêm Vào Giỏ Hàng
 				</Button>
 			</div>
 			<div className="my-10">
@@ -157,7 +265,7 @@ export const InformationRight = () => {
 						<FontAwesomeIcon icon={faTruck} style={{height: 30}} />
 					</div>
 					<div className="flex-col items-center ml-3">
-						<p className="font-semibold">Giao Hàng Miễn Phí</p>
+						<p className="font-semibold">Giao Hàng Nhanh Chóng</p>
 						<p>
 							Chúng tôi cam kết mang đến trải nghiệm mua sắm và giao hàng hài lòng
 							nhất cho bạn.
@@ -220,18 +328,18 @@ export const InformationRight = () => {
 						</div>
 					</div>
 				</div>
-				<div className="my-4 cursor-pointer" onClick={toggleProductWarrantly}>
+				<div className="my-4 cursor-pointer" onClick={toggleProductWarranty}>
 					<div className="flex justify-between">
 						<div className="text-black m-4 px-4 rounded-lg focus:outline-none font-semibold">
 							Đảm Bảo Sản Phẩm
 						</div>
 						<div className="m-4 px-4 rounded-lg focus:outline-none">
-							{showProductWarrantly ? <MinusOutlined /> : <PlusOutlined />}
+							{showProductWarranty ? <MinusOutlined /> : <PlusOutlined />}
 						</div>
 					</div>
 					<div
 						className={`transition-max-height duration-500 ease-in-out overflow-hidden ${
-							showProductWarrantly ? 'max-h-screen' : 'max-h-0'
+							showProductWarranty ? 'max-h-screen' : 'max-h-0'
 						}`}
 					>
 						<div className="flex justify-between px-4 py-2">

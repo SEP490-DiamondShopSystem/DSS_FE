@@ -1,21 +1,13 @@
-import React from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import React, {useEffect, useState} from 'react';
 import {Helmet} from 'react-helmet';
 import {BannerDiamond} from './../../components/Banner/Banner';
-import BannerShape from './../../components/Banner/BannerShape';
 import {BannerEarrings} from './../../components/Banner/BannerEarrings-1';
-import {BannerEarrings2} from './../../components/Banner/BannerEarrings-2';
-import {BannerEarrings3} from './../../components/Banner/BannerEarrings-3';
 import {BannerJewelry} from './../../components/Banner/BannerJewelry-1';
-import {BannerJewelry2} from './../../components/Banner/BannerJewelry-2';
-import {BannerJewelry3} from './../../components/Banner/BannerJewelry-3';
 import {BannerNecklace} from './../../components/Banner/BannerNecklace';
-import {BannerNecklace2} from './../../components/Banner/BannerNecklace2';
-import {BannerNecklace3} from './../../components/Banner/BannerNecklace3';
 import {BannerRings} from './../../components/Banner/BannerRing-1';
-import {BannerRing2} from './../../components/Banner/BannerRing-2';
-import {BannerRing3} from './../../components/Banner/BannerRing-3';
-import {PopularOnStore} from './../../components/Banner/PopularOnStore'; // Import the PopularOnStore component
+import BannerShape from './../../components/Banner/BannerShape';
+// import {PopularOnStore} from './../../components/Banner/PopularOnStore'; // Import the PopularOnStore component
 
 import {list} from '../../utils/constant';
 
@@ -52,7 +44,7 @@ const HomePage = () => {
 			<BannerJewelry />
 			<BannerRings />
 			<BannerShape />
-			<PopularOnStore />
+			{/* <PopularOnStore /> */}
 		</div>
 	);
 };

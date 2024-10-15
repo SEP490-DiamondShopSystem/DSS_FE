@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-// const API = 'https://669f3824b132e2c136fd0909.mockapi.io/api';
+const API = 'https://669f3824b132e2c136fd0909.mockapi.io/api';
 // const API = 'https://reqres.in/api';
-// const API = 'https://nzppv0j4-7160.asse.devtunnels.ms/api';
-const API = 'https://fpkj263r-7160.asse.devtunnels.ms/api';
+// const API = 'https://diamondshop-fqgcbagydmgxa4cx.eastasia-01.azurewebsites.net/api';
+// const API = 'https://nkxt1lnf-7160.asse.devtunnels.ms/api';
 
 // Khởi tạo axios instance
 export const api = axios.create({

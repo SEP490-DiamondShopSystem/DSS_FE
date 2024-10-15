@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 
 import {MinusOutlined, PlusOutlined} from '@ant-design/icons';
 
-export const InformationLeft = () => {
+export const InformationLeft = ({diamond}) => {
 	const [showMore, setShowMore] = useState(false);
 
 	const toggleShowMore = () => {
@@ -21,36 +21,36 @@ export const InformationLeft = () => {
 				</div>
 				<div class="flex justify-between px-4 border-b border-tintWhite py-2">
 					<span class="text-gray-600">Hình dạng</span>
-					<span class="text-gray-800">Tròn</span>
+					<span class="text-gray-800">{diamond.DiamondShape}</span>
 				</div>
 				<div class="flex justify-between px-4 border-b border-tintWhite py-2">
-					<span class="text-gray-600">Độ cắt</span>
-					<span class="text-gray-800 flex items-center">Xuất sắc</span>
+					<span class="text-gray-600">Cut</span>
+					<span class="text-gray-800 flex items-center">{diamond.Cut}</span>
 				</div>
 				<div class="flex justify-between px-4 border-b border-tintWhite py-2">
-					<span class="text-gray-600">Màu sắc</span>
-					<span class="text-gray-800 flex items-center">H</span>
+					<span class="text-gray-600">Color</span>
+					<span class="text-gray-800 flex items-center">{diamond.Color}</span>
 				</div>
 				<div class="flex justify-between px-4 border-b border-tintWhite py-2">
-					<span class="text-gray-600">Độ trong</span>
-					<span class="text-gray-800 flex items-center">VS2</span>
+					<span class="text-gray-600">Clarity</span>
+					<span class="text-gray-800 flex items-center">{diamond.Clarity}</span>
 				</div>
 				<div class="flex justify-between px-4 border-b border-tintWhite py-2">
 					<span class="text-gray-600">Trọng lượng Carat</span>
-					<span class="text-gray-800 flex items-center">1.00</span>
+					<span class="text-gray-800 flex items-center">{diamond.Carat}</span>
 				</div>
 				<div class="flex justify-between px-4 border-b border-tintWhite py-2">
 					<span class="text-gray-600">Huỳnh quang</span>
-					<span class="text-gray-800 flex items-center">Trung bình</span>
+					<span class="text-gray-800 flex items-center">{diamond.Fluorescence}</span>
 				</div>
-				<div
+				{/* <div
 					class={`flex justify-between ${
 						showMore ? 'border-b border-tintWhite' : ''
 					} px-4  py-2`}
 				>
 					<span class="text-gray-600">Tỉ lệ chiều dài/chiều rộng</span>
 					<span class="text-gray-800 flex items-center">1.01</span>
-				</div>
+				</div> */}
 			</div>
 
 			<div
@@ -61,32 +61,32 @@ export const InformationLeft = () => {
 				<div className="bg-gray-50  rounded-lg shadow-md w-full pr-36">
 					{/* <h2 className="text-lg font-semibold">Natural Diamond Information</h2> */}
 					<div className="flex justify-between px-4 border-b border-tintWhite py-2">
-						<span className="text-gray-600">Độ sâu %</span>
-						<span className="text-gray-800">62.9</span>
+						<span className="text-gray-600">Depth %</span>
+						<span className="text-gray-800">{diamond.Depth}</span>
 					</div>
 					<div className="flex justify-between px-4 border-b border-tintWhite py-2">
-						<span className="text-gray-600">Bàn %</span>
-						<span className="text-gray-800">59.0</span>
+						<span className="text-gray-600">Table %</span>
+						<span className="text-gray-800">{diamond.Table}</span>
 					</div>
 					<div className="flex justify-between px-4 border-b border-tintWhite py-2">
-						<span className="text-gray-600">Đánh bóng</span>
-						<span className="text-gray-800">Xuất sắc</span>
+						<span className="text-gray-600">Polish</span>
+						<span className="text-gray-800">{diamond.Polish}</span>
 					</div>
 					<div className="flex justify-between px-4 border-b border-tintWhite py-2">
-						<span className="text-gray-600">Đối xứng</span>
-						<span className="text-gray-800">Xuất sắc</span>
+						<span className="text-gray-600">Symmetry</span>
+						<span className="text-gray-800">{diamond.Symmetry}</span>
 					</div>
 					<div className="flex justify-between px-4 border-b border-tintWhite py-2">
-						<span className="text-gray-600">Vành</span>
-						<span className="text-gray-800">Hơi dày</span>
+						<span className="text-gray-600">Girdle</span>
+						<span className="text-gray-800">{diamond.Girdle}</span>
 					</div>
-					<div className="flex justify-between border-b border-tintWhite px-4 py-2">
+					{/* <div className="flex justify-between border-b border-tintWhite px-4 py-2">
 						<span className="text-gray-600">Đỉnh</span>
 						<span className="text-gray-800">Không có</span>
-					</div>
+					</div> */}
 					<div className="flex justify-between px-4 py-2">
 						<span className="text-gray-600">Kích thước</span>
-						<span className="text-gray-800">6.33x6.37x3.99 mm</span>
+						<span className="text-gray-800">{diamond?.Measurement}</span>
 					</div>
 				</div>
 			</div>

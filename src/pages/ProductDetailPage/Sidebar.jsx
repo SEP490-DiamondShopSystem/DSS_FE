@@ -38,7 +38,14 @@ const shapes = [
 	},
 ];
 
-export const Sidebar = ({isOpen, toggleSidebar}) => {
+export const Sidebar = ({
+	isOpen,
+	toggleSidebar,
+	diamondJewelry,
+	selectedWidth,
+	selectedMetal,
+	size,
+}) => {
 	const navigate = useNavigate();
 	const [link, setLink] = useState('/diamond/search');
 	const [activeRcm, setActiveRcm] = useState('');
@@ -69,6 +76,54 @@ export const Sidebar = ({isOpen, toggleSidebar}) => {
 
 	const handleSelectOptionClick = (option) => {
 		setSelectedImage(option.image);
+	};
+
+	const handleNavigate = () => {
+		const jewelryId = diamondJewelry.Id;
+		const data = {
+			JewelryId: diamondJewelry.Id,
+			JewelryName: diamondJewelry.Name,
+			Size: size,
+			Price: diamondJewelry.Price,
+			Thumbnail: diamondJewelry.Thumbnail,
+			SerialCode: diamondJewelry.SerialCode,
+			Width: selectedWidth.width,
+			Metal: selectedMetal,
+		};
+		// Get the existing cart from localStorage
+		const existingCart = localStorage.getItem('cartDesign');
+
+		// Initialize cart as an empty array
+		let cart = [];
+
+		// Attempt to parse the existing cart data
+		try {
+			cart = existingCart ? JSON.parse(existingCart) : [];
+
+			// Check if cart is an array; if not, reset it
+			if (!Array.isArray(cart)) {
+				cart = [];
+			}
+		} catch (error) {
+			// Log error if parsing fails and reset cart
+			console.error('Error parsing cart data:', error);
+			cart = [];
+		}
+
+		const existingJewelryIndex = cart.findIndex((item) => item.JewelryId === jewelryId);
+		// Add the current jewelry item to the cart
+		if (existingJewelryIndex !== -1) {
+			// If the diamond exists, replace it with the new diamond
+			cart[existingJewelryIndex] = data;
+		} else {
+			// If the diamond doesn't exist, push the current diamond to the cart
+			cart.push(data);
+		}
+
+		// Save the updated cart back to localStorage
+		localStorage.setItem('cartDesign', JSON.stringify(cart));
+		navigate(link);
+		console.log('click');
 	};
 
 	const currentShape = shapes.find((shape) => shape.name === shapeActive);
@@ -164,9 +219,7 @@ export const Sidebar = ({isOpen, toggleSidebar}) => {
 							</div>
 							<div className=" bottom-10" style={{width: '100%'}}>
 								<Button
-									onClick={
-										link === '' ? () => navigate(link) : handleSelectDiamondRcm
-									}
+									onClick={link === '' ? handleNavigate : handleSelectDiamondRcm}
 									type="text"
 									className=" bg-primary w-full text-lg font-semibold p-5"
 								>
@@ -246,7 +299,7 @@ export const Sidebar = ({isOpen, toggleSidebar}) => {
 									if (link === '') {
 										handleSelectDiamondRcm('diamondRcm');
 									} else {
-										navigate(link);
+										handleNavigate();
 									}
 								}}
 								type="text"

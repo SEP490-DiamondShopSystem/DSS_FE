@@ -16,6 +16,7 @@ export const ProductList = () => {
 	const dispatch = useDispatch();
 
 	const [jewelries, setJewelries] = useState();
+	const [pageSize, setPageSize] = useState(1);
 	const [filters, setFilters] = useState({
 		gender: [],
 		type: [],
@@ -34,7 +35,7 @@ export const ProductList = () => {
 	}, []);
 
 	useEffect(() => {
-		dispatch(getAllJewelry());
+		dispatch(getAllJewelry({pageSize}));
 	}, [dispatch]);
 
 	useEffect(() => {
@@ -45,6 +46,8 @@ export const ProductList = () => {
 		localStorage.removeItem('jewelry');
 		setFilters({gender: [], type: [], metal: [], price: {minPrice: 0, maxPrice: 1000}});
 	};
+
+	console.log(jewelryList);
 
 	return (
 		<>
@@ -77,7 +80,7 @@ export const ProductList = () => {
 										key={i}
 										className="shadow-lg bg-white rounded-lg hover:border-2 cursor-pointer"
 										onClick={() =>
-											navigate(`/jewelry/diamond-jewelry/${jewelry.id}`)
+											navigate(`/jewelry/diamond-jewelry/${jewelry.Id}`)
 										}
 									>
 										<div className="w-80">

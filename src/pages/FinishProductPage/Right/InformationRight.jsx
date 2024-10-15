@@ -1,9 +1,11 @@
 import {CheckCircleFilled, MinusOutlined, PlusOutlined} from '@ant-design/icons';
 import {faRefresh, faRing, faTruck} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {Button, Rate, Select, Typography} from 'antd';
+import {Button, message, Rate, Select, Typography} from 'antd';
 import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
+import {formatPrice} from '../../../utils';
+import {Clarity} from '../../Customize/DiamondDetailPage/ChoiceMetal/Choose/Clarity';
 
 const {Text} = Typography;
 
@@ -42,11 +44,12 @@ const ring = [
 	},
 ];
 
-export const InformationRight = ({toggleSidebar}) => {
+export const InformationRight = ({jewelryDetail, diamondDetail}) => {
 	const navigate = useNavigate();
 	const [showDetail, setDetail] = useState(false);
 	const [showSecureShopping, setSecureShopping] = useState(false);
 	const [showProductWarrantly, setProductWarrantly] = useState(false);
+	const [sizeChange, setSizeChange] = useState();
 
 	const toggleDetail = () => {
 		setDetail(!showDetail);
@@ -59,14 +62,70 @@ export const InformationRight = ({toggleSidebar}) => {
 	};
 
 	const handleChange = (value) => {
-		console.log('value', value);
+		setSizeChange(value);
+	};
+
+	const plus = jewelryDetail.Price + diamondDetail.Price;
+
+	console.log('sizeChange', sizeChange);
+
+	const handleAddToCart = () => {
+		if (sizeChange === '') return message.warning('Vui lòng chọn kích thước nhẫn!');
+		const data = {
+			JewelryId: jewelryDetail.JewelryId,
+			JewelryName: jewelryDetail.Name,
+			Size: sizeChange || jewelryDetail.Size,
+			Width: jewelryDetail.Width,
+			Metal: jewelryDetail.Metal,
+			JewelryThumbnail: jewelryDetail.Thumbnail,
+			JewelryPrice: jewelryDetail.Price,
+			DiamondId: diamondDetail.DiamondId,
+			Cut: diamondDetail.Cut,
+			Clarity: diamondDetail.Clarity,
+			Color: diamondDetail.Color,
+			Carat: diamondDetail.Carat,
+			DiamondPrice: diamondDetail.Price,
+			DiamondShape: diamondDetail.DiamondShape,
+		};
+
+		// Get the existing cart from localStorage
+		const existingCart = localStorage.getItem('cartFinish');
+
+		// Initialize cart as an empty array
+		let cart = [];
+
+		// Attempt to parse the existing cart data
+		try {
+			cart = existingCart ? JSON.parse(existingCart) : [];
+
+			// Check if cart is an array; if not, reset it
+			if (!Array.isArray(cart)) {
+				cart = [];
+			}
+		} catch (error) {
+			// Log error if parsing fails and reset cart
+			console.error('Error parsing cart data:', error);
+			cart = [];
+		}
+
+		// Add the current jewelry item to the cart
+		cart.push(data);
+
+		// Save the updated cart back to localStorage
+		localStorage.setItem('cartFinish', JSON.stringify(cart));
+
+		// Thông báo thành công khi sản phẩm được thêm vào
+		message.success('Sản phẩm đã được thêm vào giỏ hàng!');
+		navigate('/cart');
 	};
 
 	return (
 		<div>
 			<div className="border-tintWhite">
 				<h1 className="text-3xl">
-					{metalType.jewelryName} {metalType.diamondName}
+					{jewelryDetail.JewelryName} - Kim Cương {diamondDetail.DiamondShape}{' '}
+					{diamondDetail.Carat} {diamondDetail.Clarity} Clarity {diamondDetail.Color}{' '}
+					Color {diamondDetail.Cut}
 				</h1>
 				<div className="my-5 flex">
 					<Rate
@@ -78,17 +137,15 @@ export const InformationRight = ({toggleSidebar}) => {
 					<p className="ml-5">477 Đánh Giá</p>
 				</div>
 				<div></div>
-				<div className="font-semibold my-2">
-					Giao hàng như kim cương lỏng vào: {metalType?.ship}
-				</div>
+				<div className="font-semibold my-2">Ngày Giao Hàng Dự Kiến: {metalType?.ship}</div>
 				<div className="flex mb-2">
-					<div className="font-semibold text-green cursor-pointer">
+					{/* <div className="font-semibold text-green cursor-pointer">
 						Giao hàng miễn phí qua đêm
-					</div>
+					</div> */}
 
-					<div className="font-semibold pl-2 text-green cursor-pointer">
+					{/* <div className="font-semibold pl-2 text-green cursor-pointer">
 						Giao hàng miễn phí qua đêm
-					</div>
+					</div> */}
 				</div>
 				<div>
 					<Text strong style={{fontSize: '18px'}}>
@@ -102,12 +159,17 @@ export const InformationRight = ({toggleSidebar}) => {
 								</div>
 								<div>
 									<div className="ml-5">
-										<p style={{width: 400}}>{metalType.diamondName}</p>
-										<p className="" style={{color: '#d2d5d8'}}>
-											{metalType.cut} · {metalType.color} ·{' '}
-											{metalType.clarity} · {metalType.stock}
+										<p style={{width: 400}}>
+											Kim Cương {diamondDetail.DiamondShape}{' '}
+											{diamondDetail.Carat} {diamondDetail.Clarity} Clarity{' '}
+											{diamondDetail.Color} Color {diamondDetail.Cut}
 										</p>
-										<p className="text-xl font-semibold">{metalType.price}</p>
+										<p className="" style={{color: '#d2d5d8'}}>
+											{metalType.stock}
+										</p>
+										<p className="text-xl font-semibold">
+											{formatPrice(diamondDetail.Price)}
+										</p>
 									</div>
 								</div>
 							</div>
@@ -120,11 +182,13 @@ export const InformationRight = ({toggleSidebar}) => {
 								</div>
 								<div>
 									<div className="ml-5">
-										<p style={{width: 400}}>{metalType.jewelryName}</p>
+										<p style={{width: 400}}>{jewelryDetail.JewelryName}</p>
 										<p className="" style={{color: '#d2d5d8'}}>
 											{metalType.stock}
 										</p>
-										<p className="text-xl font-semibold">{metalType.price}</p>
+										<p className="text-xl font-semibold">
+											{formatPrice(jewelryDetail.Price)}
+										</p>
 									</div>
 								</div>
 							</div>
@@ -134,7 +198,7 @@ export const InformationRight = ({toggleSidebar}) => {
 							<p className="mr-3">Kích Cỡ Nhẫn Hiện Tại:</p>
 
 							<Select
-								defaultValue="1"
+								defaultValue={jewelryDetail.Size}
 								style={{
 									width: 120,
 								}}
@@ -146,10 +210,10 @@ export const InformationRight = ({toggleSidebar}) => {
 				</div>
 				<div className="border-y border-tintWhite py-5 my-5">
 					<div className="flex items-center">
-						<p className="line-through text-gray decoration-gray text-2xl">
+						{/* <p className="line-through text-gray decoration-gray text-2xl">
 							{metalType.price}
-						</p>
-						<p className="font-semibold pl-2 text-2xl">{metalType.priceDiscount}</p>
+						</p> */}
+						<p className="font-semibold text-2xl">{formatPrice(plus)}</p>
 					</div>
 					<div>
 						<div className="text-xl pt-2 font-semibold">
@@ -161,10 +225,10 @@ export const InformationRight = ({toggleSidebar}) => {
 			<div className="flex justify-between items-center mt-5">
 				<Button
 					type="text"
-					className="border py-7 px-14 font-bold text-lg bg-primary rounded hover:bg-second w-full"
-					onClick={() => navigate('/cart')}
+					className="border py-7 px-14 font-bold text-lg bg-primary rounded hover:bg-second w-full uppercase"
+					onClick={handleAddToCart}
 				>
-					THÊM VÀO GIỎ
+					THÊM VÀO GIỎ Hàng
 				</Button>
 			</div>
 			<div className="my-10">
@@ -174,7 +238,7 @@ export const InformationRight = ({toggleSidebar}) => {
 						<FontAwesomeIcon icon={faTruck} style={{height: 30}} />
 					</div>
 					<div className="flex-col items-center ml-3">
-						<p className="font-semibold">Giao Hàng Miễn Phí</p>
+						<p className="font-semibold">Giao Hàng Nhanh Chóng</p>
 						<p>
 							Chúng tôi cam kết mang đến cho bạn trải nghiệm toàn diện, từ mua sắm đến
 							giao hàng.

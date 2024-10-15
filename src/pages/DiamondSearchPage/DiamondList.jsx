@@ -18,15 +18,14 @@ import BannerShape from '../../components/Banner/BannerShape';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import ReactLoading from 'react-loading';
 
-export const DiamondList = () => {
+export const DiamondList = ({diamond, diamondList, setDiamond}) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	const diamondList = useSelector(GetAllDiamondSelector);
+
 	const loading = useSelector(LoadingDiamondSelector);
 
 	const [changeGrid, setChangeGrid] = useState(false);
 	const [like, setLike] = useState({});
-	const [diamond, setDiamond] = useState([]);
 	const [filters, setFilters] = useState({
 		shape: '',
 		price: {minPrice: 0, maxPrice: 1000},
@@ -38,8 +37,9 @@ export const DiamondList = () => {
 	const [hasMore, setHasMore] = useState(true);
 	const [visibleDiamonds, setVisibleDiamonds] = useState([]);
 	const [diamondChoice, setDiamondChoice] = useState(localStorage.getItem('diamondChoice') || '');
+	const [diamondNatural, setDiamondNatural] = useState();
 
-	console.log('diamondList', diamond);
+	console.log('diamondNatural', diamondNatural);
 
 	useEffect(() => {
 		const savedShape = localStorage.getItem('selected');
@@ -52,15 +52,13 @@ export const DiamondList = () => {
 	}, []);
 
 	useEffect(() => {
-		dispatch(getAllDiamond());
-	}, [dispatch]);
-
-	useEffect(() => {
-		if (diamondList) {
-			setDiamond(diamondList);
-			// setVisibleDiamonds(diamondList?.slice(0, 10));
+		// Filter diamonds where IsLabDiamond is false
+		if (diamond) {
+			const filteredDiamonds = diamond.filter((diamondItem) => !diamondItem.IsLabDiamond);
+			setDiamondNatural(filteredDiamonds);
+			// setVisibleDiamonds(filteredDiamonds?.slice(0, 10)); // Optional for pagination
 		}
-	}, [diamondList]);
+	}, []);
 
 	const loadMoreData = () => {
 		if (visibleDiamonds.length >= diamond.length) {
@@ -100,13 +98,15 @@ export const DiamondList = () => {
 
 	const handleDiamondChoiceClick = (id) => {
 		navigate(`/diamond-detail/${id}`);
+		console.log(id);
+
 		localStorage.setItem('diamondChoice', 'Kim Cương');
 	};
 	const handleJewelryChoiceClick = (id) => {
 		navigate(`/diamond-detail/${id}`);
 	};
 
-	if (!diamondList) return <div>Loading....</div>;
+	// if (!diamondList) return <div>Loading....</div>;
 
 	return (
 		<div>
@@ -119,7 +119,7 @@ export const DiamondList = () => {
 			) : (
 				<>
 					<div className="text-2xl flex justify-end mt-10">
-						<p className="p-2">{visibleDiamonds.length} Kết quả</p>
+						<p className="p-2">{diamondNatural?.length} Kết quả</p>
 						<div
 							className="md:cursor-pointer mx-10 hover:bg-neutral-300 rounded-xl p-2"
 							onClick={handleListClick}
@@ -142,14 +142,14 @@ export const DiamondList = () => {
 					> */}
 					{changeGrid ? (
 						<div className="transition-all duration-300 grid grid-cols-4 gap-10 mb-20 mt-10">
-							{diamond.map((diamondItem) => (
+							{diamondNatural?.map((diamondItem) => (
 								<div
 									key={diamondItem.id}
 									className="shadow-lg bg-white border-2 border-white rounded-lg hover:border-2 hover:border-black cursor-pointer"
 									onClick={
 										diamondChoice.length > 0
-											? () => handleDiamondChoiceClick(diamondItem.id)
-											: () => handleJewelryChoiceClick(diamondItem.id)
+											? () => handleDiamondChoiceClick(diamondItem.Id)
+											: () => handleJewelryChoiceClick(diamondItem.Id)
 									}
 								>
 									<div className="w-80">
@@ -161,7 +161,7 @@ export const DiamondList = () => {
 										</div>
 										<div className="mx-10 my-5">
 											<p>{diamondItem.title}</p>
-											<p style={{color: '#707070'}}>{diamondItem.price}</p>
+											<p style={{color: '#707070'}}>{diamondItem.Price}</p>
 										</div>
 									</div>
 								</div>
@@ -169,14 +169,14 @@ export const DiamondList = () => {
 						</div>
 					) : (
 						<div className="transition-all duration-300 mb-20 mt-10">
-							{diamond.map((diamondItem, i) => (
+							{diamondNatural?.map((diamondItem, i) => (
 								<div
 									key={i + 1}
 									className="shadow-lg bg-white rounded-lg cursor-pointer"
 									onClick={
 										diamondChoice.length > 0
-											? () => handleDiamondChoiceClick(diamondItem.id)
-											: () => handleJewelryChoiceClick(diamondItem.id)
+											? () => handleDiamondChoiceClick(diamondItem.Id)
+											: () => handleJewelryChoiceClick(diamondItem.Id)
 									}
 								>
 									<div className="flex w-full my-10">

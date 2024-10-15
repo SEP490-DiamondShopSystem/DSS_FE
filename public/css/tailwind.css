@@ -2304,3 +2304,18 @@ video {
 .w-72 {
 	width: 18rem /* 288px */;
 }
+
+.hover\:bg-offWhite:hover {
+	--tw-bg-opacity: 1;
+	background-color: rgb(247 247 247 / var(--tw-bg-opacity)) /* #f7f7f7 */;
+}
+
+.my-7 {
+	margin-top: 1.75rem /* 28px */;
+	margin-bottom: 1.75rem /* 28px */;
+}
+
+.mx-3 {
+	margin-left: 0.75rem /* 12px */;
+	margin-right: 0.75rem /* 12px */;
+}

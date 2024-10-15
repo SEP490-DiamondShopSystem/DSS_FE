@@ -35,8 +35,6 @@ export const DiamondJewelryList = () => {
 		}
 	}, []);
 
-	console.log(filters);
-
 	useEffect(() => {
 		dispatch(getAllJewelry());
 	}, [dispatch]);
@@ -68,14 +66,14 @@ export const DiamondJewelryList = () => {
 			) : (
 				<>
 					<div className="text-2xl flex justify-end mt-10">
-						<p className="p-2">200 Kết quả</p>
+						<p className="p-2">{jewelries?.length} Kết quả</p>
 					</div>
 					<div className="transition-all duration-300 grid grid-cols-4 gap-10 mb-20 mt-10">
 						{jewelries?.map((jewelry, i) => (
 							<div
 								key={i}
 								className="shadow-lg bg-white rounded-lg hover:border-2 cursor-pointer"
-								onClick={() => navigate(`/jewelry/diamond-jewelry/${jewelry.id}`)}
+								onClick={() => navigate(`/jewelry/diamond-jewelry/${jewelry.Id}`)}
 							>
 								<div className="w-80">
 									<div
@@ -83,20 +81,20 @@ export const DiamondJewelryList = () => {
 										style={{background: '#b8b7b5'}}
 									>
 										<Image
-											src={jewelryImg}
+											src={jewelry.Thumbnail || jewelryImg}
 											alt={jewelry.title}
 											className=""
 											preview={false}
 										/>
 									</div>
 									<div className="mx-5 my-5">
-										<p>{jewelry.title}</p>
+										<p>{jewelry.Name}</p>
 										<div className="flex mt-2">
-											<p className="line-through" style={{color: '#b0b0b0'}}>
+											{/* <p className="line-through" style={{color: '#b0b0b0'}}>
 												{jewelry.price}
-											</p>
-											<p className="ml-5 " style={{color: '#707070'}}>
-												{jewelry.discountPrice}
+											</p> */}
+											<p className="" style={{color: '#707070'}}>
+												{jewelry.Price}
 											</p>
 										</div>
 									</div>

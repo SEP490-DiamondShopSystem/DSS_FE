@@ -16,15 +16,14 @@ import {FilterDiamond} from '../../components/Filter/Filter';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import ReactLoading from 'react-loading';
 
-export const DiamondLabList = () => {
+export const DiamondLabList = ({diamond, setDiamond, diamondList}) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	const diamondList = useSelector(GetAllDiamondSelector);
 	const loading = useSelector(LoadingDiamondSelector);
 
 	const [changeGrid, setChangeGrid] = useState(false);
 	const [like, setLike] = useState({});
-	const [diamond, setDiamond] = useState([]);
+
 	const [filters, setFilters] = useState({
 		shape: '',
 		price: {minPrice: 0, maxPrice: 1000},
@@ -36,6 +35,7 @@ export const DiamondLabList = () => {
 	const [hasMore, setHasMore] = useState(true);
 	const [visibleDiamonds, setVisibleDiamonds] = useState([]);
 	const [diamondChoice, setDiamondChoice] = useState(localStorage.getItem('diamondChoice') || '');
+	const [diamondLab, setDiamondLab] = useState();
 
 	console.log('diamondList', diamond);
 
@@ -50,15 +50,12 @@ export const DiamondLabList = () => {
 	}, []);
 
 	useEffect(() => {
-		dispatch(getAllDiamond());
-	}, [dispatch]);
-
-	useEffect(() => {
-		if (diamondList) {
-			setDiamond(diamondList);
-			// setVisibleDiamonds(diamondList?.slice(0, 10));
+		if (diamond) {
+			const filteredDiamonds = diamond.filter((diamondItem) => diamondItem.IsLabDiamond);
+			setDiamondLab(filteredDiamonds);
+			// setVisibleDiamonds(filteredDiamonds?.slice(0, 10)); // Optional for pagination
 		}
-	}, [diamondList]);
+	}, [diamond]);
 
 	const loadMoreData = () => {
 		if (visibleDiamonds.length >= diamond.length) {
@@ -117,7 +114,7 @@ export const DiamondLabList = () => {
 			) : (
 				<>
 					<div className="text-2xl flex justify-end mt-10">
-						<p className="p-2">{visibleDiamonds.length} Kết quả</p>
+						<p className="p-2">{diamondLab?.length} Kết quả</p>
 						<div
 							className="md:cursor-pointer mx-10 hover:bg-neutral-300 rounded-xl p-2"
 							onClick={handleListClick}
@@ -140,14 +137,14 @@ export const DiamondLabList = () => {
 					> */}
 					{changeGrid ? (
 						<div className="transition-all duration-300 grid grid-cols-4 gap-10 mb-20 mt-10">
-							{diamond.map((diamondItem) => (
+							{diamondLab?.map((diamondItem) => (
 								<div
-									key={diamondItem.id}
+									key={diamondItem.Id}
 									className="shadow-lg bg-white border-2 border-white rounded-lg hover:border-2 hover:border-black cursor-pointer"
 									onClick={
 										diamondChoice.length > 0
-											? () => handleDiamondChoiceClick(diamondItem.id)
-											: () => handleJewelryChoiceClick(diamondItem.id)
+											? () => handleDiamondChoiceClick(diamondItem.Id)
+											: () => handleJewelryChoiceClick(diamondItem.Id)
 									}
 								>
 									<div className="w-80">
@@ -155,11 +152,11 @@ export const DiamondLabList = () => {
 											className="flex justify-center mb-5"
 											style={{background: '#b8b7b5'}}
 										>
-											<Image src={diamondImg} alt={diamondItem.title} />
+											<Image src={diamondImg} alt={diamondItem.Name} />
 										</div>
 										<div className="mx-10 my-5">
 											<p>{diamondItem.title}</p>
-											<p style={{color: '#707070'}}>{diamondItem.price}</p>
+											<p style={{color: '#707070'}}>{diamondItem.Price}</p>
 										</div>
 									</div>
 								</div>
@@ -167,14 +164,14 @@ export const DiamondLabList = () => {
 						</div>
 					) : (
 						<div className="transition-all duration-300 mb-20 mt-10">
-							{diamond.map((diamondItem, i) => (
+							{diamondLab?.map((diamondItem, i) => (
 								<div
 									key={i + 1}
 									className="shadow-lg bg-white rounded-lg cursor-pointer"
 									onClick={
 										diamondChoice.length > 0
-											? () => handleDiamondChoiceClick(diamondItem.id)
-											: () => handleJewelryChoiceClick(diamondItem.id)
+											? () => handleDiamondChoiceClick(diamondItem.Id)
+											: () => handleJewelryChoiceClick(diamondItem.Id)
 									}
 								>
 									<div className="flex w-full my-10">
@@ -194,16 +191,16 @@ export const DiamondLabList = () => {
 												{diamondItem.shape}
 											</p>
 											<p className="text-xl w-1/5 text-center">
-												{diamondItem.carat}
+												{diamondItem.Carat}
 											</p>
 											<p className="text-xl w-1/5 text-center">
-												{diamondItem.cut || '-'}
+												{diamondItem.Cut || '-'}
 											</p>
 											<p className="text-xl w-1/5 text-center">
-												{diamondItem.color}
+												{diamondItem.Color}
 											</p>
 											<p className="text-xl w-1/5 text-center">
-												{diamondItem.clarity}
+												{diamondItem.Clarity}
 											</p>
 											<p
 												className="text-xl w-1/5 text-center"
