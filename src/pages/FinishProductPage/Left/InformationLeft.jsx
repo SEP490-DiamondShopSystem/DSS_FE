@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 
 import {MinusOutlined, PlusOutlined} from '@ant-design/icons';
 
-export const InformationLeft = () => {
+export const InformationLeft = ({jewelryDetail, diamondDetail}) => {
 	const [showMore, setShowMore] = useState(false);
 
 	const toggleShowMore = () => {

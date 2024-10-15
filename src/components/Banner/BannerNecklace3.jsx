@@ -8,7 +8,7 @@ export const BannerNecklace3 = () => {
 
 	const handleNecklaceShopClick = () => {
 		localStorage.setItem('jewelry', 'Dây chuyền');
-		navigate('/jewelry/all-jewelry');
+		navigate('/jewelry/setting/all');
 	};
 
 	const handleNecklaceDesignClick = () => {

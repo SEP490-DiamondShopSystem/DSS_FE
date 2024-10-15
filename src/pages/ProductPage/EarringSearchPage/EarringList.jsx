@@ -8,6 +8,7 @@ import jewelryImg from '../../../assets/ring_classic.png';
 import {FilterJewelry} from '../../../components/Filter/Filter';
 import {GetAllJewelrySelector, LoadingJewelrySelector} from '../../../redux/selectors';
 import {getAllJewelry} from '../../../redux/slices/jewelrySlice';
+import {formatPrice} from '../../../utils';
 
 export const EarringList = () => {
 	const navigate = useNavigate();
@@ -63,7 +64,7 @@ export const EarringList = () => {
 								className="shadow-lg bg-white rounded-lg hover:border-2 cursor-pointer"
 								onClick={() =>
 									navigate(
-										`/jewelry/design-your-own-earrings/setting/${jewelry.id}`
+										`/jewelry/design-your-own-earrings/setting/${jewelry.Id}`
 									)
 								}
 							>
@@ -73,20 +74,20 @@ export const EarringList = () => {
 										style={{background: '#b8b7b5'}}
 									>
 										<Image
-											src={jewelryImg}
+											src={jewelry.Thumbnail || jewelryImg}
 											alt={jewelry.title}
 											className=""
 											preview={false}
 										/>
 									</div>
 									<div className="mx-5 my-5">
-										<p>{jewelry.title}</p>
+										<p>{jewelry.Name}</p>
 										<div className="flex mt-2">
-											<p className="line-through" style={{color: '#b0b0b0'}}>
+											{/* <p className="line-through" style={{color: '#b0b0b0'}}>
 												{jewelry.price}
-											</p>
-											<p className="ml-5 " style={{color: '#707070'}}>
-												{jewelry.discountPrice}
+											</p> */}
+											<p className="" style={{color: '#707070'}}>
+												{formatPrice(jewelry.Price)}
 											</p>
 										</div>
 									</div>

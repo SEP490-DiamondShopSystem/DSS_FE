@@ -9,7 +9,7 @@ export const BannerNecklace = () => {
 	const handleEarringDesignClick = () => {
 		localStorage.setItem('jewelry', 'Dây chuyền');
 		localStorage.removeItem('diamondChoice');
-		navigate('/jewelry/all-jewelry');
+		navigate('/jewelry/design-your-own-necklaces/setting/all');
 	};
 	return (
 		<div className="relative bg-gray-800 text-white">

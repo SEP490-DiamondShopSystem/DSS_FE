@@ -10,6 +10,43 @@ const FinishProductPage = () => {
 	const [jewelryChoice, setJewelryChoice] = useState(localStorage.getItem('jewelryChoice') || '');
 	const [diamondChoice, setDiamondChoice] = useState(localStorage.getItem('diamondChoice') || '');
 	const [jewelryType, setJewelryType] = useState(localStorage.getItem('jewelryType') || '');
+	const [diamondDetail, setDiamondDetail] = useState(() => {
+		const cartDesign = localStorage.getItem('cartDesign');
+
+		if (cartDesign) {
+			try {
+				const parsedCartDesign = JSON.parse(cartDesign);
+
+				const diamond = parsedCartDesign.find((item) => item.DiamondId);
+
+				return diamond || null;
+			} catch (error) {
+				console.error('Error parsing cartDesign from localStorage:', error);
+				return null;
+			}
+		}
+
+		return null;
+	});
+
+	const [jewelryDetail, setJewelryDetail] = useState(() => {
+		const cartDesign = localStorage.getItem('cartDesign');
+
+		if (cartDesign) {
+			try {
+				const parsedCartDesign = JSON.parse(cartDesign);
+
+				const jewelry = parsedCartDesign.find((item) => item.JewelryId);
+
+				return jewelry || null;
+			} catch (error) {
+				console.error('Error parsing cartDesign from localStorage:', error);
+				return null;
+			}
+		}
+
+		return null;
+	});
 
 	const items = [
 		{
@@ -54,11 +91,11 @@ const FinishProductPage = () => {
 			<div className="flex flex-col md:flex-row bg-white my-10 md:my-20 rounded-lg shadow-lg">
 				<div className="w-full md:w-1/2 p-6">
 					<ImageGallery />
-					<InformationLeft />
+					<InformationLeft jewelryDetail={jewelryDetail} diamondDetail={diamondDetail} />
 				</div>
 
 				<div className="w-full md:w-1/2 p-6 md:pr-32">
-					<InformationRight />
+					<InformationRight jewelryDetail={jewelryDetail} diamondDetail={diamondDetail} />
 				</div>
 			</div>
 		</div>

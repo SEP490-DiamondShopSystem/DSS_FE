@@ -14,27 +14,12 @@ import {
 } from '../../utils/constant';
 
 export const FilterDiamond = ({filters, setFilters, handleReset}) => {
-	const location = useLocation();
-
-	// useEffect(() => {
-	// 	const params = new URLSearchParams(location.search);
-	// 	const shapeFromURL = params.get('shape');
-
-	// 	console.log(shapeFromURL);
-
-	// 	if (shapeFromURL) {
-	// 		setFilters((prev) => ({
-	// 			...prev,
-	// 			shape: shapeFromURL,
-	// 		}));
-	// 	}
-	// }, [location.search, setFilters]);
-
 	const handleChange = (type, value) => {
 		setFilters((prev) => ({
 			...prev,
 			[type]: value,
 		}));
+		localStorage.setItem('selected', value);
 	};
 
 	const handlePriceChange = (value) => {

@@ -4,6 +4,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {Button, Rate} from 'antd';
 import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
+import {formatPrice} from '../../../utils';
 
 const infoMetal = {
 	name: 'Kim cương tròn 1.00 Carat',
@@ -19,11 +20,27 @@ const infoMetal = {
 		},
 	],
 };
-export const InformationRight = ({diamondChoice, toggleSidebar}) => {
+export const InformationRight = ({diamondChoice, toggleSidebar, diamond}) => {
 	const navigate = useNavigate();
 	const [showDetail, setDetail] = useState(false);
 	const [showSecureShopping, setSecureShopping] = useState(false);
 	const [showProductWarranty, setProductWarranty] = useState(false);
+	const [cartDesign, setCartDesign] = useState(() => {
+		// Lấy cartDesign từ localStorage
+		const storedCartDesign = localStorage.getItem('cartDesign');
+
+		// Parse dữ liệu nếu tồn tại, nếu không thì trả về mảng rỗng
+		try {
+			return storedCartDesign ? JSON.parse(storedCartDesign) : [];
+		} catch (error) {
+			console.error('Error parsing cartDesign from localStorage:', error);
+			return [];
+		}
+	});
+
+	const jewelryItem = cartDesign.find((item) => item.JewelryId);
+
+	console.log(jewelryItem);
 
 	const handleDetailOpen = () => {
 		setDetail(!showDetail);
@@ -35,41 +52,83 @@ export const InformationRight = ({diamondChoice, toggleSidebar}) => {
 		setProductWarranty(!showProductWarranty);
 	};
 
+	console.log(diamond);
+
+	const handleCompleted = (id) => {
+		// Get the current diamond's ID for comparison
+		const jewelryDiamondId = jewelryItem.JewelryId + id;
+
+		// let cartKey = active === 'addToCart' ? 'cart' : 'cartDesign';
+		const existingCart = localStorage.getItem('cartDesign');
+
+		// Initialize cart as an empty array
+		let cart = [];
+
+		// Attempt to parse the existing cart data
+		try {
+			cart = existingCart ? JSON.parse(existingCart) : [];
+
+			// Check if cart is an array; if not, reset it
+			if (!Array.isArray(cart)) {
+				cart = [];
+			}
+		} catch (error) {
+			// Log error if parsing fails and reset cart
+			console.error('Error parsing cart data:', error);
+			cart = [];
+		}
+
+		// Find the index of the diamond in the cart based on its ID
+		const existingDiamondIndex = cart.findIndex((item) => item.DiamondId === id);
+
+		if (existingDiamondIndex !== -1) {
+			// If the diamond exists, replace it with the new diamond
+			cart[existingDiamondIndex] = diamond;
+		} else {
+			// If the diamond doesn't exist, push the current diamond to the cart
+			cart.push(diamond);
+		}
+
+		// Save the updated cart back to localStorage
+		localStorage.setItem('cartDesign', JSON.stringify(cart));
+		navigate(`/completed-jewelry/${jewelryDiamondId}`);
+	};
+
 	return (
 		<div>
 			<div className="border-tintWhite">
-				<h1 className="text-3xl">{infoMetal.name}</h1>
-				<div className="font-semibold my-2">
+				<h1 className="text-3xl">
+					{diamond.DiamondShape} {diamond.Carat}ct
+				</h1>
+				{/* <div className="font-semibold my-2">
 					Giao hàng như một viên kim cương rời vào: {infoMetal?.delivery}
-				</div>
-				<div className="flex mb-2">
+				</div> */}
+				{/* <div className="flex mb-2">
 					<div className="font-semibold text-green cursor-pointer">
 						Giao hàng qua đêm miễn phí
 					</div>
-				</div>
+				</div> */}
 				<div>
-					{infoMetal?.tuyChon?.map((metal, i) => (
-						<div className="flex items-center text-sm" key={i}>
-							<p className="p-2" style={{backgroundColor: '#f7f7f7'}}>
-								{metal.carat}
-							</p>
-							<p className="ml-4 p-2" style={{backgroundColor: '#f7f7f7'}}>
-								{metal.mauSac}
-							</p>
-							<p className="ml-4 p-2" style={{backgroundColor: '#f7f7f7'}}>
-								{metal.doSang}
-							</p>
-							<p className="ml-4 p-2" style={{backgroundColor: '#f7f7f7'}}>
-								{metal.cat}
-							</p>
-						</div>
-					))}
+					<div className="flex items-center text-sm mt-5">
+						<p className="p-2" style={{backgroundColor: '#f7f7f7'}}>
+							{diamond.Carat}ct
+						</p>
+						<p className="ml-4 p-2" style={{backgroundColor: '#f7f7f7'}}>
+							{diamond.Color} Color
+						</p>
+						<p className="ml-4 p-2" style={{backgroundColor: '#f7f7f7'}}>
+							{diamond.Clarity} Clarity
+						</p>
+						<p className="ml-4 p-2" style={{backgroundColor: '#f7f7f7'}}>
+							{diamond.Cut}
+						</p>
+					</div>
 				</div>
 			</div>
 
 			<div className="border-y border-tintWhite py-5 my-5">
 				<div className="flex items-center">
-					<p className="font-semibold pl-2 text-2xl">{infoMetal.price}</p>
+					<p className="font-semibold pl-2 text-2xl">{formatPrice(diamond.Price)}</p>
 					<div className="text-sm pl-2">(Giá Kim Cương)</div>
 				</div>
 			</div>
@@ -87,7 +146,7 @@ export const InformationRight = ({diamondChoice, toggleSidebar}) => {
 					<Button
 						type="text"
 						className="border py-7 px-14 font-bold text-lg bg-primary rounded hover:bg-second w-full"
-						onClick={() => navigate(`/completed-jewelry/1`)}
+						onClick={() => handleCompleted(diamond.DiamondId)}
 					>
 						CHỌN VIÊN KIM CƯƠNG NÀY
 					</Button>

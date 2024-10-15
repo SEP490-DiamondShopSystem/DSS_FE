@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {MinusOutlined, PlusOutlined} from '@ant-design/icons';
 
-export const InformationLeft = () => {
+export const InformationLeft = ({diamondJewelry, selectedMetal}) => {
 	const [showMore, setShowMore] = useState(false);
 
 	const toggleShowMore = () => {
@@ -13,19 +13,21 @@ export const InformationLeft = () => {
 			<div className="bg-gray-50 rounded-lg shadow-md w-full mt-10 pr-36">
 				<div className="flex justify-between px-4 border-b border-tintWhite py-2">
 					<span className="text-gray-600">Mã Định Danh</span>
-					<span className="text-gray-800">501290w14</span>
+					<span className="text-gray-800">{diamondJewelry.SerialCode}</span>
 				</div>
 				<div className="flex justify-between px-4 border-b border-tintWhite py-2">
 					<span className="text-gray-600">Chất Liệu</span>
-					<span className="text-gray-800">Vàng Trắng 14K</span>
+					<span className="text-gray-800">{selectedMetal.Name}</span>
 				</div>
 				<div className="flex justify-between px-4 border-b border-tintWhite py-2">
 					<span className="text-gray-600">Chiều Rộng</span>
-					<span className="text-gray-800">2.00mm</span>
+					<span className="text-gray-800">{diamondJewelry.Model.Width}mm</span>
 				</div>
 				<div className="flex justify-between px-4 py-2">
 					<span className="text-gray-600">Hoàn Thiện Rhodium</span>
-					<span className="text-gray-800 flex items-center">Có</span>
+					<span className="text-gray-800 flex items-center">
+						{diamondJewelry.Model.IsRhodiumFinish ? 'Có' : 'Không'}
+					</span>
 				</div>
 			</div>
 
@@ -34,7 +36,7 @@ export const InformationLeft = () => {
 					showMore ? 'max-h-screen' : 'max-h-0'
 				}`}
 			>
-				<div className="bg-gray-50 rounded-lg shadow-md w-full pr-36 mt-4">
+				{/* <div className="bg-gray-50 rounded-lg shadow-md w-full pr-36 mt-4">
 					<h2 className="text-lg font-semibold">Thông Tin Kim Cương Tự Nhiên</h2>
 					<div className="flex justify-between px-4 border-b border-tintWhite py-2">
 						<span className="text-gray-600">Hình Dạng</span>
@@ -60,7 +62,7 @@ export const InformationLeft = () => {
 						<span className="text-gray-600">Loại Gắn</span>
 						<span className="text-gray-800">Pave</span>
 					</div>
-				</div>
+				</div> */}
 				<div className="bg-gray-50 rounded-lg shadow-md w-full pr-36 mt-4">
 					<h2 className="text-lg font-semibold">Có Thể Gắn Với:</h2>
 					<div className="flex justify-between px-4 border-b border-tintWhite py-2">

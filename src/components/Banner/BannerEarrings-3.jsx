@@ -8,7 +8,7 @@ export const BannerEarrings3 = () => {
 
 	const handleEarringShopClick = () => {
 		localStorage.setItem('jewelry', 'Bông tai');
-		navigate('/jewelry/all-jewelry');
+		navigate('/jewelry/design-your-own-earrings/setting/all');
 	};
 
 	return (

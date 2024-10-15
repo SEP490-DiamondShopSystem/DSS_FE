@@ -43,7 +43,7 @@ export const BannerDiamond = () => {
 	};
 
 	const handleJewelryShopClick = () => {
-		navigate('/jewelry/all-jewelry');
+		navigate('/jewelry');
 		localStorage.removeItem('jewelryChoice');
 		localStorage.removeItem('diamondChoice');
 		localStorage.removeItem('jewelryType');

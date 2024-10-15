@@ -38,7 +38,7 @@ const shapes = [
 	},
 ];
 
-export const Sidebar = ({isOpen, toggleSidebar}) => {
+export const Sidebar = ({isOpen, toggleSidebar, diamond}) => {
 	const navigate = useNavigate();
 	const [link, setLink] = useState('/diamond/search');
 	const [activeRcm, setActiveRcm] = useState('');
@@ -58,6 +58,50 @@ export const Sidebar = ({isOpen, toggleSidebar}) => {
 		setLink(url);
 		setActive(ac);
 		localStorage.setItem('jewelryType', jewelry);
+	};
+
+	console.log(diamond);
+
+	const handleNavigate = () => {
+		// Get the current diamond's ID for comparison
+		const diamondId = diamond.DiamondId; // Đảm bảo 'diamond' có thuộc tính 'id'
+
+		let cartKey = active === 'addToCart' ? 'cart' : 'cartDesign';
+		const existingCart = localStorage.getItem(cartKey);
+
+		// Initialize cart as an empty array
+		let cart = [];
+
+		// Attempt to parse the existing cart data
+		try {
+			cart = existingCart ? JSON.parse(existingCart) : [];
+
+			// Check if cart is an array; if not, reset it
+			if (!Array.isArray(cart)) {
+				cart = [];
+			}
+		} catch (error) {
+			// Log error if parsing fails and reset cart
+			console.error('Error parsing cart data:', error);
+			cart = [];
+		}
+
+		// Find the index of the diamond in the cart based on its ID
+		const existingDiamondIndex = cart.findIndex((item) => item.DiamondId === diamondId);
+
+		if (existingDiamondIndex !== -1) {
+			// If the diamond exists, replace it with the new diamond
+			cart[existingDiamondIndex] = diamond;
+		} else {
+			// If the diamond doesn't exist, push the current diamond to the cart
+			cart.push(diamond);
+		}
+
+		// Save the updated cart back to localStorage
+		localStorage.setItem(cartKey, JSON.stringify(cart));
+
+		// Navigate to the desired link
+		navigate(link);
 	};
 
 	return (
@@ -145,9 +189,7 @@ export const Sidebar = ({isOpen, toggleSidebar}) => {
 				</div>
 				<div className="mx-5 absolute bottom-10" style={{width: '90%'}}>
 					<Button
-						onClick={() => {
-							navigate(link);
-						}}
+						onClick={handleNavigate}
 						type="text"
 						className=" bg-primary w-full text-lg font-semibold p-5 uppercase"
 					>

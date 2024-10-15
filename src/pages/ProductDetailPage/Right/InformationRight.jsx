@@ -1,48 +1,30 @@
 import {MinusOutlined, PlusOutlined} from '@ant-design/icons';
 import {faRefresh, faTruck} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {Button, Rate} from 'antd';
+import {Button, Rate, Select} from 'antd';
 import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
+import {convertToVietnamDate, formatPrice} from '../../../utils';
 
-const metalType = {
-	id: 12212,
-	name: 'Nhẫn Đính Hôn Heirloom Petite Milgrain',
-	price: '$620',
-	priceDiscount: '$465',
-	productDetail:
-		'Thể hiện tình yêu của bạn với chiếc nhẫn đính hôn bằng vàng trắng 14k này, với thiết kế gài kim cương bằng móc theo hướng đông-tây.',
-	clarity: '',
-	cut: '',
-	color: '',
-	options: [
-		{
-			metal: '14k',
-			metalSelect: 'Vàng Trắng 14k',
-			color: 'gray',
-			ship: 'Thứ Hai, 26 tháng 8',
-		},
-		{
-			metal: '14k',
-			metalSelect: 'Vàng Vàng 14k',
-			color: 'second',
-			ship: 'Thứ Sáu, 30 tháng 8',
-		},
-		{
-			metal: '14k',
-			metalSelect: 'Vàng Hồng 14k',
-			color: 'red',
-			ship: 'Chủ Nhật, 25 tháng 8',
-		},
-	],
-};
-
-export const InformationRight = ({toggleSidebar, diamondChoice}) => {
+export const InformationRight = ({
+	toggleSidebar,
+	diamondChoice,
+	selectedMetal,
+	setSelectedMetal,
+	selectedWidth,
+	setSelectedWidth,
+	handleSelectMetal,
+	handleSelectWidth,
+	handleChoiceClick,
+	handleChange,
+	metalType,
+	diamondJewelry,
+}) => {
 	const navigate = useNavigate();
 
 	const [showDetail, setDetail] = useState(false);
 	const [showSecureShopping, setSecureShopping] = useState(false);
-	const [showProductWarrantly, setProductWarrantly] = useState(false);
+	const [showProductWarranty, setProductWarranty] = useState(false);
 
 	const toggleDetail = () => {
 		setDetail(!showDetail);
@@ -50,27 +32,8 @@ export const InformationRight = ({toggleSidebar, diamondChoice}) => {
 	const toggleSecureShopping = () => {
 		setSecureShopping(!showSecureShopping);
 	};
-	const toggleProductWarrantly = () => {
-		setProductWarrantly(!showProductWarrantly);
-	};
-
-	// State to store the selected metal
-	const [selectedMetal, setSelectedMetal] = useState(() => {
-		// Get the saved metal from localStorage, default to first metal if not present
-		const savedMetal = localStorage.getItem('selectedMetal');
-		return savedMetal ? JSON.parse(savedMetal) : metalType.options[0];
-	});
-
-	// Function to handle metal selection
-	const handleSelectMetal = (metal) => {
-		setSelectedMetal(metal);
-		console.log(metal);
-
-		localStorage.setItem('selectedMetal', JSON.stringify(metal));
-	};
-
-	const handleChoiceClick = (id) => {
-		navigate(`/completed-jewelry/${id}`);
+	const toggleProductWarranty = () => {
+		setProductWarranty(!showProductWarranty);
 	};
 
 	return (
@@ -89,9 +52,9 @@ export const InformationRight = ({toggleSidebar, diamondChoice}) => {
 					<p className="ml-5">477 Đánh Giá</p>
 				</div>
 				<div className="font-semibold my-2">
-					Giao hàng như kim cương rời vào: {selectedMetal?.ship}
+					Ngày Giao Hàng Dự Kiến: {convertToVietnamDate(diamondJewelry?.ShippingDate)}
 				</div>
-				<div className="flex mb-2">
+				{/* <div className="flex mb-2">
 					<div className="font-semibold  text-green cursor-pointer">
 						Giao Hàng Miễn Phí Ngay
 					</div>
@@ -99,41 +62,79 @@ export const InformationRight = ({toggleSidebar, diamondChoice}) => {
 					<div className="font-semibold pl-2 text-green cursor-pointer">
 						Giao Hàng Miễn Phí Ngay
 					</div>
-				</div>
+				</div> */}
 			</div>
 			<div>
 				<div className="my-5 flex items-center">
 					<div className="font-semibold">Loại Kim Loại</div>
 					<div className={`font-semibold text-xl pl-4 text-primary`}>
-						{selectedMetal?.metalSelect}
+						{selectedMetal?.Name}
 					</div>
 				</div>
 				<div>
 					<div className="flex">
-						{metalType?.options?.map((metal, i) => (
+						{diamondJewelry?.Metal?.map((metal, i) => (
 							<div
 								key={i}
 								className={`${
 									selectedMetal?.metalSelect === metal?.metalSelect
 										? 'border border-black'
 										: 'border border-white'
-								} m-2 py-2 px-4 rounded-lg cursor-pointer`}
+								} m-2 py-2 px-4 rounded-lg cursor-pointer hover:bg-offWhite`}
 								onClick={() => handleSelectMetal(metal)} // Save selected metal on click
 							>
-								<div className={`rounded-full border-2 p-1 border-${metal.color}`}>
-									{metal.metal}
-								</div>
+								<div className={`rounded-full p-1`}>{metal.Name}</div>
 							</div>
 						))}
+					</div>
+				</div>
+				<div className="my-5 flex items-center">
+					<div className="font-semibold">Độ dài</div>
+					<div className={`font-semibold text-xl pl-4 text-primary`}>
+						{selectedWidth?.width}mm
+					</div>
+				</div>
+				<div>
+					<div className="flex">
+						{metalType?.optionsWidth?.map((metal, i) => (
+							<div
+								key={i}
+								className={`${
+									selectedWidth?.width === metal?.width
+										? 'border border-black'
+										: 'border border-white'
+								} m-2 py-2 px-4 rounded-lg cursor-pointer hover:bg-offWhite`}
+								onClick={() => handleSelectWidth(metal)} // Save selected metal on click
+							>
+								<div className={`rounded-full p-1`}>{metal.width}</div>
+							</div>
+						))}
+					</div>
+				</div>
+				<div className="my-5 flex items-center">
+					<div className="font-semibold">Chọn kích thước nhẫn:</div>
+					<div className={`font-semibold text-xl pl-4 text-primary`}>
+						<Select
+							defaultValue=""
+							style={{width: 120}}
+							onChange={handleChange}
+							options={[
+								{value: '', label: 'Chọn size'},
+								{value: '1', label: '1'},
+								{value: '2', label: '2'},
+								{value: '3', label: '3'},
+								{value: '4', label: '4'},
+							]}
+						/>
 					</div>
 				</div>
 			</div>
 			<div className="border-y border-tintWhite py-5 my-5">
 				<div className="flex items-center">
-					<p className="line-through text-gray decoration-gray text-2xl">
-						{metalType.price}
-					</p>
-					<p className="font-semibold pl-2 text-2xl">{metalType.priceDiscount}</p>
+					{/* <p className="line-through text-gray decoration-gray text-2xl">
+						{diamondJewelry.price}
+					</p> */}
+					<p className="font-semibold text-2xl">{formatPrice(diamondJewelry.Price)}</p>
 					<div className="text-sm pl-2">(Giá Cài Đặt)</div>
 				</div>
 				<div>
@@ -149,7 +150,7 @@ export const InformationRight = ({toggleSidebar, diamondChoice}) => {
 					onClick={
 						diamondChoice.length === 0
 							? toggleSidebar
-							: () => handleChoiceClick(metalType.id)
+							: () => handleChoiceClick(diamondJewelry.Id)
 					}
 				>
 					CHỌN CÀI ĐẶT NÀY
@@ -225,18 +226,18 @@ export const InformationRight = ({toggleSidebar, diamondChoice}) => {
 						</div>
 					</div>
 				</div>
-				<div className="my-4 cursor-pointer" onClick={toggleProductWarrantly}>
+				<div className="my-4 cursor-pointer" onClick={toggleProductWarranty}>
 					<div className="flex justify-between">
 						<div className="text-black m-4 px-4 rounded-lg focus:outline-none font-semibold">
 							Đảm Bảo Sản Phẩm
 						</div>
 						<div className="m-4 px-4 rounded-lg focus:outline-none">
-							{showProductWarrantly ? <MinusOutlined /> : <PlusOutlined />}
+							{showProductWarranty ? <MinusOutlined /> : <PlusOutlined />}
 						</div>
 					</div>
 					<div
 						className={`transition-max-height duration-500 ease-in-out overflow-hidden ${
-							showProductWarrantly ? 'max-h-screen' : 'max-h-0'
+							showProductWarranty ? 'max-h-screen' : 'max-h-0'
 						}`}
 					>
 						<div className="flex justify-between px-4 py-2">
