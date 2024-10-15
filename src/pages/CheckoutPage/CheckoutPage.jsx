@@ -1,8 +1,13 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {FaRegAddressBook, FaRegEnvelope, FaPhoneAlt} from 'react-icons/fa';
 import {Form, Input, Button, Radio, message} from 'antd';
+import {useNavigate} from 'react-router-dom';
 
 const CheckoutPage = () => {
+	// State to manage selected payment method
+	const [paymentMethod, setPaymentMethod] = useState(null);
+	const navigate = useNavigate();
+
 	// Form submission handler
 	const onFinish = (values) => {
 		console.log('Form Values:', values);
@@ -12,6 +17,11 @@ const CheckoutPage = () => {
 	const onFinishFailed = (errorInfo) => {
 		console.log('Failed:', errorInfo);
 		message.error('Please check the form fields and try again.');
+	};
+
+	// Handler for payment method change
+	const handlePaymentMethodChange = (e) => {
+		setPaymentMethod(e.target.value);
 	};
 
 	return (
@@ -171,50 +181,112 @@ const CheckoutPage = () => {
 								>
 									<Input.TextArea placeholder="Order Notes" />
 								</Form.Item>
-							</Form>
-						</div>
-					</div>
+								{/* Payment Method */}
+								<div className="my-6">
+									<div className="md:w-1/3 bg-white p-6 rounded-lg shadow-lg space-y-6 mt-6 md:mt-0 transition-shadow duration-300 hover:shadow-2xl">
+										<h2 className="text-2xl font-semibold text-gray-800 mb-6">
+											Payment Method
+										</h2>
+										<Form.Item
+											name="paymentMethod"
+											rules={[
+												{
+													required: true,
+													message: 'Please select a payment method',
+												},
+											]}
+											className="py-3"
+										>
+											<Radio.Group
+												className="flex flex-col"
+												onChange={handlePaymentMethodChange}
+											>
+												<Radio
+													value="creditCard"
+													className="border p-4 rounded-md hover:border-blue-500 transition duration-300 mb-4"
+												>
+													Chuyển Khoản Ngân Hàng
+												</Radio>
+												<Radio
+													value="installments"
+													className="border p-4 rounded-md hover:border-blue-500 transition duration-300 mb-4"
+												>
+													Thanh Toán Qua ZaloPay
+												</Radio>
+											</Radio.Group>
+										</Form.Item>
 
-					<div className="my-6">
-						{/* Payment Method */}
-						<div className="md:w-1/3 bg-white p-6 rounded-lg shadow-lg space-y-6 mt-6 md:mt-0 transition-shadow duration-300 hover:shadow-2xl">
-							<h2 className="text-2xl font-semibold text-gray-800 mb-6">
-								Payment Method
-							</h2>
-							<Form.Item
-								name="paymentMethod"
-								rules={[
-									{required: true, message: 'Please select a payment method'},
-								]}
-								className="py-3"
-							>
-								<Radio.Group className="flex flex-col">
-									<Radio
-										value="creditCard"
-										className="border p-4 rounded-md hover:border-blue-500 transition duration-300 mb-4"
-									>
-										Credit Card
-									</Radio>
-									<Radio
-										value="installments"
-										className="border p-4 rounded-md hover:border-blue-500 transition duration-300 mb-4"
-									>
-										Interest-Free Monthly Installments
-									</Radio>
-									<Radio
-										value="delivery"
-										className="border p-4 rounded-md hover:border-blue-500 transition duration-300 mb-4"
-									>
-										Pay on Delivery
-									</Radio>
-									<Radio
-										value="paypal"
-										className="border p-4 rounded-md hover:border-blue-500 transition duration-300"
-									>
-										PayPal
-									</Radio>
-								</Radio.Group>
-							</Form.Item>
+										{/* Conditionally render card details if 'Chuyển Khoản Ngân Hàng' is selected */}
+										{paymentMethod === 'creditCard' && (
+											<div className="space-y-4">
+												<Form.Item
+													label="Card Number"
+													name="cardNumber"
+													rules={[
+														{
+															required: true,
+															message:
+																'Please enter your card number',
+														},
+													]}
+												>
+													<Input placeholder="Card Number" />
+												</Form.Item>
+												<Form.Item
+													label="Bank"
+													name="bankName"
+													rules={[
+														{
+															required: true,
+															message: 'Please enter your bank name',
+														},
+													]}
+												>
+													<Input placeholder="Bank Name" />
+												</Form.Item>
+												<Form.Item
+													label="Expiry Date"
+													name="expiryDate"
+													rules={[
+														{
+															required: true,
+															message: 'Please enter the expiry date',
+														},
+													]}
+												>
+													<Input placeholder="MM/YY" />
+												</Form.Item>
+												<Form.Item
+													label="Security Code"
+													name="securityCode"
+													rules={[
+														{
+															required: true,
+															message:
+																'Please enter the security code',
+														},
+													]}
+												>
+													<Input placeholder="CVV" />
+												</Form.Item>
+												<Form.Item
+													label="Card Holder's Name"
+													name="cardHolderName"
+													rules={[
+														{
+															required: true,
+															message:
+																"Please enter the card holder's name",
+														},
+													]}
+												>
+													<Input placeholder="Card Holder's Name" />
+												</Form.Item>
+											</div>
+										)}
+									</div>
+								</div>
+							</Form>
 						</div>
 					</div>
 				</div>
@@ -334,12 +406,13 @@ const CheckoutPage = () => {
 							</div>
 
 							{/* Order Button Section */}
-							<div className="flex justify-center">
-								<Form.Item>
-									<Button type="primary" htmlType="submit" className="w-full">
-										Place Order
-									</Button>
-								</Form.Item>
+							<div className="flex justify-center mt-6 w-full ">
+								<button
+									className="mx-10 px-6 py-2 bg-primary rounded-lg uppercase font-semibold hover:bg-second w-full h-12"
+									onClick={() => navigate(`/invoice`)}
+								>
+									Place Order
+								</button>
 							</div>
 
 							{/* Customer Service Section */}

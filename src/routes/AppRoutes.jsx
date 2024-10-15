@@ -3,6 +3,7 @@ import {Route, Routes} from 'react-router-dom';
 
 import CartPage from '../pages/CartPage/CartPage';
 import CheckoutPage from '../pages/CheckoutPage/CheckoutPage';
+import Invoice from '../pages/CheckoutPage/Invoice';
 import CouponPage from '../pages/CouponPage/CouponPage';
 import ChooseJewelrySetting from '../pages/Customize/ChooseJewelrySetting';
 import JewelryCustomDetail from '../pages/Customize/JewelryDetailPage';
@@ -72,6 +73,7 @@ export const AppRouters = () => {
 			<Route path="/jewelry/all-jewelry" element={<ProductPage />} />
 			<Route path="/diamond/search" element={<DiamondSearchPage />} />
 			<Route path="/checkout" element={<CheckoutPage />} />
+			<Route path="/invoice" element={<Invoice />} />
 			<Route path="/coupons" element={<CouponPage />} />
 			<Route path="/promotion" element={<PromotionPage />} />
 			<Route path="*" element={<NotFoundPage />} />
