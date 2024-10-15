@@ -65,7 +65,7 @@ export const InformationRight = ({jewelryDetail, diamondDetail}) => {
 		setSizeChange(value);
 	};
 
-	const plus = jewelryDetail.Price + diamondDetail.Price;
+	const plus = jewelryDetail?.Price + diamondDetail?.Price;
 
 	console.log('sizeChange', sizeChange);
 
@@ -73,7 +73,7 @@ export const InformationRight = ({jewelryDetail, diamondDetail}) => {
 		if (sizeChange === '') return message.warning('Vui lòng chọn kích thước nhẫn!');
 		const data = {
 			JewelryId: jewelryDetail.JewelryId,
-			JewelryName: jewelryDetail.Name,
+			JewelryName: jewelryDetail.JewelryName,
 			Size: sizeChange || jewelryDetail.Size,
 			Width: jewelryDetail.Width,
 			Metal: jewelryDetail.Metal,
@@ -123,9 +123,9 @@ export const InformationRight = ({jewelryDetail, diamondDetail}) => {
 		<div>
 			<div className="border-tintWhite">
 				<h1 className="text-3xl">
-					{jewelryDetail.JewelryName} - Kim Cương {diamondDetail.DiamondShape}{' '}
-					{diamondDetail.Carat} {diamondDetail.Clarity} Clarity {diamondDetail.Color}{' '}
-					Color {diamondDetail.Cut}
+					{jewelryDetail?.JewelryName} - Kim Cương {diamondDetail?.DiamondShape}{' '}
+					{diamondDetail?.Carat} {diamondDetail?.Clarity} Clarity {diamondDetail?.Color}{' '}
+					Color {diamondDetail?.Cut}
 				</h1>
 				<div className="my-5 flex">
 					<Rate
@@ -160,15 +160,15 @@ export const InformationRight = ({jewelryDetail, diamondDetail}) => {
 								<div>
 									<div className="ml-5">
 										<p style={{width: 400}}>
-											Kim Cương {diamondDetail.DiamondShape}{' '}
-											{diamondDetail.Carat} {diamondDetail.Clarity} Clarity{' '}
-											{diamondDetail.Color} Color {diamondDetail.Cut}
+											Kim Cương {diamondDetail?.DiamondShape}{' '}
+											{diamondDetail?.Carat} {diamondDetail?.Clarity} Clarity{' '}
+											{diamondDetail?.Color} Color {diamondDetail?.Cut}
 										</p>
 										<p className="" style={{color: '#d2d5d8'}}>
 											{metalType.stock}
 										</p>
 										<p className="text-xl font-semibold">
-											{formatPrice(diamondDetail.Price)}
+											{formatPrice(diamondDetail?.Price)}
 										</p>
 									</div>
 								</div>

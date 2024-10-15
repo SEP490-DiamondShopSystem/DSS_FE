@@ -104,6 +104,7 @@ export const InformationRight = ({
 		const data = {
 			JewelryId: diamondJewelry.Id,
 			JewelryName: diamondJewelry.Name,
+			JewelryPrice: diamondJewelry.Price,
 			Size: size,
 			Width: selectedWidth.width,
 			Metal: selectedMetal.Name,

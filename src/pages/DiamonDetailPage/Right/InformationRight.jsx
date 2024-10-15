@@ -25,6 +25,22 @@ export const InformationRight = ({diamondChoice, toggleSidebar, diamond}) => {
 	const [showDetail, setDetail] = useState(false);
 	const [showSecureShopping, setSecureShopping] = useState(false);
 	const [showProductWarranty, setProductWarranty] = useState(false);
+	const [cartDesign, setCartDesign] = useState(() => {
+		// Lấy cartDesign từ localStorage
+		const storedCartDesign = localStorage.getItem('cartDesign');
+
+		// Parse dữ liệu nếu tồn tại, nếu không thì trả về mảng rỗng
+		try {
+			return storedCartDesign ? JSON.parse(storedCartDesign) : [];
+		} catch (error) {
+			console.error('Error parsing cartDesign from localStorage:', error);
+			return [];
+		}
+	});
+
+	const jewelryItem = cartDesign.find((item) => item.JewelryId);
+
+	console.log(jewelryItem);
 
 	const handleDetailOpen = () => {
 		setDetail(!showDetail);
@@ -37,6 +53,46 @@ export const InformationRight = ({diamondChoice, toggleSidebar, diamond}) => {
 	};
 
 	console.log(diamond);
+
+	const handleCompleted = (id) => {
+		// Get the current diamond's ID for comparison
+		const jewelryDiamondId = jewelryItem.JewelryId + id;
+
+		// let cartKey = active === 'addToCart' ? 'cart' : 'cartDesign';
+		const existingCart = localStorage.getItem('cartDesign');
+
+		// Initialize cart as an empty array
+		let cart = [];
+
+		// Attempt to parse the existing cart data
+		try {
+			cart = existingCart ? JSON.parse(existingCart) : [];
+
+			// Check if cart is an array; if not, reset it
+			if (!Array.isArray(cart)) {
+				cart = [];
+			}
+		} catch (error) {
+			// Log error if parsing fails and reset cart
+			console.error('Error parsing cart data:', error);
+			cart = [];
+		}
+
+		// Find the index of the diamond in the cart based on its ID
+		const existingDiamondIndex = cart.findIndex((item) => item.DiamondId === id);
+
+		if (existingDiamondIndex !== -1) {
+			// If the diamond exists, replace it with the new diamond
+			cart[existingDiamondIndex] = diamond;
+		} else {
+			// If the diamond doesn't exist, push the current diamond to the cart
+			cart.push(diamond);
+		}
+
+		// Save the updated cart back to localStorage
+		localStorage.setItem('cartDesign', JSON.stringify(cart));
+		navigate(`/completed-jewelry/${jewelryDiamondId}`);
+	};
 
 	return (
 		<div>
@@ -90,7 +146,7 @@ export const InformationRight = ({diamondChoice, toggleSidebar, diamond}) => {
 					<Button
 						type="text"
 						className="border py-7 px-14 font-bold text-lg bg-primary rounded hover:bg-second w-full"
-						onClick={() => navigate(`/completed-jewelry/${diamond.DiamondId}`)}
+						onClick={() => handleCompleted(diamond.DiamondId)}
 					>
 						CHỌN VIÊN KIM CƯƠNG NÀY
 					</Button>
