@@ -4,8 +4,9 @@ import {Steps} from 'antd';
 import {DiamondLabList} from './DiamondLabList';
 import {DiamondList} from './DiamondList';
 import {useDispatch, useSelector} from 'react-redux';
-import {GetAllDiamondSelector, GetDiamondAttributesSelector} from '../../redux/selectors';
-import {getAllDiamond, getDiamondAttributesValues} from '../../redux/slices/diamondSlice';
+import {GetAllDiamondSelector} from '../../redux/selectors';
+import {getAllDiamond} from '../../redux/slices/diamondSlice';
+import {enums} from '../../utils/constant';
 
 const mapAttributes = (data, attributes) => {
 	return {
@@ -52,11 +53,8 @@ const mapAttributes = (data, attributes) => {
 
 const DiamondSearchPage = () => {
 	const dispatch = useDispatch();
-	const diamondAttributes = useSelector(GetDiamondAttributesSelector);
 	const diamondList = useSelector(GetAllDiamondSelector);
-
 	const [changeDiamond, setChangeDiamond] = useState(true);
-	const [attributes, setAttributes] = useState();
 	const [mappedDiamonds, setMappedDiamonds] = useState([]);
 	const [diamondChoice, setDiamondChoice] = useState(
 		localStorage.getItem('diamondChoice') || localStorage.getItem('selected') || ''
@@ -70,22 +68,12 @@ const DiamondSearchPage = () => {
 	console.log(mappedDiamonds);
 
 	useEffect(() => {
-		if (diamondList && attributes) {
+		if (diamondList && enums) {
 			// Map diamond attributes to more readable values
-			const mappedData = diamondList.map((diamond) => mapAttributes(diamond, attributes));
+			const mappedData = diamondList.map((diamond) => mapAttributes(diamond, enums));
 			setMappedDiamonds(mappedData);
 		}
-	}, [diamondList, attributes]);
-
-	useEffect(() => {
-		dispatch(getDiamondAttributesValues());
-	}, []);
-
-	useEffect(() => {
-		if (diamondAttributes && diamondAttributes.length > 0) {
-			setAttributes(diamondAttributes[0]); // Assuming the first element contains the necessary attributes
-		}
-	}, [diamondAttributes]);
+	}, [diamondList, enums]);
 
 	const items = [
 		{

@@ -1,5 +1,6 @@
 import React from 'react';
 import {Route, Routes} from 'react-router-dom';
+import {PrivateRoute} from './PrivateRoute';
 
 import CartPage from '../pages/CartPage/CartPage';
 import CheckoutPage from '../pages/CheckoutPage/CheckoutPage';
@@ -37,10 +38,6 @@ export const AppRouters = () => {
 			<Route path="/jewelry/design-your-own-earrings" element={<HomeEarringPage />} />
 			<Route path="/jewelry/design-your-own-necklaces" element={<HomeNecklacePage />} />
 			<Route path="/jewelry/design-your-own-rings" element={<HomeRingPage />} />
-			<Route path="/profile" element={<ProfilePage />} />
-			<Route path="/my-orders" element={<MyOrderPage />} />
-			<Route path="/my-info" element={<MyInfoPage />} />
-			<Route path="/change-password" element={<ChangePassword />} />
 			<Route path="/jewelry/design-your-own-rings/setting/all" element={<RingSearchPage />} />
 			<Route
 				path="/jewelry/design-your-own-necklaces/setting/all"
@@ -69,13 +66,83 @@ export const AppRouters = () => {
 			<Route path="/customize/diamond-jewelry" element={<ChooseJewelrySetting />} />
 			<Route path="/customize/diamond-jewelry/:id" element={<JewelryCustomDetail />} />
 
-			<Route path="/cart" element={<CartPage />} />
 			<Route path="/jewelry/setting/all" element={<ProductPage />} />
 			<Route path="/diamond/search" element={<DiamondSearchPage />} />
-			<Route path="/checkout" element={<CheckoutPage />} />
-			<Route path="/invoice" element={<Invoice />} />
-			<Route path="/coupons" element={<CouponPage />} />
-			<Route path="/promotion" element={<PromotionPage />} />
+
+			{/* Private routes */}
+			<Route
+				path="/cart"
+				element={
+					<PrivateRoute roles={'customer'}>
+						<CartPage />
+					</PrivateRoute>
+				}
+			/>
+			<Route
+				path="/checkout"
+				element={
+					<PrivateRoute roles={'customer'}>
+						<CheckoutPage />
+					</PrivateRoute>
+				}
+			/>
+			<Route
+				path="/invoice"
+				element={
+					<PrivateRoute roles={'customer'}>
+						<Invoice />
+					</PrivateRoute>
+				}
+			/>
+			<Route
+				path="/coupons"
+				element={
+					<PrivateRoute roles={'customer'}>
+						<CouponPage />
+					</PrivateRoute>
+				}
+			/>
+			<Route
+				path="/promotion"
+				element={
+					<PrivateRoute roles={'customer'}>
+						<PromotionPage />
+					</PrivateRoute>
+				}
+			/>
+			<Route
+				path="/profile"
+				element={
+					<PrivateRoute roles={'customer'}>
+						<ProfilePage />
+					</PrivateRoute>
+				}
+			/>
+			<Route
+				path="/my-orders"
+				element={
+					<PrivateRoute roles={'customer'}>
+						<MyOrderPage />
+					</PrivateRoute>
+				}
+			/>
+			<Route
+				path="/my-info"
+				element={
+					<PrivateRoute roles={'customer'}>
+						<MyInfoPage />
+					</PrivateRoute>
+				}
+			/>
+			<Route
+				path="/change-password"
+				element={
+					<PrivateRoute roles={'customer'}>
+						<ChangePassword />
+					</PrivateRoute>
+				}
+			/>
+
 			<Route path="*" element={<NotFoundPage />} />
 		</Routes>
 	);

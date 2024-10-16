@@ -1,6 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
 
-// Slice giỏ hàng cho cả cart và cartFinish
 export const cartSlice = createSlice({
 	name: 'cart',
 	initialState: {
@@ -80,8 +79,17 @@ export const cartSlice = createSlice({
 				state.cartFinish = [];
 			}
 
-			// Thêm sản phẩm mới vào giỏ hàng
+			// const existingIndex = state.cartFinish.findIndex(
+			// 	(item) => item.DiamondId === newItem.DiamondId
+			// );
+
+			// if (existingIndex !== -1) {
+			// 	// Nếu sản phẩm đã tồn tại, cập nhật sản phẩm
+			// 	state.cartFinish[existingIndex] = newItem;
+			// } else {
+			// 	// Nếu không tồn tại, thêm sản phẩm mới vào giỏ hàng thiết kế
 			state.cartFinish.push(newItem);
+			// }
 
 			// Đồng bộ với localStorage
 			localStorage.setItem('cartFinish', JSON.stringify(state.cartFinish));

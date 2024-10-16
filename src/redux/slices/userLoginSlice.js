@@ -5,13 +5,37 @@ import {setLocalStorage} from '../../utils/localstorage';
 // Login Thunk
 export const handleLogin = createAsyncThunk(
 	'userLoginSlice/handleLogin',
-	async ({email, password}, {rejectWithValue}) => {
+	async ({email, password, isExternalLogin, isStaffLogin}, {rejectWithValue}) => {
 		try {
-			const data = await api.post(`/login`, {email, password});
+			const data = await api.post(`/Account/Login`, {
+				email,
+				password,
+				isExternalLogin,
+				isStaffLogin,
+			});
+			console.log(data);
+
 			return data;
 		} catch (error) {
 			console.error(error);
-			return rejectWithValue(error); // Gửi lỗi về reducer
+			return rejectWithValue(error);
+		}
+	}
+);
+
+export const GoogleLogin = createAsyncThunk(
+	'userLoginSlice/GoogleLogin',
+	async ({externalProviderName}, {rejectWithValue}) => {
+		try {
+			const data = await api.post(
+				`/Account/Login?externalProviderName=${externalProviderName}`
+			);
+			console.log(data);
+
+			return data;
+		} catch (error) {
+			console.error(error);
+			return rejectWithValue(error);
 		}
 	}
 );
@@ -19,17 +43,31 @@ export const handleLogin = createAsyncThunk(
 // Register Thunk
 export const handleRegister = createAsyncThunk(
 	'userLoginSlice/handleRegister',
-	async ({email, password, fullName}, {rejectWithValue}) => {
+	async ({email, password, fullName, isExternalRegister}, {rejectWithValue}) => {
 		try {
 			const data = await api.post(`/Account/Register`, {
 				email,
 				password,
 				fullName,
+				isExternalRegister,
 			});
 			return data;
 		} catch (error) {
 			console.error(error);
-			return rejectWithValue(error); // Gửi lỗi về reducer
+			return rejectWithValue(error);
+		}
+	}
+);
+
+export const getUserDetail = createAsyncThunk(
+	'userLoginSlice/getUserDetail',
+	async (id, {rejectWithValue}) => {
+		try {
+			const data = await api.get(`/Account/${id}`);
+			return data;
+		} catch (error) {
+			console.error(error);
+			return rejectWithValue(error);
 		}
 	}
 );
@@ -37,7 +75,8 @@ export const handleRegister = createAsyncThunk(
 export const userLoginSlice = createSlice({
 	name: 'userLoginSlice',
 	initialState: {
-		userInfo: {},
+		userInfo: null,
+		userDetail: null,
 		loading: null,
 		error: null,
 	},
@@ -46,8 +85,10 @@ export const userLoginSlice = createSlice({
 			state.userInfo = action.payload;
 		},
 		logout: (state) => {
-			state.userInfo = {};
-			localStorage.removeItem('token'); // Xoá token khi logout
+			state.userInfo = null;
+			state.userDetail = null;
+			localStorage.removeItem('accessToken');
+			localStorage.removeItem('refreshToken');
 		},
 	},
 	extraReducers: (builder) => {
@@ -60,9 +101,24 @@ export const userLoginSlice = createSlice({
 			.addCase(handleLogin.fulfilled, (state, action) => {
 				state.loading = false;
 				state.userInfo = action.payload;
-				setLocalStorage('token', action.payload.token); // Lưu token vào localStorage
+				setLocalStorage('accessToken', action.payload.accessToken);
+				setLocalStorage('refreshToken', action.payload.refreshToken);
 			})
 			.addCase(handleLogin.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload; // Lưu lỗi nếu có
+			})
+			.addCase(GoogleLogin.pending, (state) => {
+				state.loading = true;
+				state.error = null;
+			})
+			.addCase(GoogleLogin.fulfilled, (state, action) => {
+				state.loading = false;
+				state.userInfo = action.payload;
+				setLocalStorage('accessToken', action.payload.accessToken);
+				setLocalStorage('refreshToken', action.payload.refreshToken);
+			})
+			.addCase(GoogleLogin.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload; // Lưu lỗi nếu có
 			})
@@ -75,11 +131,22 @@ export const userLoginSlice = createSlice({
 			.addCase(handleRegister.fulfilled, (state, action) => {
 				state.loading = false;
 				state.userInfo = action.payload;
-				setLocalStorage('token', action.payload.token); // Lưu token sau khi đăng ký
+				// setLocalStorage('token', action.payload); // Lưu token sau khi đăng ký
 			})
 			.addCase(handleRegister.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload; // Lưu lỗi nếu có
+			})
+			.addCase(getUserDetail.pending, (state) => {
+				state.loading = true;
+			})
+			.addCase(getUserDetail.fulfilled, (state, action) => {
+				state.loading = false;
+				state.userDetail = action.payload;
+			})
+			.addCase(getUserDetail.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload;
 			});
 	},
 });

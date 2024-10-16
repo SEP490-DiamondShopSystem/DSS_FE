@@ -19,10 +19,8 @@ const JewelryDetailPage = () => {
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 	const [diamondJewelry, setDiamondJewelry] = useState(data);
 	const [size, setSize] = useState('');
-	const [selectedMetal, setSelectedMetal] = useState(() => {
-		const savedMetal = localStorage.getItem('selectedMetal');
-		return savedMetal ? JSON.parse(savedMetal) : diamondJewelry.Metal[0].Name;
-	});
+	const [jewelry, setJewelry] = useState();
+	const [selectedMetal, setSelectedMetal] = useState(diamondJewelry.Metal.Name);
 
 	const toggleSidebar = () => {
 		setIsSidebarOpen(!isSidebarOpen);
@@ -32,20 +30,23 @@ const JewelryDetailPage = () => {
 		dispatch(getJewelryDetail({id}));
 	}, []);
 
+	useEffect(() => {
+		if (jewelryDetail) setJewelry(jewelryDetail);
+	}, [jewelryDetail]);
+
+	console.log('jewelry', jewelry);
+
 	return (
 		<div className="mx-32">
 			<div className="flex flex-col md:flex-row mx-6 md:mx-32 bg-white my-10 md:my-20 rounded-lg shadow-lg">
 				<div className="w-full md:w-1/2 p-6">
 					<ImageGallery />
-					<InformationLeft
-						diamondJewelry={diamondJewelry}
-						selectedMetal={selectedMetal}
-					/>
+					<InformationLeft diamondJewelry={jewelry} />
 				</div>
 
 				<div className="w-full md:w-1/2 p-6 md:pr-32">
 					<InformationRight
-						diamondJewelry={diamondJewelry}
+						diamondJewelry={jewelry}
 						setSelectedMetal={setSelectedMetal}
 						selectedMetal={selectedMetal}
 						setSize={setSize}

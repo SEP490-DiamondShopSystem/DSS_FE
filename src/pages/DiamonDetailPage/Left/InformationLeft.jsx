@@ -17,7 +17,7 @@ export const InformationLeft = ({diamond}) => {
 				</div>
 				<div class="flex justify-between px-4 border-b border-tintWhite py-2">
 					<span class="text-gray-600">Mã Định Danh</span>
-					<span class="text-gray-800">22063275</span>
+					<span class="text-gray-800">{diamond.Criteria}</span>
 				</div>
 				<div class="flex justify-between px-4 border-b border-tintWhite py-2">
 					<span class="text-gray-600">Hình dạng</span>

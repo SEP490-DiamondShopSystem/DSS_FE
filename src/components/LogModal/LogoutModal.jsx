@@ -12,12 +12,7 @@ const LogoutModal = ({visible, onConfirm, onCancel}) => {
 				<Button key="back" onClick={onCancel}>
 					Cancel
 				</Button>,
-				<Button
-					key="submit"
-					type="text"
-					className="bg-primary text-white hover:bg-primary"
-					onClick={onConfirm}
-				>
+				<Button key="submit" danger onClick={onConfirm}>
 					Đăng xuất
 				</Button>,
 			]}

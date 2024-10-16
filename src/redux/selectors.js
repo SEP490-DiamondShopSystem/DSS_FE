@@ -1,6 +1,9 @@
 // USER INFO
 export const LoadingUserSelector = (state) => state.userLoginSlice.loading;
 export const UserInfoSelector = (state) => state.userLoginSlice.userInfo;
+export const GetUserDetailSelector = (state) => state.userLoginSlice.userDetail;
+
+//USER
 
 //DIAMOND
 export const GetAllDiamondSelector = (state) => state.diamondSlice.diamonds;

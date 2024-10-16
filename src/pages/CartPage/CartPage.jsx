@@ -32,9 +32,10 @@ const CartPage = () => {
 	const cart = useSelector(GetCartSelector);
 	const cartFinish = useSelector(GetCartFinishSelector);
 
-	const [ringSize, setRingSize] = useState('');
 	const [promo, setPromo] = useState('');
 	const [jewelryType, setJewelryType] = useState(localStorage.getItem('jewelryType') || '');
+	const [cartPreset, setCartPreset] = useState('');
+	const [cartDesign, setCartDesign] = useState('');
 	// const [cartFinish, setCartFinish] = useState(() => {
 	// 	// Lấy cartFinish từ localStorage
 	// 	const storedCartFinish = localStorage.getItem('cartFinish');
@@ -64,8 +65,50 @@ const CartPage = () => {
 	console.log('cart', cart);
 	console.log('cartFinish', cartFinish);
 
-	const handleRingSizeChange = (value) => {
-		setRingSize(value);
+	const handleRingSizeChange = (index, value) => {
+		console.log(index);
+
+		// Tạo một bản sao của mảng cartFinish để không thay đổi trực tiếp trên state ban đầu
+		const updatedCart = [...cart];
+
+		// Tìm mục cần thay đổi bằng cách sử dụng index
+		const selectedItem = updatedCart[index];
+
+		console.log('selectedItem', selectedItem);
+
+		if (selectedItem && selectedItem.Size) {
+			// Thay đổi giá trị size của mục được chọn
+			selectedItem.Size = value;
+
+			// Cập nhật lại state cartFinish với mảng đã thay đổi
+			setCartPreset(updatedCart);
+
+			// Tùy chọn: Bạn có thể lưu hoặc thực hiện thêm các logic khác sau khi cập nhật
+			console.log('Updated cart:', updatedCart);
+		}
+	};
+
+	const handleRingSizeFinishChange = (index, value) => {
+		console.log(index);
+
+		// Tạo một bản sao của mảng cartFinish để không thay đổi trực tiếp trên state ban đầu
+		const updatedCart = [...cartFinish];
+
+		// Tìm mục cần thay đổi bằng cách sử dụng index
+		const selectedItem = updatedCart[index];
+
+		console.log('selectedItem', selectedItem);
+
+		if (selectedItem) {
+			// Thay đổi giá trị size của mục được chọn
+			selectedItem.Size = value;
+
+			// Cập nhật lại state cartFinish với mảng đã thay đổi
+			setCartDesign(updatedCart);
+
+			// Tùy chọn: Bạn có thể lưu hoặc thực hiện thêm các logic khác sau khi cập nhật
+			console.log('Updated cart:', updatedCart);
+		}
 	};
 
 	const handlePromoChange = (value) => {
@@ -115,6 +158,7 @@ const CartPage = () => {
 		}
 	};
 
+	// Tính Toán
 	const totalDiamondDesignPrice = cartFinish.reduce((acc, item) => acc + item.DiamondPrice, 0);
 	const totalJewelryDesignPrice = cartFinish.reduce((acc, item) => acc + item.JewelryPrice, 0);
 
@@ -190,7 +234,9 @@ const CartPage = () => {
 											</label>
 											<Select
 												defaultValue={item.Size}
-												onChange={handleRingSizeChange}
+												onChange={(value) =>
+													handleRingSizeFinishChange(index, value)
+												}
 												className="p-1 text-sm"
 												options={ring}
 											/>
@@ -253,7 +299,9 @@ const CartPage = () => {
 													</label>
 													<Select
 														defaultValue={item.Size}
-														onChange={handleRingSizeChange}
+														onChange={(value) =>
+															handleRingSizeChange(index, value)
+														}
 														className="p-1 text-sm"
 														options={ring}
 													/>

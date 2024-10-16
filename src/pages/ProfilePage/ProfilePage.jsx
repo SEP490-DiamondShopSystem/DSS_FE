@@ -7,6 +7,7 @@ import NavbarProfile from '../../components/NavbarProfile';
 import {removeLocalStorage} from '../../utils/localstorage';
 import {useDispatch} from 'react-redux';
 import {logout} from '../../redux/slices/userLoginSlice';
+import * as jwtDecode from 'jwt-decode';
 
 const detailGroups = {
 	total_price: 20138000,
@@ -66,6 +67,8 @@ const ProfilePage = () => {
 	const navigate = useNavigate();
 	const observer = useRef();
 	const dispatch = useDispatch();
+
+	const accessToken = localStorage.getItem('accessToken');
 
 	// const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
 	const [status, setStatus] = useState('All');

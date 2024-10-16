@@ -1,13 +1,12 @@
 import axios from 'axios';
 
-const API = 'https://669f3824b132e2c136fd0909.mockapi.io/api';
-// const API = 'https://reqres.in/api';
-// const API = 'https://diamondshop-fqgcbagydmgxa4cx.eastasia-01.azurewebsites.net/api';
-// const API = 'https://nkxt1lnf-7160.asse.devtunnels.ms/api';
+const API_URL = import.meta.env.VITE_API_URL;
+
+console.log('API_URL', API_URL);
 
 // Khởi tạo axios instance
 export const api = axios.create({
-	baseURL: API,
+	baseURL: API_URL,
 	headers: {
 		'Content-Type': 'application/json',
 	},
@@ -16,7 +15,7 @@ export const api = axios.create({
 // Thêm interceptor để tự động thêm token vào mỗi request
 api.interceptors.request.use(
 	(config) => {
-		const token = localStorage.getItem('token');
+		const token = localStorage.getItem('accessToken');
 		if (token) {
 			config.headers.Authorization = `Bearer ${token}`;
 		}

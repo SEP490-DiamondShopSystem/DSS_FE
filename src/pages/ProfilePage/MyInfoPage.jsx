@@ -3,21 +3,37 @@ import {Helmet} from 'react-helmet';
 import NavbarProfile from '../../components/NavbarProfile';
 import {Form, Input, Button, message, Modal, List} from 'antd';
 import {ExclamationCircleOutlined, PlusOutlined, MinusCircleOutlined} from '@ant-design/icons';
+import {useDispatch, useSelector} from 'react-redux';
+import {GetUserDetailSelector, UserInfoSelector} from '../../redux/selectors';
+import {getUserDetail} from '../../redux/slices/userLoginSlice';
 
 const {confirm} = Modal;
 
 const MyInfoPage = () => {
+	const dispatch = useDispatch();
+	const userSelector = useSelector(UserInfoSelector);
+	const userDetail = useSelector(GetUserDetailSelector);
 	const [form] = Form.useForm();
 	const [loading, setLoading] = useState(false);
 	const [editing, setEditing] = useState(false);
 	const [userInfo, setUserInfo] = useState({
-		firstName: 'John',
-		lastName: 'Doe',
-		email: 'johndoe@example.com',
+		firstName: userDetail.FirstName,
+		lastName: userDetail.LastName,
+		email: userDetail.Email,
 		phone: '123456789',
 		addresses: ['123 Diamond St, NY', '456 Gem Ave, LA'],
 		paymentMethods: ['**** **** **** 1234', '**** **** **** 5678'],
 	});
+
+	useEffect(() => {
+		if (userSelector && userSelector.UserId) {
+			dispatch(getUserDetail(userSelector.UserId)).finally(() => {
+				setLoading(false);
+			});
+		} else {
+			setLoading(false);
+		}
+	}, [dispatch, userSelector]);
 
 	useEffect(() => {
 		form.setFieldsValue(userInfo);
@@ -193,7 +209,9 @@ const MyInfoPage = () => {
 							</div>
 
 							<div className="col-span-2">
-								<h3 className="text-xl font-semibold mb-4">Phương Thức Thanh Toán</h3>
+								<h3 className="text-xl font-semibold mb-4">
+									Phương Thức Thanh Toán
+								</h3>
 								<List
 									bordered
 									dataSource={userInfo.paymentMethods}

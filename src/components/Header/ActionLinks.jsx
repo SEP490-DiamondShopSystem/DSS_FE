@@ -9,9 +9,10 @@ import LogoutModal from '../LogModal/LogoutModal'; // Import LogoutModal
 import SignUpModal from '../LogModal/SignUpModal';
 import {useDispatch} from 'react-redux';
 import {logout} from '../../redux/slices/userLoginSlice';
+import {message} from 'antd';
 
 const ActionLinks = () => {
-	const token = localStorage.getItem('token');
+	const token = localStorage.getItem('accessToken');
 
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
@@ -31,7 +32,7 @@ const ActionLinks = () => {
 
 	const handleLogout = () => {
 		dispatch(logout());
-		notifySuccess('Logout Successful!');
+		message.success('Đăng xuất thành công!');
 		hideLogoutModal();
 		navigate('/');
 	};

@@ -8,6 +8,7 @@ import jewelryImg from '../../assets/ring_classic.png';
 import {FilterDiamondJewelry} from '../../components/Filter/Filter';
 import {GetAllJewelrySelector, LoadingJewelrySelector} from '../../redux/selectors';
 import {getAllJewelry} from '../../redux/slices/jewelrySlice';
+import {formatPrice} from '../../utils';
 
 export const DiamondJewelryList = () => {
 	const navigate = useNavigate();
@@ -40,7 +41,7 @@ export const DiamondJewelryList = () => {
 	}, [dispatch]);
 
 	useEffect(() => {
-		if (jewelryList) setJewelries(jewelryList);
+		if (jewelryList) setJewelries(jewelryList.Values);
 	}, [jewelryList]);
 
 	const handleReset = () => {
@@ -48,7 +49,7 @@ export const DiamondJewelryList = () => {
 		setFilters({gender: [], type: [], metal: [], price: {minPrice: 0, maxPrice: 1000}});
 	};
 
-	if (!jewelryList) return <div>Loading...</div>;
+	// if (!jewelryList) return <div>Loading...</div>;
 	return (
 		<>
 			<div className="mt-10">
@@ -94,7 +95,7 @@ export const DiamondJewelryList = () => {
 												{jewelry.price}
 											</p> */}
 											<p className="" style={{color: '#707070'}}>
-												{jewelry.Price}
+												{formatPrice(jewelry.Price)}
 											</p>
 										</div>
 									</div>
