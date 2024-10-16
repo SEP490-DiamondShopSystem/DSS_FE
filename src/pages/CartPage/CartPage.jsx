@@ -121,7 +121,7 @@ const CartPage = () => {
 	const grandDesignTotal = totalDiamondDesignPrice + totalJewelryDesignPrice;
 
 	const totalDiamondPrice = cart.reduce((acc, item) => {
-		return acc + (item && item.DiamondPrice ? item.DiamondPrice : 0);
+		return acc + (item && item.Price ? item.Price : 0);
 	}, 0);
 
 	const totalJewelryPrice = cart.reduce((acc, item) => {
@@ -132,6 +132,11 @@ const CartPage = () => {
 	const grandTotal = totalDiamondPrice + totalJewelryPrice;
 
 	const totalPrice = grandDesignTotal + grandTotal;
+
+	console.log(grandDesignTotal);
+	console.log(grandTotal);
+	console.log(totalDiamondPrice);
+	console.log(totalJewelryPrice);
 
 	return (
 		<div className="flex justify-between p-8 bg-gray-50 min-h-screen mx-32 my-20">
