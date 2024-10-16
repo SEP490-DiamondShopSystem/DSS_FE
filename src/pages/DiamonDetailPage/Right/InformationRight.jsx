@@ -5,6 +5,9 @@ import {Button, Rate} from 'antd';
 import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {formatPrice} from '../../../utils';
+import {useDispatch} from 'react-redux';
+import {addOrUpdateCartDesignDiamondItem} from '../../../redux/slices/cartSlice';
+import {jewelries} from '../../../utils/constant';
 
 const infoMetal = {
 	name: 'Kim cương tròn 1.00 Carat',
@@ -22,6 +25,7 @@ const infoMetal = {
 };
 export const InformationRight = ({diamondChoice, toggleSidebar, diamond}) => {
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 	const [showDetail, setDetail] = useState(false);
 	const [showSecureShopping, setSecureShopping] = useState(false);
 	const [showProductWarranty, setProductWarranty] = useState(false);
@@ -58,39 +62,8 @@ export const InformationRight = ({diamondChoice, toggleSidebar, diamond}) => {
 		// Get the current diamond's ID for comparison
 		const jewelryDiamondId = jewelryItem.JewelryId + id;
 
-		// let cartKey = active === 'addToCart' ? 'cart' : 'cartDesign';
-		const existingCart = localStorage.getItem('cartDesign');
+		dispatch(addOrUpdateCartDesignDiamondItem({diamond}));
 
-		// Initialize cart as an empty array
-		let cart = [];
-
-		// Attempt to parse the existing cart data
-		try {
-			cart = existingCart ? JSON.parse(existingCart) : [];
-
-			// Check if cart is an array; if not, reset it
-			if (!Array.isArray(cart)) {
-				cart = [];
-			}
-		} catch (error) {
-			// Log error if parsing fails and reset cart
-			console.error('Error parsing cart data:', error);
-			cart = [];
-		}
-
-		// Find the index of the diamond in the cart based on its ID
-		const existingDiamondIndex = cart.findIndex((item) => item.DiamondId === id);
-
-		if (existingDiamondIndex !== -1) {
-			// If the diamond exists, replace it with the new diamond
-			cart[existingDiamondIndex] = diamond;
-		} else {
-			// If the diamond doesn't exist, push the current diamond to the cart
-			cart.push(diamond);
-		}
-
-		// Save the updated cart back to localStorage
-		localStorage.setItem('cartDesign', JSON.stringify(cart));
 		navigate(`/completed-jewelry/${jewelryDiamondId}`);
 	};
 

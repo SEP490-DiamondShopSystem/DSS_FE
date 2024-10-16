@@ -1,7 +1,13 @@
 import React from 'react';
-import {Modal, Button, Input, Form} from 'antd';
+
+import {Modal, Button, Input, Form, message} from 'antd';
+import {useDispatch, useSelector} from 'react-redux';
+import {handleRegister} from '../../redux/slices/userLoginSlice';
+import {LoadingUserSelector} from '../../redux/selectors';
 
 const SignUpModal = ({isOpen, onClose}) => {
+	const dispatch = useDispatch();
+	const loading = useSelector(LoadingUserSelector);
 	const [form] = Form.useForm();
 
 	const onFinish = (values) => {
@@ -11,7 +17,19 @@ const SignUpModal = ({isOpen, onClose}) => {
 			lastName: values.lastName,
 		};
 
-		console.log('Received values:', {...values, fullName});
+		dispatch(handleRegister({...values, fullName, isExternalRegister: true})).then((res) => {
+			if (res.payload) {
+				message.success('Đăng ký thành công!');
+				form.resetFields();
+				onClose();
+
+				navigate('/');
+			} else {
+				message.error(
+					'Đăng ký không thành công. Vui lòng kiểm tra thông tin đăng ký của bạn!'
+				);
+			}
+		});
 
 		form.resetFields();
 	};
@@ -91,6 +109,7 @@ const SignUpModal = ({isOpen, onClose}) => {
 							htmlType="submit"
 							type="text"
 							className="bg-primary text-black hover:bg-primary font-semibold w-full"
+							loading={loading}
 						>
 							Đăng ký
 						</Button>

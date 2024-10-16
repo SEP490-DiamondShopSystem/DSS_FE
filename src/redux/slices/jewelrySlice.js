@@ -6,7 +6,7 @@ export const getAllJewelry = createAsyncThunk(
 	async (_, {rejectWithValue}) => {
 		try {
 			// const response = await api.get(`/Jewelry/All`);
-			const response = await api.get(`/Jewelry_Selling`);
+			const response = await api.get(`/Jewelry/Selling`);
 			// const response = await api.get(`/all_jewelry`);
 			console.log(response);
 
@@ -56,13 +56,12 @@ export const jewelrySlice = createSlice({
 		jewelries: null,
 		jewelriesModel: null,
 		jewelryDetail: null,
+		cartItems: [],
 		loading: false,
 		error: null,
 	},
 	reducers: {
-		setUser: (state, action) => {
-			state.userInfo = action.payload;
-		},
+		addToCart: (state, action) => {},
 	},
 	extraReducers: (builder) => {
 		builder

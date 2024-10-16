@@ -93,7 +93,7 @@ export const RingList = () => {
 													// className="line-through"
 													// style={{color: '#b0b0b0'}}
 													>
-														{jewelry.Price}
+														{formatPrice(jewelry.Price)}
 													</p>
 													{/* <p className="ml-5 " style={{color: '#707070'}}>
 														{jewelry.discountPrice}

@@ -1,10 +1,12 @@
-import {ArrowLeftOutlined, RightOutlined} from '@ant-design/icons';
+import {RightOutlined} from '@ant-design/icons';
 import {faGem, faShoppingBag} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {Button, Image} from 'antd';
+import {Button} from 'antd';
 import React, {useEffect, useState} from 'react';
+import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import diamondImage from '../../assets/img-diamond.png';
+import {addOrUpdateCartDesignDiamondItem, addOrUpdateItem} from '../../redux/slices/cartSlice';
 
 const shapes = [
 	{
@@ -40,6 +42,7 @@ const shapes = [
 
 export const Sidebar = ({isOpen, toggleSidebar, diamond}) => {
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 	const [link, setLink] = useState('/diamond/search');
 	const [activeRcm, setActiveRcm] = useState('');
 	const [active, setActive] = useState('diamond');
@@ -63,44 +66,20 @@ export const Sidebar = ({isOpen, toggleSidebar, diamond}) => {
 	console.log(diamond);
 
 	const handleNavigate = () => {
-		// Get the current diamond's ID for comparison
-		const diamondId = diamond.DiamondId; // Đảm bảo 'diamond' có thuộc tính 'id'
-
-		let cartKey = active === 'addToCart' ? 'cart' : 'cartDesign';
-		const existingCart = localStorage.getItem(cartKey);
-
-		// Initialize cart as an empty array
-		let cart = [];
-
-		// Attempt to parse the existing cart data
-		try {
-			cart = existingCart ? JSON.parse(existingCart) : [];
-
-			// Check if cart is an array; if not, reset it
-			if (!Array.isArray(cart)) {
-				cart = [];
-			}
-		} catch (error) {
-			// Log error if parsing fails and reset cart
-			console.error('Error parsing cart data:', error);
-			cart = [];
-		}
-
-		// Find the index of the diamond in the cart based on its ID
-		const existingDiamondIndex = cart.findIndex((item) => item.DiamondId === diamondId);
-
-		if (existingDiamondIndex !== -1) {
-			// If the diamond exists, replace it with the new diamond
-			cart[existingDiamondIndex] = diamond;
+		const data = {
+			...diamond,
+			DiamondPrice: diamond.Price,
+		};
+		// Xác định xem lưu vào 'cart' hay 'cartDesign'
+		if (active === 'addToCart') {
+			// Gọi action để thêm/cập nhật giỏ hàng trong Redux
+			dispatch(addOrUpdateItem({diamond: data}));
 		} else {
-			// If the diamond doesn't exist, push the current diamond to the cart
-			cart.push(diamond);
+			// Gọi action để thêm/cập nhật giỏ hàng thiết kế trong Redux
+			dispatch(addOrUpdateCartDesignDiamondItem({diamond: data}));
 		}
 
-		// Save the updated cart back to localStorage
-		localStorage.setItem(cartKey, JSON.stringify(cart));
-
-		// Navigate to the desired link
+		// Điều hướng tới link mong muốn
 		navigate(link);
 	};
 

@@ -1,31 +1,23 @@
-import {createSlice} from '@reduxjs/toolkit';
+import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import {api} from '../../services/api';
 
-// Fetch users
-// export const fetchUsers = createAsyncThunk(
-//   'users/fetchAll',
-//   async ({ currentPage, pageSize, name, isPremium }, { rejectWithValue }) => {
-//     try {
-//       let url = `/users?page_size=${pageSize}&page_number=${currentPage}`;
-
-//       if (name) {
-//         url += `&name=${name}`;
-//       }
-//       if (isPremium !== undefined) {
-//         url += `&is_premium=${isPremium}`;
-//       }
-
-//       const response = await api.get(url);
-//       return response.data.metadata;
-//     } catch (error) {
-//       return rejectWithValue(error.response.data);
-//     }
-//   }
+// export const getUserDetail = createAsyncThunk(
+// 	'userLoginSlice/getUserDetail',
+// 	async (id, {rejectWithValue}) => {
+// 		try {
+// 			const data = await api.get(`/Account/${id}`);
+// 			return data;
+// 		} catch (error) {
+// 			console.error(error);
+// 			return rejectWithValue(error);
+// 		}
+// 	}
 // );
 
 export const userSlice = createSlice({
 	name: 'userSlice',
 	initialState: {
-		users: null,
+		userDetail: null,
 		loading: false,
 		error: null,
 	},
@@ -36,16 +28,16 @@ export const userSlice = createSlice({
 	},
 	extraReducers: (builder) => {
 		builder;
-		// .addCase(fetchUsers.pending, (state) => {
-		//   state.loading = true;
+		// .addCase(getUserDetail.pending, (state) => {
+		// 	state.loading = true;
 		// })
-		// .addCase(fetchUsers.fulfilled, (state, action) => {
-		//   state.loading = false;
-		//   state.users = action.payload;
+		// .addCase(getUserDetail.fulfilled, (state, action) => {
+		// 	state.loading = false;
+		// 	state.userDetail = action.payload;
 		// })
-		// .addCase(fetchUsers.rejected, (state, action) => {
-		//   state.loading = false;
-		//   state.error = action.payload;
-		// })
+		// .addCase(getUserDetail.rejected, (state, action) => {
+		// 	state.loading = false;
+		// 	state.error = action.payload;
+		// });
 	},
 });

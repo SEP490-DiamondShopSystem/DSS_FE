@@ -5,22 +5,7 @@ export const getAllDiamond = createAsyncThunk(
 	'diamondSlice/getAllDiamond',
 	async (_, {rejectWithValue}) => {
 		try {
-			const response = await api.get(`/Diamond_All`);
-			return response;
-		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.response.data));
-			return rejectWithValue(error.response.data);
-		}
-	}
-);
-
-export const getDiamondAttributesValues = createAsyncThunk(
-	'diamondSlice/getDiamondAttributesValues',
-	async (_, {rejectWithValue}) => {
-		try {
-			const response = await api.get(`/AttributeValues`);
-			console.log(response);
-
+			const response = await api.get(`/Diamond/All`);
 			return response;
 		} catch (error) {
 			console.log('Error: ', JSON.stringify(error.response.data));
@@ -35,7 +20,7 @@ export const getDiamondDetail = createAsyncThunk(
 		console.log(id);
 
 		try {
-			const response = await api.get(`/Diamond_All/${id}`);
+			const response = await api.get(`/Diamond/${id}`);
 			console.log(response);
 
 			return response;
@@ -51,7 +36,6 @@ export const diamondSlice = createSlice({
 	initialState: {
 		diamonds: null,
 		diamondDetail: null,
-		diamondAttributes: null,
 		loading: false,
 		error: null,
 	},
@@ -81,17 +65,6 @@ export const diamondSlice = createSlice({
 				state.diamondDetail = action.payload;
 			})
 			.addCase(getDiamondDetail.rejected, (state, action) => {
-				state.loading = false;
-				state.error = action.payload;
-			})
-			.addCase(getDiamondAttributesValues.pending, (state) => {
-				state.loading = true;
-			})
-			.addCase(getDiamondAttributesValues.fulfilled, (state, action) => {
-				state.loading = false;
-				state.diamondAttributes = action.payload;
-			})
-			.addCase(getDiamondAttributesValues.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload;
 			});

@@ -25,6 +25,7 @@ export const InformationRight = ({
 	const [showDetail, setDetail] = useState(false);
 	const [showSecureShopping, setSecureShopping] = useState(false);
 	const [showProductWarranty, setProductWarranty] = useState(false);
+	const [jewelryType, setJewelryType] = useState(localStorage.getItem('jewelryType'));
 
 	const toggleDetail = () => {
 		setDetail(!showDetail);
@@ -40,7 +41,7 @@ export const InformationRight = ({
 		<div>
 			<div className="border-b border-tintWhite">
 				<h1 className="text-3xl">
-					{metalType.name} {selectedMetal?.metalSelect}
+					{diamondJewelry.Name} {selectedMetal?.Name || selectedMetal}
 				</h1>
 				<div className="my-5 flex">
 					<Rate
@@ -77,7 +78,7 @@ export const InformationRight = ({
 							<div
 								key={i}
 								className={`${
-									selectedMetal?.metalSelect === metal?.metalSelect
+									selectedMetal?.Name === metal?.Name
 										? 'border border-black'
 										: 'border border-white'
 								} m-2 py-2 px-4 rounded-lg cursor-pointer hover:bg-offWhite`}
@@ -111,23 +112,25 @@ export const InformationRight = ({
 						))}
 					</div>
 				</div>
-				<div className="my-5 flex items-center">
-					<div className="font-semibold">Chọn kích thước nhẫn:</div>
-					<div className={`font-semibold text-xl pl-4 text-primary`}>
-						<Select
-							defaultValue=""
-							style={{width: 120}}
-							onChange={handleChange}
-							options={[
-								{value: '', label: 'Chọn size'},
-								{value: '1', label: '1'},
-								{value: '2', label: '2'},
-								{value: '3', label: '3'},
-								{value: '4', label: '4'},
-							]}
-						/>
+				{jewelryType && jewelryType === 'Nhẫn' && (
+					<div className="my-5 flex items-center">
+						<div className="font-semibold">Chọn kích thước nhẫn:</div>
+						<div className={`font-semibold text-xl pl-4 text-primary`}>
+							<Select
+								defaultValue=""
+								style={{width: 120}}
+								onChange={handleChange}
+								options={[
+									{value: '', label: 'Chọn size'},
+									{value: '1', label: '1'},
+									{value: '2', label: '2'},
+									{value: '3', label: '3'},
+									{value: '4', label: '4'},
+								]}
+							/>
+						</div>
 					</div>
-				</div>
+				)}
 			</div>
 			<div className="border-y border-tintWhite py-5 my-5">
 				<div className="flex items-center">
