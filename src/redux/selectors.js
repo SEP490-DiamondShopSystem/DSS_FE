@@ -17,7 +17,14 @@ export const GetAllJewelryModelSelector = (state) => state.jewelrySlice.jewelrie
 export const GetJewelryDetailSelector = (state) => state.jewelrySlice.jewelryDetail;
 export const LoadingJewelrySelector = (state) => state.jewelrySlice.loading;
 
+
+// DISTANCE
+export const selectDistances = (state) => state.distanceSlice.distances;
+export const selectLoading = (state) => state.distanceSlice.loading;
+export const selectError = (state) => state.distanceSlice.error;
+
 //CART
 export const GetCartSelector = (state) => state.cartSlice.cart;
 export const GetCartDesignSelector = (state) => state.cartSlice.cartDesign;
 export const GetCartFinishSelector = (state) => state.cartSlice.cartFinish;
+
