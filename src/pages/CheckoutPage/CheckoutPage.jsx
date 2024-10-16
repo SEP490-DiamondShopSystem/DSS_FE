@@ -1,38 +1,65 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {FaRegAddressBook, FaRegEnvelope, FaPhoneAlt} from 'react-icons/fa';
-import {Form, Input, Button, Radio, message} from 'antd';
+import {Form, Input, Button, Radio, message, Select} from 'antd';
 import {useNavigate} from 'react-router-dom';
+import {useDispatch, useSelector} from 'react-redux';
+import {fetchDistances} from '../../redux/slices/distanceSlice';
+import {selectDistances, selectLoading, selectError} from '../../redux/selectors';
 
 const CheckoutPage = () => {
-	// State to manage selected payment method
 	const [paymentMethod, setPaymentMethod] = useState(null);
+	const [selectedCity, setSelectedCity] = useState('');
+	const [shippingFee, setShippingFee] = useState(0);
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 
-	// Form submission handler
+	// Selectors to access distances and loading state
+	const distances = useSelector(selectDistances);
+	const loading = useSelector(selectLoading);
+	const error = useSelector(selectError);
+
+	// Fetch distances on component mount
+	useEffect(() => {
+		dispatch(fetchDistances());
+	}, [dispatch]);
+
+	// Update shipping fee when the selected city changes
+	useEffect(() => {
+		const selectedDistance = distances?.find((distance) => distance.name === selectedCity);
+		if (selectedDistance) {
+			const fee = Math.ceil(selectedDistance.distance_km) * 500; // 500 VND per km
+			setShippingFee(fee);
+		}
+	}, [selectedCity, distances]);
+
+	// Hàm xử lý gửi form
 	const onFinish = (values) => {
-		console.log('Form Values:', values);
-		message.success('Order placed successfully!');
+		console.log('Giá trị Form:', values);
+		message.success('Đặt hàng thành công!');
 	};
 
 	const onFinishFailed = (errorInfo) => {
-		console.log('Failed:', errorInfo);
-		message.error('Please check the form fields and try again.');
+		console.log('Thất bại:', errorInfo);
+		message.error('Vui lòng kiểm tra các trường trong form và thử lại.');
 	};
 
-	// Handler for payment method change
+	// Hàm xử lý thay đổi phương thức thanh toán
 	const handlePaymentMethodChange = (e) => {
 		setPaymentMethod(e.target.value);
 	};
-
+	// Handle city selection change
+	const handleCityChange = (value) => {
+		setSelectedCity(value);
+	};
 	return (
 		<div className="min-h-screen flex justify-center items-center bg-gray-100">
 			<div className="container mx-auto p-4 flex flex-col md:flex-row md:space-x-6 gap-4 justify-around">
-				{/* Billing and Shipping Information */}
+				{/* Thông tin thanh toán và giao hàng */}
 				<div className="flex-col">
 					<div className="mb-6">
 						<div className="md:w-2/3 bg-white p-6 rounded-lg shadow-lg transition-shadow duration-300 hover:shadow-2xl">
 							<h2 className="text-2xl font-semibold text-gray-800 mb-6">
-								Billing and Shipping
+								Thông tin thanh toán và giao hàng
 							</h2>
 							<Form
 								layout="vertical"
@@ -46,18 +73,18 @@ const CheckoutPage = () => {
 											label={
 												<>
 													<FaRegAddressBook className="inline-block mr-2" />
-													First Name
+													Tên
 												</>
 											}
 											name="firstName"
 											rules={[
 												{
 													required: true,
-													message: 'Please enter your first name',
+													message: 'Vui lòng nhập tên của bạn',
 												},
 											]}
 										>
-											<Input placeholder="First Name" />
+											<Input placeholder="Tên" />
 										</Form.Item>
 									</div>
 									<div className="w-full md:w-1/2 p-1">
@@ -65,91 +92,95 @@ const CheckoutPage = () => {
 											label={
 												<>
 													<FaRegAddressBook className="inline-block mr-2" />
-													Last Name
+													Họ
 												</>
 											}
 											name="lastName"
 											rules={[
 												{
 													required: true,
-													message: 'Please enter your last name',
+													message: 'Vui lòng nhập họ của bạn',
 												},
 											]}
 										>
-											<Input placeholder="Last Name" />
+											<Input placeholder="Họ" />
 										</Form.Item>
 									</div>
 								</div>
 
+								<div className="flex flex-col md:flex-row md:space-x-4 gap-4">
+									<div className="w-full md:w-1/2 p-1">
+										<Form.Item
+											label="Tỉnh thành"
+											name="city"
+											rules={[
+												{
+													required: true,
+													message: 'Vui lòng nhập thành phố',
+												},
+											]}
+										>
+											<Select
+												placeholder="Chọn tỉnh thành"
+												onChange={handleCityChange}
+											>
+												{distances?.map((distance) => (
+													<Select.Option
+														key={distance.Id}
+														value={distance.name}
+													>
+														{distance.name}
+													</Select.Option>
+												))}
+											</Select>
+										</Form.Item>
+									</div>
+									<div className="w-full md:w-1/2 p-1">
+										<Form.Item
+											label="Quận / Huyện"
+											name="postcode"
+											rules={[
+												{
+													required: true,
+													message: 'Vui lòng nhập mã bưu điện',
+												},
+											]}
+										>
+											<Input placeholder="Mã bưu điện" />
+										</Form.Item>
+									</div>
+								</div>
 								<Form.Item
-									label="Country"
-									name="country"
-									rules={[{required: true, message: 'Please enter your country'}]}
-									className="p-1"
-								>
-									<Input placeholder="Country" />
-								</Form.Item>
-
-								<Form.Item
-									label="Street Address"
+									label="Địa chỉ"
 									name="streetAddress"
 									className="p-1"
 									rules={[
 										{
 											required: true,
-											message: 'Please enter your street address',
+											message: 'Vui lòng nhập địa chỉ',
 										},
 									]}
 								>
-									<Input placeholder="Street Address" />
+									<Input placeholder="Địa chỉ" />
 								</Form.Item>
-
-								<div className="flex flex-col md:flex-row md:space-x-4 gap-4">
-									<div className="w-full md:w-1/2  p-1">
-										<Form.Item
-											label="City"
-											name="city"
-											rules={[
-												{required: true, message: 'Please enter your city'},
-											]}
-										>
-											<Input placeholder="City" />
-										</Form.Item>
-									</div>
-									<div className="w-full md:w-1/2 p-1">
-										<Form.Item
-											label="Postcode ZIP"
-											name="postcode"
-											rules={[
-												{
-													required: true,
-													message: 'Please enter your postcode',
-												},
-											]}
-										>
-											<Input placeholder="Postcode ZIP" />
-										</Form.Item>
-									</div>
-								</div>
-
 								<div className="flex flex-col md:flex-row md:space-x-4 gap-4">
 									<div className="w-full md:w-1/2 p-1">
 										<Form.Item
 											label={
 												<>
 													<FaPhoneAlt className="inline-block mr-2" />
-													Phone
+													Điện thoại
 												</>
 											}
 											name="phone"
 											rules={[
 												{
 													required: true,
-													message: 'Please enter your phone number',
+													message: 'Vui lòng nhập số điện thoại của bạn',
 												},
 											]}
 										>
-											<Input placeholder="Phone" />
+											<Input placeholder="Điện thoại" />
 										</Form.Item>
 									</div>
 									<div className="w-full md:w-1/2 p-1">
@@ -157,7 +188,7 @@ const CheckoutPage = () => {
 											label={
 												<>
 													<FaRegEnvelope className="inline-block mr-2" />
-													Email Address
+													Địa chỉ Email
 												</>
 											}
 											name="email"
@@ -165,7 +196,7 @@ const CheckoutPage = () => {
 												{
 													required: true,
 													type: 'email',
-													message: 'Please enter a valid email address',
+													message: 'Vui lòng nhập địa chỉ email hợp lệ',
 												},
 											]}
 										>
@@ -175,24 +206,24 @@ const CheckoutPage = () => {
 								</div>
 
 								<Form.Item
-									label="Order Notes (optional)"
+									label="Ghi chú đơn hàng (tùy chọn)"
 									name="notes"
 									className="p-1"
 								>
-									<Input.TextArea placeholder="Order Notes" />
+									<Input.TextArea placeholder="Ghi chú đơn hàng" />
 								</Form.Item>
-								{/* Payment Method */}
+								{/* Phương thức thanh toán */}
 								<div className="my-6">
 									<div className="md:w-1/3 bg-white p-6 rounded-lg shadow-lg space-y-6 mt-6 md:mt-0 transition-shadow duration-300 hover:shadow-2xl">
 										<h2 className="text-2xl font-semibold text-gray-800 mb-6">
-											Payment Method
+											Phương thức thanh toán
 										</h2>
 										<Form.Item
 											name="paymentMethod"
 											rules={[
 												{
 													required: true,
-													message: 'Please select a payment method',
+													message: 'Vui lòng chọn phương thức thanh toán',
 												},
 											]}
 											className="py-3"
@@ -216,71 +247,68 @@ const CheckoutPage = () => {
 											</Radio.Group>
 										</Form.Item>
 
-										{/* Conditionally render card details if 'Chuyển Khoản Ngân Hàng' is selected */}
+										{/* Hiển thị thông tin thẻ nếu 'Chuyển Khoản Ngân Hàng' được chọn */}
 										{paymentMethod === 'creditCard' && (
 											<div className="space-y-4">
 												<Form.Item
-													label="Card Number"
+													label="Số thẻ"
 													name="cardNumber"
 													rules={[
 														{
 															required: true,
-															message:
-																'Please enter your card number',
+															message: 'Vui lòng nhập số thẻ',
 														},
 													]}
 												>
-													<Input placeholder="Card Number" />
+													<Input placeholder="Số thẻ" />
 												</Form.Item>
 												<Form.Item
-													label="Bank"
+													label="Ngân hàng"
 													name="bankName"
 													rules={[
 														{
 															required: true,
-															message: 'Please enter your bank name',
+															message: 'Vui lòng nhập tên ngân hàng',
 														},
 													]}
 												>
-													<Input placeholder="Bank Name" />
+													<Input placeholder="Tên ngân hàng" />
 												</Form.Item>
 												<Form.Item
-													label="Expiry Date"
+													label="Ngày hết hạn"
 													name="expiryDate"
 													rules={[
 														{
 															required: true,
-															message: 'Please enter the expiry date',
+															message: 'Vui lòng nhập ngày hết hạn',
 														},
 													]}
 												>
 													<Input placeholder="MM/YY" />
 												</Form.Item>
 												<Form.Item
-													label="Security Code"
+													label="Mã bảo mật"
 													name="securityCode"
 													rules={[
 														{
 															required: true,
-															message:
-																'Please enter the security code',
+															message: 'Vui lòng nhập mã bảo mật',
 														},
 													]}
 												>
 													<Input placeholder="CVV" />
 												</Form.Item>
 												<Form.Item
-													label="Card Holder's Name"
+													label="Tên chủ thẻ"
 													name="cardHolderName"
 													rules={[
 														{
 															required: true,
-															message:
-																"Please enter the card holder's name",
+															message: 'Vui lòng nhập tên chủ thẻ',
 														},
 													]}
 												>
-													<Input placeholder="Card Holder's Name" />
+													<Input placeholder="Tên chủ thẻ" />
 												</Form.Item>
 											</div>
 										)}
@@ -297,7 +325,7 @@ const CheckoutPage = () => {
 						<h2 className="text-2xl font-semibold text-gray-800 mb-6">Order Summary</h2>
 						<div className="flex justify-center items-center">
 							<a href="#" className="text-sm text-yellow-500 hover:underline">
-								Edit Cart
+								Sửa giỏ hàng
 							</a>
 						</div>
 					</div>
@@ -323,16 +351,12 @@ const CheckoutPage = () => {
 								</div>
 							</div>
 							<div className="flex justify-between text-sm text-gray-700">
-								<span>Original Price:</span>
+								<span>Giá gốc:</span>
 								<span className="line-through">$1,470</span>
 							</div>
 							<div className="flex justify-between text-sm text-gray-700">
-								<span>Discounted Price:</span>
+								<span>Giá đã giảm:</span>
 								<span>$1,102</span>
-							</div>
-							<div className="flex justify-between text-sm text-gray-700">
-								<span>Shipping:</span>
-								<span>Free</span>
 							</div>
 						</div>
 
@@ -358,16 +382,12 @@ const CheckoutPage = () => {
 								</div>
 							</div>
 							<div className="flex justify-between text-sm text-gray-700">
-								<span>Original Price:</span>
+								<span>Giá gốc:</span>
 								<span className="line-through">$5,000</span>
 							</div>
 							<div className="flex justify-between text-sm text-gray-700">
-								<span>Discounted Price:</span>
+								<span>Giá đã giảm:</span>
 								<span>$3,530</span>
-							</div>
-							<div className="flex justify-between text-sm text-gray-700">
-								<span>Shipping:</span>
-								<span>Free</span>
 							</div>
 						</div>
 
@@ -383,9 +403,14 @@ const CheckoutPage = () => {
 							{/* Total and Savings Section */}
 							<div className="p-4 border rounded-lg bg-gray-50">
 								<div className="flex justify-between font-semibold text-lg text-gray-800 mb-2">
-									<span>Total:</span>
+									<span>Tổng giá trị đơn hàng:</span>
 									<span>$4,632</span>
 								</div>
+								<div className="flex justify-between text-lg text-gray-800 mb-2">
+									<span>Phí vận chuyển:</span>
+									<span>{shippingFee.toLocaleString()} VND</span>
+								</div>
+
 								<div className="text-sm text-gray-600 mb-4">
 									or interest-free installments from $1,544 / mo.
 								</div>
@@ -401,7 +426,7 @@ const CheckoutPage = () => {
 									</span>
 								</div>
 								<div className="text-green-600 font-semibold text-base mt-4">
-									Total Savings $368
+									Tiết Kiệm $368
 								</div>
 							</div>
 
@@ -411,13 +436,13 @@ const CheckoutPage = () => {
 									className="mx-10 px-6 py-2 bg-primary rounded-lg uppercase font-semibold hover:bg-second w-full h-12"
 									onClick={() => navigate(`/invoice`)}
 								>
-									Place Order
+									Đặt hàng
 								</button>
 							</div>
 
 							{/* Customer Service Section */}
 							<div className="text-center text-sm text-gray-600 mt-6">
-								24/7 Customer Service
+								24/7 Dịch vụ chăm sóc khách hàng
 								<div className="mt-2 flex items-center justify-center space-x-4">
 									<div className="flex items-center space-x-1">
 										<span>📞</span>
@@ -425,7 +450,9 @@ const CheckoutPage = () => {
 									</div>
 									<div className="flex items-center space-x-1">
 										<span>💬</span>
-										<span className="text-blue-600">Chat With Us</span>
+										<span className="text-blue-600">
+											Trò chuyện cùng chúng tôi{' '}
+										</span>
 									</div>
 								</div>
 							</div>

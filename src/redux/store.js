@@ -6,6 +6,7 @@ import {userSlice} from './slices/userSlice';
 import {userLoginSlice} from './slices/userLoginSlice';
 import {diamondSlice} from './slices/diamondSlice';
 import {jewelrySlice} from './slices/jewelrySlice';
+import {distanceSlice} from './slices/distanceSlice';
 
 const rootPersistConfig = {
 	key: 'root',
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
 	userLoginSlice: userLoginSlice.reducer,
 	diamondSlice: diamondSlice.reducer,
 	jewelrySlice: jewelrySlice.reducer,
+	distanceSlice: distanceSlice.reducer,
 });
 
 const persistedReducer = persistReducer(rootPersistConfig, rootReducer);
