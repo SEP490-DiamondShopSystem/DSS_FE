@@ -66,13 +66,17 @@ export const Sidebar = ({isOpen, toggleSidebar, diamond}) => {
 	console.log(diamond);
 
 	const handleNavigate = () => {
+		const data = {
+			...diamond,
+			DiamondPrice: diamond.Price,
+		};
 		// Xác định xem lưu vào 'cart' hay 'cartDesign'
 		if (active === 'addToCart') {
 			// Gọi action để thêm/cập nhật giỏ hàng trong Redux
-			dispatch(addOrUpdateItem({diamond}));
+			dispatch(addOrUpdateItem({diamond: data}));
 		} else {
 			// Gọi action để thêm/cập nhật giỏ hàng thiết kế trong Redux
-			dispatch(addOrUpdateCartDesignDiamondItem({diamond}));
+			dispatch(addOrUpdateCartDesignDiamondItem({diamond: data}));
 		}
 
 		// Điều hướng tới link mong muốn

@@ -121,7 +121,7 @@ const CartPage = () => {
 	const grandDesignTotal = totalDiamondDesignPrice + totalJewelryDesignPrice;
 
 	const totalDiamondPrice = cart.reduce((acc, item) => {
-		return acc + (item && item.Price ? item.Price : 0);
+		return acc + (item && item.DiamondPrice ? item.DiamondPrice : 0);
 	}, 0);
 
 	const totalJewelryPrice = cart.reduce((acc, item) => {
@@ -272,7 +272,7 @@ const CartPage = () => {
 											<p className="text-gray-700 text-sm">
 												Giá:{' '}
 												<span className="text-gray-900 font-semibold">
-													{formatPrice(item.Price)}
+													{formatPrice(item.DiamondPrice)}
 												</span>
 											</p>
 										</div>
