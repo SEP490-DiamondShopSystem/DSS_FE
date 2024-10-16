@@ -5,6 +5,8 @@ import {Button, message, Rate, Select} from 'antd';
 import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {convertToVietnamDate, formatPrice} from '../../../utils';
+import {addToCart} from '../../../redux/slices/cartSlice';
+import {useDispatch} from 'react-redux';
 
 const metalType = {
 	id: 12212,
@@ -60,10 +62,12 @@ export const InformationRight = ({
 	setSize,
 }) => {
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 
 	const [showDetail, setDetail] = useState(false);
 	const [showSecureShopping, setSecureShopping] = useState(false);
 	const [showProductWarranty, setProductWarranty] = useState(false);
+	const [jewelryType, setJewelryType] = useState(localStorage.getItem('jewelryType'));
 
 	const toggleDetail = () => {
 		setDetail(!showDetail);
@@ -101,41 +105,20 @@ export const InformationRight = ({
 
 	const handleAddCart = () => {
 		if (size === '') return message.warning('Vui lòng chọn kích thước nhẫn!');
+
 		const data = {
+			...diamondJewelry,
 			JewelryId: diamondJewelry.Id,
 			JewelryName: diamondJewelry.Name,
 			JewelryPrice: diamondJewelry.Price,
 			Size: size,
 			Width: selectedWidth.width,
-			Metal: selectedMetal.Name,
+			Metal: selectedMetal,
 			JewelryThumbnail: diamondJewelry.Thumbnail,
 		};
 
-		// Get the existing cart from localStorage
-		const existingCart = localStorage.getItem('cart');
-
-		// Initialize cart as an empty array
-		let cart = [];
-
-		// Attempt to parse the existing cart data
-		try {
-			cart = existingCart ? JSON.parse(existingCart) : [];
-
-			// Check if cart is an array; if not, reset it
-			if (!Array.isArray(cart)) {
-				cart = [];
-			}
-		} catch (error) {
-			// Log error if parsing fails and reset cart
-			console.error('Error parsing cart data:', error);
-			cart = [];
-		}
-
-		// Add the current jewelry item to the cart
-		cart.push(data);
-
-		// Save the updated cart back to localStorage
-		localStorage.setItem('cart', JSON.stringify(cart));
+		// Dispatch action để thêm sản phẩm vào giỏ hàng trong Redux
+		dispatch(addToCart(data));
 
 		// Thông báo thành công khi sản phẩm được thêm vào
 		message.success('Sản phẩm đã được thêm vào giỏ hàng!');
@@ -172,9 +155,7 @@ export const InformationRight = ({
 			<div>
 				<div className="my-5 flex items-center">
 					<div className="font-semibold">Loại Kim Loại</div>
-					<div className={`font-semibold text-xl pl-4 text-primary`}>
-						{selectedMetal?.Name}
-					</div>
+					<div className={`font-semibold text-xl pl-4 text-primary`}>{selectedMetal}</div>
 				</div>
 				<div>
 					<div className="flex">
@@ -182,7 +163,7 @@ export const InformationRight = ({
 							<div
 								key={i}
 								className={`${
-									selectedMetal?.metalSelect === metal?.metalSelect
+									selectedMetal === metal?.Name
 										? 'border border-black'
 										: 'border border-white'
 								} m-2 py-2 px-4 rounded-lg cursor-pointer hover:bg-offWhite`}
@@ -216,23 +197,25 @@ export const InformationRight = ({
 						))}
 					</div>
 				</div>
-				<div className="my-5 flex items-center">
-					<div className="font-semibold">Chọn kích thước nhẫn:</div>
-					<div className={`font-semibold text-xl pl-4 text-primary`}>
-						<Select
-							defaultValue=""
-							style={{width: 120}}
-							onChange={handleChange}
-							options={[
-								{value: '', label: 'Chọn size'},
-								{value: '1', label: '1'},
-								{value: '2', label: '2'},
-								{value: '3', label: '3'},
-								{value: '4', label: '4'},
-							]}
-						/>
+				{jewelryType && jewelryType === 'Nhẫn' && (
+					<div className="my-5 flex items-center">
+						<div className="font-semibold">Chọn kích thước nhẫn:</div>
+						<div className={`font-semibold text-xl pl-4 text-primary`}>
+							<Select
+								defaultValue=""
+								style={{width: 120}}
+								onChange={handleChange}
+								options={[
+									{value: '', label: 'Chọn size'},
+									{value: '1', label: '1'},
+									{value: '2', label: '2'},
+									{value: '3', label: '3'},
+									{value: '4', label: '4'},
+								]}
+							/>
+						</div>
 					</div>
-				</div>
+				)}
 			</div>
 			<div className="border-y border-tintWhite py-5 my-5">
 				<div className="flex items-center">

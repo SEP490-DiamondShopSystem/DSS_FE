@@ -3,43 +3,44 @@ import React, {useEffect, useState} from 'react';
 import {HeartOutlined} from '@ant-design/icons';
 import {faShoppingBag} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {Badge} from 'antd';
+import {useSelector} from 'react-redux';
 import {Link} from 'react-router-dom';
+import {GetCartFinishSelector, GetCartSelector} from '../../redux/selectors';
 import Logo from './../../assets/logo-ex.png';
 import ActionLinks from './ActionLinks';
 import NavLinks from './NavLinks';
-import {Badge} from 'antd';
 
 export const Header = () => {
-	const [cartFinish, setCartFinish] = useState(() => {
-		// Lấy cartFinish từ localStorage
-		const storedCartFinish = localStorage.getItem('cartFinish');
+	const cart = useSelector(GetCartSelector);
+	const cartFinish = useSelector(GetCartFinishSelector);
 
-		// Parse dữ liệu nếu tồn tại, nếu không thì trả về mảng rỗng
-		try {
-			return storedCartFinish ? JSON.parse(storedCartFinish) : [];
-		} catch (error) {
-			console.error('Error parsing cartFinish from localStorage:', error);
-			return [];
-		}
-	});
+	// const [cartFinish, setCartFinish] = useState(() => {
+	// 	// Lấy cartFinish từ localStorage
+	// 	const storedCartFinish = localStorage.getItem('cartFinish');
 
-	const [cart, setCart] = useState(() => {
-		// Lấy cart từ localStorage
-		const storedCart = localStorage.getItem('cart');
+	// 	// Parse dữ liệu nếu tồn tại, nếu không thì trả về mảng rỗng
+	// 	try {
+	// 		return storedCartFinish ? JSON.parse(storedCartFinish) : [];
+	// 	} catch (error) {
+	// 		console.error('Error parsing cartFinish from localStorage:', error);
+	// 		return [];
+	// 	}
+	// });
 
-		// Parse dữ liệu nếu tồn tại, nếu không thì trả về mảng rỗng
-		try {
-			return storedCart ? JSON.parse(storedCart) : [];
-		} catch (error) {
-			console.error('Error parsing cart from localStorage:', error);
-			return [];
-		}
-	});
-	const [cartTotal, setCartTotal] = useState();
+	// const [cart, setCart] = useState(() => {
+	// 	// Lấy cart từ localStorage
+	// 	const storedCart = localStorage.getItem('cart');
 
-	useEffect(() => {
-		if (cartFinish && cart) setCartTotal(cartFinish?.length + cart?.length);
-	}, [cartFinish, cart]);
+	// 	// Parse dữ liệu nếu tồn tại, nếu không thì trả về mảng rỗng
+	// 	try {
+	// 		return storedCart ? JSON.parse(storedCart) : [];
+	// 	} catch (error) {
+	// 		console.error('Error parsing cart from localStorage:', error);
+	// 		return [];
+	// 	}
+	// });
+	const cartTotal = (cart?.length || 0) + (cartFinish?.length || 0);
 
 	return (
 		<nav className="bg-white">
