@@ -1,47 +1,66 @@
 import React from 'react';
 
-import {Button, Form, Input, Modal} from 'antd';
+import {Button, Form, Input, message, Modal} from 'antd';
+import {jwtDecode} from 'jwt-decode';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import {LoadingUserSelector} from '../../redux/selectors';
-import {handleLogin} from '../../redux/slices/userLoginSlice';
-import {notifyError, notifySuccess} from '../../utils/toast';
+import {GoogleLogin, handleLogin, setUser} from '../../redux/slices/userLoginSlice';
 import {GoogleLoginButton} from '../LoginGoogleButton';
 
 const LoginModal = ({isOpen, onClose}) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const loading = useSelector(LoadingUserSelector);
+
 	const [form] = Form.useForm();
 
 	const onFinish = (values) => {
-		console.log('Received values:', values);
-		dispatch(handleLogin(values))
+		const {email, password} = values;
+
+		const data = {
+			email,
+			password,
+			isExternalLogin: true,
+			isStaffLogin: false,
+		};
+		dispatch(handleLogin(data))
 			.then((res) => {
 				if (res.payload) {
-					notifySuccess('Login successful!');
+					const decodedData = jwtDecode(res.payload.accessToken);
+					console.log(decodedData);
+					dispatch(setUser(decodedData));
+					message.success('Đăng nhập thành công!');
 					form.resetFields();
 					onClose();
+
 					navigate('/');
 				} else {
-					notifyError('Login failed. Please check your credentials!');
+					message.error(
+						'Đăng nhập không thành công. Vui lòng kiểm tra thông tin đăng nhập của bạn!'
+					);
 				}
 			})
 			.catch((error) => {
 				console.error('Login failed:', error);
-				notifyError('Login failed. Please check your credentials!');
+				message.error(
+					'Đăng nhập không thành công. Vui lòng kiểm tra thông tin đăng nhập của bạn!'
+				);
 			});
 	};
 
 	const handleGoogleLogin = (response) => {
 		console.log('Google login response:', response);
-		// Add logic to handle Google response and call API if necessary.
-		notifySuccess('Google login successful!');
+		// dispatch(GoogleLogin({externalProviderName: 'Google'}));
+		const decode = jwtDecode(response.credential);
+		console.log(decode);
+
+		message.success('Đăng nhập Google thành công!');
 		onClose();
 	};
 
 	const handleGoogleLoginFailure = (error) => {
-		notifyError('Google login error!');
+		message.error('Lỗi đăng nhập Google!');
 		console.error('Google login error:', error);
 	};
 

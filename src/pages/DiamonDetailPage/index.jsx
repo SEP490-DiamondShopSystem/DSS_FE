@@ -1,58 +1,25 @@
-import React, {useEffect, useState} from 'react';
 import {Steps} from 'antd';
+import React, {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {useParams} from 'react-router-dom';
+import {GetDiamondDetailSelector} from '../../redux/selectors';
+import {enums} from '../../utils/constant';
 import {ImageGallery} from './Left/ImageGallery';
 import {InformationLeft} from './Left/InformationLeft';
 import {InformationRight} from './Right/InformationRight';
 import {Sidebar} from './Sidebar';
-import {useDispatch, useSelector} from 'react-redux';
-import {GetDiamondAttributesSelector} from '../../redux/selectors';
-import {getDiamondAttributesValues} from '../../redux/slices/diamondSlice';
-import {useParams} from 'react-router-dom';
-
-const fakeData = {
-	Carat: 0.5,
-	Clarity: 6,
-	Color: 2,
-	Culet: 4,
-	Cut: 3,
-	Depth: 0.3,
-	DiamondPrice: {
-		ShapeId: '10',
-		CriteriaId: '638639878904151872',
-		Criteria: {},
-		Shape: {
-			Id: '10',
-			ShapeName: 'Pear',
-		},
-		Price: 23800000,
-	},
-	DiamondShape: {
-		Id: '10',
-		ShapeName: 'Pear',
-	},
-	DiamondShapeId: '10',
-	Fluorescence: 2,
-	Girdle: 5,
-	Id: '9a282eae-41b9-4819-8e26-47760aa4c33c',
-	IsLabDiamond: true,
-	JewelryId: null,
-	Measurement: '0.3x0.3x0.3',
-	Polish: 4,
-	PriceOffset: 1,
-	Symmetry: 3,
-	Table: 0.3,
-	WidthLengthRatio: 0.3,
-};
+import {getDiamondDetail} from '../../redux/slices/diamondSlice';
 
 const DiamondDetailPage = () => {
 	const {id} = useParams();
-	const diamondAttributes = useSelector(GetDiamondAttributesSelector);
+	// const diamondAttributes = useSelector(GetDiamondAttributesSelector);
+	const diamondDetail = useSelector(GetDiamondDetailSelector);
 	const dispatch = useDispatch();
 
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 	const [diamondChoice, setDiamondChoice] = useState(localStorage.getItem('diamondChoice') || '');
 	const [jewelryType, setJewelryType] = useState(localStorage.getItem('jewelryType') || '');
-	const [attributes, setAttributes] = useState({});
+	const [detail, setDetail] = useState({});
 
 	const items = [
 		{
@@ -79,14 +46,14 @@ const DiamondDetailPage = () => {
 	];
 
 	useEffect(() => {
-		dispatch(getDiamondAttributesValues());
+		dispatch(getDiamondDetail(id));
 	}, [dispatch]);
 
 	useEffect(() => {
-		if (diamondAttributes && diamondAttributes.length > 0) {
-			setAttributes(diamondAttributes[0]); // Assuming the first element contains the necessary attributes
+		if (diamondDetail) {
+			setDetail(diamondDetail);
 		}
-	}, [diamondAttributes]);
+	}, [diamondDetail]);
 
 	const toggleSidebar = () => {
 		setIsSidebarOpen(!isSidebarOpen);
@@ -96,52 +63,68 @@ const DiamondDetailPage = () => {
 		return {
 			DiamondId: data.Id,
 			Carat: data.Carat,
-			Clarity: attributes.Clarity
-				? Object.keys(attributes.Clarity).find(
-						(key) => attributes.Clarity[key] === data.Clarity
-				  )
-				: '',
-			Color: attributes.Color
-				? Object.keys(attributes.Color).find((key) => attributes.Color[key] === data.Color)
-				: '',
-			Culet: attributes.Culet
-				? Object.keys(attributes.Culet).find((key) => attributes.Culet[key] === data.Culet)
-				: '',
-			Cut: attributes.Cut
-				? Object.keys(attributes.Cut).find((key) => attributes.Cut[key] === data.Cut)
-				: '',
-			Fluorescence: attributes.Fluorescence
-				? Object.keys(attributes.Fluorescence).find(
-						(key) => attributes.Fluorescence[key] === data.Fluorescence
-				  )
-				: '',
-			Girdle: attributes.Girdle
-				? Object.keys(attributes.Girdle).find(
-						(key) => attributes.Girdle[key] === data.Girdle
-				  )
-				: '',
-			Polish: attributes.Polish
-				? Object.keys(attributes.Polish).find(
-						(key) => attributes.Polish[key] === data.Polish
-				  )
-				: '',
-			Symmetry: attributes.Symmetry
-				? Object.keys(attributes.Symmetry).find(
-						(key) => attributes.Symmetry[key] === data.Symmetry
-				  )
-				: '',
+			Clarity:
+				attributes.Clarity && data.Clarity !== undefined
+					? Object.keys(attributes.Clarity).find(
+							(key) => attributes.Clarity[key] === data.Clarity
+					  ) || 'Unknown Clarity' // Thêm giá trị mặc định nếu không tìm thấy
+					: '',
+			Color:
+				attributes.Color && data.Color !== undefined
+					? Object.keys(attributes.Color).find(
+							(key) => attributes.Color[key] === data.Color
+					  ) || 'Unknown Color'
+					: '',
+			Culet:
+				attributes.Culet && data.Culet !== undefined
+					? Object.keys(attributes.Culet).find(
+							(key) => attributes.Culet[key] === data.Culet
+					  ) || 'Unknown Culet'
+					: '',
+			Cut:
+				attributes.Cut && data.Cut !== undefined
+					? Object.keys(attributes.Cut).find((key) => attributes.Cut[key] === data.Cut) ||
+					  'Unknown Cut'
+					: '',
+			Fluorescence:
+				attributes.Fluorescence && data.Fluorescence !== undefined
+					? Object.keys(attributes.Fluorescence).find(
+							(key) => attributes.Fluorescence[key] === data.Fluorescence
+					  ) || 'Unknown Fluorescence'
+					: '',
+			Girdle:
+				attributes.Girdle && data.Girdle !== undefined
+					? Object.keys(attributes.Girdle).find(
+							(key) => attributes.Girdle[key] === data.Girdle
+					  ) || 'Unknown Girdle'
+					: '',
+			Polish:
+				attributes.Polish && data.Polish !== undefined
+					? Object.keys(attributes.Polish).find(
+							(key) => attributes.Polish[key] === data.Polish
+					  ) || 'Unknown Polish'
+					: '',
+			Symmetry:
+				attributes.Symmetry && data.Symmetry !== undefined
+					? Object.keys(attributes.Symmetry).find(
+							(key) => attributes.Symmetry[key] === data.Symmetry
+					  ) || 'Unknown Symmetry'
+					: '',
 			Depth: data.Depth,
 			Table: data.Table,
 			Measurement: data.Measurement,
-			DiamondShape: data.DiamondShape.ShapeName,
-			Price: data.DiamondPrice.Price,
+			DiamondShape: data.DiamondShape?.ShapeName,
+			Price: data.DiamondPrice?.Price,
 			IsLabDiamond: data.IsLabDiamond,
+			Criteria: data.DiamondPrice?.CriteriaId,
 		};
 	};
 
-	const mappedDiamond = mapAttributes(fakeData, attributes); // Use fake data with fetched attributes
+	const mappedDiamond = mapAttributes(detail, enums);
 
-	console.log(fakeData);
+	console.log('diamondDetail', diamondDetail);
+	console.log('detail', detail);
+	console.log('mappedDiamond', mappedDiamond);
 
 	return (
 		<>

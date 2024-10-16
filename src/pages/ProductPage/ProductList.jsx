@@ -8,6 +8,7 @@ import jewelryImg from '../../assets/ring_classic.png';
 import {FilterAllJewelry} from '../../components/Filter/Filter';
 import {GetAllJewelrySelector, LoadingJewelrySelector} from '../../redux/selectors';
 import {getAllJewelry} from '../../redux/slices/jewelrySlice';
+import {formatPrice} from '../../utils';
 
 export const ProductList = () => {
 	const navigate = useNavigate();
@@ -102,7 +103,7 @@ export const ProductList = () => {
 													// className="line-through"
 													// style={{color: '#b0b0b0'}}
 													>
-														{jewelry.Price}
+														{formatPrice(jewelry.Price)}
 													</p>
 													{/* <p className="ml-5 " style={{color: '#707070'}}>
 														{jewelry.discountPrice}

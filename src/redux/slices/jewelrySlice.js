@@ -6,7 +6,7 @@ export const getAllJewelry = createAsyncThunk(
 	async (_, {rejectWithValue}) => {
 		try {
 			// const response = await api.get(`/Jewelry/All`);
-			const response = await api.get(`/Jewelry_Selling`);
+			const response = await api.get(`/Jewelry/Selling`);
 			// const response = await api.get(`/all_jewelry`);
 			console.log(response);
 

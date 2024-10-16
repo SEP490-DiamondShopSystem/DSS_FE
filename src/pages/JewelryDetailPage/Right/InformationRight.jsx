@@ -79,11 +79,6 @@ export const InformationRight = ({
 		setProductWarranty(!showProductWarranty);
 	};
 
-	const [selectedWidth, setSelectedWidth] = useState(() => {
-		const savedWidth = localStorage.getItem('selectedWidth');
-		return savedWidth ? JSON.parse(savedWidth) : metalType.optionsWidth[0];
-	});
-
 	// Function to handle metal selection
 	const handleSelectMetal = (metal) => {
 		setSelectedMetal(metal);
@@ -111,9 +106,6 @@ export const InformationRight = ({
 			JewelryId: diamondJewelry.Id,
 			JewelryName: diamondJewelry.Name,
 			JewelryPrice: diamondJewelry.Price,
-			Size: size,
-			Width: selectedWidth.width,
-			Metal: selectedMetal,
 			JewelryThumbnail: diamondJewelry.Thumbnail,
 		};
 
@@ -128,7 +120,7 @@ export const InformationRight = ({
 		<div>
 			<div className="border-b border-tintWhite">
 				<h1 className="text-3xl">
-					{diamondJewelry.Name} {selectedMetal?.Name || selectedMetal}
+					{diamondJewelry?.Name} {selectedMetal?.Name || selectedMetal}
 				</h1>
 				<div className="my-5 flex">
 					<Rate
@@ -161,25 +153,22 @@ export const InformationRight = ({
 				</div>
 				<div>
 					<div className="flex">
-						{diamondJewelry?.Metal?.map((metal, i) => (
-							<div
-								key={i}
-								className={`${
-									selectedMetal?.Name === metal?.Name
-										? 'border border-black'
-										: 'border border-white'
-								} m-2 py-2 px-4 rounded-lg cursor-pointer hover:bg-offWhite`}
-								onClick={() => handleSelectMetal(metal)} // Save selected metal on click
-							>
-								<div className={`rounded-full  p-1`}>{metal.Name}</div>
-							</div>
-						))}
+						<div
+							className={`${
+								selectedMetal?.Name === diamondJewelry?.Metal?.Name
+									? 'border border-black'
+									: 'border border-white'
+							} m-2 py-2 px-4 rounded-lg cursor-pointer hover:bg-offWhite`}
+							onClick={() => handleSelectMetal(diamondJewelry?.Metal)} // Save selected metal on click
+						>
+							<div className={`rounded-full  p-1`}>{diamondJewelry?.Metal?.Name}</div>
+						</div>
 					</div>
 				</div>
 				<div className="my-5 flex items-center">
 					<div className="font-semibold">Độ dài</div>
 					<div className={`font-semibold text-xl pl-4 text-primary`}>
-						{selectedWidth?.width}mm
+						{diamondJewelry?.Width}mm
 					</div>
 				</div>
 				<div>

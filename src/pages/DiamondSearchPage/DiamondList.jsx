@@ -160,8 +160,14 @@ export const DiamondList = ({diamond, diamondList, setDiamond}) => {
 											<Image src={diamondImg} alt={diamondItem.title} />
 										</div>
 										<div className="mx-10 my-5">
-											<p>{diamondItem.title}</p>
-											<p style={{color: '#707070'}}>{diamondItem.Price}</p>
+											<p>
+												{diamondItem.DiamondShape} {diamondItem.Carat}ct{' '}
+												{diamondItem.Color} Color {diamondItem.Clarity}{' '}
+												Clarity {diamondItem.Cut}
+											</p>
+											<p style={{color: '#707070'}}>
+												{formatPrice(diamondItem.Price)}
+											</p>
 										</div>
 									</div>
 								</div>
@@ -186,38 +192,42 @@ export const DiamondList = ({diamond, diamondList, setDiamond}) => {
 										>
 											<Image
 												src={diamondImg}
-												alt={diamondItem.title}
+												alt={
+													diamondItem.IsLabDiamond === true
+														? 'Kim cương nhân tạo'
+														: 'Kim cương tự nhiên'
+												}
 												className="w-full"
 												preview={false}
 											/>
 										</div>
 										<div className="flex justify-between items-center w-4/5 ml-5">
 											<p className="text-xl w-1/5 text-center">
-												{diamondItem.shape}
+												{diamondItem.DiamondShape || '-'}
 											</p>
 											<p className="text-xl w-1/5 text-center">
-												{diamondItem.Carat}
+												{diamondItem.Carat || '-'}ct
+											</p>
+											<p className="text-xl w-1/5 text-center">
+												{diamondItem.Color || '-'} Color
+											</p>
+											<p className="text-xl w-1/5 text-center">
+												{diamondItem.Clarity || '-'} Clarity
 											</p>
 											<p className="text-xl w-1/5 text-center">
 												{diamondItem.Cut || '-'}
-											</p>
-											<p className="text-xl w-1/5 text-center">
-												{diamondItem.Color}
-											</p>
-											<p className="text-xl w-1/5 text-center">
-												{diamondItem.Clarity}
 											</p>
 											<p
 												className="text-xl w-1/5 text-center"
 												style={{color: '#707070'}}
 											>
-												{diamondItem.price}
+												{diamondItem.Price}
 											</p>
 											<p
 												className="text-xl w-1/5 text-center cursor-pointer"
 												onClick={(e) => {
 													e.stopPropagation(); // Ngăn chặn sự kiện onClick khác
-													handleHeartClick(diamondItem.id);
+													handleHeartClick(diamondItem.Id);
 												}}
 											>
 												{like[diamondItem.id] ? (

@@ -78,7 +78,7 @@ export const InformationRight = ({
 							<div
 								key={i}
 								className={`${
-									selectedMetal?.Name === metal?.metalSelect
+									selectedMetal?.Name === metal?.Name
 										? 'border border-black'
 										: 'border border-white'
 								} m-2 py-2 px-4 rounded-lg cursor-pointer hover:bg-offWhite`}
