@@ -411,7 +411,7 @@ const CheckoutPage = () => {
 									className="mx-10 px-6 py-2 bg-primary rounded-lg uppercase font-semibold hover:bg-second w-full h-12"
 									onClick={() => navigate(`/invoice`)}
 								>
-									Place Order
+									Đặt hàng
 								</button>
 							</div>
 
