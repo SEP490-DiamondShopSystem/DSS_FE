@@ -104,7 +104,7 @@ export const InformationRight = ({
 	};
 
 	const handleAddCart = () => {
-		if (size === '') return message.warning('Vui lòng chọn kích thước nhẫn!');
+		// if (size === '') return message.warning('Vui lòng chọn kích thước nhẫn!');
 
 		const data = {
 			...diamondJewelry,
@@ -128,7 +128,7 @@ export const InformationRight = ({
 		<div>
 			<div className="border-b border-tintWhite">
 				<h1 className="text-3xl">
-					{diamondJewelry.Name} {selectedMetal?.Name}
+					{diamondJewelry.Name} {selectedMetal?.Name || selectedMetal}
 				</h1>
 				<div className="my-5 flex">
 					<Rate
@@ -155,7 +155,9 @@ export const InformationRight = ({
 			<div>
 				<div className="my-5 flex items-center">
 					<div className="font-semibold">Loại Kim Loại</div>
-					<div className={`font-semibold text-xl pl-4 text-primary`}>{selectedMetal}</div>
+					<div className={`font-semibold text-xl pl-4 text-primary`}>
+						{selectedMetal?.Name}
+					</div>
 				</div>
 				<div>
 					<div className="flex">
@@ -163,7 +165,7 @@ export const InformationRight = ({
 							<div
 								key={i}
 								className={`${
-									selectedMetal === metal?.Name
+									selectedMetal?.Name === metal?.Name
 										? 'border border-black'
 										: 'border border-white'
 								} m-2 py-2 px-4 rounded-lg cursor-pointer hover:bg-offWhite`}
