@@ -5,6 +5,8 @@ import {Button, Image} from 'antd';
 import React, {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import diamondImage from '../../assets/img-diamond.png';
+import {addOrUpdateCartDesignItem} from '../../redux/slices/cartSlice';
+import {useDispatch} from 'react-redux';
 
 const shapes = [
 	{
@@ -47,6 +49,7 @@ export const Sidebar = ({
 	size,
 }) => {
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 	const [link, setLink] = useState('/diamond/search');
 	const [activeRcm, setActiveRcm] = useState('');
 	const [active, setActive] = useState('diamond');
@@ -79,8 +82,8 @@ export const Sidebar = ({
 	};
 
 	const handleNavigate = () => {
-		const jewelryId = diamondJewelry.Id;
 		const data = {
+			...diamondJewelry,
 			JewelryId: diamondJewelry.Id,
 			JewelryName: diamondJewelry.Name,
 			Size: size,
@@ -90,40 +93,12 @@ export const Sidebar = ({
 			Width: selectedWidth.width,
 			Metal: selectedMetal,
 		};
-		// Get the existing cart from localStorage
-		const existingCart = localStorage.getItem('cartDesign');
 
-		// Initialize cart as an empty array
-		let cart = [];
+		// Gọi action Redux để thêm hoặc cập nhật sản phẩm vào `cartDesign`
+		dispatch(addOrUpdateCartDesignItem({jewelry: data, cartKey: 'cartDesign'}));
 
-		// Attempt to parse the existing cart data
-		try {
-			cart = existingCart ? JSON.parse(existingCart) : [];
-
-			// Check if cart is an array; if not, reset it
-			if (!Array.isArray(cart)) {
-				cart = [];
-			}
-		} catch (error) {
-			// Log error if parsing fails and reset cart
-			console.error('Error parsing cart data:', error);
-			cart = [];
-		}
-
-		const existingJewelryIndex = cart.findIndex((item) => item.JewelryId === jewelryId);
-		// Add the current jewelry item to the cart
-		if (existingJewelryIndex !== -1) {
-			// If the diamond exists, replace it with the new diamond
-			cart[existingJewelryIndex] = data;
-		} else {
-			// If the diamond doesn't exist, push the current diamond to the cart
-			cart.push(data);
-		}
-
-		// Save the updated cart back to localStorage
-		localStorage.setItem('cartDesign', JSON.stringify(cart));
+		// Điều hướng tới link mong muốn
 		navigate(link);
-		console.log('click');
 	};
 
 	const currentShape = shapes.find((shape) => shape.name === shapeActive);

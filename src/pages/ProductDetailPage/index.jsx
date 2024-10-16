@@ -1,13 +1,14 @@
 import React, {useState} from 'react';
 
 import {Steps} from 'antd';
+import {useNavigate} from 'react-router-dom';
+import {addOrUpdateCartDesignItem} from '../../redux/slices/cartSlice';
+import {data} from '../../utils/constant';
 import {ImageGallery} from './Left/ImageGallery';
 import {InformationLeft} from './Left/InformationLeft';
 import {InformationRight} from './Right/InformationRight';
 import {Sidebar} from './Sidebar';
-import {notifyError} from '../../utils/toast';
-import {data} from '../../utils/constant';
-import {useNavigate} from 'react-router-dom';
+import {useDispatch} from 'react-redux';
 
 const metalType = {
 	id: 12212,
@@ -57,6 +58,7 @@ const metalType = {
 
 const ProductDetailPage = () => {
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 	const [diamondChoice, setDiamondChoice] = useState(localStorage.getItem('diamondChoice') || '');
@@ -89,8 +91,8 @@ const ProductDetailPage = () => {
 	};
 
 	const handleChoiceClick = (id) => {
-		const jewelryId = diamondJewelry.Id;
 		const data = {
+			...diamondJewelry,
 			JewelryId: diamondJewelry.Id,
 			JewelryName: diamondJewelry.Name,
 			Size: size,
@@ -101,37 +103,7 @@ const ProductDetailPage = () => {
 			Metal: selectedMetal,
 		};
 
-		// Get the existing cart from localStorage
-		const existingCart = localStorage.getItem('cartDesign');
-
-		// Initialize cart as an empty array
-		let cart = [];
-
-		// Attempt to parse the existing cart data
-		try {
-			cart = existingCart ? JSON.parse(existingCart) : [];
-
-			// Check if cart is an array; if not, reset it
-			if (!Array.isArray(cart)) {
-				cart = [];
-			}
-		} catch (error) {
-			// Log error if parsing fails and reset cart
-			console.error('Error parsing cart data:', error);
-			cart = [];
-		}
-		const existingJewelryIndex = cart.findIndex((item) => item.JewelryId === jewelryId);
-		// Add the current jewelry item to the cart
-		if (existingJewelryIndex !== -1) {
-			// If the diamond exists, replace it with the new diamond
-			cart[existingJewelryIndex] = data;
-		} else {
-			// If the diamond doesn't exist, push the current diamond to the cart
-			cart.push(data);
-		}
-
-		// Save the updated cart back to localStorage
-		localStorage.setItem('cartDesign', JSON.stringify(cart));
+		dispatch(addOrUpdateCartDesignItem({jewelry: data}));
 
 		// Navigate to the completed jewelry page
 		navigate(`/completed-jewelry/${id}`);

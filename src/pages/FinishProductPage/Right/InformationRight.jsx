@@ -6,6 +6,8 @@ import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {formatPrice} from '../../../utils';
 import {Clarity} from '../../Customize/DiamondDetailPage/ChoiceMetal/Choose/Clarity';
+import {useDispatch} from 'react-redux';
+import {addToCartFinish} from '../../../redux/slices/cartSlice';
 
 const {Text} = Typography;
 
@@ -46,10 +48,12 @@ const ring = [
 
 export const InformationRight = ({jewelryDetail, diamondDetail}) => {
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 	const [showDetail, setDetail] = useState(false);
 	const [showSecureShopping, setSecureShopping] = useState(false);
 	const [showProductWarrantly, setProductWarrantly] = useState(false);
 	const [sizeChange, setSizeChange] = useState();
+	const [jewelryType, setJewelryType] = useState(localStorage.getItem('jewelryType'));
 
 	const toggleDetail = () => {
 		setDetail(!showDetail);
@@ -67,11 +71,12 @@ export const InformationRight = ({jewelryDetail, diamondDetail}) => {
 
 	const plus = jewelryDetail?.Price + diamondDetail?.Price;
 
-	console.log('sizeChange', sizeChange);
-
 	const handleAddToCart = () => {
 		if (sizeChange === '') return message.warning('Vui lòng chọn kích thước nhẫn!');
+
 		const data = {
+			...jewelryDetail,
+			...diamondDetail,
 			JewelryId: jewelryDetail.JewelryId,
 			JewelryName: jewelryDetail.JewelryName,
 			Size: sizeChange || jewelryDetail.Size,
@@ -88,33 +93,10 @@ export const InformationRight = ({jewelryDetail, diamondDetail}) => {
 			DiamondShape: diamondDetail.DiamondShape,
 		};
 
-		// Get the existing cart from localStorage
-		const existingCart = localStorage.getItem('cartFinish');
+		// Dispatch action để thêm sản phẩm vào Redux
+		dispatch(addToCartFinish(data));
 
-		// Initialize cart as an empty array
-		let cart = [];
-
-		// Attempt to parse the existing cart data
-		try {
-			cart = existingCart ? JSON.parse(existingCart) : [];
-
-			// Check if cart is an array; if not, reset it
-			if (!Array.isArray(cart)) {
-				cart = [];
-			}
-		} catch (error) {
-			// Log error if parsing fails and reset cart
-			console.error('Error parsing cart data:', error);
-			cart = [];
-		}
-
-		// Add the current jewelry item to the cart
-		cart.push(data);
-
-		// Save the updated cart back to localStorage
-		localStorage.setItem('cartFinish', JSON.stringify(cart));
-
-		// Thông báo thành công khi sản phẩm được thêm vào
+		// Thông báo thành công
 		message.success('Sản phẩm đã được thêm vào giỏ hàng!');
 		navigate('/cart');
 	};
@@ -194,18 +176,20 @@ export const InformationRight = ({jewelryDetail, diamondDetail}) => {
 							</div>
 							<p className="text-primary cursor-pointer">Thay Đổi Vỏ</p>
 						</div>
-						<div className="flex items-center">
-							<p className="mr-3">Kích Cỡ Nhẫn Hiện Tại:</p>
+						{jewelryType && jewelryType === 'Nhẫn' && (
+							<div className="flex items-center">
+								<p className="mr-3">Kích Cỡ Nhẫn Hiện Tại:</p>
 
-							<Select
-								defaultValue={jewelryDetail.Size}
-								style={{
-									width: 120,
-								}}
-								onChange={handleChange}
-								options={ring}
-							/>
-						</div>
+								<Select
+									defaultValue={jewelryDetail.Size}
+									style={{
+										width: 120,
+									}}
+									onChange={handleChange}
+									options={ring}
+								/>
+							</div>
+						)}
 					</div>
 				</div>
 				<div className="border-y border-tintWhite py-5 my-5">

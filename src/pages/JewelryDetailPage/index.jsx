@@ -24,8 +24,6 @@ const JewelryDetailPage = () => {
 		return savedMetal ? JSON.parse(savedMetal) : diamondJewelry.Metal[0].Name;
 	});
 
-	console.log(selectedMetal);
-
 	const toggleSidebar = () => {
 		setIsSidebarOpen(!isSidebarOpen);
 	};

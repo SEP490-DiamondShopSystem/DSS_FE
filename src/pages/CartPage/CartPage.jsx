@@ -267,7 +267,6 @@ const CartPage = () => {
 					</div>
 				)}
 
-				{/* Available Promotions Section */}
 				<div className="bg-white p-6 mx-5 my-5 border rounded-lg shadow-md">
 					<label htmlFor="promotions" className="block mb-2 text-gray-700 font-medium">
 						Khuyến mãi có sẵn
@@ -276,7 +275,6 @@ const CartPage = () => {
 				</div>
 			</div>
 
-			{/* Right Segment: Checkout Summary */}
 			<div
 				className=" lg:mt-0 flex-shrink-0 w-full lg:w-1/3 bg-gray-50 p-6 mx-5 shadow-lg bg-white rounded-lg lg:sticky lg:top-8"
 				style={{width: '30%'}}

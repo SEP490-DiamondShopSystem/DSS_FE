@@ -56,13 +56,12 @@ export const jewelrySlice = createSlice({
 		jewelries: null,
 		jewelriesModel: null,
 		jewelryDetail: null,
+		cartItems: [],
 		loading: false,
 		error: null,
 	},
 	reducers: {
-		setUser: (state, action) => {
-			state.userInfo = action.payload;
-		},
+		addToCart: (state, action) => {},
 	},
 	extraReducers: (builder) => {
 		builder

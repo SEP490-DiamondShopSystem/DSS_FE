@@ -13,3 +13,8 @@ export const GetAllJewelrySelector = (state) => state.jewelrySlice.jewelries;
 export const GetAllJewelryModelSelector = (state) => state.jewelrySlice.jewelriesModel;
 export const GetJewelryDetailSelector = (state) => state.jewelrySlice.jewelryDetail;
 export const LoadingJewelrySelector = (state) => state.jewelrySlice.loading;
+
+//CART
+export const GetCartSelector = (state) => state.cartSlice.cart;
+export const GetCartDesignSelector = (state) => state.cartSlice.cartDesign;
+export const GetCartFinishSelector = (state) => state.cartSlice.cartFinish;

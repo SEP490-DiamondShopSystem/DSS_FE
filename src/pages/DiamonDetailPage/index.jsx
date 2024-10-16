@@ -141,7 +141,7 @@ const DiamondDetailPage = () => {
 
 	const mappedDiamond = mapAttributes(fakeData, attributes); // Use fake data with fetched attributes
 
-	console.log(mappedDiamond);
+	console.log(fakeData);
 
 	return (
 		<>
