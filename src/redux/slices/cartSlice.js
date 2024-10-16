@@ -33,17 +33,7 @@ export const cartSlice = createSlice({
 				state.cart = []; // Khởi tạo nếu chưa tồn tại
 			}
 
-			const existingIndex = state.cart.findIndex(
-				(item) => item.DiamondId === diamond.DiamondId
-			);
-
-			if (existingIndex !== -1) {
-				// Nếu sản phẩm đã tồn tại, cập nhật sản phẩm
-				state.cart[existingIndex] = diamond;
-			} else {
-				// Nếu không tồn tại, thêm sản phẩm mới vào giỏ hàng
-				state.cart.push(diamond);
-			}
+			state.cart.push(diamond);
 
 			// Đồng bộ với localStorage
 			localStorage.setItem('cart', JSON.stringify(state.cart));
@@ -96,6 +86,14 @@ export const cartSlice = createSlice({
 			// Đồng bộ với localStorage
 			localStorage.setItem('cartFinish', JSON.stringify(state.cartFinish));
 		},
+		removeFromCart: (state, action) => {
+			state.cart = action.payload; // Cập nhật cart với dữ liệu mới
+			localStorage.setItem('cart', JSON.stringify(state.cart)); // Đồng bộ với localStorage
+		},
+		removeFromCartFinish: (state, action) => {
+			state.cartFinish = action.payload; // Cập nhật cart với dữ liệu mới
+			localStorage.setItem('cart', JSON.stringify(state.cartFinish)); // Đồng bộ với localStorage
+		},
 	},
 });
 
@@ -106,4 +104,6 @@ export const {
 	addOrUpdateItem,
 	addOrUpdateCartDesignDiamondItem,
 	addToCartFinish,
+	removeFromCart,
+	removeFromCartFinish,
 } = cartSlice.actions;
