@@ -7,14 +7,12 @@ import {
 	UnorderedListOutlined,
 } from '@ant-design/icons';
 import {Image} from 'antd';
+import Loading from 'react-loading';
 import {useDispatch, useSelector} from 'react-redux';
-import diamondImg from '../../assets/img-diamond.png';
-import {GetAllDiamondSelector, LoadingDiamondSelector} from '../../redux/selectors';
-import {getAllDiamond} from '../../redux/slices/diamondSlice';
 import {useNavigate} from 'react-router-dom';
+import diamondImg from '../../assets/img-diamond.png';
 import {FilterDiamond} from '../../components/Filter/Filter';
-import InfiniteScroll from 'react-infinite-scroll-component';
-import ReactLoading from 'react-loading';
+import {LoadingDiamondSelector} from '../../redux/selectors';
 import {formatPrice} from '../../utils';
 
 export const DiamondLabList = ({diamond, setDiamond, diamondList}) => {
@@ -109,9 +107,7 @@ export const DiamondLabList = ({diamond, setDiamond, diamondList}) => {
 			<FilterDiamond setFilters={setFilters} filters={filters} handleReset={handleReset} />
 
 			{loading ? (
-				<div className="flex items-center justify-center my-10">
-					<ReactLoading height={'10%'} width={'10%'} type="spin" color="#dec986" />
-				</div>
+				<Loading />
 			) : (
 				<>
 					<div className="text-2xl flex justify-end mt-10">

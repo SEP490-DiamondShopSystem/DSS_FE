@@ -1,15 +1,14 @@
 import React, {useState} from 'react';
 
 import {UserOutlined} from '@ant-design/icons';
+import {message} from 'antd';
+import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
-import {removeLocalStorage, setLocalStorage} from '../../utils/localstorage';
-import {notifySuccess} from '../../utils/toast';
+import {logout} from '../../redux/slices/userLoginSlice';
+import {setLocalStorage} from '../../utils/localstorage';
 import LoginModal from '../LogModal/LoginModal';
 import LogoutModal from '../LogModal/LogoutModal'; // Import LogoutModal
 import SignUpModal from '../LogModal/SignUpModal';
-import {useDispatch} from 'react-redux';
-import {logout} from '../../redux/slices/userLoginSlice';
-import {message} from 'antd';
 
 const ActionLinks = () => {
 	const token = localStorage.getItem('accessToken');
@@ -32,9 +31,11 @@ const ActionLinks = () => {
 
 	const handleLogout = () => {
 		dispatch(logout());
+		// dispatch(clearCartByUserId());
 		message.success('Đăng xuất thành công!');
 		hideLogoutModal();
 		navigate('/');
+		window.location.reload();
 	};
 
 	const handleLinkClick = (page) => {

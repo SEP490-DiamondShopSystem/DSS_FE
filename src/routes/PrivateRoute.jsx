@@ -1,7 +1,8 @@
-import React, {useEffect, useState} from 'react';
 import {message} from 'antd';
+import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Navigate} from 'react-router-dom';
+import Loading from '../components/Loading';
 import {GetUserDetailSelector, UserInfoSelector} from '../redux/selectors';
 import {getUserDetail} from '../redux/slices/userLoginSlice';
 
@@ -10,7 +11,7 @@ export const PrivateRoute = ({children, roles}) => {
 	const userDetail = useSelector(GetUserDetailSelector);
 	const dispatch = useDispatch();
 
-	const [loading, setLoading] = useState(true); // Thêm state loading
+	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
 		if (userSelector && userSelector.UserId) {
@@ -23,7 +24,7 @@ export const PrivateRoute = ({children, roles}) => {
 	}, [dispatch, userSelector]);
 
 	if (loading) {
-		return <div>Loading...</div>;
+		return <Loading />;
 	}
 
 	// Kiểm tra xem người dùng đã đăng nhập chưa
@@ -35,7 +36,7 @@ export const PrivateRoute = ({children, roles}) => {
 		userDetail.Roles.length === 0
 	) {
 		console.log('Private route redirect: User not logged in');
-		message.error('Xin Đăng Nhập!');
+		message.error('Vui Lòng Đăng Nhập!');
 		return <Navigate to="/" />;
 	}
 

@@ -1,12 +1,14 @@
+import React, {useState} from 'react';
+
 import {MinusOutlined, PlusOutlined} from '@ant-design/icons';
 import {faRefresh, faTruck} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {Button, message, Rate, Select} from 'antd';
-import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {convertToVietnamDate, formatPrice} from '../../../utils';
 import {addToCart} from '../../../redux/slices/cartSlice';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {UserInfoSelector} from '../../../redux/selectors';
 
 const metalType = {
 	id: 12212,
@@ -60,9 +62,13 @@ export const InformationRight = ({
 	diamondJewelry,
 	size,
 	setSize,
+	setIsLoginModalVisible,
+	user,
 }) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+
+	const userSelector = useSelector(UserInfoSelector);
 
 	const [showDetail, setDetail] = useState(false);
 	const [showSecureShopping, setSecureShopping] = useState(false);
@@ -87,19 +93,20 @@ export const InformationRight = ({
 		localStorage.setItem('selectedMetal', JSON.stringify(metal));
 	};
 
-	const handleSelectWidth = (width) => {
-		setSelectedWidth(width);
-		console.log(width);
-
-		localStorage.setItem('selectedWidth', JSON.stringify(width));
-	};
-
 	const handleChange = (value) => {
 		setSize(value);
 	};
 
 	const handleAddCart = () => {
 		// if (size === '') return message.warning('Vui lòng chọn kích thước nhẫn!');
+		const isLoggedIn = userSelector && userSelector.UserId;
+
+		if (!isLoggedIn) {
+			message.warning('Bạn cần phải đăng nhập để thêm vào giỏ hàng!');
+			setIsLoginModalVisible(true);
+			return;
+		}
+		console.log(userSelector.UserId);
 
 		const data = {
 			...diamondJewelry,
@@ -110,15 +117,14 @@ export const InformationRight = ({
 		};
 
 		// Dispatch action để thêm sản phẩm vào giỏ hàng trong Redux
-		dispatch(addToCart(data));
-
-		// Thông báo thành công khi sản phẩm được thêm vào
-		message.success('Sản phẩm đã được thêm vào giỏ hàng!');
+		dispatch(addToCart({data, userId: userSelector.UserId}));
 	};
+
+	console.log('diamondJewelry', diamondJewelry);
 
 	return (
 		<div>
-			<div className="border-b border-tintWhite">
+			<div className="border-tintWhite">
 				<h1 className="text-3xl">
 					{diamondJewelry?.Name} {selectedMetal?.Name || selectedMetal}
 				</h1>
@@ -145,7 +151,7 @@ export const InformationRight = ({
 				</div> */}
 			</div>
 			<div>
-				<div className="my-5 flex items-center">
+				{/* <div className="my-5 flex items-center">
 					<div className="font-semibold">Loại Kim Loại</div>
 					<div className={`font-semibold text-xl pl-4 text-primary`}>
 						{selectedMetal?.Name}
@@ -170,8 +176,8 @@ export const InformationRight = ({
 					<div className={`font-semibold text-xl pl-4 text-primary`}>
 						{diamondJewelry?.Width}mm
 					</div>
-				</div>
-				<div>
+				</div> */}
+				{/* <div>
 					<div className="flex">
 						{metalType?.optionsWidth?.map((metal, i) => (
 							<div
@@ -187,8 +193,10 @@ export const InformationRight = ({
 							</div>
 						))}
 					</div>
-				</div>
-				{jewelryType && jewelryType === 'Nhẫn' && (
+				</div> */}
+			</div>
+			<div className="border-y border-tintWhite my-5">
+				{/* {diamondJewelry && diamondJewelry.Model.Category.Name === 'Ring' && (
 					<div className="my-5 flex items-center">
 						<div className="font-semibold">Chọn kích thước nhẫn:</div>
 						<div className={`font-semibold text-xl pl-4 text-primary`}>
@@ -206,17 +214,15 @@ export const InformationRight = ({
 							/>
 						</div>
 					</div>
-				)}
-			</div>
-			<div className="border-y border-tintWhite py-5 my-5">
+				)} */}
 				<div className="flex items-center">
 					{/* <p className="line-through text-gray decoration-gray text-2xl">
 						{metalType.price}
 					</p> */}
-					<p className="font-semibold pl-2 text-2xl">
-						{formatPrice(diamondJewelry.Price)}
+					<p className="font-semibold text-2xl my-2">
+						{formatPrice(diamondJewelry?.Price)}
 					</p>
-					<div className="text-sm pl-2">(Giá Cài Đặt)</div>
+					<div className="text-sm pl-2">(Giá Gốc)</div>
 				</div>
 				<div>
 					<div className="text-xl pt-2 font-semibold">
@@ -276,7 +282,7 @@ export const InformationRight = ({
 						}`}
 					>
 						<div className="flex justify-between px-4 py-2">
-							<span>{metalType.productDetail}</span>
+							<span>{diamondJewelry?.Model?.Category?.Description}</span>
 						</div>
 					</div>
 				</div>

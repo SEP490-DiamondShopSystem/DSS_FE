@@ -1,42 +1,90 @@
 import {createSlice} from '@reduxjs/toolkit';
+import {message} from 'antd';
+
+function getUserId() {
+	return localStorage.getItem('userId') || null;
+}
 
 export const cartSlice = createSlice({
 	name: 'cart',
 	initialState: {
-		cart: JSON.parse(localStorage.getItem('cart')) || [],
-		cartDesign: JSON.parse(localStorage.getItem('cartDesign')) || [],
-		cartFinish: JSON.parse(localStorage.getItem('cartFinish')) || [],
+		cart: JSON.parse(localStorage.getItem('cart')) || '',
+		cartByUserId: localStorage.getItem(`cart_${getUserId()}`) || '',
+		cartDiamondByUserId: localStorage.getItem(`cart_${getUserId()}`) || '',
+		cartFinishByUserId: localStorage.getItem(`cartFinish_${getUserId()}`) || '[]',
+		cartDesign: JSON.parse(localStorage.getItem('cartDesign')) || '',
+		cartFinish: JSON.parse(localStorage.getItem('cartFinish')) || '',
 	},
 	reducers: {
 		addToCart: (state, action) => {
-			const newItem = action.payload;
+			const {data, userId} = action.payload;
 
-			console.log(newItem);
-
-			// Đảm bảo state.cart là một mảng
-			if (!Array.isArray(state.cart)) {
-				state.cart = []; // Khởi tạo nếu chưa tồn tại
+			// Đảm bảo rằng cartByUserId đã được khởi tạo
+			if (!state.cartByUserId) {
+				state.cartByUserId = {};
 			}
 
-			// Thêm sản phẩm mới vào giỏ hàng
-			state.cart.push(newItem);
+			// Đảm bảo rằng cart cho userId đã được khởi tạo là một mảng
+			if (!Array.isArray(state.cartByUserId[userId])) {
+				state.cartByUserId[userId] = [];
+			}
 
-			// Đồng bộ với localStorage
-			localStorage.setItem('cart', JSON.stringify(state.cart));
+			// Kiểm tra xem sản phẩm jewelry đã có trong giỏ hàng chưa
+			const existingJewelryIndex = state.cartByUserId[userId].findIndex(
+				(item) => item.JewelryId === data.JewelryId
+			);
+
+			if (existingJewelryIndex === -1) {
+				// Nếu sản phẩm jewelry chưa có, thêm sản phẩm vào giỏ hàng
+				state.cartByUserId[userId].push(data);
+
+				// Cập nhật lại localStorage
+				localStorage.setItem(`cart_${userId}`, JSON.stringify(state.cartByUserId[userId]));
+
+				// Thông báo thành công khi sản phẩm được thêm vào
+				message.success('Sản phẩm đã được thêm vào giỏ hàng!');
+			} else {
+				// Nếu sản phẩm jewelry đã có, có thể hiển thị thông báo hoặc xử lý theo ý muốn
+				message.warning('Sản phẩm đã có trong giỏ hàng!');
+			}
 		},
+
 		addOrUpdateItem: (state, action) => {
 			const {diamond} = action.payload;
-			console.log(diamond);
 
-			if (!Array.isArray(state.cart)) {
-				state.cart = []; // Khởi tạo nếu chưa tồn tại
+			// Đảm bảo rằng cartByUserId đã được khởi tạo
+			if (!state.cartByUserId) {
+				state.cartByUserId = {};
 			}
 
-			state.cart.push(diamond);
+			// Đảm bảo rằng cart cho userId đã được khởi tạo là một mảng
+			if (!Array.isArray(state.cartByUserId[getUserId()])) {
+				state.cartByUserId[getUserId()] = [];
+			}
 
-			// Đồng bộ với localStorage
-			localStorage.setItem('cart', JSON.stringify(state.cart));
+			// Kiểm tra xem sản phẩm diamond đã có trong giỏ hàng chưa
+			const existingDiamondIndex = state.cartByUserId[getUserId()].findIndex(
+				(item) => item.DiamondId === diamond.DiamondId
+			);
+
+			if (existingDiamondIndex === -1) {
+				// Nếu sản phẩm diamond chưa có, thêm sản phẩm vào giỏ hàng
+				state.cartByUserId[getUserId()].push(diamond);
+
+				// Cập nhật lại localStorage
+				localStorage.setItem(
+					`cart_${getUserId()}`,
+					JSON.stringify(state.cartByUserId[getUserId()])
+				);
+
+				// Thông báo thành công khi sản phẩm được thêm vào
+				message.success('Sản phẩm đã được thêm vào giỏ hàng!');
+			} else {
+				// Nếu sản phẩm diamond đã có, có thể hiển thị thông báo hoặc xử lý theo ý muốn
+				message.warning('Sản phẩm đã có trong giỏ hàng!');
+			}
 		},
+
 		addOrUpdateCartDesignItem: (state, action) => {
 			const {jewelry} = action.payload; // Nhận diamondJewelry từ action payload
 			const existingIndex = state.cartDesign.findIndex(
@@ -76,7 +124,7 @@ export const cartSlice = createSlice({
 
 			// Đảm bảo cartFinish là một mảng
 			if (!Array.isArray(state.cartFinish)) {
-				state.cartFinish = [];
+				state.cartFinishByUserId[getUserId()] = [];
 			}
 
 			// const existingIndex = state.cartFinish.findIndex(
@@ -88,19 +136,33 @@ export const cartSlice = createSlice({
 			// 	state.cartFinish[existingIndex] = newItem;
 			// } else {
 			// 	// Nếu không tồn tại, thêm sản phẩm mới vào giỏ hàng thiết kế
-			state.cartFinish.push(newItem);
+			state.cartFinishByUserId[getUserId()].push(newItem);
 			// }
 
 			// Đồng bộ với localStorage
-			localStorage.setItem('cartFinish', JSON.stringify(state.cartFinish));
+			localStorage.setItem(
+				`cartFinish_${getUserId()}`,
+				JSON.stringify(state.cartFinishByUserId[getUserId()])
+			);
 		},
 		removeFromCart: (state, action) => {
-			state.cart = action.payload; // Cập nhật cart với dữ liệu mới
-			localStorage.setItem('cart', JSON.stringify(state.cart)); // Đồng bộ với localStorage
+			// Cập nhật giỏ hàng cho người dùng hiện tại
+			state.cartByUserId[getUserId()] = action.payload; // Cập nhật giỏ hàng với dữ liệu mới
+
+			// Cập nhật localStorage
+			localStorage.setItem(`cart_${getUserId()}`, JSON.stringify(action.payload)); // Cập nhật giỏ hàng trong localStorage với dữ liệu mới
 		},
+
 		removeFromCartFinish: (state, action) => {
 			state.cartFinish = action.payload; // Cập nhật cart với dữ liệu mới
 			localStorage.setItem('cart', JSON.stringify(state.cartFinish)); // Đồng bộ với localStorage
+		},
+		clearCartByUserId: (state) => {
+			const userId = getUserId();
+			if (userId) {
+				state.cartByUserId[userId] = [];
+				// localStorage.removeItem(`cart_${userId}`);
+			}
 		},
 	},
 });
@@ -114,4 +176,5 @@ export const {
 	addToCartFinish,
 	removeFromCart,
 	removeFromCartFinish,
+	clearCartByUserId,
 } = cartSlice.actions;

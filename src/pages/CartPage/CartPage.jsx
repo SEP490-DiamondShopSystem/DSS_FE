@@ -6,6 +6,7 @@ import {Select} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
 import {GetCartFinishSelector, GetCartSelector} from '../../redux/selectors';
 import {removeFromCart, removeFromCartFinish} from '../../redux/slices/cartSlice';
+import {DeleteOutlined, EyeOutlined} from '@ant-design/icons';
 
 const ring = [
 	{
@@ -26,41 +27,28 @@ const ring = [
 	},
 ];
 
+function getUserId() {
+	return localStorage.getItem('userId') || null;
+}
+
 const CartPage = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	const cart = useSelector(GetCartSelector);
-	const cartFinish = useSelector(GetCartFinishSelector);
+	const userId = getUserId();
+
+	const cart = useSelector((state) => {
+		const cartByUserId = state.cartSlice?.cartByUserId || {};
+		return cartByUserId[userId] || [];
+	});
+	const cartFinish = useSelector((state) => {
+		const cartFinishByUserId = state.cartSlice?.cartFinishByUserId || {};
+		return cartFinishByUserId[userId] || [];
+	});
 
 	const [promo, setPromo] = useState('');
 	const [jewelryType, setJewelryType] = useState(localStorage.getItem('jewelryType') || '');
 	const [cartPreset, setCartPreset] = useState('');
 	const [cartDesign, setCartDesign] = useState('');
-	// const [cartFinish, setCartFinish] = useState(() => {
-	// 	// Lấy cartFinish từ localStorage
-	// 	const storedCartFinish = localStorage.getItem('cartFinish');
-
-	// 	// Parse dữ liệu nếu tồn tại, nếu không thì trả về mảng rỗng
-	// 	try {
-	// 		return storedCartFinish ? JSON.parse(storedCartFinish) : [];
-	// 	} catch (error) {
-	// 		console.error('Error parsing cartFinish from localStorage:', error);
-	// 		return [];
-	// 	}
-	// });
-
-	// const [cart, setCart] = useState(() => {
-	// 	// Lấy cartFinish từ localStorage
-	// 	const storedCart = localStorage.getItem('cart');
-
-	// 	// Parse dữ liệu nếu tồn tại, nếu không thì trả về mảng rỗng
-	// 	try {
-	// 		return storedCart ? JSON.parse(storedCart) : [];
-	// 	} catch (error) {
-	// 		console.error('Error parsing cartFinish from localStorage:', error);
-	// 		return [];
-	// 	}
-	// });
 
 	console.log('cart', cart);
 	console.log('cartFinish', cartFinish);
@@ -68,22 +56,17 @@ const CartPage = () => {
 	const handleRingSizeChange = (index, value) => {
 		console.log(index);
 
-		// Tạo một bản sao của mảng cartFinish để không thay đổi trực tiếp trên state ban đầu
 		const updatedCart = [...cart];
 
-		// Tìm mục cần thay đổi bằng cách sử dụng index
 		const selectedItem = updatedCart[index];
 
 		console.log('selectedItem', selectedItem);
 
 		if (selectedItem && selectedItem.Size) {
-			// Thay đổi giá trị size của mục được chọn
 			selectedItem.Size = value;
 
-			// Cập nhật lại state cartFinish với mảng đã thay đổi
 			setCartPreset(updatedCart);
 
-			// Tùy chọn: Bạn có thể lưu hoặc thực hiện thêm các logic khác sau khi cập nhật
 			console.log('Updated cart:', updatedCart);
 		}
 	};
@@ -91,22 +74,17 @@ const CartPage = () => {
 	const handleRingSizeFinishChange = (index, value) => {
 		console.log(index);
 
-		// Tạo một bản sao của mảng cartFinish để không thay đổi trực tiếp trên state ban đầu
 		const updatedCart = [...cartFinish];
 
-		// Tìm mục cần thay đổi bằng cách sử dụng index
 		const selectedItem = updatedCart[index];
 
 		console.log('selectedItem', selectedItem);
 
 		if (selectedItem) {
-			// Thay đổi giá trị size của mục được chọn
 			selectedItem.Size = value;
 
-			// Cập nhật lại state cartFinish với mảng đã thay đổi
 			setCartDesign(updatedCart);
 
-			// Tùy chọn: Bạn có thể lưu hoặc thực hiện thêm các logic khác sau khi cập nhật
 			console.log('Updated cart:', updatedCart);
 		}
 	};
@@ -116,16 +94,12 @@ const CartPage = () => {
 	};
 
 	const handleRemoveCartFinish = (index) => {
-		// Tạo một bản sao của mảng cart
 		const updatedCart = [...cartFinish];
 
-		// Xóa phần tử tại vị trí index
 		updatedCart.splice(index, 1);
 
-		// Cập nhật lại state trong Redux
 		dispatch(removeFromCartFinish(updatedCart));
 
-		// Cập nhật lại localStorage
 		localStorage.setItem('cartFinish', JSON.stringify(updatedCart));
 	};
 
@@ -135,16 +109,12 @@ const CartPage = () => {
 	};
 
 	const handleRemoveCart = (index) => {
-		// Tạo một bản sao của mảng cart
 		const updatedCart = [...cart];
 
-		// Xóa phần tử tại vị trí index
 		updatedCart.splice(index, 1);
 
-		// Cập nhật lại state trong Redux
 		dispatch(removeFromCart(updatedCart));
 
-		// Cập nhật lại localStorage
 		localStorage.setItem('cart', JSON.stringify(updatedCart));
 	};
 
@@ -176,11 +146,6 @@ const CartPage = () => {
 	const grandTotal = totalDiamondPrice + totalJewelryPrice;
 
 	const totalPrice = grandDesignTotal + grandTotal;
-
-	console.log(grandDesignTotal);
-	console.log(grandTotal);
-	console.log(totalDiamondPrice);
-	console.log(totalJewelryPrice);
 
 	return (
 		<div className="flex justify-between p-8 bg-gray-50 min-h-screen mx-32 my-20">
@@ -292,22 +257,12 @@ const CartPage = () => {
 													{formatPrice(item.JewelryPrice)}
 												</span>
 											</p>
-											{jewelryType && jewelryType === 'Nhẫn' && (
+											{item.Model?.Category?.Name === 'Ring' && (
 												<div className="flex items-center mt-2">
 													<label className="mr-2 text-gray-700">
 														Kích thước nhẫn:
 													</label>
-													<Select
-														defaultValue={item.Size}
-														onChange={(value) =>
-															handleRingSizeChange(index, value)
-														}
-														className="p-1 text-sm"
-														options={ring}
-													/>
-													{/* <span className="ml-2 text-blue-500 text-sm cursor-pointer">
-											Find your ring size
-										</span> */}
+													<p>{item.SizeId}</p>
 												</div>
 											)}
 										</div>
@@ -328,9 +283,9 @@ const CartPage = () => {
 										<p className="text-gray-800">Không có thông tin</p>
 									)}
 								</div>
-								<div className="flex flex-col items-end space-y-2 text-sm text-yellow-600">
+								<div className="flex items-center justify-end space-y-2 divide-x text-sm text-yellow-600">
 									<span
-										className="cursor-pointer"
+										className="cursor-pointer w-auto hover:text-black text-primary text-xl px-3"
 										onClick={() => {
 											if (item.JewelryId) {
 												handleViewCart(item.JewelryId, null);
@@ -339,14 +294,14 @@ const CartPage = () => {
 											}
 										}}
 									>
-										View
+										<EyeOutlined classID="" />
 									</span>
 
 									<span
-										className="cursor-pointer"
+										className="cursor-pointer px-3"
 										onClick={() => handleRemoveCart(index)}
 									>
-										Remove
+										<DeleteOutlined color="red" />
 									</span>
 								</div>
 							</div>

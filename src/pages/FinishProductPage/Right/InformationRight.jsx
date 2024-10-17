@@ -6,8 +6,9 @@ import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {formatPrice} from '../../../utils';
 import {Clarity} from '../../Customize/DiamondDetailPage/ChoiceMetal/Choose/Clarity';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {addToCartFinish} from '../../../redux/slices/cartSlice';
+import {UserInfoSelector} from '../../../redux/selectors';
 
 const {Text} = Typography;
 
@@ -46,9 +47,17 @@ const ring = [
 	},
 ];
 
-export const InformationRight = ({jewelryDetail, diamondDetail}) => {
+export const InformationRight = ({
+	jewelryDetail,
+	diamondDetail,
+	setIsLoginModalVisible,
+	isLoginModalVisible,
+}) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+
+	const userSelector = useSelector(UserInfoSelector);
+
 	const [showDetail, setDetail] = useState(false);
 	const [showSecureShopping, setSecureShopping] = useState(false);
 	const [showProductWarrantly, setProductWarrantly] = useState(false);
@@ -73,6 +82,14 @@ export const InformationRight = ({jewelryDetail, diamondDetail}) => {
 
 	const handleAddToCart = () => {
 		if (sizeChange === '') return message.warning('Vui lòng chọn kích thước nhẫn!');
+
+		const isLoggedIn = userSelector && userSelector.UserId;
+
+		if (!isLoggedIn) {
+			message.warning('Bạn cần phải đăng nhập để thêm vào giỏ hàng!');
+			setIsLoginModalVisible(true);
+			return;
+		}
 
 		const data = {
 			...jewelryDetail,

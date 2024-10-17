@@ -9,6 +9,7 @@ import {InformationLeft} from './Left/InformationLeft';
 import {InformationRight} from './Right/InformationRight';
 import {Sidebar} from './Sidebar';
 import {getDiamondDetail} from '../../redux/slices/diamondSlice';
+import LoginModal from '../../components/LogModal/LoginModal';
 
 const DiamondDetailPage = () => {
 	const {id} = useParams();
@@ -20,6 +21,7 @@ const DiamondDetailPage = () => {
 	const [diamondChoice, setDiamondChoice] = useState(localStorage.getItem('diamondChoice') || '');
 	const [jewelryType, setJewelryType] = useState(localStorage.getItem('jewelryType') || '');
 	const [detail, setDetail] = useState({});
+	const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
 
 	const items = [
 		{
@@ -54,6 +56,8 @@ const DiamondDetailPage = () => {
 			setDetail(diamondDetail);
 		}
 	}, [diamondDetail]);
+
+	const hideLoginModal = () => setIsLoginModalVisible(false);
 
 	const toggleSidebar = () => {
 		setIsSidebarOpen(!isSidebarOpen);
@@ -149,8 +153,11 @@ const DiamondDetailPage = () => {
 				{diamondChoice.length > 0 && (
 					<Sidebar
 						isOpen={isSidebarOpen}
+						setIsSidebarOpen={setIsSidebarOpen}
 						toggleSidebar={toggleSidebar}
 						diamond={mappedDiamond}
+						isLoginModalVisible={isLoginModalVisible}
+						setIsLoginModalVisible={setIsLoginModalVisible}
 					/>
 				)}
 
@@ -168,6 +175,7 @@ const DiamondDetailPage = () => {
 						/>
 					</div>
 				</div>
+				<LoginModal isOpen={isLoginModalVisible} onClose={hideLoginModal} />
 			</div>
 		</>
 	);

@@ -23,12 +23,12 @@ export const handleLogin = createAsyncThunk(
 	}
 );
 
-export const GoogleLogin = createAsyncThunk(
-	'userLoginSlice/GoogleLogin',
+export const GoogleRegister = createAsyncThunk(
+	'userLoginSlice/GoogleRegister',
 	async ({externalProviderName}, {rejectWithValue}) => {
 		try {
-			const data = await api.post(
-				`/Account/Login?externalProviderName=${externalProviderName}`
+			const data = await api.get(
+				`/Account/Register/External?externalProviderName=${externalProviderName}`
 			);
 			console.log(data);
 
@@ -89,6 +89,7 @@ export const userLoginSlice = createSlice({
 			state.userDetail = null;
 			localStorage.removeItem('accessToken');
 			localStorage.removeItem('refreshToken');
+			localStorage.removeItem('userId');
 		},
 	},
 	extraReducers: (builder) => {
@@ -108,17 +109,17 @@ export const userLoginSlice = createSlice({
 				state.loading = false;
 				state.error = action.payload; // Lưu lỗi nếu có
 			})
-			.addCase(GoogleLogin.pending, (state) => {
+			.addCase(GoogleRegister.pending, (state) => {
 				state.loading = true;
 				state.error = null;
 			})
-			.addCase(GoogleLogin.fulfilled, (state, action) => {
+			.addCase(GoogleRegister.fulfilled, (state, action) => {
 				state.loading = false;
 				state.userInfo = action.payload;
 				setLocalStorage('accessToken', action.payload.accessToken);
 				setLocalStorage('refreshToken', action.payload.refreshToken);
 			})
-			.addCase(GoogleLogin.rejected, (state, action) => {
+			.addCase(GoogleRegister.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload; // Lưu lỗi nếu có
 			})

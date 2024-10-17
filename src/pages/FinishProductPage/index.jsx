@@ -5,11 +5,13 @@ import {items} from '../../components/StepProgressBar/StepProgressBar-1';
 import {ImageGallery} from './Left/ImageGallery';
 import {InformationLeft} from './Left/InformationLeft';
 import {InformationRight} from './Right/InformationRight';
+import LoginModal from '../../components/LogModal/LoginModal';
 
 const FinishProductPage = () => {
 	const [jewelryChoice, setJewelryChoice] = useState(localStorage.getItem('jewelryChoice') || '');
 	const [diamondChoice, setDiamondChoice] = useState(localStorage.getItem('diamondChoice') || '');
 	const [jewelryType, setJewelryType] = useState(localStorage.getItem('jewelryType') || '');
+	const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
 	const [diamondDetail, setDiamondDetail] = useState(() => {
 		const cartDesign = localStorage.getItem('cartDesign');
 
@@ -28,7 +30,6 @@ const FinishProductPage = () => {
 
 		return null;
 	});
-
 	const [jewelryDetail, setJewelryDetail] = useState(() => {
 		const cartDesign = localStorage.getItem('cartDesign');
 
@@ -47,6 +48,8 @@ const FinishProductPage = () => {
 
 		return null;
 	});
+
+	const hideLoginModal = () => setIsLoginModalVisible(false);
 
 	const items = [
 		{
@@ -95,9 +98,15 @@ const FinishProductPage = () => {
 				</div>
 
 				<div className="w-full md:w-1/2 p-6 md:pr-32">
-					<InformationRight jewelryDetail={jewelryDetail} diamondDetail={diamondDetail} />
+					<InformationRight
+						jewelryDetail={jewelryDetail}
+						diamondDetail={diamondDetail}
+						setIsLoginModalVisible={setIsLoginModalVisible}
+						isLoginModalVisible={isLoginModalVisible}
+					/>
 				</div>
 			</div>
+			<LoginModal isOpen={isLoginModalVisible} onClose={hideLoginModal} />
 		</div>
 	);
 };

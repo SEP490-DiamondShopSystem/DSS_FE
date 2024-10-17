@@ -2319,3 +2319,23 @@ video {
 	margin-left: 0.75rem /* 12px */;
 	margin-right: 0.75rem /* 12px */;
 }
+
+.hover\:text-offWhite:hover {
+	--tw-text-opacity: 1;
+	color: rgb(247 247 247 / var(--tw-text-opacity)) /* #f7f7f7 */;
+}
+
+.hover\:text-black:hover {
+	--tw-text-opacity: 1;
+	color: rgb(0 0 0 / var(--tw-text-opacity)) /* #000000 */;
+}
+
+.py-2 {
+	padding-top: 0.5rem /* 8px */;
+	padding-bottom: 0.5rem /* 8px */;
+}
+
+.px-3 {
+	padding-left: 0.75rem /* 12px */;
+	padding-right: 0.75rem /* 12px */;
+}

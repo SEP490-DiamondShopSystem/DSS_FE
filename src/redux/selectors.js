@@ -8,6 +8,7 @@ export const GetUserDetailSelector = (state) => state.userLoginSlice.userDetail;
 //DIAMOND
 export const GetAllDiamondSelector = (state) => state.diamondSlice.diamonds;
 export const GetDiamondDetailSelector = (state) => state.diamondSlice.diamondDetail;
+export const GetDiamondShapeSelector = (state) => state.diamondSlice.diamondShape;
 export const GetDiamondAttributesSelector = (state) => state.diamondSlice.diamondAttributes;
 export const LoadingDiamondSelector = (state) => state.diamondSlice.loading;
 
@@ -16,7 +17,6 @@ export const GetAllJewelrySelector = (state) => state.jewelrySlice.jewelries;
 export const GetAllJewelryModelSelector = (state) => state.jewelrySlice.jewelriesModel;
 export const GetJewelryDetailSelector = (state) => state.jewelrySlice.jewelryDetail;
 export const LoadingJewelrySelector = (state) => state.jewelrySlice.loading;
-
 
 // DISTANCE
 export const selectDistances = (state) => state.distanceSlice.distances;
@@ -27,4 +27,3 @@ export const selectError = (state) => state.distanceSlice.error;
 export const GetCartSelector = (state) => state.cartSlice.cart;
 export const GetCartDesignSelector = (state) => state.cartSlice.cartDesign;
 export const GetCartFinishSelector = (state) => state.cartSlice.cartFinish;
-
