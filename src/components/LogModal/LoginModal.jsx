@@ -5,8 +5,9 @@ import {jwtDecode} from 'jwt-decode';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import {LoadingUserSelector} from '../../redux/selectors';
-import {GoogleLogin, handleLogin, setUser} from '../../redux/slices/userLoginSlice';
+import {GoogleRegister, handleLogin, setUser} from '../../redux/slices/userLoginSlice';
 import {GoogleLoginButton} from '../LoginGoogleButton';
+import {setLocalStorage} from '../../utils/localstorage';
 
 const LoginModal = ({isOpen, onClose}) => {
 	const dispatch = useDispatch();
@@ -29,6 +30,8 @@ const LoginModal = ({isOpen, onClose}) => {
 				if (res.payload) {
 					const decodedData = jwtDecode(res.payload.accessToken);
 					console.log(decodedData);
+					setLocalStorage('user', JSON.stringify(decodedData));
+					setLocalStorage('userId', decodedData.UserId);
 					dispatch(setUser(decodedData));
 					message.success('Đăng nhập thành công!');
 					form.resetFields();
@@ -51,8 +54,12 @@ const LoginModal = ({isOpen, onClose}) => {
 
 	const handleGoogleLogin = (response) => {
 		console.log('Google login response:', response);
-		// dispatch(GoogleLogin({externalProviderName: 'Google'}));
-		const decode = jwtDecode(response.credential);
+		// const data = {
+		// 	email: '',
+		// 	password: '',
+		// };
+		dispatch(GoogleRegister({externalProviderName: 'Google'}));
+		// const decode = jwtDecode(response.credential);
 		console.log(decode);
 
 		message.success('Đăng nhập Google thành công!');

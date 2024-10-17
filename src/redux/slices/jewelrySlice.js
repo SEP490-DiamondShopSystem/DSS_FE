@@ -60,9 +60,7 @@ export const jewelrySlice = createSlice({
 		loading: false,
 		error: null,
 	},
-	reducers: {
-		addToCart: (state, action) => {},
-	},
+	reducers: {},
 	extraReducers: (builder) => {
 		builder
 			.addCase(getAllJewelry.pending, (state) => {

@@ -1,30 +1,29 @@
 import React, {useEffect, useState} from 'react';
 
-import {Steps} from 'antd';
+import {useDispatch, useSelector} from 'react-redux';
+import {useParams} from 'react-router-dom';
+import LoginModal from '../../components/LogModal/LoginModal';
+import {GetJewelryDetailSelector} from '../../redux/selectors';
+import {getJewelryDetail} from '../../redux/slices/jewelrySlice';
+import {data} from '../../utils/constant';
 import {ImageGallery} from './Left/ImageGallery';
 import {InformationLeft} from './Left/InformationLeft';
 import {InformationRight} from './Right/InformationRight';
-import {useParams} from 'react-router-dom';
-import {useDispatch, useSelector} from 'react-redux';
-import {getJewelryDetail} from '../../redux/slices/jewelrySlice';
-import {GetJewelryDetailSelector} from '../../redux/selectors';
-import {data} from '../../utils/constant';
 
 const JewelryDetailPage = () => {
 	const {id} = useParams();
 	const dispatch = useDispatch();
 
 	const jewelryDetail = useSelector(GetJewelryDetailSelector);
+	const storedUser = localStorage.getItem('user');
+	const user = JSON.parse(storedUser);
 
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 	const [diamondJewelry, setDiamondJewelry] = useState(data);
 	const [size, setSize] = useState('');
 	const [jewelry, setJewelry] = useState();
 	const [selectedMetal, setSelectedMetal] = useState(diamondJewelry.Metal.Name);
-
-	const toggleSidebar = () => {
-		setIsSidebarOpen(!isSidebarOpen);
-	};
+	const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
 
 	useEffect(() => {
 		dispatch(getJewelryDetail({id}));
@@ -34,7 +33,11 @@ const JewelryDetailPage = () => {
 		if (jewelryDetail) setJewelry(jewelryDetail);
 	}, [jewelryDetail]);
 
-	console.log('jewelry', jewelry);
+	const hideLoginModal = () => setIsLoginModalVisible(false);
+
+	const toggleSidebar = () => {
+		setIsSidebarOpen(!isSidebarOpen);
+	};
 
 	return (
 		<div className="mx-32">
@@ -51,9 +54,12 @@ const JewelryDetailPage = () => {
 						selectedMetal={selectedMetal}
 						setSize={setSize}
 						size={size}
+						setIsLoginModalVisible={setIsLoginModalVisible}
+						user={user}
 					/>
 				</div>
 			</div>
+			<LoginModal isOpen={isLoginModalVisible} onClose={hideLoginModal} />
 		</div>
 	);
 };

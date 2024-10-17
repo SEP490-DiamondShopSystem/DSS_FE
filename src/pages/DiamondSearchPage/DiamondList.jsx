@@ -8,15 +8,12 @@ import {
 } from '@ant-design/icons';
 import {Image} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
-import diamondImg from '../../assets/img-diamond.png';
-import {GetAllDiamondSelector, LoadingDiamondSelector} from '../../redux/selectors';
-import {getAllDiamond} from '../../redux/slices/diamondSlice';
 import {useNavigate} from 'react-router-dom';
+import diamondImg from '../../assets/img-diamond.png';
 import {FilterDiamond} from '../../components/Filter/Filter';
-import BannerShape from '../../components/Banner/BannerShape';
+import {LoadingDiamondSelector} from '../../redux/selectors';
 
-import InfiniteScroll from 'react-infinite-scroll-component';
-import ReactLoading from 'react-loading';
+import Loading from 'react-loading';
 
 export const DiamondList = ({diamond, diamondList, setDiamond}) => {
 	const dispatch = useDispatch();
@@ -113,9 +110,7 @@ export const DiamondList = ({diamond, diamondList, setDiamond}) => {
 			<FilterDiamond setFilters={setFilters} filters={filters} handleReset={handleReset} />
 
 			{loading ? (
-				<div className="flex items-center justify-center my-10">
-					<ReactLoading height={'10%'} width={'10%'} type="spin" color="#dec986" />
-				</div>
+				<Loading />
 			) : (
 				<>
 					<div className="text-2xl flex justify-end mt-10">

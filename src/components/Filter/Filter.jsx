@@ -1,8 +1,8 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {DownOutlined, ReloadOutlined} from '@ant-design/icons';
 import {Button, Select, Slider} from 'antd';
-import {useLocation} from 'react-router-dom';
+import {useDispatch, useSelector} from 'react-redux';
 import {
 	genderChoice,
 	marks,
@@ -12,8 +12,25 @@ import {
 	Shape,
 	typeChoice,
 } from '../../utils/constant';
+import {GetDiamondShapeSelector} from '../../redux/selectors';
+import {getDiamondShape} from '../../redux/slices/diamondSlice';
 
 export const FilterDiamond = ({filters, setFilters, handleReset}) => {
+	const dispatch = useDispatch();
+	const shape = useSelector(GetDiamondShapeSelector);
+
+	const [diamondShape, setDiamondShape] = useState();
+
+	useEffect(() => {
+		dispatch(getDiamondShape());
+	}, []);
+
+	useEffect(() => {
+		if (shape) {
+			setDiamondShape(shape);
+		}
+	}, [shape]);
+
 	const handleChange = (type, value) => {
 		setFilters((prev) => ({
 			...prev,
@@ -51,11 +68,11 @@ export const FilterDiamond = ({filters, setFilters, handleReset}) => {
 					className="h-12 ml-10"
 					style={{width: '10%', lineHeight: 160}}
 					onChange={(value) => handleChange('shape', value)}
-					value={filters.shape}
+					value={filters.shape || 'Hình dạng'}
 				>
-					{Shape?.map((shape, i) => (
-						<Select.Option key={i} value={shape}>
-							{shape}
+					{diamondShape?.map((shape, i) => (
+						<Select.Option key={i} value={shape?.ShapeName}>
+							{shape?.ShapeName}
 						</Select.Option>
 					))}
 				</Select>
@@ -63,7 +80,7 @@ export const FilterDiamond = ({filters, setFilters, handleReset}) => {
 			<div className="flex items-center mt-4">
 				{/* Price Range Slider */}
 				<div className="ml-10 min-w-44">
-					<p className="mb-4">Price:</p>
+					<p className="mb-4">Giá:</p>
 					<Slider
 						range
 						value={[filters.price.minPrice, filters.price.maxPrice]}

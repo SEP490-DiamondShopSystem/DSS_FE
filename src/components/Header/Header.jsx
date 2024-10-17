@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 
 import {HeartOutlined} from '@ant-design/icons';
 import {faShoppingBag} from '@fortawesome/free-solid-svg-icons';
@@ -6,41 +6,36 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {Badge} from 'antd';
 import {useSelector} from 'react-redux';
 import {Link} from 'react-router-dom';
-import {GetCartFinishSelector, GetCartSelector} from '../../redux/selectors';
+import {GetCartFinishSelector} from '../../redux/selectors';
 import Logo from './../../assets/logo-ex.png';
 import ActionLinks from './ActionLinks';
 import NavLinks from './NavLinks';
 
 export const Header = () => {
-	const cart = useSelector(GetCartSelector);
-	const cartFinish = useSelector(GetCartFinishSelector);
+	function getUserId() {
+		return localStorage.getItem('userId') || null;
+	}
+	const userId = getUserId();
+	const localCart = JSON.parse(localStorage.getItem(`cart_${userId}`)) || [];
 
-	// const [cartFinish, setCartFinish] = useState(() => {
-	// 	// Lấy cartFinish từ localStorage
-	// 	const storedCartFinish = localStorage.getItem('cartFinish');
+	const cartFromRedux = useSelector((state) => {
+		const cartByUserId = state.cartSlice?.cartByUserId || {};
+		return cartByUserId[userId] || [];
+	});
+	const localCartFinish = JSON.parse(localStorage.getItem(`cartFinish_${userId}`)) || [];
 
-	// 	// Parse dữ liệu nếu tồn tại, nếu không thì trả về mảng rỗng
-	// 	try {
-	// 		return storedCartFinish ? JSON.parse(storedCartFinish) : [];
-	// 	} catch (error) {
-	// 		console.error('Error parsing cartFinish from localStorage:', error);
-	// 		return [];
-	// 	}
-	// });
+	const cartFinishFromRedux = useSelector((state) => {
+		const cartFinishByUserId = state.cartSlice?.cartFinishByUserId || {};
+		return cartFinishByUserId[userId] || [];
+	});
 
-	// const [cart, setCart] = useState(() => {
-	// 	// Lấy cart từ localStorage
-	// 	const storedCart = localStorage.getItem('cart');
+	const cart = localCart.length > 0 ? localCart : cartFromRedux;
+	const cartFinish = localCart.length > 0 ? localCartFinish : cartFinishFromRedux;
+	// const cart1 = JSON.parse(getLocalStorage(`cart_${getUserId()}`));
 
-	// 	// Parse dữ liệu nếu tồn tại, nếu không thì trả về mảng rỗng
-	// 	try {
-	// 		return storedCart ? JSON.parse(storedCart) : [];
-	// 	} catch (error) {
-	// 		console.error('Error parsing cart from localStorage:', error);
-	// 		return [];
-	// 	}
-	// });
 	const cartTotal = (cart?.length || 0) + (cartFinish?.length || 0);
+
+	console.log(userId);
 
 	return (
 		<nav className="bg-white">

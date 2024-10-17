@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 
 import {Image} from 'antd';
-import ReactLoading from 'react-loading';
+import Loading from 'react-loading';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import jewelryImg from '../../assets/ring_classic.png';
@@ -40,13 +40,15 @@ export const ProductList = () => {
 	}, [dispatch]);
 
 	useEffect(() => {
-		if (jewelryList) setJewelries(jewelryList);
+		if (jewelryList) setJewelries(jewelryList.Values);
 	}, [jewelryList]);
 
 	const handleReset = () => {
 		localStorage.removeItem('jewelry');
 		setFilters({gender: [], type: [], metal: [], price: {minPrice: 0, maxPrice: 1000}});
 	};
+
+	const handleNavigate = () => {};
 
 	console.log(jewelryList);
 
@@ -61,9 +63,7 @@ export const ProductList = () => {
 			</div>
 
 			{loading ? (
-				<div className="flex items-center justify-center my-10">
-					<ReactLoading height={'10%'} width={'10%'} type="spin" color="#dec986" />
-				</div>
+				<Loading />
 			) : (
 				<>
 					{!Array.isArray(jewelries) || jewelries.length === 0 ? (

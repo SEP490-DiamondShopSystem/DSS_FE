@@ -9,7 +9,7 @@ export const BannerRings = () => {
 	const handleEarringDesignClick = () => {
 		localStorage.setItem('jewelryType', 'Nhẫn');
 		localStorage.removeItem('diamondChoice');
-		navigate('/jewelry/design-your-own-earrings/setting/all');
+		navigate('/jewelry/design-your-own-rings/setting/all');
 	};
 	return (
 		<div className="relative bg-gray-800 text-white">

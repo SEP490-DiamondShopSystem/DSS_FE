@@ -1,12 +1,13 @@
 import {RightOutlined} from '@ant-design/icons';
 import {faGem, faShoppingBag} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {Button} from 'antd';
+import {Button, message} from 'antd';
 import React, {useEffect, useState} from 'react';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import diamondImage from '../../assets/img-diamond.png';
 import {addOrUpdateCartDesignDiamondItem, addOrUpdateItem} from '../../redux/slices/cartSlice';
+import {UserInfoSelector} from '../../redux/selectors';
 
 const shapes = [
 	{
@@ -40,9 +41,18 @@ const shapes = [
 	},
 ];
 
-export const Sidebar = ({isOpen, toggleSidebar, diamond}) => {
+export const Sidebar = ({
+	isOpen,
+	toggleSidebar,
+	diamond,
+	setIsLoginModalVisible,
+	setIsSidebarOpen,
+}) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+
+	const userSelector = useSelector(UserInfoSelector);
+
 	const [link, setLink] = useState('/diamond/search');
 	const [activeRcm, setActiveRcm] = useState('');
 	const [active, setActive] = useState('diamond');
@@ -66,20 +76,25 @@ export const Sidebar = ({isOpen, toggleSidebar, diamond}) => {
 	console.log(diamond);
 
 	const handleNavigate = () => {
+		const isLoggedIn = userSelector && userSelector.UserId;
+
+		if (!isLoggedIn) {
+			message.warning('Bạn cần phải đăng nhập để thêm vào giỏ hàng!');
+			setIsLoginModalVisible(true);
+			setIsSidebarOpen(false);
+			return;
+		}
 		const data = {
 			...diamond,
 			DiamondPrice: diamond.Price,
 		};
-		// Xác định xem lưu vào 'cart' hay 'cartDesign'
+
 		if (active === 'addToCart') {
-			// Gọi action để thêm/cập nhật giỏ hàng trong Redux
 			dispatch(addOrUpdateItem({diamond: data}));
 		} else {
-			// Gọi action để thêm/cập nhật giỏ hàng thiết kế trong Redux
 			dispatch(addOrUpdateCartDesignDiamondItem({diamond: data}));
 		}
 
-		// Điều hướng tới link mong muốn
 		navigate(link);
 	};
 
