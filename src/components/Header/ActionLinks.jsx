@@ -7,7 +7,7 @@ import {useNavigate} from 'react-router-dom';
 import {logout} from '../../redux/slices/userLoginSlice';
 import {setLocalStorage} from '../../utils/localstorage';
 import LoginModal from '../LogModal/LoginModal';
-import LogoutModal from '../LogModal/LogoutModal'; // Import LogoutModal
+import LogoutModal from '../LogModal/LogoutModal';
 import SignUpModal from '../LogModal/SignUpModal';
 
 const ActionLinks = () => {
@@ -31,7 +31,6 @@ const ActionLinks = () => {
 
 	const handleLogout = () => {
 		dispatch(logout());
-		// dispatch(clearCartByUserId());
 		message.success('Đăng xuất thành công!');
 		hideLogoutModal();
 		navigate('/');
