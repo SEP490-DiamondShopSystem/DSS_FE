@@ -74,7 +74,7 @@ const DiamondSearchPage = () => {
 		dispatch(getAllDiamond());
 	}, [dispatch]);
 
-	console.log(mappedDiamonds);
+	console.log('diamondList', diamondList);
 
 	useEffect(() => {
 		if (diamondList && enums) {

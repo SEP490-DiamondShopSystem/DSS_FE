@@ -202,7 +202,7 @@ const CartPage = () => {
 	};
 
 	// Lọc các sản phẩm có Jewelry hoặc Diamond
-	const jewelryOrDiamondProducts = cartValidate.Products.filter(
+	const jewelryOrDiamondProducts = cartValidate?.Products.filter(
 		(product) => product.Jewelry || product.Diamond
 	);
 

@@ -90,6 +90,8 @@ export const userLoginSlice = createSlice({
 			localStorage.removeItem('accessToken');
 			localStorage.removeItem('refreshToken');
 			localStorage.removeItem('userId');
+			localStorage.removeItem('user');
+			localStorage.removeItem('userDetail');
 		},
 	},
 	extraReducers: (builder) => {
@@ -144,6 +146,7 @@ export const userLoginSlice = createSlice({
 			.addCase(getUserDetail.fulfilled, (state, action) => {
 				state.loading = false;
 				state.userDetail = action.payload;
+				localStorage.setItem('userDetail', JSON.stringify(action.payload));
 			})
 			.addCase(getUserDetail.rejected, (state, action) => {
 				state.loading = false;

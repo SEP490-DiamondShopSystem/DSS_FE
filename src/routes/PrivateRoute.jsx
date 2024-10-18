@@ -3,25 +3,29 @@ import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Navigate} from 'react-router-dom';
 import Loading from '../components/Loading';
-import {GetUserDetailSelector, UserInfoSelector} from '../redux/selectors';
+import {GetUserDetailSelector} from '../redux/selectors';
 import {getUserDetail} from '../redux/slices/userLoginSlice';
 
-export const PrivateRoute = ({children, roles}) => {
-	const userSelector = useSelector(UserInfoSelector);
+const PrivateRoute = ({children, roles}) => {
+	const userId = localStorage.getItem('userId');
 	const userDetail = useSelector(GetUserDetailSelector);
+
 	const dispatch = useDispatch();
+
+	console.log('userId', userId);
+	console.log(userDetail);
 
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
-		if (userSelector && userSelector.UserId) {
-			dispatch(getUserDetail(userSelector.UserId)).finally(() => {
+		if (userId) {
+			dispatch(getUserDetail(userId)).finally(() => {
 				setLoading(false);
 			});
 		} else {
 			setLoading(false);
 		}
-	}, [dispatch, userSelector]);
+	}, [dispatch, userId]);
 
 	if (loading) {
 		return <Loading />;
@@ -29,8 +33,8 @@ export const PrivateRoute = ({children, roles}) => {
 
 	// Kiểm tra xem người dùng đã đăng nhập chưa
 	if (
-		!userSelector ||
-		userSelector === 0 ||
+		!userId ||
+		userId === 0 ||
 		!userDetail ||
 		!userDetail.Roles ||
 		userDetail.Roles.length === 0
@@ -43,7 +47,7 @@ export const PrivateRoute = ({children, roles}) => {
 	// Kiểm tra xem userDetail có tồn tại không
 	if (!userDetail || !userDetail.Roles || userDetail.Roles.length === 0) {
 		console.log('Private route redirect: User roles not available');
-		message.error('User roles are not available!');
+		message.error('Vai trò người dùng không có sẵn!');
 		return <Navigate to="/" />;
 	}
 
@@ -60,3 +64,4 @@ export const PrivateRoute = ({children, roles}) => {
 	// Nếu có quyền, cho phép truy cập vào children
 	return <>{children}</>;
 };
+export default PrivateRoute;
