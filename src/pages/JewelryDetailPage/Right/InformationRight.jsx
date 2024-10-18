@@ -10,51 +10,9 @@ import {addToCart} from '../../../redux/slices/cartSlice';
 import {useDispatch, useSelector} from 'react-redux';
 import {UserInfoSelector} from '../../../redux/selectors';
 
-const metalType = {
-	id: 12212,
-	name: 'Nhẫn Đính Hôn Heirloom Petite Milgrain',
-	price: '$620',
-	priceDiscount: '$465',
-	productDetail:
-		'Thể hiện tình yêu của bạn với chiếc nhẫn đính hôn bằng vàng trắng 14k này, với thiết kế gài kim cương bằng móc theo hướng đông-tây.',
-	clarity: '',
-	cut: '',
-	color: '',
-	optionsMetal: [
-		{
-			metal: '14k',
-			metalSelect: 'Vàng Trắng 14k',
-			color: 'gray',
-			ship: 'Thứ Hai, 26 tháng 8',
-		},
-		{
-			metal: '14k',
-			metalSelect: 'Vàng Vàng 14k',
-			color: 'second',
-			ship: 'Thứ Sáu, 30 tháng 8',
-		},
-		{
-			metal: '14k',
-			metalSelect: 'Vàng Hồng 14k',
-			color: 'red',
-			ship: 'Chủ Nhật, 25 tháng 8',
-		},
-	],
-	optionsWidth: [
-		{
-			width: '2.00',
-		},
-		{
-			width: '3.00',
-		},
-		{
-			width: '4.00',
-		},
-		{
-			width: '5.00',
-		},
-	],
-};
+function getUserId() {
+	return localStorage.getItem('userId') || null;
+}
 
 export const InformationRight = ({
 	selectedMetal,
@@ -68,6 +26,7 @@ export const InformationRight = ({
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
+	const userId = getUserId();
 	const userSelector = useSelector(UserInfoSelector);
 
 	const [showDetail, setDetail] = useState(false);
@@ -97,16 +56,14 @@ export const InformationRight = ({
 		setSize(value);
 	};
 
-	const handleAddCart = () => {
-		// if (size === '') return message.warning('Vui lòng chọn kích thước nhẫn!');
-		const isLoggedIn = userSelector && userSelector.UserId;
+	console.log(diamondJewelry);
 
-		if (!isLoggedIn) {
+	const handleAddCart = () => {
+		if (!userId) {
 			message.warning('Bạn cần phải đăng nhập để thêm vào giỏ hàng!');
 			setIsLoginModalVisible(true);
 			return;
 		}
-		console.log(userSelector.UserId);
 
 		const data = {
 			...diamondJewelry,
@@ -116,8 +73,24 @@ export const InformationRight = ({
 			JewelryThumbnail: diamondJewelry.Thumbnail,
 		};
 
-		// Dispatch action để thêm sản phẩm vào giỏ hàng trong Redux
-		dispatch(addToCart({data, userId: userSelector.UserId}));
+		// Lấy cart hiện tại từ localStorage
+		const existingCart = JSON.parse(localStorage.getItem(`cart_${userId}`)) || [];
+
+		const existingIndex = existingCart.findIndex(
+			(item) => item.JewelryId === diamondJewelry.Id
+		);
+
+		if (existingIndex !== -1) {
+			// Nếu sản phẩm đã tồn tại, hiện thông báo
+			message.info('Sản phẩm này đã có trong giỏ hàng!');
+		} else {
+			// Nếu không tồn tại, thêm sản phẩm mới vào giỏ hàng thiết kế
+			existingCart.push(data);
+			message.success('Sản phẩm đã được thêm vào giỏ hàng!');
+		}
+
+		// Lưu cart cập nhật lại vào localStorage
+		localStorage.setItem(`cart_${userId}`, JSON.stringify(existingCart));
 	};
 
 	console.log('diamondJewelry', diamondJewelry);

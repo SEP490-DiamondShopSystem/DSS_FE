@@ -1,12 +1,21 @@
-import React, {useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 
 import {useNavigate} from 'react-router-dom';
 import {formatPrice} from '../../utils';
-import {Select} from 'antd';
+import {Input, Modal, Select} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
-import {GetCartFinishSelector, GetCartSelector} from '../../redux/selectors';
-import {removeFromCart, removeFromCartFinish} from '../../redux/slices/cartSlice';
-import {DeleteOutlined, EyeOutlined} from '@ant-design/icons';
+import {GetCartFinishSelector, GetCartSelector, GetPromotionSelector} from '../../redux/selectors';
+import {
+	handleCartValidate,
+	removeFromCart,
+	removeFromCartFinish,
+} from '../../redux/slices/cartSlice';
+import {DeleteOutlined, ExclamationCircleOutlined, EyeOutlined} from '@ant-design/icons';
+import {getAllPromo} from '../../redux/slices/promotionSlice';
+import {enums} from '../../utils/constant';
+import Loading from '../../components/Loading';
+
+const {confirm} = Modal;
 
 const ring = [
 	{
@@ -31,15 +40,89 @@ function getUserId() {
 	return localStorage.getItem('userId') || null;
 }
 
+const getEnumKey = (enumObj, value) => {
+	return enumObj
+		? Object.keys(enumObj)
+				.find((key) => enumObj[key] === value)
+				?.replace('_', ' ')
+		: '';
+};
+
+const mapAttributes = (data, attributes) => {
+	return {
+		Id: data.CartProductId,
+		DiscountId: data.DiscountId,
+		DiscountPercent: data.DiscountPercent,
+		EngravedFont: data.EngravedFont,
+		EngravedText: data.EngravedText,
+		ErrorMessage: data.ErrorMessage,
+		GiftAssignedId: data.GiftAssignedId,
+		IsAvailable: data.IsAvailable,
+		IsGift: data.IsGift,
+		IsHavingDiscount: data.IsHavingDiscount,
+		IsHavingPromotion: data.IsHavingPromotion,
+		IsProduct: data.IsProduct,
+		IsReqirement: data.IsReqirement,
+		IsValid: data.IsValid,
+		JewelryId: data?.Jewelry?.Id,
+		Diamonds: data?.Jewelry?.Diamonds,
+		IsPreset: data?.Jewelry?.IsPreset,
+		IsSold: data?.Jewelry?.IsSold,
+		IsAwaiting: data?.Jewelry?.IsAwaiting,
+		MetalId: data?.Jewelry?.MetalId,
+		MetalName: data?.Jewelry?.Metal?.Name,
+		MetalPrice: data?.Jewelry?.Metal?.Price,
+		Model: data?.Jewelry?.Model,
+		ModelId: data?.Jewelry?.ModelId,
+		JewelryPrice: data?.Jewelry?.Price,
+		JewelryName: data?.Jewelry?.Name,
+		SerialCode: data?.Jewelry?.SerialCode,
+		ShippingDate: data?.Jewelry?.ShippingDate,
+		SideDiamonds: data?.Jewelry?.SideDiamonds,
+		SizeId: data?.Jewelry?.SizeId,
+		Weight: data?.Jewelry?.Weight,
+		JewelryModel: data.JewelryModel,
+		PromotionId: data.PromotionId,
+		RequirementQualifedId: data.RequirementQualifedId,
+		Carat: data?.Diamond?.Carat || null,
+		CategoryName: data?.Jewelry?.Model?.Category?.Name || null,
+
+		// Using the helper function to map diamond attributes
+		Clarity: getEnumKey(attributes.Clarity, data?.Diamond?.Clarity),
+		Color: getEnumKey(attributes.Color, data?.Diamond?.Color),
+		Culet: getEnumKey(attributes.Culet, data?.Diamond?.Culet),
+		Cut: getEnumKey(attributes.Cut, data?.Diamond?.Cut),
+		Fluorescence: getEnumKey(attributes.Fluorescence, data?.Diamond?.Fluorescence),
+		Girdle: getEnumKey(attributes.Girdle, data?.Diamond?.Girdle),
+		Symmetry: getEnumKey(attributes.Symmetry, data?.Diamond?.Symmetry),
+		Polish: getEnumKey(attributes.Polish, data?.Diamond?.Polish),
+
+		Depth: data?.Diamond?.Depth,
+		Table: data?.Diamond?.Table,
+		Measurement: data?.Diamond?.Measurement,
+		DiamondShapeId: data?.Diamond?.DiamondShapeId,
+		DiamondShape: data?.Diamond?.DiamondShape?.ShapeName,
+		DiscountPrice: data?.Diamond?.DiscountPrice,
+		DiamondTruePrice: data?.Diamond?.TruePrice,
+		DiamondPriceOffset: data?.Diamond?.PriceOffset,
+		IsLabDiamond: data?.IsLabDiamond,
+		DiamondThumbnail: data?.Diamond?.Thumbnail,
+		CriteriaId: data?.Diamond?.DiamondPrice?.CriteriaId,
+	};
+};
+
 const CartPage = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const userId = getUserId();
 
-	const cart = useSelector((state) => {
-		const cartByUserId = state.cartSlice?.cartByUserId || {};
-		return cartByUserId[userId] || [];
-	});
+	const promotionList = useSelector(GetPromotionSelector);
+	const cartList = useSelector(GetCartSelector);
+
+	// const cart = useSelector((state) => {
+	// 	const cartByUserId = state.cartSlice?.cartByUserId || {};
+	// 	return cartByUserId[userId] || [];
+	// });
 	const cartFinish = useSelector((state) => {
 		const cartFinishByUserId = state.cartSlice?.cartFinishByUserId || {};
 		return cartFinishByUserId[userId] || [];
@@ -49,27 +132,28 @@ const CartPage = () => {
 	const [jewelryType, setJewelryType] = useState(localStorage.getItem('jewelryType') || '');
 	const [cartPreset, setCartPreset] = useState('');
 	const [cartDesign, setCartDesign] = useState('');
+	const [cart, setCart] = useState('');
+	const localCart = JSON.parse(localStorage.getItem(`cart_${userId}`));
+	const cartValidate = JSON.parse(localStorage.getItem(`cartValidate_${userId}`));
+	const [cartValidateProduct, setCartValidateProduct] = useState([]);
+	const [loading, setLoading] = useState(false);
+	const [confirmRemove, setConfirmRemove] = useState(false);
 
-	console.log('cart', cart);
-	console.log('cartFinish', cartFinish);
+	useEffect(() => {
+		dispatch(getAllPromo());
+	}, []);
 
-	const handleRingSizeChange = (index, value) => {
-		console.log(index);
-
-		const updatedCart = [...cart];
-
-		const selectedItem = updatedCart[index];
-
-		console.log('selectedItem', selectedItem);
-
-		if (selectedItem && selectedItem.Size) {
-			selectedItem.Size = value;
-
-			setCartPreset(updatedCart);
-
-			console.log('Updated cart:', updatedCart);
+	useEffect(() => {
+		if (promotionList) {
+			setPromo(promotionList);
 		}
-	};
+	}, [promotionList]);
+
+	useEffect(() => {
+		if (cartValidateProduct) {
+			setCart(cartValidateProduct);
+		}
+	}, [cartValidateProduct]);
 
 	const handleRingSizeFinishChange = (index, value) => {
 		console.log(index);
@@ -89,10 +173,6 @@ const CartPage = () => {
 		}
 	};
 
-	const handlePromoChange = (value) => {
-		setPromo(value);
-	};
-
 	const handleRemoveCartFinish = (index) => {
 		const updatedCart = [...cartFinish];
 
@@ -108,17 +188,10 @@ const CartPage = () => {
 		navigate(`/completed-jewelry/${jewelryDiamondId}`);
 	};
 
-	const handleRemoveCart = (index) => {
-		const updatedCart = [...cart];
-
-		updatedCart.splice(index, 1);
-
-		dispatch(removeFromCart(updatedCart));
-
-		localStorage.setItem('cart', JSON.stringify(updatedCart));
-	};
-
 	const handleViewCart = (jewelryId, diamondId) => {
+		console.log(jewelryId);
+		console.log(diamondId);
+
 		if (jewelryId) {
 			navigate(`/jewelry/diamond-jewelry/${jewelryId}`);
 		} else if (diamondId) {
@@ -128,24 +201,92 @@ const CartPage = () => {
 		}
 	};
 
-	// Tính Toán
-	const totalDiamondDesignPrice = cartFinish.reduce((acc, item) => acc + item.DiamondPrice, 0);
-	const totalJewelryDesignPrice = cartFinish.reduce((acc, item) => acc + item.JewelryPrice, 0);
+	// Lọc các sản phẩm có Jewelry hoặc Diamond
+	const jewelryOrDiamondProducts = cartValidate.Products.filter(
+		(product) => product.Jewelry || product.Diamond
+	);
 
-	const grandDesignTotal = totalDiamondDesignPrice + totalJewelryDesignPrice;
+	const mappedProducts = useMemo(() => {
+		if (jewelryOrDiamondProducts && enums) {
+			return jewelryOrDiamondProducts.map((product) => mapAttributes(product, enums));
+		}
+		return [];
+	}, [jewelryOrDiamondProducts, enums]);
 
-	const totalDiamondPrice = cart.reduce((acc, item) => {
-		return acc + (item && item.DiamondPrice ? item.DiamondPrice : 0);
-	}, 0);
+	// Lọc các sản phẩm có JewelryModel và Diamond hoặc chỉ có JewelryModel
+	const jewelryModelAndDiamondProducts = cartValidateProduct.filter(
+		(product) => (product.JewelryModel && product.Diamond) || product.JewelryModel
+	);
 
-	const totalJewelryPrice = cart.reduce((acc, item) => {
-		return acc + (item && item.JewelryPrice ? item.JewelryPrice : 0);
-	}, 0);
+	const mappedProductsFinish = useMemo(() => {
+		if (jewelryModelAndDiamondProducts && enums) {
+			return jewelryModelAndDiamondProducts.map((product) => mapAttributes(product, enums));
+		}
+		return [];
+	}, [jewelryModelAndDiamondProducts, enums]);
 
-	// Tổng hợp cả 2 giá
-	const grandTotal = totalDiamondPrice + totalJewelryPrice;
+	const handleChangeWarranty = (value) => {
+		console.log(value);
+	};
 
-	const totalPrice = grandDesignTotal + grandTotal;
+	// const handleRemoveCart = (index) => {
+	// 	// Xóa đối tượng tại chỉ số index
+	// 	localCart.splice(index, 1);
+
+	// 	// Lưu cart cập nhật lại vào localStorage
+	// 	localStorage.setItem(`cart_${userId}`, JSON.stringify(localCart));
+
+	// 	setConfirmRemove(true);
+	// };
+
+	const handleRemoveCart = (index) => {
+		// Xóa đối tượng tại chỉ số index
+		localCart.splice(index, 1);
+
+		// Lưu cart cập nhật lại vào localStorage
+		localStorage.setItem(`cart_${userId}`, JSON.stringify(localCart));
+
+		// Chuyển đổi dữ liệu sau khi xóa sản phẩm
+		const transformedData = localCart.map((productId) => ({
+			id: Math.floor(1000000 + Math.random() * 9000000).toString(),
+			jewelryId: productId.Id || null,
+			diamondId: productId.DiamondId || null,
+			jewelryModelId: null,
+			sizeId: null,
+			metalId: null,
+			sideDiamondChoices: [],
+			engravedText: null,
+			engravedFont: null,
+		}));
+
+		// Gọi dispatch sau khi xóa
+		dispatch(handleCartValidate({promotionId: null, transformedData}));
+	};
+
+	const handleOk = () => {
+		// const transformedData = localCart.map((productId, index) => ({
+		// 	id: Math.floor(1000000 + Math.random() * 9000000).toString(),
+		// 	jewelryId: productId.Id || null,
+		// 	diamondId: productId.DiamondId || null,
+		// 	jewelryModelId: null,
+		// 	sizeId: null,
+		// 	metalId: null,
+		// 	sideDiamondChoices: [],
+		// 	engravedText: null,
+		// 	engravedFont: null,
+		// }));
+		// dispatch(handleCartValidate({promotionId: null, transformedData}));
+		// setConfirmRemove(false);
+	};
+	const handleCancel = () => {
+		setConfirmRemove(false);
+	};
+
+	if (loading) {
+		return <Loading />;
+	}
+
+	console.log(cartList);
 
 	return (
 		<div className="flex justify-between p-8 bg-gray-50 min-h-screen mx-32 my-20">
@@ -197,17 +338,7 @@ const CartPage = () => {
 											<label className="mr-2 text-gray-700">
 												Kích thước nhẫn:
 											</label>
-											<Select
-												defaultValue={item.Size}
-												onChange={(value) =>
-													handleRingSizeFinishChange(index, value)
-												}
-												className="p-1 text-sm"
-												options={ring}
-											/>
-											{/* <span className="ml-2 text-blue-500 text-sm cursor-pointer">
-											Find your ring size
-										</span> */}
+											<p>{item.SizeId}</p>
 										</div>
 									)}
 								</div>
@@ -232,11 +363,11 @@ const CartPage = () => {
 					</div>
 				)}
 
-				{cart?.length > 0 && (
+				{mappedProducts?.length > 0 && (
 					<div className="bg-white p-6 mx-5 my-5 border rounded-lg shadow-md">
 						<h2 className="text-xl font-semibold mb-2 border-b pb-2">Hàng Có Sẵn</h2>
-						{cart?.map((item, index) => (
-							<div className="flex mt-4 shadow-xl p-5 rounded-lg" key={index}>
+						{mappedProducts.map((item, index) => (
+							<div className="flex mt-4 shadow-xl p-5 rounded-lg" key={item.Id}>
 								<div className="mr-4 flex-shrink-0">
 									<img
 										src="path-to-image"
@@ -245,19 +376,19 @@ const CartPage = () => {
 									/>
 								</div>
 								<div className="flex-1 mx-5">
-									{/* Kiểm tra xem đây là Jewelry hay Diamond và hiển thị thông tin tương ứng */}
-									{item?.JewelryId ? (
+									{/* Kiểm tra và hiển thị thông tin sản phẩm */}
+									{item.JewelryId ? (
 										<div>
 											<p className="mb-1 text-gray-800 font-semibold">
 												{item.JewelryName}
 											</p>
-											<p className="text-gray-700 text-sm">
-												Giá:{' '}
+											<p className="text-gray-700 text-sm py-3">
+												Giá:
 												<span className="text-gray-900 font-semibold">
 													{formatPrice(item.JewelryPrice)}
 												</span>
 											</p>
-											{item.Model?.Category?.Name === 'Ring' && (
+											{item.CategoryName === 'Ring' && (
 												<div className="flex items-center mt-2">
 													<label className="mr-2 text-gray-700">
 														Kích thước nhẫn:
@@ -265,19 +396,69 @@ const CartPage = () => {
 													<p>{item.SizeId}</p>
 												</div>
 											)}
+											{/* <div className="flex items-center mt-2">
+												<p className="mr-3">Bảo Hành:</p>
+												<Select
+													onChange={handleChangeWarranty}
+													className="w-20"
+													options={[
+														{
+															label: '2 Năm',
+															value: '2 năm',
+														},
+														{
+															label: '4 Năm',
+															value: '4 năm',
+														},
+														{
+															label: '6 Năm',
+															value: '6 năm',
+														},
+														{
+															label: '10 Năm',
+															value: '10 năm',
+														},
+													]}
+												/>
+											</div> */}
 										</div>
-									) : item?.DiamondId ? (
+									) : item.Carat ? (
 										<div>
 											<p className="mb-1 text-gray-800 font-semibold">
 												{item.Carat}ct {item.Color}-{item.Clarity}{' '}
-												{item.Cut} {item.DiamondShape}
+												{item.Cut} {item.ShapeName}
 											</p>
 											<p className="text-gray-700 text-sm">
-												Giá:{' '}
-												<span className="text-gray-900 font-semibold">
-													{formatPrice(item.DiamondPrice)}
+												Giá:
+												<span className="text-gray-900 font-semibold py-3">
+													{formatPrice(item.DiamondTruePrice)}
 												</span>
 											</p>
+											{/* <div className="flex items-center mt-2">
+												<p className="mr-3">Bảo Hành:</p>
+												<Select
+													onChange={handleChangeWarranty}
+													className="w-20"
+													options={[
+														{
+															label: '2 Năm',
+															value: '2 năm',
+														},
+														{
+															label: '4 Năm',
+															value: '4 năm',
+														},
+														{
+															label: '6 Năm',
+															value: '6 năm',
+														},
+														{
+															label: '10 Năm',
+															value: '10 năm',
+														},
+													]}
+												/>
+											</div> */}
 										</div>
 									) : (
 										<p className="text-gray-800">Không có thông tin</p>
@@ -294,14 +475,14 @@ const CartPage = () => {
 											}
 										}}
 									>
-										<EyeOutlined classID="" />
+										<EyeOutlined />
 									</span>
 
 									<span
 										className="cursor-pointer px-3"
 										onClick={() => handleRemoveCart(index)}
 									>
-										<DeleteOutlined color="red" />
+										<DeleteOutlined />
 									</span>
 								</div>
 							</div>
@@ -313,7 +494,20 @@ const CartPage = () => {
 					<label htmlFor="promotions" className="block mb-2 text-gray-700 font-medium">
 						Khuyến mãi có sẵn
 					</label>
-					<Select defaultValue={''} onChange={handlePromoChange} className="w-full" />
+					{promo &&
+						promo?.map((promotion) => (
+							<Select
+								key={promotion.Id}
+								defaultValue={promotion.Description}
+								className="w-full"
+								options={[
+									{
+										value: promotion.Description,
+										label: promotion.Description,
+									},
+								]}
+							/>
+						))}
 				</div>
 			</div>
 
@@ -324,14 +518,21 @@ const CartPage = () => {
 				<div className="bg-white p-4 mx-5 my-5 rounded-lg shadow-md space-y-6">
 					<div className="space-y-4">
 						<p className="flex justify-between text-gray-700">
-							<span>Giá Gốc</span> <span>{formatPrice(totalPrice)}</span>
+							<span>Giá Gốc</span>{' '}
+							<span>{formatPrice(cartList?.OrderPrices?.DefaultPrice)}</span>
 						</p>
 						<p className="flex justify-between text-gray-700">
-							<span>Khuyến Mãi</span> <span>{promo ? `-${promo}` : '$0'}</span>
+							<span>Giảm Giá</span>{' '}
+							<span>-{formatPrice(cartList?.OrderPrices?.DiscountAmountSaved)}</span>
+						</p>
+						<p className="flex justify-between text-gray-700">
+							<span>Khuyến Mãi</span>{' '}
+							<span>-{formatPrice(cartList?.OrderPrices?.PromotionAmountSaved)}</span>
 						</p>
 						<hr className="border-t" />
 						<p className="flex justify-between text-gray-900 font-semibold">
-							<span>Tổng Giá</span> <span>{formatPrice(totalPrice)}</span>
+							<span>Tổng Giá</span>{' '}
+							<span>{formatPrice(cartList?.OrderPrices?.FinalPrice)}</span>
 						</p>
 					</div>
 				</div>
@@ -343,6 +544,9 @@ const CartPage = () => {
 					Thanh Toán
 				</button>
 			</div>
+			<Modal title="Thông Báo" open={confirmRemove} onOk={handleOk} onCancel={handleCancel}>
+				<p>Bạn muốn xóa sản phẩm này khỏi giỏ hàng?</p>
+			</Modal>
 		</div>
 	);
 };

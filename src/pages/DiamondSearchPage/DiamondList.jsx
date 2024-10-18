@@ -14,6 +14,7 @@ import {FilterDiamond} from '../../components/Filter/Filter';
 import {LoadingDiamondSelector} from '../../redux/selectors';
 
 import Loading from 'react-loading';
+import {formatPrice} from '../../utils';
 
 export const DiamondList = ({diamond, diamondList, setDiamond}) => {
 	const dispatch = useDispatch();
@@ -53,9 +54,8 @@ export const DiamondList = ({diamond, diamondList, setDiamond}) => {
 		if (diamond) {
 			const filteredDiamonds = diamond.filter((diamondItem) => !diamondItem.IsLabDiamond);
 			setDiamondNatural(filteredDiamonds);
-			// setVisibleDiamonds(filteredDiamonds?.slice(0, 10)); // Optional for pagination
 		}
-	}, []);
+	}, [diamond]);
 
 	const loadMoreData = () => {
 		if (visibleDiamonds.length >= diamond.length) {
@@ -139,7 +139,7 @@ export const DiamondList = ({diamond, diamondList, setDiamond}) => {
 						<div className="transition-all duration-300 grid grid-cols-4 gap-10 mb-20 mt-10">
 							{diamondNatural?.map((diamondItem) => (
 								<div
-									key={diamondItem.id}
+									key={diamondItem.Id}
 									className="shadow-lg bg-white border-2 border-white rounded-lg hover:border-2 hover:border-black cursor-pointer"
 									onClick={
 										diamondChoice.length > 0
@@ -160,9 +160,17 @@ export const DiamondList = ({diamond, diamondList, setDiamond}) => {
 												{diamondItem.Color} Color {diamondItem.Clarity}{' '}
 												Clarity {diamondItem.Cut}
 											</p>
-											<p style={{color: '#707070'}}>
-												{formatPrice(diamondItem.Price)}
-											</p>
+											<div className="flex">
+												<p
+													style={{color: '#707070'}}
+													className="line-through"
+												>
+													{formatPrice(diamondItem.TruePrice)}
+												</p>
+												<p className="ml-3">
+													{formatPrice(diamondItem.DiscountPrice)}
+												</p>
+											</div>
 										</div>
 									</div>
 								</div>
@@ -172,7 +180,7 @@ export const DiamondList = ({diamond, diamondList, setDiamond}) => {
 						<div className="transition-all duration-300 mb-20 mt-10">
 							{diamondNatural?.map((diamondItem, i) => (
 								<div
-									key={i + 1}
+									key={diamondItem.Id}
 									className="shadow-lg bg-white rounded-lg cursor-pointer"
 									onClick={
 										diamondChoice.length > 0
@@ -216,7 +224,7 @@ export const DiamondList = ({diamond, diamondList, setDiamond}) => {
 												className="text-xl w-1/5 text-center"
 												style={{color: '#707070'}}
 											>
-												{diamondItem.Price}
+												{formatPrice(diamondItem.DiscountPrice)}
 											</p>
 											<p
 												className="text-xl w-1/5 text-center cursor-pointer"
