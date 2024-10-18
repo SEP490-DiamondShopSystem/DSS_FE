@@ -1,14 +1,35 @@
-import {createSlice} from '@reduxjs/toolkit';
+import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {message} from 'antd';
+import {api} from '../../services/api';
 
 function getUserId() {
 	return localStorage.getItem('userId') || null;
 }
 
+export const handleCartValidate = createAsyncThunk(
+	'jewelrySlice/handleCartValidate',
+	async ({promotionId, transformedData}, {rejectWithValue}) => {
+		console.log('transformedData', transformedData);
+
+		try {
+			const response = await api.post(`/Cart/Validate`, {
+				promotionId,
+				items: transformedData,
+			});
+			console.log(response);
+
+			return response;
+		} catch (error) {
+			console.log('Error: ', JSON.stringify(error.response.data));
+			return rejectWithValue(error.response.data);
+		}
+	}
+);
+
 export const cartSlice = createSlice({
 	name: 'cart',
 	initialState: {
-		cart: JSON.parse(localStorage.getItem('cart')) || '',
+		cart: null,
 		cartByUserId: localStorage.getItem(`cart_${getUserId()}`) || '',
 		cartDiamondByUserId: localStorage.getItem(`cart_${getUserId()}`) || '',
 		cartFinishByUserId: localStorage.getItem(`cartFinish_${getUserId()}`) || '[]',
@@ -148,9 +169,6 @@ export const cartSlice = createSlice({
 		removeFromCart: (state, action) => {
 			// Cập nhật giỏ hàng cho người dùng hiện tại
 			state.cartByUserId[getUserId()] = action.payload; // Cập nhật giỏ hàng với dữ liệu mới
-
-			// Cập nhật localStorage
-			localStorage.setItem(`cart_${getUserId()}`, JSON.stringify(action.payload)); // Cập nhật giỏ hàng trong localStorage với dữ liệu mới
 		},
 
 		removeFromCartFinish: (state, action) => {
@@ -164,6 +182,21 @@ export const cartSlice = createSlice({
 				// localStorage.removeItem(`cart_${userId}`);
 			}
 		},
+	},
+	extraReducers: (builder) => {
+		builder
+			.addCase(handleCartValidate.pending, (state) => {
+				state.loading = true;
+			})
+			.addCase(handleCartValidate.fulfilled, (state, action) => {
+				state.loading = false;
+				state.cart = action.payload;
+				localStorage.setItem(`cartValidate_${getUserId()}`, JSON.stringify(action.payload));
+			})
+			.addCase(handleCartValidate.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload;
+			});
 	},
 });
 

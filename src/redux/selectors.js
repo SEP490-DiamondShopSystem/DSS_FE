@@ -27,3 +27,6 @@ export const selectError = (state) => state.distanceSlice.error;
 export const GetCartSelector = (state) => state.cartSlice.cart;
 export const GetCartDesignSelector = (state) => state.cartSlice.cartDesign;
 export const GetCartFinishSelector = (state) => state.cartSlice.cartFinish;
+
+//PROMOTION
+export const GetPromotionSelector = (state) => state.promotionSlice.promotion;

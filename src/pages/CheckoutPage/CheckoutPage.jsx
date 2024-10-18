@@ -4,19 +4,35 @@ import {Form, Input, Button, Radio, message, Select} from 'antd';
 import {useNavigate} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchDistances} from '../../redux/slices/distanceSlice';
-import {selectDistances, selectLoading, selectError} from '../../redux/selectors';
+import {
+	selectDistances,
+	selectLoading,
+	selectError,
+	GetUserDetailSelector,
+} from '../../redux/selectors';
 
 const CheckoutPage = () => {
-	const [paymentMethod, setPaymentMethod] = useState(null);
-	const [selectedCity, setSelectedCity] = useState('');
-	const [shippingFee, setShippingFee] = useState(0);
+	const [form] = Form.useForm();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-
-	// Selectors to access distances and loading state
 	const distances = useSelector(selectDistances);
 	const loading = useSelector(selectLoading);
 	const error = useSelector(selectError);
+	const userDetail = useSelector(GetUserDetailSelector);
+
+	const [paymentMethod, setPaymentMethod] = useState(null);
+	const [selectedCity, setSelectedCity] = useState('');
+	const [shippingFee, setShippingFee] = useState(0);
+	const [userInfo, setUserInfo] = useState({
+		firstName: userDetail.FirstName,
+		lastName: userDetail.LastName,
+		email: userDetail.Email,
+		phone: '',
+	});
+
+	useEffect(() => {
+		form.setFieldsValue(userInfo);
+	}, [form, userInfo]);
 
 	// Fetch distances on component mount
 	useEffect(() => {
@@ -51,6 +67,15 @@ const CheckoutPage = () => {
 	const handleCityChange = (value) => {
 		setSelectedCity(value);
 	};
+
+	const handleChange = (e) => {
+		const [name, value] = e.target;
+		setUserInfo((prev) => ({
+			...prev,
+			[name]: value,
+		}));
+	};
+
 	return (
 		<div className="min-h-screen flex justify-center items-center bg-gray-100">
 			<div className="container mx-auto p-4 flex flex-col md:flex-row md:space-x-6 gap-4 justify-around">
@@ -63,6 +88,7 @@ const CheckoutPage = () => {
 							</h2>
 							<Form
 								layout="vertical"
+								form={form}
 								className="space-y-6"
 								onFinish={onFinish}
 								onFinishFailed={onFinishFailed}
@@ -84,7 +110,7 @@ const CheckoutPage = () => {
 												},
 											]}
 										>
-											<Input placeholder="Tên" />
+											<Input placeholder="Tên" onClick={handleChange} />
 										</Form.Item>
 									</div>
 									<div className="w-full md:w-1/2 p-1">

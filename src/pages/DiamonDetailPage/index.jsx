@@ -81,14 +81,15 @@ const DiamondDetailPage = () => {
 					: '',
 			Culet:
 				attributes.Culet && data.Culet !== undefined
-					? Object.keys(attributes.Culet).find(
-							(key) => attributes.Culet[key] === data.Culet
-					  ) || 'Unknown Culet'
+					? Object.keys(attributes.Culet)
+							.find((key) => attributes.Culet[key] === data.Culet)
+							.replace('_', ' ') || 'Unknown Culet'
 					: '',
 			Cut:
 				attributes.Cut && data.Cut !== undefined
-					? Object.keys(attributes.Cut).find((key) => attributes.Cut[key] === data.Cut) ||
-					  'Unknown Cut'
+					? Object.keys(attributes.Cut)
+							.find((key) => attributes.Cut[key] === data.Cut)
+							.replace('_', ' ') || 'Unknown Cut'
 					: '',
 			Fluorescence:
 				attributes.Fluorescence && data.Fluorescence !== undefined
@@ -98,21 +99,21 @@ const DiamondDetailPage = () => {
 					: '',
 			Girdle:
 				attributes.Girdle && data.Girdle !== undefined
-					? Object.keys(attributes.Girdle).find(
-							(key) => attributes.Girdle[key] === data.Girdle
-					  ) || 'Unknown Girdle'
+					? Object.keys(attributes.Girdle)
+							.find((key) => attributes.Girdle[key] === data.Girdle)
+							.replace('_', ' ') || 'Unknown Girdle'
 					: '',
 			Polish:
 				attributes.Polish && data.Polish !== undefined
-					? Object.keys(attributes.Polish).find(
-							(key) => attributes.Polish[key] === data.Polish
-					  ) || 'Unknown Polish'
+					? Object.keys(attributes.Polish)
+							.find((key) => attributes.Polish[key] === data.Polish)
+							.replace('_', ' ') || 'Unknown Polish'
 					: '',
 			Symmetry:
 				attributes.Symmetry && data.Symmetry !== undefined
-					? Object.keys(attributes.Symmetry).find(
-							(key) => attributes.Symmetry[key] === data.Symmetry
-					  ) || 'Unknown Symmetry'
+					? Object.keys(attributes.Symmetry)
+							.find((key) => attributes.Symmetry[key] === data.Symmetry)
+							.replace('_', ' ') || 'Unknown Symmetry'
 					: '',
 			Depth: data.Depth,
 			Table: data.Table,

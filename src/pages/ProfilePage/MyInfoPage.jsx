@@ -20,9 +20,8 @@ const MyInfoPage = () => {
 		firstName: userDetail.FirstName,
 		lastName: userDetail.LastName,
 		email: userDetail.Email,
-		phone: '123456789',
+		phone: '',
 		addresses: ['123 Diamond St, NY', '456 Gem Ave, LA'],
-		paymentMethods: ['**** **** **** 1234', '**** **** **** 5678'],
 	});
 
 	useEffect(() => {
@@ -208,56 +207,14 @@ const MyInfoPage = () => {
 								)}
 							</div>
 
-							<div className="col-span-2">
-								<h3 className="text-xl font-semibold mb-4">
-									Phương Thức Thanh Toán
-								</h3>
-								<List
-									bordered
-									dataSource={userInfo.paymentMethods}
-									renderItem={(item, index) => (
-										<List.Item>
-											{editing ? (
-												<>
-													<Input
-														value={item}
-														onChange={(e) =>
-															handlePaymentMethodChange(
-																e.target.value,
-																index
-															)
-														}
-													/>
-													<MinusCircleOutlined
-														onClick={() =>
-															handleRemovePaymentMethod(index)
-														}
-														style={{color: 'red'}}
-														className="ml-4"
-													/>
-												</>
-											) : (
-												item
-											)}
-										</List.Item>
-									)}
-								/>
-								{editing && (
-									<Button
-										type="dashed"
-										onClick={handleAddPaymentMethod}
-										icon={<PlusOutlined />}
-										className="mt-4"
-									>
-										Thêm Phương Thức Thanh Toán
-									</Button>
-								)}
-							</div>
-
-							<div className="col-span-2 flex justify-end mt-6 space-x-4">
+							<div className="flex justify-center items-center">
 								{editing ? (
 									<>
-										<Button type="default" onClick={handleCancelEdit}>
+										<Button
+											type="default"
+											onClick={handleCancelEdit}
+											className="mr-5"
+										>
 											Hủy
 										</Button>
 										<Button type="primary" htmlType="submit" loading={loading}>
@@ -268,9 +225,6 @@ const MyInfoPage = () => {
 									<>
 										<Button type="primary" onClick={handleEdit}>
 											Chỉnh Sửa
-										</Button>
-										<Button danger onClick={showDeleteConfirm}>
-											Xóa Tài Khoản
 										</Button>
 									</>
 								)}

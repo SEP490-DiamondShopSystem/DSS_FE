@@ -8,6 +8,7 @@ import {LoadingUserSelector} from '../../redux/selectors';
 import {GoogleRegister, handleLogin, setUser} from '../../redux/slices/userLoginSlice';
 import {GoogleLoginButton} from '../LoginGoogleButton';
 import {setLocalStorage} from '../../utils/localstorage';
+import {GoogleOutlined} from '@ant-design/icons';
 
 const LoginModal = ({isOpen, onClose}) => {
 	const dispatch = useDispatch();
@@ -59,7 +60,7 @@ const LoginModal = ({isOpen, onClose}) => {
 		// 	password: '',
 		// };
 		dispatch(GoogleRegister({externalProviderName: 'Google'}));
-		// const decode = jwtDecode(response.credential);
+		const decode = jwtDecode(response.credential);
 		console.log(decode);
 
 		message.success('Đăng nhập Google thành công!');
@@ -109,12 +110,19 @@ const LoginModal = ({isOpen, onClose}) => {
 				</Form.Item>
 				<div className="text-center">
 					<p className="my-5">hoặc đăng nhập bằng</p>
-					<div className="w-full flex justify-center items-center">
+					{/* <div className="w-full flex justify-center items-center">
 						<GoogleLoginButton
 							onSuccess={handleGoogleLogin}
 							onError={handleGoogleLoginFailure}
 						/>
-					</div>
+					</div> */}
+					<a
+						href="https://diamondshop-fqgcbagydmgxa4cx.eastasia-01.azurewebsites.net/Account/Register/External"
+						className=""
+						// onClick={handleGoogleLogin}
+					>
+						<GoogleOutlined />
+					</a>
 				</div>
 			</Form>
 		</Modal>

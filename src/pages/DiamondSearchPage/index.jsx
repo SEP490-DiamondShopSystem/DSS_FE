@@ -21,10 +21,14 @@ const mapAttributes = (data, attributes) => {
 			? Object.keys(attributes.Color).find((key) => attributes.Color[key] === data.Color)
 			: '',
 		Culet: attributes.Culet
-			? Object.keys(attributes.Culet).find((key) => attributes.Culet[key] === data.Culet)
+			? Object.keys(attributes.Culet)
+					.find((key) => attributes.Culet[key] === data.Culet)
+					.replace('_', ' ')
 			: '',
 		Cut: attributes.Cut
-			? Object.keys(attributes.Cut).find((key) => attributes.Cut[key] === data.Cut)
+			? Object.keys(attributes.Cut)
+					.find((key) => attributes.Cut[key] === data.Cut)
+					.replace('_', ' ')
 			: '',
 		Fluorescence: attributes.Fluorescence
 			? Object.keys(attributes.Fluorescence).find(
@@ -32,21 +36,26 @@ const mapAttributes = (data, attributes) => {
 			  )
 			: '',
 		Girdle: attributes.Girdle
-			? Object.keys(attributes.Girdle).find((key) => attributes.Girdle[key] === data.Girdle)
+			? Object.keys(attributes.Girdle)
+					.find((key) => attributes.Girdle[key] === data.Girdle)
+					.replace('_', ' ')
 			: '',
 		Polish: attributes.Polish
-			? Object.keys(attributes.Polish).find((key) => attributes.Polish[key] === data.Polish)
+			? Object.keys(attributes.Polish)
+					.find((key) => attributes.Polish[key] === data.Polish)
+					.replace('_', ' ')
 			: '',
 		Symmetry: attributes.Symmetry
-			? Object.keys(attributes.Symmetry).find(
-					(key) => attributes.Symmetry[key] === data.Symmetry
-			  )
+			? Object.keys(attributes.Symmetry)
+					.find((key) => attributes.Symmetry[key] === data.Symmetry)
+					.replace('_', ' ')
 			: '',
 		Depth: data.Depth,
 		Table: data.Table,
 		Measurement: data.Measurement,
 		DiamondShape: data?.DiamondShape?.ShapeName,
-		Price: data.DiamondPrice.Price,
+		DiscountPrice: data?.DiscountPrice,
+		TruePrice: data?.TruePrice,
 		IsLabDiamond: data.IsLabDiamond,
 	};
 };

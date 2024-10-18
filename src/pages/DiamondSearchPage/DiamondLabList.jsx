@@ -157,9 +157,17 @@ export const DiamondLabList = ({diamond, setDiamond, diamondList}) => {
 												{diamondItem.Color} Color {diamondItem.Clarity}{' '}
 												Clarity {diamondItem.Cut}
 											</p>
-											<p style={{color: '#707070'}}>
-												{formatPrice(diamondItem.Price)}
-											</p>
+											<div className="flex">
+												<p
+													style={{color: '#707070'}}
+													className="line-through"
+												>
+													{formatPrice(diamondItem.TruePrice)}
+												</p>
+												<p className="ml-3">
+													{formatPrice(diamondItem.DiscountPrice)}
+												</p>
+											</div>
 										</div>
 									</div>
 								</div>
@@ -169,7 +177,7 @@ export const DiamondLabList = ({diamond, setDiamond, diamondList}) => {
 						<div className="transition-all duration-300 mb-20 mt-10">
 							{diamondLab?.map((diamondItem, i) => (
 								<div
-									key={i + 1}
+									key={diamondItem.Id}
 									className="shadow-lg bg-white rounded-lg cursor-pointer"
 									onClick={
 										diamondChoice.length > 0
@@ -209,7 +217,7 @@ export const DiamondLabList = ({diamond, setDiamond, diamondList}) => {
 												className="text-xl w-1/5 text-center"
 												style={{color: '#707070'}}
 											>
-												{diamondItem.Price}
+												{formatPrice(diamondItem.DiscountPrice)}
 											</p>
 											<p
 												className="text-xl w-1/5 text-center cursor-pointer"

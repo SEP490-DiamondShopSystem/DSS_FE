@@ -53,7 +53,7 @@ const ActionLinks = () => {
 					sublink: token
 						? [
 								{name: 'Hồ sơ', link: '/profile'},
-								{name: 'Thông tin', link: '/info'},
+								{name: 'Thông tin', link: '/my-info'},
 								{name: 'Đơn hàng của tôi', link: '/my-orders'},
 								{name: 'Đăng xuất', action: showLogoutModal},
 						  ]
