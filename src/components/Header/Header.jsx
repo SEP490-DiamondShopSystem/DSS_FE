@@ -10,10 +10,7 @@ import {handleCartValidate} from '../../redux/slices/cartSlice';
 import Logo from './../../assets/logo-ex.png';
 import ActionLinks from './ActionLinks';
 import NavLinks from './NavLinks';
-
-function getUserId() {
-	return localStorage.getItem('userId') || null;
-}
+import {getUserId} from '../GetUserId';
 
 export const Header = () => {
 	const userId = getUserId();

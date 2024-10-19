@@ -1,44 +1,16 @@
 import React, {useEffect, useMemo, useState} from 'react';
 
-import {useNavigate} from 'react-router-dom';
-import {formatPrice} from '../../utils';
-import {Input, Modal, Select} from 'antd';
+import {DeleteOutlined, EyeOutlined} from '@ant-design/icons';
+import {Select} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
-import {GetCartFinishSelector, GetCartSelector, GetPromotionSelector} from '../../redux/selectors';
-import {
-	handleCartValidate,
-	removeFromCart,
-	removeFromCartFinish,
-} from '../../redux/slices/cartSlice';
-import {DeleteOutlined, ExclamationCircleOutlined, EyeOutlined} from '@ant-design/icons';
-import {getAllPromo} from '../../redux/slices/promotionSlice';
-import {enums} from '../../utils/constant';
+import {useNavigate} from 'react-router-dom';
+import {getUserId} from '../../components/GetUserId';
 import Loading from '../../components/Loading';
-
-const {confirm} = Modal;
-
-const ring = [
-	{
-		value: '1',
-		label: '1',
-	},
-	{
-		value: '2',
-		label: '2',
-	},
-	{
-		value: '3',
-		label: '3',
-	},
-	{
-		value: '4',
-		label: '4',
-	},
-];
-
-function getUserId() {
-	return localStorage.getItem('userId') || null;
-}
+import {GetCartSelector, GetPromotionSelector} from '../../redux/selectors';
+import {handleCartValidate, removeFromCartFinish} from '../../redux/slices/cartSlice';
+import {getAllPromo} from '../../redux/slices/promotionSlice';
+import {formatPrice} from '../../utils';
+import {enums} from '../../utils/constant';
 
 const getEnumKey = (enumObj, value) => {
 	return enumObj
@@ -119,10 +91,6 @@ const CartPage = () => {
 	const promotionList = useSelector(GetPromotionSelector);
 	const cartList = useSelector(GetCartSelector);
 
-	// const cart = useSelector((state) => {
-	// 	const cartByUserId = state.cartSlice?.cartByUserId || {};
-	// 	return cartByUserId[userId] || [];
-	// });
 	const cartFinish = useSelector((state) => {
 		const cartFinishByUserId = state.cartSlice?.cartFinishByUserId || {};
 		return cartFinishByUserId[userId] || [];
@@ -137,7 +105,6 @@ const CartPage = () => {
 	const cartValidate = JSON.parse(localStorage.getItem(`cartValidate_${userId}`));
 	const [cartValidateProduct, setCartValidateProduct] = useState([]);
 	const [loading, setLoading] = useState(false);
-	const [confirmRemove, setConfirmRemove] = useState(false);
 
 	useEffect(() => {
 		dispatch(getAllPromo());
@@ -154,24 +121,6 @@ const CartPage = () => {
 			setCart(cartValidateProduct);
 		}
 	}, [cartValidateProduct]);
-
-	const handleRingSizeFinishChange = (index, value) => {
-		console.log(index);
-
-		const updatedCart = [...cartFinish];
-
-		const selectedItem = updatedCart[index];
-
-		console.log('selectedItem', selectedItem);
-
-		if (selectedItem) {
-			selectedItem.Size = value;
-
-			setCartDesign(updatedCart);
-
-			console.log('Updated cart:', updatedCart);
-		}
-	};
 
 	const handleRemoveCartFinish = (index) => {
 		const updatedCart = [...cartFinish];
@@ -229,16 +178,6 @@ const CartPage = () => {
 		console.log(value);
 	};
 
-	// const handleRemoveCart = (index) => {
-	// 	// Xóa đối tượng tại chỉ số index
-	// 	localCart.splice(index, 1);
-
-	// 	// Lưu cart cập nhật lại vào localStorage
-	// 	localStorage.setItem(`cart_${userId}`, JSON.stringify(localCart));
-
-	// 	setConfirmRemove(true);
-	// };
-
 	const handleRemoveCart = (index) => {
 		// Xóa đối tượng tại chỉ số index
 		localCart.splice(index, 1);
@@ -261,25 +200,6 @@ const CartPage = () => {
 
 		// Gọi dispatch sau khi xóa
 		dispatch(handleCartValidate({promotionId: null, transformedData}));
-	};
-
-	const handleOk = () => {
-		// const transformedData = localCart.map((productId, index) => ({
-		// 	id: Math.floor(1000000 + Math.random() * 9000000).toString(),
-		// 	jewelryId: productId.Id || null,
-		// 	diamondId: productId.DiamondId || null,
-		// 	jewelryModelId: null,
-		// 	sizeId: null,
-		// 	metalId: null,
-		// 	sideDiamondChoices: [],
-		// 	engravedText: null,
-		// 	engravedFont: null,
-		// }));
-		// dispatch(handleCartValidate({promotionId: null, transformedData}));
-		// setConfirmRemove(false);
-	};
-	const handleCancel = () => {
-		setConfirmRemove(false);
 	};
 
 	if (loading) {
@@ -544,9 +464,6 @@ const CartPage = () => {
 					Thanh Toán
 				</button>
 			</div>
-			<Modal title="Thông Báo" open={confirmRemove} onOk={handleOk} onCancel={handleCancel}>
-				<p>Bạn muốn xóa sản phẩm này khỏi giỏ hàng?</p>
-			</Modal>
 		</div>
 	);
 };

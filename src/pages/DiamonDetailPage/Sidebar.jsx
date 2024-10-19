@@ -8,10 +8,7 @@ import {useNavigate} from 'react-router-dom';
 import diamondImage from '../../assets/img-diamond.png';
 import {addOrUpdateCartDesignDiamondItem, addOrUpdateItem} from '../../redux/slices/cartSlice';
 import {UserInfoSelector} from '../../redux/selectors';
-
-function getUserId() {
-	return localStorage.getItem('userId') || null;
-}
+import {getUserId} from '../../components/GetUserId';
 
 export const Sidebar = ({
 	isOpen,

@@ -2,7 +2,7 @@ import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {api} from '../../services/api';
 
 export const getAllPromo = createAsyncThunk(
-	'jewelrySlice/getAllPromo',
+	'promotionSlice/getAllPromo',
 	async (_, {rejectWithValue}) => {
 		try {
 			const response = await api.get(`/Promotion`);

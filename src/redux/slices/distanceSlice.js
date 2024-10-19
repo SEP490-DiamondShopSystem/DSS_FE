@@ -5,11 +5,9 @@ import {api} from '../../services/api';
 export const fetchDistances = createAsyncThunk(
 	'distances/fetchDistances',
 	async (_, {rejectWithValue}) => {
-		console.log('Fetching distances...');
 		try {
-			const response = await api.get('/distance');
-			console.log('Full response: ', response); // Log the entire response object
-			return response; // Adjust according to the structure of response
+			const response = await api.get('/Location/Province');
+			return response;
 		} catch (error) {
 			console.log('Error: ', JSON.stringify(error.response.data));
 			return rejectWithValue(error.response.data);
