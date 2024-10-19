@@ -9,10 +9,7 @@ import {convertToVietnamDate, formatPrice} from '../../../utils';
 import {addToCart} from '../../../redux/slices/cartSlice';
 import {useDispatch, useSelector} from 'react-redux';
 import {UserInfoSelector} from '../../../redux/selectors';
-
-function getUserId() {
-	return localStorage.getItem('userId') || null;
-}
+import {getUserId} from '../../../components/GetUserId';
 
 export const InformationRight = ({
 	selectedMetal,

@@ -1,13 +1,10 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {message} from 'antd';
 import {api} from '../../services/api';
-
-function getUserId() {
-	return localStorage.getItem('userId') || null;
-}
+import {getUserId} from '../../components/GetUserId';
 
 export const handleCartValidate = createAsyncThunk(
-	'jewelrySlice/handleCartValidate',
+	'cartSlice/handleCartValidate',
 	async ({promotionId, transformedData}, {rejectWithValue}) => {
 		console.log('transformedData', transformedData);
 
