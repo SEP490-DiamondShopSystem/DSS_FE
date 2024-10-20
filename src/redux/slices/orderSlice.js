@@ -26,10 +26,6 @@ import {getUserId} from '../../components/GetUserId';
 export const handleCheckoutOrder = createAsyncThunk(
 	'orderSlice/handleCheckoutOrder',
 	async ({orderRequestDto, orderItemRequestDtos, billingDetail}, {rejectWithValue}) => {
-		console.log('orderRequestDto', orderRequestDto);
-		console.log('orderItemRequestDtos', orderItemRequestDtos);
-		console.log('billingDetail', billingDetail);
-
 		try {
 			const response = await api.post(`/Order/Checkout`, {
 				orderRequestDto,
@@ -46,10 +42,41 @@ export const handleCheckoutOrder = createAsyncThunk(
 	}
 );
 
+export const getUserOrder = createAsyncThunk(
+	'orderSlice/getUserOrder',
+	async (_, {rejectWithValue}) => {
+		try {
+			const response = await api.get(`/Order/User/All`);
+			console.log(response);
+
+			return response;
+		} catch (error) {
+			console.log('Error: ', JSON.stringify(error.response.data));
+			return rejectWithValue(error.response.data);
+		}
+	}
+);
+
+export const getUserOrderDetail = createAsyncThunk(
+	'orderSlice/getUserOrderDetail',
+	async (orderId, {rejectWithValue}) => {
+		try {
+			const response = await api.get(`/Order/User/${orderId}`);
+			console.log(response);
+
+			return response;
+		} catch (error) {
+			console.log('Error: ', JSON.stringify(error.response.data));
+			return rejectWithValue(error.response.data);
+		}
+	}
+);
+
 export const orderSlice = createSlice({
 	name: 'cart',
 	initialState: {
 		orderList: null,
+		orderDetail: null,
 	},
 	reducers: {},
 	extraReducers: (builder) => {
@@ -61,6 +88,28 @@ export const orderSlice = createSlice({
 				state.loading = false;
 			})
 			.addCase(handleCheckoutOrder.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload;
+			})
+			.addCase(getUserOrder.pending, (state) => {
+				state.loading = true;
+			})
+			.addCase(getUserOrder.fulfilled, (state, action) => {
+				state.loading = false;
+				state.orderList = action.payload;
+			})
+			.addCase(getUserOrder.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload;
+			})
+			.addCase(getUserOrderDetail.pending, (state) => {
+				state.loading = true;
+			})
+			.addCase(getUserOrderDetail.fulfilled, (state, action) => {
+				state.loading = false;
+				state.orderDetail = action.payload;
+			})
+			.addCase(getUserOrderDetail.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload;
 			});

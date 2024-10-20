@@ -9,6 +9,7 @@ import {jewelrySlice} from './slices/jewelrySlice';
 import {distanceSlice} from './slices/distanceSlice';
 import {cartSlice} from './slices/cartSlice';
 import {promotionSlice} from './slices/promotionSlice';
+import {orderSlice} from './slices/orderSlice';
 
 const rootPersistConfig = {
 	key: 'root',
@@ -23,6 +24,7 @@ const rootReducer = combineReducers({
 	jewelrySlice: jewelrySlice.reducer,
 	distanceSlice: distanceSlice.reducer,
 	cartSlice: cartSlice.reducer,
+	orderSlice: orderSlice.reducer,
 	promotionSlice: promotionSlice.reducer,
 });
 

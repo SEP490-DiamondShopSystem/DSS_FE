@@ -2,7 +2,6 @@ import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {api} from '../../services/api';
 import {setLocalStorage} from '../../utils/localstorage';
 
-// Login Thunk
 export const handleLogin = createAsyncThunk(
 	'userLoginSlice/handleLogin',
 	async ({email, password, isExternalLogin, isStaffLogin}, {rejectWithValue}) => {
@@ -40,7 +39,6 @@ export const GoogleRegister = createAsyncThunk(
 	}
 );
 
-// Register Thunk
 export const handleRegister = createAsyncThunk(
 	'userLoginSlice/handleRegister',
 	async ({email, password, fullName, isExternalRegister}, {rejectWithValue}) => {
@@ -51,6 +49,19 @@ export const handleRegister = createAsyncThunk(
 				fullName,
 				isExternalRegister,
 			});
+			return data;
+		} catch (error) {
+			console.error(error);
+			return rejectWithValue(error);
+		}
+	}
+);
+
+export const handleRefreshToken = createAsyncThunk(
+	'userLoginSlice/handleRefreshToken',
+	async (refreshToken, {rejectWithValue}) => {
+		try {
+			const data = await api.put(`/Account/RefreshToken?refreshToken=${refreshToken}`);
 			return data;
 		} catch (error) {
 			console.error(error);
@@ -109,7 +120,7 @@ export const userLoginSlice = createSlice({
 			})
 			.addCase(handleLogin.rejected, (state, action) => {
 				state.loading = false;
-				state.error = action.payload; // Lưu lỗi nếu có
+				state.error = action.payload;
 			})
 			.addCase(GoogleRegister.pending, (state) => {
 				state.loading = true;
@@ -126,7 +137,6 @@ export const userLoginSlice = createSlice({
 				state.error = action.payload; // Lưu lỗi nếu có
 			})
 
-			// Register
 			.addCase(handleRegister.pending, (state) => {
 				state.loading = true;
 				state.error = null;
@@ -139,6 +149,18 @@ export const userLoginSlice = createSlice({
 			.addCase(handleRegister.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload; // Lưu lỗi nếu có
+			})
+			.addCase(handleRefreshToken.pending, (state) => {
+				state.loading = true;
+				state.error = null;
+			})
+			.addCase(handleRefreshToken.fulfilled, (state, action) => {
+				state.loading = false;
+				setLocalStorage('accessToken', action.payload.accessToken);
+			})
+			.addCase(handleRefreshToken.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload;
 			})
 			.addCase(getUserDetail.pending, (state) => {
 				state.loading = true;
