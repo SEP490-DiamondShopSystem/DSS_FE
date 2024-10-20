@@ -32,13 +32,42 @@ api.interceptors.response.use(
 		// Bất kỳ mã trạng thái nào nằm trong phạm vi 2xx sẽ kích hoạt chức năng này
 		return response.data ? response.data : {statusCode: response.status};
 	},
-	(error) => {
+	async (error) => {
 		// Bất kỳ mã trạng thái nào nằm ngoài phạm vi 2xx sẽ kích hoạt chức năng này
 		let res = {};
+
 		if (error.response) {
 			// Yêu cầu đã được gửi và server đã phản hồi
 			res.data = error.response.data;
 			res.status = error.response.status;
+
+			// Nếu mã trạng thái là 401 và chưa retry (token hết hạn)
+			if (res.status === 401 && !error.config._retry) {
+				error.config._retry = true;
+
+				try {
+					// Gửi request làm mới token
+					const refreshToken = localStorage.getItem('refreshToken');
+					const refreshResponse = await api.put(
+						`/Account/RefreshToken?refreshToken=${refreshToken}`
+					);
+
+					// Lưu Access Token mới
+					const newAccessToken = refreshResponse.accessToken;
+					console.log('newAccessToken', newAccessToken);
+
+					localStorage.setItem('accessToken', newAccessToken);
+
+					// Gán Access Token mới vào header và thực hiện lại request ban đầu
+					error.config.headers['Authorization'] = `Bearer ${newAccessToken}`;
+					return api(error.config);
+				} catch (refreshError) {
+					console.error('Token refresh failed', refreshError);
+					// Điều hướng người dùng đến trang đăng nhập
+					window.location.href = '/';
+					return Promise.reject(refreshError);
+				}
+			}
 		} else if (error.request) {
 			// Yêu cầu đã được gửi nhưng không có phản hồi nào
 			console.log(error.request);

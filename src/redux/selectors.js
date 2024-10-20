@@ -20,6 +20,8 @@ export const LoadingJewelrySelector = (state) => state.jewelrySlice.loading;
 
 // DISTANCE
 export const selectDistances = (state) => state.distanceSlice.distances;
+export const GetAllWardSelector = (state) => state.distanceSlice.ward;
+export const GetAllDistrictSelector = (state) => state.distanceSlice.district;
 export const selectLoading = (state) => state.distanceSlice.loading;
 export const selectError = (state) => state.distanceSlice.error;
 
@@ -30,3 +32,7 @@ export const GetCartFinishSelector = (state) => state.cartSlice.cartFinish;
 
 //PROMOTION
 export const GetPromotionSelector = (state) => state.promotionSlice.promotion;
+
+//ORDER
+export const GetAllOrderSelector = (state) => state.orderSlice.orderList;
+export const GetAllOrderDetailSelector = (state) => state.orderSlice.orderDetail;

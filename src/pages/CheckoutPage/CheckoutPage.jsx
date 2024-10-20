@@ -3,13 +3,15 @@ import {FaRegAddressBook, FaRegEnvelope, FaPhoneAlt} from 'react-icons/fa';
 import {Form, Input, Button, Radio, message, Select} from 'antd';
 import {useNavigate} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
-import {fetchDistances} from '../../redux/slices/distanceSlice';
+import {fetchDistances, fetchDistrict, fetchWard} from '../../redux/slices/distanceSlice';
 import {
 	selectDistances,
 	selectLoading,
 	selectError,
 	GetUserDetailSelector,
 	GetCartSelector,
+	GetAllDistrictSelector,
+	GetAllWardSelector,
 } from '../../redux/selectors';
 import {handleCheckoutOrder} from '../../redux/slices/orderSlice';
 import {enums} from '../../utils/constant';
@@ -91,6 +93,8 @@ const CheckoutPage = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const distances = useSelector(selectDistances);
+	const districts = useSelector(GetAllDistrictSelector);
+	const wards = useSelector(GetAllWardSelector);
 	const loading = useSelector(selectLoading);
 	const error = useSelector(selectError);
 	const userDetail = useSelector(GetUserDetailSelector);
@@ -98,19 +102,22 @@ const CheckoutPage = () => {
 
 	const [paymentMethod, setPaymentMethod] = useState(null);
 	const [paymentForm, setPaymentForm] = useState(null);
-	const [selectedCity, setSelectedCity] = useState('');
+	// const [selectedCity, setSelectedCity] = useState('');
 	const [shippingFee, setShippingFee] = useState(0);
+	const [province, setProvince] = useState('');
+	const [district, setDistrict] = useState('');
+	const [ward, setWard] = useState('');
 	const [userInfo, setUserInfo] = useState({
 		firstName: userDetail.FirstName,
 		lastName: userDetail.LastName,
 		email: userDetail.Email,
 		phone: '',
 		providence: '',
+		district: '',
 		ward: '',
 		address: '',
 		note: '',
 	});
-	const [province, setProvince] = useState('');
 
 	useEffect(() => {
 		form.setFieldsValue(userInfo);
@@ -127,16 +134,36 @@ const CheckoutPage = () => {
 		}
 	}, [distances]);
 
-	// Update shipping fee when the selected city changes
 	useEffect(() => {
-		const selectedDistance =
-			province && province?.find((distance) => distance.Name === selectedCity);
-		if (selectedDistance) {
-			const fee = Math.ceil(selectedDistance.distance_km) * 500; // 500 VND per km
-			setShippingFee(fee);
+		dispatch(fetchDistrict(userInfo?.providence?.Id));
+	}, [dispatch, userInfo]);
+
+	useEffect(() => {
+		if (districts) {
+			setDistrict(districts);
 		}
-		console.log('selectedDistance', selectedDistance);
-	}, [selectedCity, distances]);
+	}, [districts]);
+
+	useEffect(() => {
+		dispatch(fetchWard(userInfo?.district?.Id));
+	}, [dispatch, userInfo]);
+
+	useEffect(() => {
+		if (wards) {
+			setWard(wards);
+		}
+	}, [wards]);
+
+	// // Update shipping fee when the selected city changes
+	// useEffect(() => {
+	// 	const selectedDistance =
+	// 		province && province?.find((distance) => distance.Name === selectedCity);
+	// 	if (selectedDistance) {
+	// 		const fee = Math.ceil(selectedDistance.distance_km) * 500; // 500 VND per km
+	// 		setShippingFee(fee);
+	// 	}
+	// 	console.log('selectedDistance', selectedDistance);
+	// }, [selectedCity, distances]);
 
 	// Lọc các sản phẩm có Jewelry hoặc Diamond
 	const jewelryOrDiamondProducts = cartList?.Products.filter(
@@ -166,20 +193,24 @@ const CheckoutPage = () => {
 			warrantyType: 1,
 		}));
 		const billingDetail = {
-			firstName: userInfo?.firstName,
-			lastName: userInfo?.lastName,
-			phone: userInfo?.phone,
-			email: userInfo?.email,
-			providence: userInfo?.providence,
-			ward: userInfo?.ward,
-			address: userInfo?.address,
-			note: userInfo?.note,
+			firstName: userInfo?.firstName || null,
+			lastName: userInfo?.lastName || null,
+			phone: userInfo?.phone || null,
+			email: userInfo?.email || null,
+			providence: userInfo?.providence?.Name || null,
+			district: userInfo?.district?.Name || null,
+			ward: userInfo?.ward?.Name || null,
+			address: userInfo?.address || null,
+			note: userInfo?.note || null,
 		};
+
+		console.log(billingDetail);
 
 		dispatch(handleCheckoutOrder({orderRequestDto, orderItemRequestDtos, billingDetail}))
 			.then((res) => {
 				if (res.payload) {
 					message.success('Đặt hàng thành công!');
+					navigate('/invoice');
 				} else {
 					message.error(
 						'Đặt hàng không thành công. Vui lòng kiểm tra thông tin của bạn!'
@@ -190,22 +221,38 @@ const CheckoutPage = () => {
 				console.error('Order failed:', error);
 				message.error('Đặt hàng không thành công. Vui lòng kiểm tra thông tin của bạn!');
 			});
-		navigate('/invoice');
 	};
 
-	const onFinishFailed = (errorInfo) => {
-		console.log('Thất bại:', errorInfo);
-		message.error('Vui lòng kiểm tra các trường trong form và thử lại.');
-	};
-
-	// Handle city selection change
 	const handleCityChange = (value) => {
+		const selected = province.find((distance) => distance.Id === value);
 		setUserInfo((prev) => ({
 			...prev,
-			providence: value,
+			providence: selected,
+			district: '',
+			ward: '',
 		}));
 		console.log(value);
 	};
+
+	const handleDistrictChange = (value) => {
+		const selected = district.find((district) => district.Id === value);
+		setUserInfo((prev) => ({
+			...prev,
+			district: selected,
+			ward: '',
+		}));
+		console.log(value);
+	};
+
+	const handleWardChange = (value) => {
+		const selected = ward.find((district) => district.Id === value);
+		setUserInfo((prev) => ({
+			...prev,
+			ward: selected,
+		}));
+		console.log(value);
+	};
+
 	const handlePaymentMethodChange = (e) => {
 		setPaymentMethod(e.target.value);
 	};
@@ -230,7 +277,11 @@ const CheckoutPage = () => {
 		return Promise.reject(new Error('Số điện thoại không hợp lệ!'));
 	};
 
-	console.log('mappedProducts', mappedProducts);
+	// console.log('mappedProducts', mappedProducts);
+	console.log('province', province);
+	console.log('userInfo', userInfo);
+	console.log('district', district);
+	console.log('ward', ward);
 
 	return (
 		<div className="min-h-screen flex justify-center items-center bg-gray-100">
@@ -298,70 +349,95 @@ const CheckoutPage = () => {
 									</div>
 								</div>
 
-								<div className="flex flex-col md:flex-row md:space-x-4 gap-4">
-									<div className="w-full md:w-1/2 p-1">
-										<Form.Item
-											label="Tỉnh thành"
-											name="city"
-											rules={[
-												{
-													required: true,
-													message: 'Vui lòng nhập thành phố',
-												},
-											]}
-										>
-											<Select
-												showSearch
-												placeholder="Chọn tỉnh thành"
-												onChange={handleCityChange}
-											>
-												{province &&
-													province?.map((distance) => (
-														<Select.Option
-															key={distance.Id}
-															value={distance.Name}
-														>
-															{distance.Name}
-														</Select.Option>
-													))}
-											</Select>
-										</Form.Item>
-									</div>
-									<div className="w-full md:w-1/2 p-1">
-										<Form.Item
-											label="Quận / Huyện"
-											name="ward"
-											rules={[
-												{
-													required: true,
-													message: 'Vui lòng nhập Quận / Huyện',
-												},
-											]}
-										>
-											<Input
-												placeholder="Quận / Huyện"
-												name="ward"
-												onChange={handleChange}
-											/>
-										</Form.Item>
-									</div>
-								</div>
 								<Form.Item
-									label="Địa chỉ"
-									className="p-1"
+									label="Tỉnh thành"
+									name="city"
 									rules={[
 										{
 											required: true,
-											message: 'Vui lòng nhập địa chỉ',
+											message: 'Vui lòng nhập thành phố',
 										},
 									]}
 								>
+									<Select
+										showSearch
+										placeholder="Chọn tỉnh thành"
+										onChange={handleCityChange} // Update city change
+										value={userInfo?.providence?.Name}
+									>
+										{province &&
+											province.map((distance) => (
+												<Select.Option
+													key={distance.Id}
+													value={distance.Id}
+												>
+													{distance.Name}
+												</Select.Option>
+											))}
+									</Select>
+								</Form.Item>
+
+								<div className="flex flex-col mb-4">
+									<label className="flex justify-start items-center mb-2">
+										<p className="text-red mr-1">*</p>Quận / Huyện
+									</label>
+									<Select
+										showSearch
+										placeholder="Chọn quận/huyện"
+										onChange={handleDistrictChange}
+										loading={loading}
+										value={userInfo?.district?.Name}
+									>
+										{district &&
+											district?.map((distance) => (
+												<Select.Option
+													key={distance.Id}
+													value={distance.Id}
+												>
+													{distance.Name}
+												</Select.Option>
+											))}
+									</Select>
+								</div>
+
+								<div className="flex flex-col mb-4">
+									<label className="flex justify-start items-center mb-2">
+										<p className="text-red mr-1">*</p>Phường / Xã
+									</label>
+									<Select
+										showSearch
+										placeholder="Chọn phường/xã"
+										onChange={handleWardChange} // Handle ward change
+										loading={loading} // Loading indicator
+										value={userInfo?.ward?.Name} // Keep selected value
+									>
+										{ward &&
+											ward.map((distance) => (
+												<Select.Option
+													key={distance.Id}
+													value={distance.Id}
+												>
+													{distance.Name}
+												</Select.Option>
+											))}
+									</Select>
+								</div>
+
+								<div className="flex flex-col mb-4">
+									<label className="flex justify-start items-center mb-2">
+										<p className="text-red mr-1">*</p>Số Nhà
+									</label>
 									<Input
-										placeholder="Địa chỉ"
+										placeholder="Số nhà"
 										name="address"
 										onChange={handleChange}
 									/>
-								</Form.Item>
+									<p className="text-red mt-2">
+										* Không nhập lại thông tin Phường/Xã - Quận/Huyện -
+										Tỉnh/Thành vào ô này
+									</p>
+								</div>
+
 								<div className="flex flex-col md:flex-row md:space-x-4 gap-4">
 									<div className="w-full md:w-1/2 p-1">
 										<Form.Item

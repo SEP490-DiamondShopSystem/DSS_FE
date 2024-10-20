@@ -2339,3 +2339,7 @@ video {
 	padding-left: 0.75rem /* 12px */;
 	padding-right: 0.75rem /* 12px */;
 }
+
+.mr-1 {
+	margin-right: 0.25rem /* 4px */;
+}

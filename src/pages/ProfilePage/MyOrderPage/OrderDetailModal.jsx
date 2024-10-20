@@ -2,40 +2,30 @@ import React, {useEffect, useState} from 'react';
 import {Button, Divider, Image, Space, Steps} from 'antd';
 import logo from '../../../assets/logo-short-ex.png';
 import '../../../css/antd.css';
+import {useDispatch, useSelector} from 'react-redux';
+import {getUserOrderDetail} from '../../../redux/slices/orderSlice';
+import {GetAllOrderDetailSelector} from '../../../redux/selectors';
+import {convertToVietnamDate, formatPrice} from '../../../utils';
 
-const detailGroups = {
-	total_price: 20138000,
-	groups: [
-		{
-			jewelry_price: 10069000,
-			status: 'Completed',
-			items: [
-				{
-					id: 86,
-					name: 'Round Diamond 3.5 Carat IF',
-					unitPrice: 3357000,
-					orderTime: '26/09/2024',
-				},
-				{
-					id: 87,
-					name: 'Round Diamond 3.5 Carat VVS1',
-					unitPrice: 4467000,
-					orderTime: '26/09/2024',
-				},
-				{
-					id: 88,
-					name: 'Petite Solitaire Engagement Ring In 14k White Gold',
-					unitPrice: 2245000,
-					orderTime: '26/09/2024',
-				},
-			],
-		},
-	],
-};
+export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder}) => {
+	const dispatch = useDispatch();
+	const orderDetail = useSelector(GetAllOrderDetailSelector);
 
-export const OrderDetailModal = ({openDetail, toggleDetailModal}) => {
 	const [showMore, setShowMore] = useState(false);
 	const [currentStep, setCurrentStep] = useState(0);
+	const [order, setOrder] = useState('');
+
+	console.log('order', order);
+
+	useEffect(() => {
+		dispatch(getUserOrderDetail(selectedOrder?.orderId));
+	}, [selectedOrder]);
+
+	useEffect(() => {
+		if (orderDetail) {
+			setOrder(orderDetail);
+		}
+	}, [orderDetail]);
 
 	const orderStatus = 'Vận Chuyển';
 
@@ -119,6 +109,23 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal}) => {
 		setShowMore(!showMore);
 	};
 
+	const getPaymentStatus = (status) => {
+		switch (status) {
+			case 1:
+				return 'Paid All';
+			case 2:
+				return 'Deposited';
+			case 3:
+				return 'Refunding';
+			case 4:
+				return 'Refunded';
+			case 5:
+				return 'Pending';
+			default:
+				return 'Unknown';
+		}
+	};
+
 	const getFilteredSteps = () => {
 		const reversedSteps = [...allSteps].reverse();
 
@@ -173,7 +180,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal}) => {
 								Trạng thái đơn hàng
 							</h2>
 							<p>Hóa đơn ID: #1031</p>
-							<p>Ngày: 19/9/2024</p>
+							<p>Ngày: {convertToVietnamDate(order?.CreatedDate)}</p>
 						</div>
 					</div>
 
@@ -214,9 +221,6 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal}) => {
 					<div className="mt-10">
 						<div className="w-full bg-primary p-5 border rounded">
 							<div className="w-full flex items-center font-semibold text-lg">
-								<p style={{width: '10%'}} className="flex justify-center">
-									Id
-								</p>
 								<p
 									style={{width: '20%'}}
 									className="flex justify-center text-center"
@@ -235,55 +239,47 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal}) => {
 							</div>
 						</div>
 						<div className="w-full">
-							{detailGroups.groups.map((gr, i) => (
-								<div key={i} className="border mb-5 p-5 rounded">
-									{gr.items.map((item, j) => (
-										<div key={j}>
-											<div className="w-full flex items-center text-lg">
-												<p
-													style={{width: '10%'}}
-													className="flex justify-center"
-												>
-													{item.id}
-												</p>
-												<p
-													style={{width: '20%'}}
-													className="flex justify-center"
-												>
-													{item.orderTime}
-												</p>
-												<p style={{width: '40%'}} className="flex my-2">
-													{item.name}
-												</p>
-												<p
-													style={{width: '10%'}}
-													className="flex justify-center my-2"
-												>
-													{item.unitPrice.toLocaleString()} ₫
-												</p>
-												<p
-													style={{width: '20%'}}
-													className="flex justify-center"
-												>
-													{gr.status}
-												</p>
-											</div>
-											<Divider />
+							{order &&
+								order?.Items.map((item, i) => (
+									<div key={i} className="border mb-5 p-5 rounded">
+										<div className="w-full flex items-center text-lg">
+											<p
+												style={{width: '20%'}}
+												className="flex justify-center"
+											>
+												{convertToVietnamDate(order?.CreatedDate)}
+											</p>
+											<p style={{width: '40%'}} className="flex my-2">
+												{item.name}
+											</p>
+											<p
+												style={{width: '10%'}}
+												className="flex justify-center my-2"
+											>
+												{/* {item.} */}
+											</p>
+											<p
+												style={{width: '20%'}}
+												className="flex justify-center"
+											>
+												{/* {item.status} */}
+											</p>
 										</div>
-									))}
-									<div className="flex items-center justify-end">
-										<p className="font-semibold">Giá trang sức</p>
-										<p className="text-2xl font-semibold text-red-600 ml-5">
-											{gr.jewelry_price.toLocaleString()} ₫
-										</p>
+										<Divider />
+
+										<div className="flex items-center justify-end">
+											<p className="font-semibold">Giá trang sức</p>
+											<p className="text-2xl font-semibold text-red-600 ml-5">
+												{/* {formatPrice(item.TotalPrice)} */}
+											</p>
+										</div>
 									</div>
-								</div>
-							))}
+								))}
 						</div>
 					</div>
 					<div className="text-end">
 						<p className="text-2xl font-semibold text-red-600">
-							Tổng giá: {detailGroups.total_price.toLocaleString()} ₫
+							Tổng giá: {formatPrice(order?.TotalPrice)}
 						</p>
 					</div>
 				</div>

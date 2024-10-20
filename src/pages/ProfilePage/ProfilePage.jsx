@@ -1,13 +1,16 @@
 import React, {useState, useEffect, useRef, useCallback} from 'react';
-import {Badge, Button, Divider, Space} from 'antd';
+import {Badge, Button, Divider, message, Space, Table, Tag} from 'antd';
 import {Helmet} from 'react-helmet';
 import {useNavigate} from 'react-router-dom';
 import LogoutModal from '../../components/LogModal/LogoutModal';
 import NavbarProfile from '../../components/NavbarProfile';
 import {removeLocalStorage} from '../../utils/localstorage';
-import {useDispatch} from 'react-redux';
-import {logout} from '../../redux/slices/userLoginSlice';
+import {useDispatch, useSelector} from 'react-redux';
+import {handleRefreshToken, logout} from '../../redux/slices/userLoginSlice';
 import * as jwtDecode from 'jwt-decode';
+import {GetAllOrderSelector} from '../../redux/selectors';
+import {getUserOrder} from '../../redux/slices/orderSlice';
+import {convertToVietnamDate, formatPrice} from '../../utils';
 
 const detailGroups = {
 	total_price: 20138000,
@@ -68,14 +71,19 @@ const ProfilePage = () => {
 	const observer = useRef();
 	const dispatch = useDispatch();
 
-	const accessToken = localStorage.getItem('accessToken');
+	const orderList = useSelector(GetAllOrderSelector);
+	// const refreshToken = localStorage.getItem('refreshToken');
+
+	console.log('orderList', orderList);
 
 	// const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
 	const [status, setStatus] = useState('All');
 	const [currentPage, setCurrentPage] = useState(1);
 	const [itemsPerPage] = useState(3);
 	const [visibleGroups, setVisibleGroups] = useState([]);
-	const [filteredData, setFilteredData] = useState(detailGroups.groups); // Added filteredData state
+	const [orders, setOrders] = useState([]);
+	const [dataSource, setDataSource] = useState([]);
+	const [filteredData, setFilteredData] = useState(detailGroups.groups);
 	const orderStatus = [
 		{icon: '', name: 'Tổng đơn hàng', status: 'All', order: 1},
 		{icon: '', name: 'Đơn hàng đang chờ xử lý', status: 'Waiting for manufacture', order: 3},
@@ -86,18 +94,134 @@ const ProfilePage = () => {
 	// const showLogoutModal = () => setIsLogoutModalVisible(true);
 	// const hideLogoutModal = () => setIsLogoutModalVisible(false);
 
-	// const handleLogout = () => {
-	// 	dispatch(logout());
-	// 	notifySuccess('Logout Successful!');
-	// 	hideLogoutModal();
+	// const refreshTokenClick = () => {
+	// 	dispatch(handleRefreshToken(refreshToken)).then((res) => {
+	// 		if (res.payload) {
+	// 			localStorage.setItem('accessToken', res.payload.accessToken);
+	// 			message.success('Làm mới thành công!');
+	// 		}
+	// 	});
+
 	// 	navigate('/');
 	// };
 
-	// Handle status change
-	const handleStatusClick = (newStatus) => {
-		setStatus(newStatus);
-		setCurrentPage(1);
+	const columns = [
+		{
+			title: 'ID',
+			dataIndex: 'orderId',
+			align: 'center',
+		},
+		{
+			title: 'Thời gian đặt hàng',
+			dataIndex: 'orderTime',
+			align: 'center',
+		},
+		// {
+		// 	title: () => <div className="text-center">Sản phẩm</div>,
+		// 	dataIndex: 'product',
+		// },
+		{
+			title: 'Tổng Giá',
+			dataIndex: 'price',
+			align: 'center',
+		},
+		{
+			title: 'Trạng thái',
+			dataIndex: 'status',
+			render: (status) => {
+				let color = 'red';
+				if (status === 'Completed') {
+					color = 'green';
+				} else if (status === 'Pending') {
+					color = 'warning';
+				} else if (status === 'Processing') {
+					color = 'processing';
+				}
+				return (
+					<div className="text-center">
+						<Tag className="text-center" color={color}>
+							{status.toUpperCase()}
+						</Tag>
+					</div>
+				);
+			},
+			align: 'center',
+		},
+	];
+
+	// Cột cho bảng mở rộng (sub-table)
+	const expandedColumns = [
+		{
+			title: 'ID',
+			dataIndex: 'productId',
+			key: 'productId',
+			align: 'center',
+		},
+		{
+			title: 'Sản phẩm',
+			dataIndex: 'productName',
+			key: 'productName',
+			align: 'center',
+		},
+		{
+			title: 'Giá',
+			dataIndex: 'productPrice',
+			key: 'productPrice',
+			align: 'center',
+		},
+	];
+
+	// Hàm render bảng mở rộng cho từng đơn hàng
+	const expandedRowRender = (record) => {
+		return (
+			<Table
+				columns={expandedColumns}
+				dataSource={record.products}
+				pagination={false}
+				rowKey="productId"
+			/>
+		);
 	};
+
+	const getOrderStatus = (status) => {
+		switch (status) {
+			case 0:
+				return 'Pending';
+			case 1:
+				return 'Processing';
+			case 2:
+				return 'Completed';
+			default:
+				return 'Unknown';
+		}
+	};
+
+	useEffect(() => {
+		if (orderList) {
+			const formattedOrders = orderList.map((order) => ({
+				orderId: order.Id,
+				orderTime: convertToVietnamDate(order.CreatedDate),
+				price: formatPrice(order.TotalPrice),
+				status: getOrderStatus(order.Status),
+				products: order.Items.map((item) => ({
+					productId: item.Id,
+					productName: item.Name,
+					productPrice: item.Price,
+				})), // Mỗi sản phẩm trong đơn hàng
+			}));
+			setDataSource(formattedOrders); // Cập nhật dataSource cho bảng
+		}
+	}, [orderList]);
+
+	useEffect(() => {
+		dispatch(getUserOrder());
+	}, []);
+
+	useEffect(() => {
+		if (orderList) {
+			setOrders(orderList);
+		}
+	}, [orderList]);
 
 	// Filter data when status or itemsPerPage change
 	useEffect(() => {
@@ -130,6 +254,12 @@ const ProfilePage = () => {
 		}
 	}, [currentPage, filteredData, status, itemsPerPage]);
 
+	// Handle status change
+	const handleStatusClick = (newStatus) => {
+		setStatus(newStatus);
+		setCurrentPage(1);
+	};
+
 	return (
 		<div>
 			<Helmet>
@@ -143,8 +273,8 @@ const ProfilePage = () => {
 				<div className="font-semibold w-full px-20 py-10 bg-white rounded-lg">
 					<div className="flex justify-between items-center">
 						<h1 className="text-2xl">Chào mừng Khách hàng</h1>
-						{/* <Button danger onClick={showLogoutModal}>
-							Đăng xuất
+						{/* <Button danger onClick={refreshTokenClick}>
+							Xác thực lại
 						</Button> */}
 					</div>
 					<div className="flex items-center font-medium justify-between mt-10">
@@ -170,93 +300,15 @@ const ProfilePage = () => {
 							</div>
 						))}
 					</div>
-					<div className="mt-10">
-						<div className="w-full bg-primary p-5 border rounded">
-							<div className="w-full flex items-center font-semibold text-lg">
-								<p style={{width: '10%'}} className="flex justify-center">
-									Id
-								</p>
-								<p
-									style={{width: '20%'}}
-									className="flex justify-center text-center"
-								>
-									Thời gian đặt hàng
-								</p>
-								<p style={{width: '40%'}} className="flex justify-center">
-									Sản phẩm
-								</p>
-								<p style={{width: '10%'}} className="flex justify-center">
-									Giá
-								</p>
-								<p style={{width: '20%'}} className="flex justify-center">
-									Trạng thái
-								</p>
-							</div>
-						</div>
-						<div className="w-full">
-							{visibleGroups.length === 0 ? (
-								<div className="text-center text-lg font-semibold mt-10">
-									Không có hàng
-								</div>
-							) : (
-								visibleGroups.map((gr, i) => (
-									<div key={i} className="border mb-5 p-5 rounded">
-										{gr.items.map((item, j) => (
-											<div key={j}>
-												<div className="w-full flex items-center text-lg">
-													<p
-														style={{width: '10%'}}
-														className="flex justify-center"
-													>
-														{item.id}
-													</p>
-													<p
-														style={{width: '20%'}}
-														className="flex justify-center"
-													>
-														{item.orderTime}
-													</p>
-													<p style={{width: '40%'}} className="flex my-2">
-														{item.name}
-													</p>
-													<p
-														style={{width: '10%'}}
-														className="flex justify-center my-2"
-													>
-														{item.unitPrice.toLocaleString()} ₫
-													</p>
-													<p
-														style={{width: '20%'}}
-														className="flex justify-center"
-													>
-														{gr.status}
-													</p>
-												</div>
-												<Divider />
-											</div>
-										))}
-										<div className="flex items-center justify-end">
-											<p className="font-semibold">Giá trang sức</p>
-											<p className="text-2xl font-semibold text-red-600 ml-5">
-												{gr.jewelry_price.toLocaleString()} ₫
-											</p>
-										</div>
-									</div>
-								))
-							)}
-							{visibleGroups.length < filteredData.length && (
-								<div ref={lastElementRef} className="text-center mt-5">
-									<p>Đang tải thêm dữ liệu...</p>
-								</div>
-							)}
-						</div>
-						{status === 'All' && (
-							<div className="text-end bg-primary p-5 rounded-lg">
-								<p className="text-2xl font-semibold text-red-600">
-									Tổng giá: {detailGroups.total_price.toLocaleString()} ₫
-								</p>
-							</div>
-						)}
+					<div className="font-semibold w-full px-20 py-10 bg-white rounded-lg">
+						<Table
+							dataSource={dataSource} // Sử dụng dữ liệu thực từ API
+							columns={columns}
+							pagination={{pageSize: 5}}
+							className="custom-table-header"
+							rowKey="orderId"
+							expandedRowRender={expandedRowRender} // Hiển thị sub-rows (bảng mở rộng)
+						/>
 					</div>
 				</div>
 			</div>
