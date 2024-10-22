@@ -102,7 +102,7 @@ const LoginModal = ({isOpen, onClose}) => {
 							htmlType="submit"
 							type="text"
 							className="bg-primary text-black hover:bg-primary font-semibold w-full mt-5"
-							loading={loading}
+							// loading={loading}
 						>
 							Đăng nhập
 						</Button>

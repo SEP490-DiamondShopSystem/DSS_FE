@@ -2343,3 +2343,10 @@ video {
 .mr-1 {
 	margin-right: 0.25rem /* 4px */;
 }
+
+.bottom-2 {
+	bottom: 0.5rem /* 8px */;
+}
+.right-2 {
+	right: 0.5rem /* 8px */;
+}

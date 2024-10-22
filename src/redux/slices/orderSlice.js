@@ -25,12 +25,11 @@ import {getUserId} from '../../components/GetUserId';
 
 export const handleCheckoutOrder = createAsyncThunk(
 	'orderSlice/handleCheckoutOrder',
-	async ({orderRequestDto, orderItemRequestDtos, billingDetail}, {rejectWithValue}) => {
+	async ({createOrderInfo, billingDetail}, {rejectWithValue}) => {
 		try {
 			const response = await api.post(`/Order/Checkout`, {
-				orderRequestDto,
-				orderItemRequestDtos,
 				billingDetail,
+				createOrderInfo,
 			});
 			console.log(response);
 
@@ -72,11 +71,27 @@ export const getUserOrderDetail = createAsyncThunk(
 	}
 );
 
+export const getUserOrderTransaction = createAsyncThunk(
+	'orderSlice/getUserOrderTransaction',
+	async (orderId, {rejectWithValue}) => {
+		try {
+			const response = await api.get(`/Order/PaymentLink/${orderId}`);
+			console.log(response);
+
+			return response;
+		} catch (error) {
+			console.log('Error: ', JSON.stringify(error.response.data));
+			return rejectWithValue(error.response.data);
+		}
+	}
+);
+
 export const orderSlice = createSlice({
 	name: 'cart',
 	initialState: {
 		orderList: null,
 		orderDetail: null,
+		transaction: null,
 	},
 	reducers: {},
 	extraReducers: (builder) => {
@@ -110,6 +125,17 @@ export const orderSlice = createSlice({
 				state.orderDetail = action.payload;
 			})
 			.addCase(getUserOrderDetail.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload;
+			})
+			.addCase(getUserOrderTransaction.pending, (state) => {
+				state.loading = true;
+			})
+			.addCase(getUserOrderTransaction.fulfilled, (state, action) => {
+				state.loading = false;
+				state.transaction = action.payload;
+			})
+			.addCase(getUserOrderTransaction.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload;
 			});

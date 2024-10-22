@@ -26,6 +26,7 @@ export const handleCartValidate = createAsyncThunk(
 export const cartSlice = createSlice({
 	name: 'cart',
 	initialState: {
+		loading: null,
 		cart: null,
 		cartByUserId: localStorage.getItem(`cart_${getUserId()}`) || '',
 		cartDiamondByUserId: localStorage.getItem(`cart_${getUserId()}`) || '',

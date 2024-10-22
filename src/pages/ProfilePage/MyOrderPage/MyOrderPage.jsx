@@ -7,24 +7,24 @@ import {OrderInvoiceModal} from './OrderInvoiceModal';
 import {useNavigate} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import {GetAllOrderSelector} from '../../../redux/selectors';
-import {getUserOrder} from '../../../redux/slices/orderSlice';
+import {getUserOrder, getUserOrderTransaction} from '../../../redux/slices/orderSlice';
 import {convertToVietnamDate, formatPrice} from '../../../utils/index';
-import {ContainerOutlined, EyeFilled} from '@ant-design/icons';
+import {ContainerOutlined, EyeFilled, TransactionOutlined} from '@ant-design/icons';
 
 const MyOrderPage = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
-	// Lấy danh sách đơn hàng từ Redux store
 	const orderList = useSelector(GetAllOrderSelector);
 
-	// State cho dataSource của bảng
 	const [dataSource, setDataSource] = useState([]);
 	const [openDetail, setOpenDetail] = useState(false);
 	const [openInvoice, setOpenInvoice] = useState(false);
 	const [selectedOrder, setSelectedOrder] = useState(null);
 
-	// Cấu trúc cột cho bảng chính
+	console.log(orderList);
+	console.log('dataSource', dataSource);
+
 	const columns = [
 		{
 			title: 'ID',
@@ -50,12 +50,33 @@ const MyOrderPage = () => {
 			dataIndex: 'status',
 			render: (status) => {
 				let color = 'red';
-				if (status === 'Completed') {
-					color = 'green';
-				} else if (status === 'Pending') {
-					color = 'warning';
-				} else if (status === 'Processing') {
-					color = 'processing';
+				switch (status) {
+					case 'Success':
+						color = 'green';
+						break;
+					case 'Pending':
+						color = 'orange';
+						break;
+					case 'Processing':
+						color = 'blue';
+						break;
+					case 'Delivering':
+						color = 'cyan';
+						break;
+					case 'Prepared':
+						color = 'purple';
+						break;
+					case 'Cancelled':
+					case 'Rejected':
+					case 'Refused':
+						color = 'red';
+						break;
+					case 'Delivery Failed':
+						color = 'volcano';
+						break;
+					default:
+						color = 'gray';
+						break;
 				}
 				return (
 					<div className="text-center">
@@ -80,15 +101,27 @@ const MyOrderPage = () => {
 							<EyeFilled />
 						</Button>
 					</Tooltip>
-					<Tooltip title={'Hóa Đơn'}>
-						<Button
-							type="text"
-							className="p-2 bg-primary border rounded-lg  transition-colors duration-300"
-							onClick={toggleInvoiceModal}
-						>
-							<ContainerOutlined />
-						</Button>
-					</Tooltip>
+					{record?.paymentStatus === 5 ? (
+						<Tooltip title={'Thanh Toán'}>
+							<Button
+								type="text"
+								className="p-2 bg-primary border rounded-lg  transition-colors duration-300"
+								onClick={() => toggleTransactionModal(record.orderId)}
+							>
+								<TransactionOutlined />
+							</Button>
+						</Tooltip>
+					) : (
+						<Tooltip title={'Hóa Đơn'}>
+							<Button
+								type="text"
+								className="p-2 bg-primary border rounded-lg  transition-colors duration-300"
+								onClick={toggleInvoiceModal}
+							>
+								<ContainerOutlined />
+							</Button>
+						</Tooltip>
+					)}
 				</>
 			),
 			align: 'center',
@@ -142,12 +175,18 @@ const MyOrderPage = () => {
 		setOpenInvoice(!openInvoice);
 	};
 
-	// Lấy dữ liệu đơn hàng từ Redux store sau khi component được mount
+	const toggleTransactionModal = (id) => {
+		dispatch(getUserOrderTransaction(id)).then((res) => {
+			if (res.payload) {
+				window.open(res.payload?.PaymentUrl, '_blank');
+			}
+		});
+	};
+
 	useEffect(() => {
 		dispatch(getUserOrder());
 	}, [dispatch]);
 
-	// Định dạng lại dữ liệu từ API để phù hợp với bảng
 	useEffect(() => {
 		if (orderList) {
 			const formattedOrders = orderList.map((order) => ({
@@ -155,6 +194,7 @@ const MyOrderPage = () => {
 				orderTime: convertToVietnamDate(order.CreatedDate),
 				price: formatPrice(order.TotalPrice),
 				status: getOrderStatus(order.Status),
+				paymentStatus: order.PaymentStatus,
 				products: order.Items.map((item) => ({
 					productId: item.Id,
 					productName: item.Name,
@@ -168,12 +208,24 @@ const MyOrderPage = () => {
 	// Hàm chuyển đổi status sang chuỗi dễ đọc
 	const getOrderStatus = (status) => {
 		switch (status) {
-			case 0:
-				return 'Pending';
 			case 1:
-				return 'Processing';
+				return 'Pending';
 			case 2:
-				return 'Completed';
+				return 'Processing';
+			case 3:
+				return 'Rejected';
+			case 4:
+				return 'Cancelled';
+			case 5:
+				return 'Prepared';
+			case 6:
+				return 'Delivering';
+			case 7:
+				return 'Delivery_Failed';
+			case 8:
+				return 'Success';
+			case 9:
+				return 'Refused';
 			default:
 				return 'Unknown';
 		}

@@ -1,12 +1,12 @@
 import React, {useEffect, useMemo, useState} from 'react';
 
 import {DeleteOutlined, EyeOutlined} from '@ant-design/icons';
-import {Select} from 'antd';
+import {Button, message, Select} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import {getUserId} from '../../components/GetUserId';
 import Loading from '../../components/Loading';
-import {GetCartSelector, GetPromotionSelector} from '../../redux/selectors';
+import {GetCartSelector, GetPromotionSelector, LoadingCartSelector} from '../../redux/selectors';
 import {handleCartValidate, removeFromCartFinish} from '../../redux/slices/cartSlice';
 import {getAllPromo} from '../../redux/slices/promotionSlice';
 import {formatPrice} from '../../utils';
@@ -90,6 +90,7 @@ const CartPage = () => {
 
 	const promotionList = useSelector(GetPromotionSelector);
 	const cartList = useSelector(GetCartSelector);
+	const loading = useSelector(LoadingCartSelector);
 
 	const cartFinish = useSelector((state) => {
 		const cartFinishByUserId = state.cartSlice?.cartFinishByUserId || {};
@@ -104,7 +105,6 @@ const CartPage = () => {
 	const localCart = JSON.parse(localStorage.getItem(`cart_${userId}`));
 	const cartValidate = JSON.parse(localStorage.getItem(`cartValidate_${userId}`));
 	const [cartValidateProduct, setCartValidateProduct] = useState([]);
-	const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
 		dispatch(getAllPromo());
@@ -199,14 +199,18 @@ const CartPage = () => {
 		}));
 
 		// Gọi dispatch sau khi xóa
-		dispatch(handleCartValidate({promotionId: null, transformedData}));
+		dispatch(handleCartValidate({promotionId: null, transformedData})).then((res) => {
+			if (res.payload) {
+				message.success('Xóa sản phẩm thành công!');
+			}
+		});
 	};
 
-	if (loading) {
-		return <Loading />;
-	}
+	// if (loading) {
+	// 	return <Loading />;
+	// }
 
-	console.log(cartList);
+	console.log('mappedProducts', mappedProducts);
 
 	return (
 		<div className="flex justify-between p-8 bg-gray-50 min-h-screen mx-32 my-20">
@@ -287,7 +291,10 @@ const CartPage = () => {
 					<div className="bg-white p-6 mx-5 my-5 border rounded-lg shadow-md">
 						<h2 className="text-xl font-semibold mb-2 border-b pb-2">Hàng Có Sẵn</h2>
 						{mappedProducts.map((item, index) => (
-							<div className="flex mt-4 shadow-xl p-5 rounded-lg" key={item.Id}>
+							<div
+								className="relative flex mt-4 shadow-xl p-5 rounded-lg"
+								key={item.Id}
+							>
 								<div className="mr-4 flex-shrink-0">
 									<img
 										src="path-to-image"
@@ -384,11 +391,11 @@ const CartPage = () => {
 										<p className="text-gray-800">Không có thông tin</p>
 									)}
 								</div>
-								<div className="flex items-center justify-end space-y-2 divide-x text-sm text-yellow-600">
-									<span
-										className="cursor-pointer w-auto hover:text-black text-primary text-xl px-3"
+								<div className="flex items-center justify-end space-y-2  text-sm">
+									<Button
+										className="cursor-pointer w-auto hover:text-black text-primary text-xl px-3 mr-2"
 										onClick={() => {
-											if (item.JewelryId) {
+											if (item.JewelryId !== null) {
 												handleViewCart(item.JewelryId, null);
 											} else if (item.DiamondId) {
 												handleViewCart(null, item.DiamondId);
@@ -396,15 +403,22 @@ const CartPage = () => {
 										}}
 									>
 										<EyeOutlined />
-									</span>
+									</Button>
 
-									<span
+									<Button
+										loading={loading}
+										danger
 										className="cursor-pointer px-3"
 										onClick={() => handleRemoveCart(index)}
 									>
 										<DeleteOutlined />
-									</span>
+									</Button>
 								</div>
+								{item.IsSold && (
+									<div className="absolute right-2 bottom-2 text-red font-semibold">
+										<p>Hàng Đã Bán</p>
+									</div>
+								)}
 							</div>
 						))}
 					</div>
