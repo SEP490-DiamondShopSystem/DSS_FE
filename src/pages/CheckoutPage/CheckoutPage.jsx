@@ -178,20 +178,44 @@ const CheckoutPage = () => {
 	}, [jewelryOrDiamondProducts, enums]);
 	// Hàm xử lý gửi form
 	const onFinish = () => {
-		const orderRequestDto = {
-			paymentType: paymentForm,
-			paymentName: paymentMethod,
-			isTransfer: true,
+		const orderItemRequestDtos = cartList?.Products?.map((product) => {
+			const diamondId = product?.Diamond?.Id || null;
+			const jewelryId = product?.Jewelry?.Id || null;
+
+			let warrantyCode = null;
+			let warrantyType = null;
+			if (diamondId) {
+				warrantyCode = 'Default_Diamond_Warranty';
+			} else if (jewelryId) {
+				warrantyCode = 'Default_Jewelry_Warranty';
+			}
+
+			if (diamondId) {
+				warrantyType = 1;
+			} else if (jewelryId) {
+				warrantyType = 2;
+			}
+
+			return {
+				// id: Math.floor(1000000 + Math.random() * 9000000).toString(),
+				jewelryId,
+				diamondId,
+				engravedText: product?.EngravedText || null,
+				engravedFont: product?.EngravedFont || null,
+				warrantyCode,
+				warrantyType,
+			};
+		});
+		const createOrderInfo = {
+			orderRequestDto: {
+				paymentType: paymentForm,
+				paymentName: paymentMethod,
+				promotionId: null,
+				isTransfer: true,
+			},
+
+			orderItemRequestDtos,
 		};
-		const orderItemRequestDtos = cartList?.Products?.map((product) => ({
-			id: Math.floor(1000000 + Math.random() * 9000000).toString(),
-			jewelryId: product?.Jewelry?.Id || null,
-			diamondId: product?.Diamond?.Id || null,
-			engravedText: product?.EngravedText || null,
-			engravedFont: product?.EngravedFont || null,
-			warrantyCode: null,
-			warrantyType: 1,
-		}));
 		const billingDetail = {
 			firstName: userInfo?.firstName || null,
 			lastName: userInfo?.lastName || null,
@@ -204,13 +228,12 @@ const CheckoutPage = () => {
 			note: userInfo?.note || null,
 		};
 
-		console.log(billingDetail);
-
-		dispatch(handleCheckoutOrder({orderRequestDto, orderItemRequestDtos, billingDetail}))
+		dispatch(handleCheckoutOrder({createOrderInfo, billingDetail}))
 			.then((res) => {
 				if (res.payload) {
 					message.success('Đặt hàng thành công!');
-					navigate('/invoice');
+					window.open(res.payload?.PaymentUrl, '_blank');
+					navigate('/my-orders');
 				} else {
 					message.error(
 						'Đặt hàng không thành công. Vui lòng kiểm tra thông tin của bạn!'
@@ -385,6 +408,7 @@ const CheckoutPage = () => {
 										showSearch
 										placeholder="Chọn quận/huyện"
 										onChange={handleDistrictChange}
+										disabled={loading}
 										loading={loading}
 										value={userInfo?.district?.Name}
 									>
@@ -407,9 +431,10 @@ const CheckoutPage = () => {
 									<Select
 										showSearch
 										placeholder="Chọn phường/xã"
-										onChange={handleWardChange} // Handle ward change
-										loading={loading} // Loading indicator
-										value={userInfo?.ward?.Name} // Keep selected value
+										onChange={handleWardChange}
+										disabled={loading}
+										loading={loading}
+										value={userInfo?.ward?.Name}
 									>
 										{ward &&
 											ward.map((distance) => (

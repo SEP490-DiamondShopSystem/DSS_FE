@@ -26,6 +26,7 @@ export const selectLoading = (state) => state.distanceSlice.loading;
 export const selectError = (state) => state.distanceSlice.error;
 
 //CART
+export const LoadingCartSelector = (state) => state.cartSlice.loading;
 export const GetCartSelector = (state) => state.cartSlice.cart;
 export const GetCartDesignSelector = (state) => state.cartSlice.cartDesign;
 export const GetCartFinishSelector = (state) => state.cartSlice.cartFinish;
@@ -36,3 +37,4 @@ export const GetPromotionSelector = (state) => state.promotionSlice.promotion;
 //ORDER
 export const GetAllOrderSelector = (state) => state.orderSlice.orderList;
 export const GetAllOrderDetailSelector = (state) => state.orderSlice.orderDetail;
+export const GetOrderTransactionSelector = (state) => state.orderSlice.transaction;

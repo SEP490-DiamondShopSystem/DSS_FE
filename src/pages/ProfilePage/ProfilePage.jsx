@@ -185,11 +185,11 @@ const ProfilePage = () => {
 
 	const getOrderStatus = (status) => {
 		switch (status) {
-			case 0:
-				return 'Pending';
 			case 1:
-				return 'Processing';
+				return 'Pending';
 			case 2:
+				return 'Processing';
+			case 3:
 				return 'Completed';
 			default:
 				return 'Unknown';
