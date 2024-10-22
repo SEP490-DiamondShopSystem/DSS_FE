@@ -15,10 +15,8 @@ const MyOrderPage = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
-	// Lấy danh sách đơn hàng từ Redux store
 	const orderList = useSelector(GetAllOrderSelector);
 
-	// State cho dataSource của bảng
 	const [dataSource, setDataSource] = useState([]);
 	const [openDetail, setOpenDetail] = useState(false);
 	const [openInvoice, setOpenInvoice] = useState(false);
@@ -27,7 +25,6 @@ const MyOrderPage = () => {
 	console.log(orderList);
 	console.log('dataSource', dataSource);
 
-	// Cấu trúc cột cho bảng chính
 	const columns = [
 		{
 			title: 'ID',
@@ -53,12 +50,33 @@ const MyOrderPage = () => {
 			dataIndex: 'status',
 			render: (status) => {
 				let color = 'red';
-				if (status === 'Completed') {
-					color = 'green';
-				} else if (status === 'Pending') {
-					color = 'warning';
-				} else if (status === 'Processing') {
-					color = 'processing';
+				switch (status) {
+					case 'Success':
+						color = 'green';
+						break;
+					case 'Pending':
+						color = 'orange';
+						break;
+					case 'Processing':
+						color = 'blue';
+						break;
+					case 'Delivering':
+						color = 'cyan';
+						break;
+					case 'Prepared':
+						color = 'purple';
+						break;
+					case 'Cancelled':
+					case 'Rejected':
+					case 'Refused':
+						color = 'red';
+						break;
+					case 'Delivery Failed':
+						color = 'volcano';
+						break;
+					default:
+						color = 'gray';
+						break;
 				}
 				return (
 					<div className="text-center">
@@ -195,7 +213,19 @@ const MyOrderPage = () => {
 			case 2:
 				return 'Processing';
 			case 3:
-				return 'Completed';
+				return 'Rejected';
+			case 4:
+				return 'Cancelled';
+			case 5:
+				return 'Prepared';
+			case 6:
+				return 'Delivering';
+			case 7:
+				return 'Delivery_Failed';
+			case 8:
+				return 'Success';
+			case 9:
+				return 'Refused';
 			default:
 				return 'Unknown';
 		}

@@ -129,13 +129,35 @@ const ProfilePage = () => {
 			title: 'Trạng thái',
 			dataIndex: 'status',
 			render: (status) => {
+				// Sửa '=' thành ':'
 				let color = 'red';
-				if (status === 'Completed') {
-					color = 'green';
-				} else if (status === 'Pending') {
-					color = 'warning';
-				} else if (status === 'Processing') {
-					color = 'processing';
+				switch (status) {
+					case 'Success':
+						color = 'green';
+						break;
+					case 'Pending':
+						color = 'orange';
+						break;
+					case 'Processing':
+						color = 'blue';
+						break;
+					case 'Delivering':
+						color = 'cyan';
+						break;
+					case 'Prepared':
+						color = 'purple';
+						break;
+					case 'Cancelled':
+					case 'Rejected':
+					case 'Refused':
+						color = 'red';
+						break;
+					case 'Delivery Failed':
+						color = 'volcano';
+						break;
+					default:
+						color = 'gray';
+						break;
 				}
 				return (
 					<div className="text-center">
@@ -190,7 +212,19 @@ const ProfilePage = () => {
 			case 2:
 				return 'Processing';
 			case 3:
-				return 'Completed';
+				return 'Rejected';
+			case 4:
+				return 'Cancelled';
+			case 5:
+				return 'Prepared';
+			case 6:
+				return 'Delivering';
+			case 7:
+				return 'Delivery_Failed';
+			case 8:
+				return 'Success';
+			case 9:
+				return 'Refused';
 			default:
 				return 'Unknown';
 		}
