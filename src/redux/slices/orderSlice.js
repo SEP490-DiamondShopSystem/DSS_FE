@@ -43,12 +43,25 @@ export const handleCheckoutOrder = createAsyncThunk(
 
 export const getUserOrder = createAsyncThunk(
 	'orderSlice/getUserOrder',
-	async (_, {rejectWithValue}) => {
+	async (params, {rejectWithValue}) => {
 		try {
-			const response = await api.get(`/Order/User/All`);
-			console.log(response);
+			const {pageSize, start, Status} = params;
 
-			return response;
+			let url = '/Order/All';
+
+			const queryParams = new URLSearchParams();
+
+			if (pageSize) queryParams.append('pageSize', pageSize);
+			if (start) queryParams.append('start', start);
+			if (Status) queryParams.append('Status', Status);
+
+			if (queryParams.toString()) {
+				url += `?${queryParams.toString()}`;
+			}
+
+			// Thực hiện request với URL đã hoàn chỉnh
+			const data = await api.get(url);
+			return data;
 		} catch (error) {
 			console.log('Error: ', JSON.stringify(error.response.data));
 			return rejectWithValue(error.response.data);
@@ -60,7 +73,7 @@ export const getUserOrderDetail = createAsyncThunk(
 	'orderSlice/getUserOrderDetail',
 	async (orderId, {rejectWithValue}) => {
 		try {
-			const response = await api.get(`/Order/User/${orderId}`);
+			const response = await api.get(`/Order/${orderId}`);
 			console.log(response);
 
 			return response;

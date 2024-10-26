@@ -189,7 +189,7 @@ const MyOrderPage = () => {
 
 	useEffect(() => {
 		if (orderList) {
-			const formattedOrders = orderList.map((order) => ({
+			const formattedOrders = orderList?.Values?.map((order) => ({
 				orderId: order.Id,
 				orderTime: convertToVietnamDate(order.CreatedDate),
 				price: formatPrice(order.TotalPrice),

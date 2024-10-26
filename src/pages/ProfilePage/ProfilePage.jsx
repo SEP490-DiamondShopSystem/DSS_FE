@@ -77,18 +77,19 @@ const ProfilePage = () => {
 	console.log('orderList', orderList);
 
 	// const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
-	const [status, setStatus] = useState('All');
+	const [status, setStatus] = useState('');
 	const [currentPage, setCurrentPage] = useState(1);
+	const [pageSize, setPageSize] = useState(100);
 	const [itemsPerPage] = useState(3);
 	const [visibleGroups, setVisibleGroups] = useState([]);
 	const [orders, setOrders] = useState([]);
 	const [dataSource, setDataSource] = useState([]);
 	const [filteredData, setFilteredData] = useState(detailGroups.groups);
 	const orderStatus = [
-		{icon: '', name: 'Tổng đơn hàng', status: 'All', order: 1},
-		{icon: '', name: 'Đơn hàng đang chờ xử lý', status: 'Waiting for manufacture', order: 3},
-		{icon: '', name: 'Đơn hàng đang xử lý', status: 'Processing', order: 4},
-		{icon: '', name: 'Hoàn tất đơn hàng', status: 'Completed', order: 10},
+		{icon: '', name: 'Tổng đơn hàng', status: '', order: 1},
+		{icon: '', name: 'Đang xử lí', status: '2', order: 3},
+		{icon: '', name: 'Đang vận chuyển', status: '6', order: 4},
+		{icon: '', name: 'Đã giao', status: '8', order: 10},
 	];
 
 	// const showLogoutModal = () => setIsLogoutModalVisible(true);
@@ -232,7 +233,7 @@ const ProfilePage = () => {
 
 	useEffect(() => {
 		if (orderList) {
-			const formattedOrders = orderList.map((order) => ({
+			const formattedOrders = orderList?.Values?.map((order) => ({
 				orderId: order.Id,
 				orderTime: convertToVietnamDate(order.CreatedDate),
 				price: formatPrice(order.TotalPrice),
@@ -248,8 +249,15 @@ const ProfilePage = () => {
 	}, [orderList]);
 
 	useEffect(() => {
-		dispatch(getUserOrder());
-	}, []);
+		dispatch(
+			getUserOrder({
+				pageSize: pageSize,
+				start: currentPage,
+				Status: status,
+			})
+		);
+		// dispatch(getAllOrder());
+	}, [pageSize, currentPage, status]);
 
 	useEffect(() => {
 		if (orderList) {
