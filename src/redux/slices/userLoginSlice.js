@@ -83,6 +83,22 @@ export const getUserDetail = createAsyncThunk(
 	}
 );
 
+export const handleUpdateAccount = createAsyncThunk(
+	'userLoginSlice/handleUpdateAccount',
+	async ({id, changedFullName, changedAddress}, {rejectWithValue}) => {
+		try {
+			const data = await api.put(`/Account/${id}/Profile`, {
+				changedFullName,
+				changedAddress,
+			});
+			return data;
+		} catch (error) {
+			console.error(error);
+			return rejectWithValue(error);
+		}
+	}
+);
+
 export const userLoginSlice = createSlice({
 	name: 'userLoginSlice',
 	initialState: {
@@ -171,6 +187,18 @@ export const userLoginSlice = createSlice({
 				localStorage.setItem('userDetail', JSON.stringify(action.payload));
 			})
 			.addCase(getUserDetail.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload;
+			})
+			.addCase(handleUpdateAccount.pending, (state) => {
+				state.loading = true;
+			})
+			.addCase(handleUpdateAccount.fulfilled, (state, action) => {
+				state.loading = false;
+				state.userDetail = action.payload;
+				localStorage.setItem('userDetail', JSON.stringify(action.payload));
+			})
+			.addCase(handleUpdateAccount.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload;
 			});

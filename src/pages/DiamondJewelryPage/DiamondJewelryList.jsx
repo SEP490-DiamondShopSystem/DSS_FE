@@ -67,17 +67,17 @@ export const DiamondJewelryList = () => {
 				<Loading />
 			) : (
 				<>
-					{!Array.isArray(filteredJewelryPreset) || filteredJewelryPreset.length === 0 ? (
+					{!Array.isArray(jewelries) || jewelries.length === 0 ? (
 						<div className="flex items-center justify-center my-10">
 							<p className="text-2xl">Chưa có sản phẩm nào</p>
 						</div>
 					) : (
 						<>
 							<div className="text-2xl flex justify-end mt-10">
-								<p className="p-2">{filteredJewelryPreset.length} Kết quả</p>
+								<p className="p-2">{jewelries.length} Kết quả</p>
 							</div>
 							<div className="transition-all duration-300 grid grid-cols-4 gap-10 mb-20 mt-10">
-								{filteredJewelryPreset?.map((jewelry, i) => (
+								{jewelries?.map((jewelry, i) => (
 									<div
 										key={i}
 										className="shadow-lg bg-white rounded-lg hover:border-2 cursor-pointer"
@@ -104,7 +104,7 @@ export const DiamondJewelryList = () => {
 													// className="line-through"
 													// style={{color: '#b0b0b0'}}
 													>
-														{formatPrice(jewelry.Price)}
+														{formatPrice(jewelry.TotalPrice)}
 													</p>
 													{/* <p className="ml-5 " style={{color: '#707070'}}>
 														{jewelry.discountPrice}

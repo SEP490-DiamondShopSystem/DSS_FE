@@ -46,8 +46,8 @@ const mapAttributes = (data, attributes) => {
 		MetalPrice: data?.Jewelry?.Metal?.Price,
 		Model: data?.Jewelry?.Model,
 		ModelId: data?.Jewelry?.ModelId,
-		JewelryPrice: data?.Jewelry?.Price,
-		JewelryName: data?.Jewelry?.Name,
+		JewelryPrice: data?.Jewelry?.TotalPrice,
+		JewelryName: data?.Jewelry?.Model?.Name,
 		SerialCode: data?.Jewelry?.SerialCode,
 		ShippingDate: data?.Jewelry?.ShippingDate,
 		SideDiamonds: data?.Jewelry?.SideDiamonds,
@@ -156,8 +156,8 @@ const CartPage = () => {
 	);
 
 	const mappedProducts = useMemo(() => {
-		if (jewelryOrDiamondProducts && enums) {
-			return jewelryOrDiamondProducts.map((product) => mapAttributes(product, enums));
+		if (cartValidate && enums) {
+			return cartValidate?.Products?.map((product) => mapAttributes(product, enums));
 		}
 		return [];
 	}, [jewelryOrDiamondProducts, enums]);
@@ -307,7 +307,7 @@ const CartPage = () => {
 									{item.JewelryId ? (
 										<div>
 											<p className="mb-1 text-gray-800 font-semibold">
-												{item.JewelryName}
+												{item.JewelryName} {item.MetalName}
 											</p>
 											<p className="text-gray-700 text-sm py-3">
 												Giá:

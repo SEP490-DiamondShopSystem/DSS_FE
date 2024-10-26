@@ -22,6 +22,7 @@ export const LoadingJewelrySelector = (state) => state.jewelrySlice.loading;
 export const selectDistances = (state) => state.distanceSlice.distances;
 export const GetAllWardSelector = (state) => state.distanceSlice.ward;
 export const GetAllDistrictSelector = (state) => state.distanceSlice.district;
+export const CalculateLocationSelector = (state) => state.distanceSlice.location;
 export const selectLoading = (state) => state.distanceSlice.loading;
 export const selectError = (state) => state.distanceSlice.error;
 

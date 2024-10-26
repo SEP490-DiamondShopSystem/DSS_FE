@@ -2350,3 +2350,7 @@ video {
 .right-2 {
 	right: 0.5rem /* 8px */;
 }
+
+.gap-4 {
+	gap: 1rem /* 16px */;
+}

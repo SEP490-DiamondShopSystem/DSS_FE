@@ -96,7 +96,7 @@ export const InformationRight = ({
 		<div>
 			<div className="border-tintWhite">
 				<h1 className="text-3xl">
-					{diamondJewelry?.Name} {selectedMetal?.Name || selectedMetal}
+					{diamondJewelry?.Model?.Name} {selectedMetal?.Name || selectedMetal}
 				</h1>
 				<div className="my-5 flex">
 					<Rate
@@ -190,7 +190,7 @@ export const InformationRight = ({
 						{metalType.price}
 					</p> */}
 					<p className="font-semibold text-2xl my-2">
-						{formatPrice(diamondJewelry?.Price)}
+						{formatPrice(diamondJewelry?.TotalPrice)}
 					</p>
 					<div className="text-sm pl-2">(Giá Gốc)</div>
 				</div>

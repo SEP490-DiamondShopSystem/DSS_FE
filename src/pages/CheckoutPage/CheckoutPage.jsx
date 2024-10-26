@@ -3,7 +3,12 @@ import {FaRegAddressBook, FaRegEnvelope, FaPhoneAlt} from 'react-icons/fa';
 import {Form, Input, Button, Radio, message, Select} from 'antd';
 import {useNavigate} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
-import {fetchDistances, fetchDistrict, fetchWard} from '../../redux/slices/distanceSlice';
+import {
+	fetchDistances,
+	fetchDistrict,
+	fetchWard,
+	handleCalculateLocation,
+} from '../../redux/slices/distanceSlice';
 import {
 	selectDistances,
 	selectLoading,
@@ -12,6 +17,7 @@ import {
 	GetCartSelector,
 	GetAllDistrictSelector,
 	GetAllWardSelector,
+	CalculateLocationSelector,
 } from '../../redux/selectors';
 import {handleCheckoutOrder} from '../../redux/slices/orderSlice';
 import {enums} from '../../utils/constant';
@@ -99,6 +105,7 @@ const CheckoutPage = () => {
 	const error = useSelector(selectError);
 	const userDetail = useSelector(GetUserDetailSelector);
 	const cartList = useSelector(GetCartSelector);
+	const location = useSelector(CalculateLocationSelector);
 
 	const [paymentMethod, setPaymentMethod] = useState(null);
 	const [paymentForm, setPaymentForm] = useState(null);
@@ -112,7 +119,7 @@ const CheckoutPage = () => {
 		lastName: userDetail.LastName,
 		email: userDetail.Email,
 		phone: '',
-		providence: '',
+		province: '',
 		district: '',
 		ward: '',
 		address: '',
@@ -135,7 +142,7 @@ const CheckoutPage = () => {
 	}, [distances]);
 
 	useEffect(() => {
-		dispatch(fetchDistrict(userInfo?.providence?.Id));
+		dispatch(fetchDistrict(userInfo?.province?.Id));
 	}, [dispatch, userInfo]);
 
 	useEffect(() => {
@@ -153,6 +160,17 @@ const CheckoutPage = () => {
 			setWard(wards);
 		}
 	}, [wards]);
+
+	useEffect(() => {
+		dispatch(
+			handleCalculateLocation({
+				Province: userInfo?.province?.Name,
+				District: userInfo?.district.Name,
+				Ward: userInfo?.ward.Name,
+				Street: userInfo?.address?.Name,
+			})
+		);
+	}, [userInfo]);
 
 	// // Update shipping fee when the selected city changes
 	// useEffect(() => {
@@ -221,7 +239,7 @@ const CheckoutPage = () => {
 			lastName: userInfo?.lastName || null,
 			phone: userInfo?.phone || null,
 			email: userInfo?.email || null,
-			providence: userInfo?.providence?.Name || null,
+			providence: userInfo?.province?.Name || null,
 			district: userInfo?.district?.Name || null,
 			ward: userInfo?.ward?.Name || null,
 			address: userInfo?.address || null,
@@ -250,7 +268,7 @@ const CheckoutPage = () => {
 		const selected = province.find((distance) => distance.Id === value);
 		setUserInfo((prev) => ({
 			...prev,
-			providence: selected,
+			province: selected,
 			district: '',
 			ward: '',
 		}));
@@ -300,20 +318,16 @@ const CheckoutPage = () => {
 		return Promise.reject(new Error('Số điện thoại không hợp lệ!'));
 	};
 
-	// console.log('mappedProducts', mappedProducts);
-	console.log('province', province);
-	console.log('userInfo', userInfo);
-	console.log('district', district);
-	console.log('ward', ward);
+	console.log('mappedProducts', mappedProducts);
 
 	return (
-		<div className="min-h-screen flex justify-center items-center bg-gray-100">
-			<div className="container mx-auto p-4 flex flex-col md:flex-row md:space-x-6 gap-4 justify-around">
+		<div className="min-h-screen flex justify-center items-center bg-gray-100 my-10">
+			<div className=" mx-auto p-4 flex flex-col md:flex-row md:space-x-6 gap-4 justify-around">
 				{/* Thông tin thanh toán và giao hàng */}
-				<div className="flex-col">
+				<div className="" style={{width: '80%'}}>
 					<div className="mb-6">
 						<div className="md:w-2/3 bg-white p-6 rounded-lg shadow-lg transition-shadow duration-300 hover:shadow-2xl">
-							<h2 className="text-2xl font-semibold text-gray-800 mb-6">
+							<h2 className="text-2xl font-semibold text-gray-800">
 								Thông tin thanh toán và giao hàng
 							</h2>
 							<Form
@@ -386,7 +400,7 @@ const CheckoutPage = () => {
 										showSearch
 										placeholder="Chọn tỉnh thành"
 										onChange={handleCityChange} // Update city change
-										value={userInfo?.providence?.Name}
+										value={userInfo?.province?.Name}
 									>
 										{province &&
 											province.map((distance) => (
@@ -746,13 +760,13 @@ const CheckoutPage = () => {
 						<div className="bg-white p-6 rounded-lg shadow-lg space-y-4">
 							{/* Total and Savings Section */}
 							<div className="p-4 border rounded-lg bg-gray-50">
-								<div className="flex justify-between font-semibold text-lg text-gray-800 mb-2">
-									<span>Tổng giá trị đơn hàng:</span>
+								<div className="flex justify-between font-semibold text-gray-800 mb-2">
+									<span>Giá tạm tính:</span>
 									<span>{formatPrice(cartList?.OrderPrices?.FinalPrice)}</span>
 								</div>
-								<div className="flex justify-between text-lg text-gray-800 mb-2">
+								<div className="flex justify-between text-gray-800 mb-2">
 									<span>Phí vận chuyển:</span>
-									<span>{formatPrice(shippingFee.toLocaleString())}</span>
+									<span>{formatPrice(location?.DeliveryFee?.Cost)}</span>
 								</div>
 
 								{/* <div className="text-sm text-gray-600 mb-4">
@@ -762,19 +776,28 @@ const CheckoutPage = () => {
 									<span>🚚</span>
 									<span>Free Overnight Shipping, Hassle-Free Returns</span>
 								</div> */}
-								<div className="flex items-center space-x-2 text-sm text-gray-600">
+								<div className="flex  text-sm text-gray-600">
 									<span>📅</span>
 									<span>
 										Giao hàng vào: For an exact shipping date, please select a
 										ring size first.
 									</span>
 								</div>
-								<div className="text-green-600 font-semibold text-base mt-4">
-									Tiết Kiệm{' '}
+								{/* <div className="text-green-600 font-semibold text-base mt-4">
+									Tiết kiệm:{' '}
 									{formatPrice(
 										cartList?.OrderPrices?.DiscountAmountSaved +
 											cartList?.OrderPrices?.PromotionAmountSaved
 									)}
+								</div> */}
+								<div className="flex justify-between items-center font-semibold mt-4 text-lg">
+									<p>Tổng giá trị đơn hàng:</p>
+									<p>
+										{formatPrice(
+											cartList?.OrderPrices?.FinalPrice +
+												location?.DeliveryFee?.Cost
+										)}
+									</p>
 								</div>
 							</div>
 

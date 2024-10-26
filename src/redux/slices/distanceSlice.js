@@ -41,6 +41,31 @@ export const fetchDistrict = createAsyncThunk(
 	}
 );
 
+export const handleCalculateLocation = createAsyncThunk(
+	'distances/handleCalculateLocation',
+	async ({Province, District, Ward, Street}, {rejectWithValue}) => {
+		try {
+			const formData = new FormData();
+			formData.append('Province', Province);
+			formData.append('District', District);
+			formData.append('Ward', Ward);
+			formData.append('Street', Street);
+			formData.append('isLocationCalculation', '');
+			const response = await api.post(`/DeliveryFee/Calculate/Location`, formData, {
+				headers: {
+					'Content-Type': 'multipart/form-data',
+				},
+			});
+			console.log(response);
+
+			return response;
+		} catch (error) {
+			console.log('Error: ', JSON.stringify(error.response.data));
+			return rejectWithValue(error.response.data);
+		}
+	}
+);
+
 // Create the distance slice
 export const distanceSlice = createSlice({
 	name: 'distanceSlice',
@@ -48,6 +73,7 @@ export const distanceSlice = createSlice({
 		distances: [],
 		ward: null,
 		district: null,
+		location: null,
 		loading: false,
 		error: null,
 	},
@@ -87,6 +113,18 @@ export const distanceSlice = createSlice({
 				state.district = action.payload;
 			})
 			.addCase(fetchDistrict.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.error.message;
+			})
+			.addCase(handleCalculateLocation.pending, (state) => {
+				state.loading = true;
+				state.error = null;
+			})
+			.addCase(handleCalculateLocation.fulfilled, (state, action) => {
+				state.loading = false;
+				state.location = action.payload;
+			})
+			.addCase(handleCalculateLocation.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.error.message;
 			});

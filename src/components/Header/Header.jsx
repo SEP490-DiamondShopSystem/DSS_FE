@@ -129,15 +129,15 @@ export const Header = () => {
 						</Link>
 					</li>
 					<li>
-						<Badge
+						{/* <Badge
 							count={cartTotal}
 							color="#dec986"
 							className="my-7 mx-3 py-2 px-2 inline-block no-underline text-black"
-						>
-							<button onClick={handleValidate}>
-								<FontAwesomeIcon icon={faShoppingBag} />
-							</button>
-						</Badge>
+						> */}
+						<button onClick={handleValidate}>
+							<FontAwesomeIcon icon={faShoppingBag} />
+						</button>
+						{/* </Badge> */}
 					</li>
 					<ActionLinks />
 				</ul>
