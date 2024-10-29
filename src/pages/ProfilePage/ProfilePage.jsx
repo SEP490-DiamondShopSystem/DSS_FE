@@ -8,7 +8,7 @@ import {removeLocalStorage} from '../../utils/localstorage';
 import {useDispatch, useSelector} from 'react-redux';
 import {handleRefreshToken, logout} from '../../redux/slices/userLoginSlice';
 import * as jwtDecode from 'jwt-decode';
-import {GetAllOrderSelector, LoadingOrderSelector} from '../../redux/selectors';
+import {GetAllOrderSelector, LoadingOrderSelector, UserInfoSelector} from '../../redux/selectors';
 import {getUserOrder} from '../../redux/slices/orderSlice';
 import {convertToVietnamDate, formatPrice} from '../../utils';
 import {
@@ -24,6 +24,7 @@ const ProfilePage = () => {
 	const dispatch = useDispatch();
 
 	const orderList = useSelector(GetAllOrderSelector);
+	const userDetail = useSelector(UserInfoSelector);
 	const loading = useSelector(LoadingOrderSelector);
 	// const refreshToken = localStorage.getItem('refreshToken');
 
@@ -44,19 +45,7 @@ const ProfilePage = () => {
 		{icon: <CheckCircleOutlined />, name: 'Đã giao', status: '8', order: 10},
 	];
 
-	// const showLogoutModal = () => setIsLogoutModalVisible(true);
-	// const hideLogoutModal = () => setIsLogoutModalVisible(false);
-
-	// const refreshTokenClick = () => {
-	// 	dispatch(handleRefreshToken(refreshToken)).then((res) => {
-	// 		if (res.payload) {
-	// 			localStorage.setItem('accessToken', res.payload.accessToken);
-	// 			message.success('Làm mới thành công!');
-	// 		}
-	// 	});
-
-	// 	navigate('/');
-	// };
+	console.log(userDetail);
 
 	const columns = [
 		{
@@ -235,7 +224,7 @@ const ProfilePage = () => {
 
 				<div className="font-semibold w-full px-20 py-10 bg-white rounded-lg shadow-lg">
 					<div className="flex justify-between items-center">
-						<h1 className="text-2xl">Chào mừng Khách hàng</h1>
+						<h1 className="text-2xl">Chào mừng {userDetail?.Name}</h1>
 						{/* <Button danger onClick={refreshTokenClick}>
 							Xác thực lại
 						</Button> */}
@@ -256,14 +245,14 @@ const ProfilePage = () => {
 							</div>
 						))}
 					</div>
-					<div className="font-semibold w-full px-20 py-10 bg-white rounded-lg">
+					<div className="font-semibold w-full py-10 bg-white rounded-lg">
 						<Table
 							dataSource={dataSource}
 							columns={columns}
 							pagination={{pageSize: 5}}
 							className="custom-table-header"
 							rowKey="orderId"
-							expandedRowRender={expandedRowRender}
+							// expandedRowRender={expandedRowRender}
 							loading={loading}
 						/>
 					</div>

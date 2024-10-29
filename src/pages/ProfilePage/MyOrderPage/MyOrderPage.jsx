@@ -159,8 +159,6 @@ const MyOrderPage = () => {
 	};
 
 	const toggleDetailModal = (order) => {
-		console.log(order);
-
 		setSelectedOrder(order);
 		setOpenDetail(!openDetail);
 	};
@@ -241,7 +239,7 @@ const MyOrderPage = () => {
 						pagination={{pageSize: 5}}
 						className="custom-table-header"
 						rowKey="orderId"
-						expandedRowRender={expandedRowRender}
+						// expandedRowRender={expandedRowRender}
 						loading={loading}
 					/>
 				</div>

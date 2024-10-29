@@ -266,9 +266,10 @@ const CheckoutPage = () => {
 		const res = await dispatch(handleCheckoutOrder({createOrderInfo, billingDetail}));
 		console.log(res);
 
-		if (res.payload) {
+		if (res.payload !== undefined) {
 			message.success('Đặt hàng thành công!');
 			// window.open(res.payload?.PaymentUrl, '_blank');
+			localStorage.removeItem(`cart_${userDetail.Id}`);
 			navigate('/payment');
 		} else {
 			message.error('Đặt hàng không thành công. Vui lòng kiểm tra thông tin của bạn!');

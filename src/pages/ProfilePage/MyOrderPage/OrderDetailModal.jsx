@@ -16,6 +16,8 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 	const [currentStep, setCurrentStep] = useState(0);
 	const [order, setOrder] = useState(null);
 
+	console.log('orderDetail', orderDetail);
+
 	useEffect(() => {
 		if (selectedOrder?.orderId) {
 			dispatch(getUserOrderDetail(selectedOrder.orderId));
@@ -111,9 +113,9 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 					: 'Chờ Shop Xác Nhận',
 			description:
 				orderStatus === 3
-					? 'Đơn hàng đã bị từ chối.'
+					? `Đơn hàng đã bị từ chối. Lý Do: ${orderDetail?.CancelledReason}`
 					: orderStatus === 4
-					? 'Đơn hàng đã bị hủy.'
+					? `Đơn hàng đã bị hủy. Lý Do: ${orderDetail?.CancelledReason}`
 					: 'Đơn hàng đang chờ xác nhận từ shop.',
 			status:
 				orderStatus === 4 || orderStatus === 3 // Nếu bị từ chối hoặc hủy bỏ
