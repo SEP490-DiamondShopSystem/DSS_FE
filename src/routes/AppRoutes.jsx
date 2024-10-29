@@ -29,6 +29,7 @@ import MyInfoPage from '../pages/ProfilePage/MyInfoPage';
 import MyOrderPage from '../pages/ProfilePage/MyOrderPage/MyOrderPage';
 import ProfilePage from '../pages/ProfilePage/ProfilePage';
 import PromotionPage from '../pages/PromotionPage/PromotionPage';
+import PaymentPage from '../pages/PaymentPage';
 
 export const AppRouters = () => {
 	return (
@@ -83,6 +84,14 @@ export const AppRouters = () => {
 				element={
 					<PrivateRoute roles={'customer'}>
 						<CheckoutPage />
+					</PrivateRoute>
+				}
+			/>
+			<Route
+				path="/payment"
+				element={
+					<PrivateRoute roles={'customer'}>
+						<PaymentPage />
 					</PrivateRoute>
 				}
 			/>

@@ -31,6 +31,8 @@ export const fetchWard = createAsyncThunk(
 export const fetchDistrict = createAsyncThunk(
 	'distances/fetchDistrict',
 	async (provinceId, {rejectWithValue}) => {
+		console.log('provinceId', provinceId);
+
 		try {
 			const response = await api.get(`/Location/District/${provinceId}`);
 			return response;

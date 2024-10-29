@@ -36,6 +36,7 @@ export const GetCartFinishSelector = (state) => state.cartSlice.cartFinish;
 export const GetPromotionSelector = (state) => state.promotionSlice.promotion;
 
 //ORDER
+export const LoadingOrderSelector = (state) => state.orderSlice.loading;
 export const GetAllOrderSelector = (state) => state.orderSlice.orderList;
 export const GetAllOrderDetailSelector = (state) => state.orderSlice.orderDetail;
 export const GetOrderTransactionSelector = (state) => state.orderSlice.transaction;

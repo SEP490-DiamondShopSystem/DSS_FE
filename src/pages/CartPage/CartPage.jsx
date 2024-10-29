@@ -1,7 +1,7 @@
 import React, {useEffect, useMemo, useState} from 'react';
 
 import {DeleteOutlined, EyeOutlined} from '@ant-design/icons';
-import {Button, message, Select} from 'antd';
+import {Button, Image, message, Select} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import {getUserId} from '../../components/GetUserId';
@@ -11,6 +11,7 @@ import {handleCartValidate, removeFromCartFinish} from '../../redux/slices/cartS
 import {getAllPromo} from '../../redux/slices/promotionSlice';
 import {formatPrice} from '../../utils';
 import {enums} from '../../utils/constant';
+import logo from '../../assets/logo-short-ex.png';
 
 const getEnumKey = (enumObj, value) => {
 	return enumObj
@@ -179,13 +180,10 @@ const CartPage = () => {
 	};
 
 	const handleRemoveCart = (index) => {
-		// Xóa đối tượng tại chỉ số index
 		localCart.splice(index, 1);
 
-		// Lưu cart cập nhật lại vào localStorage
 		localStorage.setItem(`cart_${userId}`, JSON.stringify(localCart));
 
-		// Chuyển đổi dữ liệu sau khi xóa sản phẩm
 		const transformedData = localCart.map((productId) => ({
 			id: Math.floor(1000000 + Math.random() * 9000000).toString(),
 			jewelryId: productId.Id || null,
@@ -206,11 +204,19 @@ const CartPage = () => {
 		});
 	};
 
+	const handleCheckoutNavigate = () => {
+		if (mappedProducts.length > 0) {
+			navigate(`/checkout`);
+		} else {
+			message.warning('Giỏ hàng chưa có sản phẩm!');
+		}
+	};
+
 	// if (loading) {
 	// 	return <Loading />;
 	// }
 
-	console.log('mappedProducts', mappedProducts);
+	console.log('mappedProducts', mappedProducts.length);
 
 	return (
 		<div className="flex justify-between p-8 bg-gray-50 min-h-screen mx-32 my-20">
@@ -219,77 +225,9 @@ const CartPage = () => {
 				className="flex-1 lg:mr-8 space-y-8 shadow-lg bg-white rounded-lg"
 				style={{width: '70%'}}
 			>
-				{/* Engagement Ring Section */}
-				{cartFinish?.length > 0 && (
+				{mappedProducts?.length > 0 ? (
 					<div className="bg-white p-6 mx-5 my-5 border rounded-lg shadow-md">
-						<h2 className="text-xl font-semibold mb-2 border-b pb-2">
-							Hàng Thiết Kế (Hoàn Thành)
-						</h2>
-						{cartFinish?.map((item, index) => (
-							<div className="flex mt-4 shadow-xl p-5 rounded-lg">
-								<div className="mr-4 flex-shrink-0">
-									<img
-										src="path-to-image"
-										alt="Engagement Ring"
-										className="w-32 h-32 object-cover rounded-lg border"
-									/>
-								</div>
-								<div className="flex-1 mx-5">
-									<p className="mb-1  text-gray-800 font-semibold">
-										{item.JewelryName}
-									</p>
-									<p className="mb-1 text-gray-700 text-sm">
-										SKU: 501410w14
-										{/* <span className="line-through text-gray-400 mr-2">
-											$1,470
-										</span>{' '} */}
-										<span className="text-gray-900 font-semibold ml-5">
-											{formatPrice(item.JewelryPrice)}
-										</span>
-									</p>
-									<p className="mb-1 text-gray-800 font-semibold mt-2">
-										Kim Cương {item.Carat}ct {item.Color}-{item.Clarity}{' '}
-										{item.Cut} {item.DiamondShape}
-									</p>
-									<p className="mb-4 text-gray-700 text-sm">
-										SKU: 22226368{' '}
-										<span className="text-gray-900 font-semibold ml-5">
-											{formatPrice(item.DiamondPrice)}
-										</span>
-									</p>
-									{jewelryType && jewelryType === 'Nhẫn' && (
-										<div className="flex items-center mt-2">
-											<label className="mr-2 text-gray-700">
-												Kích thước nhẫn:
-											</label>
-											<p>{item.SizeId}</p>
-										</div>
-									)}
-								</div>
-								<div className="flex flex-col items-end space-y-2 text-sm text-yellow-600">
-									<span
-										className="cursor-pointer"
-										onClick={() =>
-											handleViewCartFinish(item.JewelryId, item.DiamondId)
-										}
-									>
-										View
-									</span>
-									<span
-										className="cursor-pointer"
-										onClick={() => handleRemoveCartFinish(index)}
-									>
-										Remove
-									</span>
-								</div>
-							</div>
-						))}
-					</div>
-				)}
-
-				{mappedProducts?.length > 0 && (
-					<div className="bg-white p-6 mx-5 my-5 border rounded-lg shadow-md">
-						<h2 className="text-xl font-semibold mb-2 border-b pb-2">Hàng Có Sẵn</h2>
+						<h2 className="text-xl font-semibold mb-2 border-b pb-2">Giỏ Hàng</h2>
 						{mappedProducts.map((item, index) => (
 							<div
 								className="relative flex mt-4 shadow-xl p-5 rounded-lg"
@@ -303,7 +241,6 @@ const CartPage = () => {
 									/>
 								</div>
 								<div className="flex-1 mx-5">
-									{/* Kiểm tra và hiển thị thông tin sản phẩm */}
 									{item.JewelryId ? (
 										<div>
 											<p className="mb-1 text-gray-800 font-semibold">
@@ -323,31 +260,6 @@ const CartPage = () => {
 													<p>{item.SizeId}</p>
 												</div>
 											)}
-											{/* <div className="flex items-center mt-2">
-												<p className="mr-3">Bảo Hành:</p>
-												<Select
-													onChange={handleChangeWarranty}
-													className="w-20"
-													options={[
-														{
-															label: '2 Năm',
-															value: '2 năm',
-														},
-														{
-															label: '4 Năm',
-															value: '4 năm',
-														},
-														{
-															label: '6 Năm',
-															value: '6 năm',
-														},
-														{
-															label: '10 Năm',
-															value: '10 năm',
-														},
-													]}
-												/>
-											</div> */}
 										</div>
 									) : item.Carat ? (
 										<div>
@@ -361,37 +273,12 @@ const CartPage = () => {
 													{formatPrice(item.DiamondTruePrice)}
 												</span>
 											</p>
-											{/* <div className="flex items-center mt-2">
-												<p className="mr-3">Bảo Hành:</p>
-												<Select
-													onChange={handleChangeWarranty}
-													className="w-20"
-													options={[
-														{
-															label: '2 Năm',
-															value: '2 năm',
-														},
-														{
-															label: '4 Năm',
-															value: '4 năm',
-														},
-														{
-															label: '6 Năm',
-															value: '6 năm',
-														},
-														{
-															label: '10 Năm',
-															value: '10 năm',
-														},
-													]}
-												/>
-											</div> */}
 										</div>
 									) : (
 										<p className="text-gray-800">Không có thông tin</p>
 									)}
 								</div>
-								<div className="flex items-center justify-end space-y-2  text-sm">
+								<div className="flex items-center justify-end space-y-2 text-sm">
 									<Button
 										className="cursor-pointer w-auto hover:text-black text-primary text-xl px-3 mr-2"
 										onClick={() => {
@@ -404,7 +291,6 @@ const CartPage = () => {
 									>
 										<EyeOutlined />
 									</Button>
-
 									<Button
 										loading={loading}
 										danger
@@ -414,13 +300,25 @@ const CartPage = () => {
 										<DeleteOutlined />
 									</Button>
 								</div>
-								{item.IsSold && (
+								{item.IsValid === false && (
 									<div className="absolute right-2 bottom-2 text-red font-semibold">
-										<p>Hàng Đã Bán</p>
+										<p>Hàng Không Còn</p>
 									</div>
 								)}
 							</div>
 						))}
+					</div>
+				) : (
+					<div className="flex flex-col items-center justify-center p-10">
+						<Image preview={false} src={logo} className="w-32 h-32" />
+						<p className="text-xl font-semibold text-gray-600 mb-4">Giỏ Hàng Trống</p>
+						<Button
+							type="text"
+							className="bg-primary"
+							// onClick={() => (window.location.href = '/')}
+						>
+							Về Trang Chủ
+						</Button>
 					</div>
 				)}
 
@@ -428,20 +326,15 @@ const CartPage = () => {
 					<label htmlFor="promotions" className="block mb-2 text-gray-700 font-medium">
 						Khuyến mãi có sẵn
 					</label>
-					{promo &&
-						promo?.map((promotion) => (
-							<Select
-								key={promotion.Id}
-								defaultValue={promotion.Description}
-								className="w-full"
-								options={[
-									{
-										value: promotion.Description,
-										label: promotion.Description,
-									},
-								]}
-							/>
-						))}
+
+					<Select className="w-full">
+						{promo &&
+							promo.map((promotion) => (
+								<Select.Option key={promotion.Id} value={promotion.Id}>
+									{promotion.Description}
+								</Select.Option>
+							))}
+					</Select>
 				</div>
 			</div>
 
@@ -473,7 +366,7 @@ const CartPage = () => {
 				<button
 					className="mr-10 px-6 py-2 bg-primary rounded-lg uppercase font-semibold hover:bg-second w-full h-12"
 					style={{padding: '13px 0px 11px 0px'}}
-					onClick={() => navigate(`/checkout`)}
+					onClick={handleCheckoutNavigate}
 				>
 					Thanh Toán
 				</button>

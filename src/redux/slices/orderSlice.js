@@ -40,6 +40,20 @@ export const handleCheckoutOrder = createAsyncThunk(
 		}
 	}
 );
+export const handleOrderCancel = createAsyncThunk(
+	'orderSlice/handleOrderCancel',
+	async ({orderId, reason}, {rejectWithValue}) => {
+		try {
+			const response = await api.put(`/Order/Cancel?orderId=${orderId}&reason=${reason}`);
+			console.log(response);
+
+			return response;
+		} catch (error) {
+			console.log('Error: ', JSON.stringify(error.response.data));
+			return rejectWithValue(error.response.data);
+		}
+	}
+);
 
 export const getUserOrder = createAsyncThunk(
 	'orderSlice/getUserOrder',
@@ -116,6 +130,16 @@ export const orderSlice = createSlice({
 				state.loading = false;
 			})
 			.addCase(handleCheckoutOrder.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload;
+			})
+			.addCase(handleOrderCancel.pending, (state) => {
+				state.loading = true;
+			})
+			.addCase(handleOrderCancel.fulfilled, (state, action) => {
+				state.loading = false;
+			})
+			.addCase(handleOrderCancel.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload;
 			})
