@@ -18,22 +18,6 @@ const NavLinks = () => {
 			link: '/jewelry',
 			sublinks: [
 				{
-					Head: 'Sản Phẩm',
-					sublink: [
-						{name: 'Trang Sức Kim Cương Đính Sẵn', link: '/jewelry/diamond-jewelry'},
-						{name: 'Kim Cương', link: '/diamond/search'},
-					],
-				},
-
-				{
-					Head: 'Thiết Kế Trang Sức Của Bạn',
-					sublink: [
-						{name: 'Nhẫn', link: '/jewelry/design-your-own-rings'},
-						{name: 'Bông Tai', link: '/jewelry/design-your-own-earrings'},
-						{name: 'Dây Chuyền', link: '/jewelry/design-your-own-necklaces'},
-					],
-				},
-				{
 					Head: 'Mua Kim Cương Theo Hình Dạng',
 					sublink: [
 						{name: 'Round', link: '/diamond/search'},
@@ -48,6 +32,22 @@ const NavLinks = () => {
 						{name: 'Marquise', link: '/diamond/search'},
 					],
 				},
+				{
+					Head: 'Sản Phẩm',
+					sublink: [
+						{name: 'Trang Sức Kim Cương Đính Sẵn', link: '/jewelry/diamond-jewelry'},
+						{name: 'Kim Cương', link: '/diamond/search'},
+					],
+				},
+
+				// {
+				// 	Head: 'Thiết Kế Trang Sức Của Bạn',
+				// 	sublink: [
+				// 		{name: 'Nhẫn', link: '/jewelry/design-your-own-rings'},
+				// 		{name: 'Bông Tai', link: '/jewelry/design-your-own-earrings'},
+				// 		{name: 'Dây Chuyền', link: '/jewelry/design-your-own-necklaces'},
+				// 	],
+				// },
 			],
 		},
 		// {
@@ -171,17 +171,19 @@ const NavLinks = () => {
 																				null,
 																				null
 																			);
-																		} else if (
-																			mySubLink.Head ===
-																			'Thiết Kế Trang Sức Của Bạn'
-																		) {
-																			handleClick(
-																				null,
-																				sl.name,
-																				null,
-																				null
-																			);
-																		} else if (
+																		}
+																		// else if (
+																		// 	mySubLink.Head ===
+																		// 	'Thiết Kế Trang Sức Của Bạn'
+																		// ) {
+																		// 	handleClick(
+																		// 		null,
+																		// 		sl.name,
+																		// 		null,
+																		// 		null
+																		// 	);
+																		// }
+																		else if (
 																			sl.name ===
 																			'Trang Sức Kim Cương Đính Sẵn'
 																		) {

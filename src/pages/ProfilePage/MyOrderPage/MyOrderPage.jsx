@@ -6,7 +6,7 @@ import {OrderDetailModal} from './OrderDetailModal';
 import {OrderInvoiceModal} from './OrderInvoiceModal';
 import {useNavigate} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
-import {GetAllOrderSelector} from '../../../redux/selectors';
+import {GetAllOrderSelector, LoadingOrderSelector} from '../../../redux/selectors';
 import {getUserOrder, getUserOrderTransaction} from '../../../redux/slices/orderSlice';
 import {convertToVietnamDate, formatPrice} from '../../../utils/index';
 import {ContainerOutlined, EyeFilled, TransactionOutlined} from '@ant-design/icons';
@@ -16,6 +16,7 @@ const MyOrderPage = () => {
 	const dispatch = useDispatch();
 
 	const orderList = useSelector(GetAllOrderSelector);
+	const loading = useSelector(LoadingOrderSelector);
 
 	const [dataSource, setDataSource] = useState([]);
 	const [openDetail, setOpenDetail] = useState(false);
@@ -36,10 +37,7 @@ const MyOrderPage = () => {
 			dataIndex: 'orderTime',
 			align: 'center',
 		},
-		// {
-		// 	title: () => <div className="text-center">Sản phẩm</div>,
-		// 	dataIndex: 'product',
-		// },
+
 		{
 			title: 'Tổng Giá',
 			dataIndex: 'price',
@@ -71,7 +69,7 @@ const MyOrderPage = () => {
 					case 'Refused':
 						color = 'red';
 						break;
-					case 'Delivery Failed':
+					case 'Delivery_Failed':
 						color = 'volcano';
 						break;
 					default:
@@ -128,7 +126,6 @@ const MyOrderPage = () => {
 		},
 	];
 
-	// Cột cho bảng mở rộng (sub-table)
 	const expandedColumns = [
 		{
 			title: 'ID',
@@ -150,7 +147,6 @@ const MyOrderPage = () => {
 		},
 	];
 
-	// Hàm render bảng mở rộng cho từng đơn hàng
 	const expandedRowRender = (record) => {
 		return (
 			<Table
@@ -162,15 +158,11 @@ const MyOrderPage = () => {
 		);
 	};
 
-	// Hàm mở/đóng modal chi tiết đơn hàng
 	const toggleDetailModal = (order) => {
-		console.log(order);
-
 		setSelectedOrder(order);
 		setOpenDetail(!openDetail);
 	};
 
-	// Hàm mở/đóng modal hoá đơn đơn hàng
 	const toggleInvoiceModal = () => {
 		setOpenInvoice(!openInvoice);
 	};
@@ -188,7 +180,7 @@ const MyOrderPage = () => {
 	}, [dispatch]);
 
 	useEffect(() => {
-		if (orderList) {
+		if (orderList?.Values) {
 			const formattedOrders = orderList?.Values?.map((order) => ({
 				orderId: order.Id,
 				orderTime: convertToVietnamDate(order.CreatedDate),
@@ -203,7 +195,7 @@ const MyOrderPage = () => {
 			}));
 			setDataSource(formattedOrders); // Cập nhật dataSource cho bảng
 		}
-	}, [orderList]);
+	}, [orderList?.Values]);
 
 	// Hàm chuyển đổi status sang chuỗi dễ đọc
 	const getOrderStatus = (status) => {
@@ -242,12 +234,13 @@ const MyOrderPage = () => {
 				</div>
 				<div className="font-semibold w-full px-20 py-10 bg-white rounded-lg">
 					<Table
-						dataSource={dataSource} // Sử dụng dữ liệu thực từ API
+						dataSource={dataSource}
 						columns={columns}
 						pagination={{pageSize: 5}}
 						className="custom-table-header"
 						rowKey="orderId"
-						expandedRowRender={expandedRowRender} // Hiển thị sub-rows (bảng mở rộng)
+						// expandedRowRender={expandedRowRender}
+						loading={loading}
 					/>
 				</div>
 			</div>

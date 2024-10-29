@@ -41,7 +41,7 @@ const JewelryDetailPage = () => {
 
 	return (
 		<div className="mx-32">
-			<div className="flex flex-col md:flex-row mx-6 md:mx-32 bg-white my-10 md:my-20 rounded-lg shadow-lg">
+			<div className="flex flex-col md:flex-row bg-white my-10 md:my-20 rounded-lg shadow-lg">
 				<div className="w-full md:w-1/2 p-6">
 					<ImageGallery />
 					<InformationLeft diamondJewelry={jewelry} />

@@ -21,7 +21,7 @@ const ChangePassword = () => {
 				<div className="mr-20">
 					<NavbarProfile />
 				</div>
-				<div className="font-semibold w-full px-20 py-10 bg-white rounded-lg">
+				<div className="font-semibold w-full px-20 py-10 bg-white rounded-lg shadow-lg">
 					<h2 className="text-2xl mb-6 text-center">Đổi Mật Khẩu</h2>
 					<Form
 						form={form}

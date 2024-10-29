@@ -8,63 +8,15 @@ import {removeLocalStorage} from '../../utils/localstorage';
 import {useDispatch, useSelector} from 'react-redux';
 import {handleRefreshToken, logout} from '../../redux/slices/userLoginSlice';
 import * as jwtDecode from 'jwt-decode';
-import {GetAllOrderSelector} from '../../redux/selectors';
+import {GetAllOrderSelector, LoadingOrderSelector, UserInfoSelector} from '../../redux/selectors';
 import {getUserOrder} from '../../redux/slices/orderSlice';
 import {convertToVietnamDate, formatPrice} from '../../utils';
-
-const detailGroups = {
-	total_price: 20138000,
-	groups: [
-		{
-			jewelry_price: 10069000,
-			status: 'Completed',
-			items: [
-				{
-					id: 86,
-					name: 'Round Diamond 3.5 Carat IF',
-					unitPrice: 3357000,
-					orderTime: '26/09/2024',
-				},
-				{
-					id: 87,
-					name: 'Round Diamond 3.5 Carat VVS1',
-					unitPrice: 4467000,
-					orderTime: '26/09/2024',
-				},
-				{
-					id: 88,
-					name: 'Petite Solitaire Engagement Ring In 14k White Gold',
-					unitPrice: 2245000,
-					orderTime: '26/09/2024',
-				},
-			],
-		},
-		{
-			jewelry_price: 10069000,
-			status: 'Waiting for manufacture',
-			items: [
-				{
-					id: 89,
-					name: 'Round Diamond 3.5 Carat IF',
-					unitPrice: 3357000,
-					orderTime: '26/09/2024',
-				},
-				{
-					id: 90,
-					name: 'Round Diamond 3.5 Carat VVS1',
-					unitPrice: 4467000,
-					orderTime: '26/09/2024',
-				},
-				{
-					id: 91,
-					name: 'Petite Solitaire Engagement Ring In 14k White Gold',
-					unitPrice: 2245000,
-					orderTime: '26/09/2024',
-				},
-			],
-		},
-	],
-};
+import {
+	CheckCircleOutlined,
+	DeliveredProcedureOutlined,
+	HourglassOutlined,
+	OrderedListOutlined,
+} from '@ant-design/icons';
 
 const ProfilePage = () => {
 	const navigate = useNavigate();
@@ -72,6 +24,8 @@ const ProfilePage = () => {
 	const dispatch = useDispatch();
 
 	const orderList = useSelector(GetAllOrderSelector);
+	const userDetail = useSelector(UserInfoSelector);
+	const loading = useSelector(LoadingOrderSelector);
 	// const refreshToken = localStorage.getItem('refreshToken');
 
 	console.log('orderList', orderList);
@@ -84,27 +38,14 @@ const ProfilePage = () => {
 	const [visibleGroups, setVisibleGroups] = useState([]);
 	const [orders, setOrders] = useState([]);
 	const [dataSource, setDataSource] = useState([]);
-	const [filteredData, setFilteredData] = useState(detailGroups.groups);
 	const orderStatus = [
-		{icon: '', name: 'Tổng đơn hàng', status: '', order: 1},
-		{icon: '', name: 'Đang xử lí', status: '2', order: 3},
-		{icon: '', name: 'Đang vận chuyển', status: '6', order: 4},
-		{icon: '', name: 'Đã giao', status: '8', order: 10},
+		{icon: <OrderedListOutlined />, name: 'Tổng đơn hàng', status: '', order: 1},
+		{icon: <HourglassOutlined />, name: 'Đang xử lí', status: '1', order: 3},
+		{icon: <DeliveredProcedureOutlined />, name: 'Đang vận chuyển', status: '6', order: 4},
+		{icon: <CheckCircleOutlined />, name: 'Đã giao', status: '8', order: 10},
 	];
 
-	// const showLogoutModal = () => setIsLogoutModalVisible(true);
-	// const hideLogoutModal = () => setIsLogoutModalVisible(false);
-
-	// const refreshTokenClick = () => {
-	// 	dispatch(handleRefreshToken(refreshToken)).then((res) => {
-	// 		if (res.payload) {
-	// 			localStorage.setItem('accessToken', res.payload.accessToken);
-	// 			message.success('Làm mới thành công!');
-	// 		}
-	// 	});
-
-	// 	navigate('/');
-	// };
+	console.log(userDetail);
 
 	const columns = [
 		{
@@ -153,7 +94,7 @@ const ProfilePage = () => {
 					case 'Refused':
 						color = 'red';
 						break;
-					case 'Delivery Failed':
+					case 'Delivery_Failed':
 						color = 'volcano';
 						break;
 					default:
@@ -232,7 +173,7 @@ const ProfilePage = () => {
 	};
 
 	useEffect(() => {
-		if (orderList) {
+		if (orderList?.Values) {
 			const formattedOrders = orderList?.Values?.map((order) => ({
 				orderId: order.Id,
 				orderTime: convertToVietnamDate(order.CreatedDate),
@@ -246,7 +187,7 @@ const ProfilePage = () => {
 			}));
 			setDataSource(formattedOrders); // Cập nhật dataSource cho bảng
 		}
-	}, [orderList]);
+	}, [orderList?.Values]);
 
 	useEffect(() => {
 		dispatch(
@@ -265,37 +206,6 @@ const ProfilePage = () => {
 		}
 	}, [orderList]);
 
-	// Filter data when status or itemsPerPage change
-	useEffect(() => {
-		const newFilteredData =
-			status === 'All'
-				? detailGroups.groups
-				: detailGroups.groups.filter((order) => order.status === status);
-		setFilteredData(newFilteredData);
-		setVisibleGroups(newFilteredData.slice(0, itemsPerPage)); // Reset visibleGroups when filter changes
-	}, [status, itemsPerPage]);
-
-	// Handle infinite scrolling
-	const lastElementRef = useCallback(
-		(node) => {
-			if (observer.current) observer.current.disconnect();
-			observer.current = new IntersectionObserver((entries) => {
-				if (entries[0].isIntersecting && currentPage * itemsPerPage < filteredData.length) {
-					setCurrentPage((prevPage) => prevPage + 1);
-				}
-			});
-			if (node) observer.current.observe(node);
-		},
-		[currentPage, filteredData.length, itemsPerPage]
-	);
-
-	// Update visible groups based on current page and filtered data
-	useEffect(() => {
-		if (status !== 'All') {
-			setVisibleGroups(filteredData.slice(0, currentPage * itemsPerPage));
-		}
-	}, [currentPage, filteredData, status, itemsPerPage]);
-
 	// Handle status change
 	const handleStatusClick = (newStatus) => {
 		setStatus(newStatus);
@@ -312,9 +222,9 @@ const ProfilePage = () => {
 					<NavbarProfile />
 				</div>
 
-				<div className="font-semibold w-full px-20 py-10 bg-white rounded-lg">
+				<div className="font-semibold w-full px-20 py-10 bg-white rounded-lg shadow-lg">
 					<div className="flex justify-between items-center">
-						<h1 className="text-2xl">Chào mừng Khách hàng</h1>
+						<h1 className="text-2xl">Chào mừng {userDetail?.Name}</h1>
 						{/* <Button danger onClick={refreshTokenClick}>
 							Xác thực lại
 						</Button> */}
@@ -330,26 +240,20 @@ const ProfilePage = () => {
 								} hover:border-black`}
 								onClick={() => handleStatusClick(statusItem.status)}
 							>
-								<div className="p-3">
-									<Badge
-										count={statusItem.order}
-										color={status === statusItem.status ? 'green' : '#dec986'}
-									>
-										<img src={statusItem.icon} alt="" className="w-14 h-14" />
-									</Badge>
-								</div>
+								<div className="p-3 w-20">{statusItem.icon}</div>
 								<div className="ml-5">{statusItem.name}</div>
 							</div>
 						))}
 					</div>
-					<div className="font-semibold w-full px-20 py-10 bg-white rounded-lg">
+					<div className="font-semibold w-full py-10 bg-white rounded-lg">
 						<Table
-							dataSource={dataSource} // Sử dụng dữ liệu thực từ API
+							dataSource={dataSource}
 							columns={columns}
 							pagination={{pageSize: 5}}
 							className="custom-table-header"
 							rowKey="orderId"
-							expandedRowRender={expandedRowRender} // Hiển thị sub-rows (bảng mở rộng)
+							// expandedRowRender={expandedRowRender}
+							loading={loading}
 						/>
 					</div>
 				</div>

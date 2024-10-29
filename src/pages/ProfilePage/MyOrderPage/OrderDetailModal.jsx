@@ -1,19 +1,22 @@
+import {Button, Form, Image, Input, message, Modal, Steps} from 'antd';
 import React, {useEffect, useState} from 'react';
-import {Button, Divider, Image, Steps} from 'antd';
+import {useDispatch, useSelector} from 'react-redux';
 import logo from '../../../assets/logo-short-ex.png';
 import '../../../css/antd.css';
-import {useDispatch, useSelector} from 'react-redux';
-import {getUserOrderDetail} from '../../../redux/slices/orderSlice';
 import {GetAllOrderDetailSelector} from '../../../redux/selectors';
+import {getUserOrderDetail, handleOrderCancel} from '../../../redux/slices/orderSlice';
 import {convertToVietnamDate, formatPrice} from '../../../utils';
 
 export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder}) => {
 	const dispatch = useDispatch();
 	const orderDetail = useSelector(GetAllOrderDetailSelector);
 
-	const [showMore, setShowMore] = useState(false);
+	const [isCancelModalVisible, setIsCancelModalVisible] = useState(false);
+	const [isReturnModalVisible, setIsReturnModalVisible] = useState(false);
 	const [currentStep, setCurrentStep] = useState(0);
 	const [order, setOrder] = useState(null);
+
+	console.log('orderDetail', orderDetail);
 
 	useEffect(() => {
 		if (selectedOrder?.orderId) {
@@ -30,8 +33,6 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 	const orderStatus = order?.Status;
 
 	console.log('orderStatus', orderStatus);
-	console.log('order', order);
-	console.log('currentStep', currentStep);
 
 	useEffect(() => {
 		const getOrderStatus = (status) => {
@@ -41,72 +42,180 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 				case 2:
 					return 'Shop Chấp Nhận';
 				case 3:
-					return 'Rejected';
+					return 'Từ Chối';
 				case 4:
-					return 'Cancelled';
+					return 'Hủy Bỏ';
 				case 5:
 					return 'Chuẩn Bị Hàng';
 				case 6:
 					return 'Vận Chuyển';
 				case 7:
-					return 'Delivery_Failed';
+					return 'Giao Hàng Thất Bại';
 				case 8:
 					return 'Nhận Hàng';
 				case 9:
-					return 'Refused';
+					return 'Hoàn Trả';
 				default:
 					return 'Unknown';
 			}
 		};
 
-		// Map trạng thái đến bước tương ứng
 		const statusToStep = {
 			'Chờ Shop Xác Nhận': 0,
 			'Shop Chấp Nhận': 1,
 			'Chuẩn Bị Hàng': 2,
 			'Vận Chuyển': 3,
 			'Nhận Hàng': 4,
-			Rejected: 5,
-			Cancelled: 6,
-			Delivery_Failed: 7,
-			Refused: 8,
+			'Từ Chối': 5,
+			'Hủy Hàng': 6,
+			'Giao Hàng Thất Bại': 7,
+			'Hoàn Trả': 8,
 		};
 
-		// Lấy tên trạng thái từ orderStatus và map đến currentStep
 		const statusName = getOrderStatus(orderStatus);
 		setCurrentStep(statusToStep[statusName] ?? 0);
 	}, [orderStatus]);
 
+	const handleCancelOrder = () => {
+		setIsCancelModalVisible(true);
+	};
+
+	const handleReturnRequest = () => {
+		setIsReturnModalVisible(true);
+	};
+
+	const submitCancelOrder = async (values) => {
+		const res = await dispatch(handleOrderCancel({orderId: order.Id, reason: values.reason}));
+		console.log(res);
+		if (res.payload?.status === 200) {
+			message.success('Hủy đơn thành công!');
+		} else if (res.payload?.status === 400) {
+			message.error('Hủy đơn thấy bại!');
+		} else if (res.payload === undefined) {
+			message.error('Lỗi hệ thống!');
+		}
+		setIsCancelModalVisible(false);
+	};
+
+	const submitReturnRequest = (values) => {
+		// dispatch(handleReturnRequest({orderId: order.Id, reason: values.reason}));
+		setIsReturnModalVisible(false);
+	};
+
 	const steps = [
-		{title: 'Chờ Shop Xác Nhận', description: 'Đơn hàng đang chờ xác nhận từ shop.'},
-		{title: 'Chuẩn Bị Hàng', description: 'Shop đang chuẩn bị hàng cho đơn hàng.'},
-		{title: 'Đang Vận Chuyển', description: 'Đơn hàng đang được vận chuyển.'},
-		{title: 'Nhận Hàng', description: 'Đơn hàng đang chờ nhận hàng.'},
-		{title: 'Hoàn Thành', description: 'Đơn hàng đã hoàn thành.'},
+		// Step 0: Chờ Shop Xác Nhận
+		{
+			title:
+				orderStatus === 3
+					? 'Đã Bị Từ Chối'
+					: orderStatus === 4
+					? 'Đã Hủy'
+					: 'Chờ Shop Xác Nhận',
+			description:
+				orderStatus === 3
+					? `Đơn hàng đã bị từ chối. Lý Do: ${orderDetail?.CancelledReason}`
+					: orderStatus === 4
+					? `Đơn hàng đã bị hủy. Lý Do: ${orderDetail?.CancelledReason}`
+					: 'Đơn hàng đang chờ xác nhận từ shop.',
+			status:
+				orderStatus === 4 || orderStatus === 3 // Nếu bị từ chối hoặc hủy bỏ
+					? 'error'
+					: orderStatus >= 1 // Nếu có trạng thái từ 1 trở lên
+					? 'process'
+					: 'wait',
+		},
+		// Step 1: Chuẩn Bị Hàng
+		{
+			title: 'Chuẩn Bị Hàng',
+			description: 'Shop đang chuẩn bị hàng cho đơn hàng.',
+			status:
+				orderStatus === 4 // Người dùng hủy
+					? 'error'
+					: orderStatus === 3 // Bị từ chối
+					? 'error'
+					: orderStatus >= 2
+					? 'process'
+					: 'wait',
+		},
+		// Step 2: Đang Vận Chuyển
+		{
+			title: 'Đang Vận Chuyển',
+			description: 'Đơn hàng đang được vận chuyển.',
+			status:
+				orderStatus === 3 || orderStatus === 4 // Nếu bị từ chối hoặc hủy bỏ
+					? 'error'
+					: orderStatus >= 3
+					? 'process'
+					: 'wait',
+		},
+		// Step 3: Giao Hàng
+		{
+			title: 'Giao Hàng',
+			description: 'Đơn hàng đang được giao.',
+			status:
+				orderStatus === 3 || orderStatus === 4 // Nếu bị từ chối hoặc hủy bỏ
+					? 'error'
+					: orderStatus >= 4
+					? 'process'
+					: 'wait',
+		},
+		// Step 4: Giao Hàng Thất Bại hoặc Hoàn Thành
+		{
+			title:
+				orderStatus === 7
+					? 'Giao Hàng Thất Bại'
+					: orderStatus === 8
+					? 'Hoàn Thành'
+					: 'Chờ Xác Nhận',
+			description:
+				orderStatus === 7
+					? 'Đơn hàng không được vận chuyển thành công.'
+					: orderStatus === 8
+					? 'Đơn hàng đã hoàn thành.'
+					: 'Đơn hàng đang chờ xác nhận từ shop.',
+			status:
+				orderStatus === 7 // Trạng thái giao hàng thất bại
+					? 'error'
+					: orderStatus === 3 || orderStatus === 4 // Nếu bị từ chối hoặc hủy bỏ
+					? 'error'
+					: orderStatus === 8 // Hoàn thành
+					? 'finish'
+					: 'wait', // Đối với các trạng thái khác sẽ là 'wait'
+		},
 	];
 
-	const handleShowMore = () => setShowMore(!showMore);
-
-	const getFilteredSteps = () => {
-		const reversedSteps = [...steps].reverse(); // Đảo ngược thứ tự bước để hiển thị từ mới nhất
-		const filteredSteps = reversedSteps.filter(
-			(step) => step.status === 'finish' || step.status === 'process'
-		);
-
-		if (showMore) {
-			return filteredSteps;
+	// Cập nhật trạng thái cho các bước trước khi có trạng thái process
+	for (let i = 0; i < steps.length; i++) {
+		if (steps[i].status === 'process') {
+			// Đặt tất cả các bước trước đó thành 'finish'
+			for (let j = 0; j < i; j++) {
+				steps[j].status = 'finish';
+			}
+			break; // Thoát vòng lặp khi đã cập nhật
 		}
+	}
 
-		// Nếu `showMore` là `false`, lọc và lấy 2 bước `finish` gần `process` nhất và 1 bước `process`
-		const processStepIndex = filteredSteps.findIndex((step) => step.status === 'process');
-		if (processStepIndex !== -1) {
-			const startIndex = Math.max(processStepIndex - 2, 0); // Bắt đầu từ 2 bước `finish` trước `process`
-			return filteredSteps.slice(startIndex, processStepIndex + 1);
+	// Kiểm tra để dừng lại nếu có lỗi
+	steps.forEach((step, index) => {
+		if (
+			(orderStatus === 3 && index > 0) || // Bị từ chối thì dừng lại
+			(orderStatus === 4 && index > 1) || // Hủy bỏ, dừng lại sau bước 1
+			(orderStatus === 7 && index > 4) // Giao hàng thất bại
+		) {
+			// Giao hàng thất bại
+			step.status = 'wait';
 		}
+	});
 
-		// Nếu không có `process`, lấy 3 bước `finish` đầu tiên
-		return filteredSteps.slice(0, 3);
-	};
+	// Đảm bảo rằng nếu trạng thái Success thì chỉ có 'finish' và 'process'
+	steps.forEach((step, index) => {
+		if (orderStatus === 5) {
+			// Giả định rằng orderStatus 5 là Success
+			if (step.status === 'wait') {
+				step.status = 'finish'; // Đặt thành finish cho Success
+			}
+		}
+	});
 
 	return (
 		<>
@@ -143,77 +252,116 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 					<div className="mt-5">
 						<h2 className="text-2xl font-semibold">Địa chỉ giao hàng</h2>
 						<p>{order?.ShippingAddress}</p>
-						<p>0912345678</p>
-
 						<div className="flex justify-center items-center space-x-4 my-10">
 							<Steps labelPlacement="vertical" current={currentStep} items={steps} />
 						</div>
-
-						{/* <div className="mt-8">
-							<Steps
-								progressDot
-								direction="vertical"
-								current={currentStep}
-								items={getFilteredSteps()}
-							/>
-							<button
-								className="mt-4 text-primary underline cursor-pointer"
-								onClick={handleShowMore}
-							>
-								{showMore ? 'Show Less' : 'Show More'}
-							</button>
-						</div> */}
 					</div>
 
 					<div className="flex justify-between">
 						<h1 className="text-xl font-semibold">Chi tiết đơn hàng</h1>
-						<Button type="text" className="bg-red text-white">
-							Yêu cầu trả lại
-						</Button>
+						{orderStatus === 8 ? (
+							<Button
+								type="text"
+								className="bg-red text-white"
+								onClick={handleReturnRequest}
+							>
+								Yêu cầu đổi hàng
+							</Button>
+						) : orderStatus === 3 || orderStatus === 4 || orderStatus === 7 ? (
+							// Không hiển thị nút nào khi orderStatus là 3 hoặc 4
+							<></>
+						) : (
+							<Button
+								type="text"
+								className="bg-red text-white"
+								onClick={handleCancelOrder}
+							>
+								Hủy Đơn
+							</Button>
+						)}
 					</div>
-
 					<div className="mt-10">
 						<div className="w-full bg-primary p-5 border rounded">
 							<div className="w-full flex items-center font-semibold text-lg">
-								<p
-									style={{width: '20%'}}
-									className="flex justify-center text-center"
-								>
-									Thời gian đặt hàng
+								<p style={{width: '33%'}} className="flex justify-center">
+									Ngày Đặt Hàng
 								</p>
-								<p style={{width: '40%'}} className="flex justify-center">
-									Sản phẩm
+								<p style={{width: '33%'}} className="flex justify-center">
+									Tên Sản Phẩm
 								</p>
-								<p style={{width: '10%'}} className="flex justify-center">
+								<p style={{width: '33%'}} className="flex justify-center">
 									Giá
 								</p>
 							</div>
 						</div>
-						<div className="w-full border">
-							{order?.Items?.map((item, i) => (
-								<div key={i} className="p-5 rounded">
-									<div className="w-full flex items-center text-lg">
-										<p style={{width: '20%'}} className="flex justify-center">
-											{convertToVietnamDate(order?.CreatedDate)}
-										</p>
-										<p style={{width: '40%'}} className="flex justify-center">
-											{item?.Jewelry?.Model?.name || 'Unknown Jewelry'}
-										</p>
-										<p style={{width: '10%'}} className="flex justify-center">
-											{formatPrice(item?.PurchasedPrice)}
-										</p>
-									</div>
-								</div>
-							))}
-						</div>
 					</div>
-
+					<div className="w-full border rounded">
+						{order?.Items?.map((item, i) => (
+							<div key={i} className="p-5 ">
+								<div className="w-full flex items-center text-lg">
+									<p style={{width: '33%'}} className="flex justify-center">
+										{convertToVietnamDate(order?.CreatedDate)}
+									</p>
+									<p style={{width: '33%'}} className="flex justify-center">
+										{item?.Jewelry?.Model?.name || 'Unknown Jewelry'}
+									</p>
+									<p style={{width: '33%'}} className="flex justify-center">
+										{formatPrice(item?.PurchasedPrice)}
+									</p>
+								</div>
+							</div>
+						))}
+					</div>
 					<div className="justify-end items-center flex mt-10">
 						<p className="font-semibold text-lg mr-10">Tổng cộng:</p>
 						<p className="text-2xl font-semibold text-red-600">
 							{formatPrice(order?.TotalPrice)}
 						</p>
 					</div>
+
+					{/* Cancel Order Modal */}
+					<Modal
+						title="Hủy Đơn"
+						visible={isCancelModalVisible}
+						onCancel={() => setIsCancelModalVisible(false)}
+						footer={null}
+					>
+						<Form onFinish={submitCancelOrder}>
+							<Form.Item
+								label="Lý do hủy"
+								name="reason"
+								rules={[{required: true, message: 'Vui lòng nhập lý do hủy đơn'}]}
+							>
+								<Input.TextArea />
+							</Form.Item>
+							<div className="flex items-center justify-center">
+								<Button type="text" className="bg-primary" htmlType="submit">
+									Xác nhận hủy
+								</Button>
+							</div>
+						</Form>
+					</Modal>
+
+					{/* Return Request Modal */}
+					<Modal
+						title="Yêu cầu trả lại"
+						visible={isReturnModalVisible}
+						onCancel={() => setIsReturnModalVisible(false)}
+						footer={null}
+					>
+						<Form onFinish={submitReturnRequest}>
+							<Form.Item
+								label="Lý do trả lại"
+								name="reason"
+								rules={[{required: true, message: 'Vui lòng nhập lý do trả lại'}]}
+							>
+								<Input.TextArea />
+							</Form.Item>
+							<Button type="primary" htmlType="submit">
+								Xác nhận yêu cầu
+							</Button>
+						</Form>
+					</Modal>
 				</div>
 			)}
 		</>

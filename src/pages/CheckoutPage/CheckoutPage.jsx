@@ -57,7 +57,7 @@ const mapAttributes = (data, attributes) => {
 		MetalPrice: data?.Jewelry?.Metal?.Price,
 		Model: data?.Jewelry?.Model,
 		ModelId: data?.Jewelry?.ModelId,
-		JewelryPrice: data?.Jewelry?.Price,
+		JewelryPrice: data?.Jewelry?.TotalPrice,
 		JewelryName: data?.Jewelry?.Name,
 		SerialCode: data?.Jewelry?.SerialCode,
 		ShippingDate: data?.Jewelry?.ShippingDate,
@@ -114,6 +114,9 @@ const CheckoutPage = () => {
 	const [province, setProvince] = useState('');
 	const [district, setDistrict] = useState('');
 	const [ward, setWard] = useState('');
+	const [provinceId, setProvinceId] = useState('');
+	const [wardId, setWardId] = useState('');
+	const [districtId, setDistrictId] = useState('');
 	const [userInfo, setUserInfo] = useState({
 		firstName: userDetail.FirstName,
 		lastName: userDetail.LastName,
@@ -130,6 +133,20 @@ const CheckoutPage = () => {
 		form.setFieldsValue(userInfo);
 	}, [form, userInfo]);
 
+	useEffect(() => {
+		if (userDetail) {
+			const firstAddress = userDetail.Addresses[0];
+			console.log(firstAddress);
+			setUserInfo((prev) => ({
+				...prev,
+				district: firstAddress.District,
+				province: firstAddress.Province,
+				ward: firstAddress.Ward,
+				address: firstAddress.Street,
+			}));
+		}
+	}, [userDetail]);
+
 	// Fetch distances on component mount
 	useEffect(() => {
 		dispatch(fetchDistances());
@@ -142,7 +159,7 @@ const CheckoutPage = () => {
 	}, [distances]);
 
 	useEffect(() => {
-		dispatch(fetchDistrict(userInfo?.province?.Id));
+		dispatch(fetchDistrict(provinceId));
 	}, [dispatch, userInfo]);
 
 	useEffect(() => {
@@ -152,7 +169,7 @@ const CheckoutPage = () => {
 	}, [districts]);
 
 	useEffect(() => {
-		dispatch(fetchWard(userInfo?.district?.Id));
+		dispatch(fetchWard(districtId));
 	}, [dispatch, userInfo]);
 
 	useEffect(() => {
@@ -164,10 +181,10 @@ const CheckoutPage = () => {
 	useEffect(() => {
 		dispatch(
 			handleCalculateLocation({
-				Province: userInfo?.province?.Name,
-				District: userInfo?.district.Name,
-				Ward: userInfo?.ward.Name,
-				Street: userInfo?.address?.Name,
+				Province: userInfo?.province,
+				District: userInfo?.district,
+				Ward: userInfo?.ward,
+				Street: userInfo?.address,
 			})
 		);
 	}, [userInfo]);
@@ -195,7 +212,7 @@ const CheckoutPage = () => {
 		return [];
 	}, [jewelryOrDiamondProducts, enums]);
 	// Hàm xử lý gửi form
-	const onFinish = () => {
+	const onFinish = async () => {
 		const orderItemRequestDtos = cartList?.Products?.map((product) => {
 			const diamondId = product?.Diamond?.Id || null;
 			const jewelryId = product?.Jewelry?.Id || null;
@@ -239,39 +256,35 @@ const CheckoutPage = () => {
 			lastName: userInfo?.lastName || null,
 			phone: userInfo?.phone || null,
 			email: userInfo?.email || null,
-			providence: userInfo?.province?.Name || null,
-			district: userInfo?.district?.Name || null,
-			ward: userInfo?.ward?.Name || null,
+			providence: userInfo?.province || null,
+			district: userInfo?.district || null,
+			ward: userInfo?.ward || null,
 			address: userInfo?.address || null,
 			note: userInfo?.note || null,
 		};
 
-		dispatch(handleCheckoutOrder({createOrderInfo, billingDetail}))
-			.then((res) => {
-				if (res.payload) {
-					message.success('Đặt hàng thành công!');
-					window.open(res.payload?.PaymentUrl, '_blank');
-					navigate('/my-orders');
-				} else {
-					message.error(
-						'Đặt hàng không thành công. Vui lòng kiểm tra thông tin của bạn!'
-					);
-				}
-			})
-			.catch((error) => {
-				console.error('Order failed:', error);
-				message.error('Đặt hàng không thành công. Vui lòng kiểm tra thông tin của bạn!');
-			});
+		const res = await dispatch(handleCheckoutOrder({createOrderInfo, billingDetail}));
+		console.log(res);
+
+		if (res.payload !== undefined) {
+			message.success('Đặt hàng thành công!');
+			// window.open(res.payload?.PaymentUrl, '_blank');
+			localStorage.removeItem(`cart_${userDetail.Id}`);
+			navigate('/payment');
+		} else {
+			message.error('Đặt hàng không thành công. Vui lòng kiểm tra thông tin của bạn!');
+		}
 	};
 
 	const handleCityChange = (value) => {
 		const selected = province.find((distance) => distance.Id === value);
 		setUserInfo((prev) => ({
 			...prev,
-			province: selected,
+			province: selected.Name,
 			district: '',
 			ward: '',
 		}));
+		setProvinceId(selected.Id);
 		console.log(value);
 	};
 
@@ -279,9 +292,10 @@ const CheckoutPage = () => {
 		const selected = district.find((district) => district.Id === value);
 		setUserInfo((prev) => ({
 			...prev,
-			district: selected,
+			district: selected.Name,
 			ward: '',
 		}));
+		setDistrictId(selected.Id);
 		console.log(value);
 	};
 
@@ -289,8 +303,9 @@ const CheckoutPage = () => {
 		const selected = ward.find((district) => district.Id === value);
 		setUserInfo((prev) => ({
 			...prev,
-			ward: selected,
+			ward: selected.Name,
 		}));
+		setWardId(selected.Id);
 		console.log(value);
 	};
 
@@ -318,6 +333,9 @@ const CheckoutPage = () => {
 		return Promise.reject(new Error('Số điện thoại không hợp lệ!'));
 	};
 
+	console.log('userInfo', userInfo);
+	console.log('userDetail', userDetail);
+	console.log('cartList', cartList);
 	console.log('mappedProducts', mappedProducts);
 
 	return (
@@ -397,10 +415,9 @@ const CheckoutPage = () => {
 									]}
 								>
 									<Select
-										showSearch
 										placeholder="Chọn tỉnh thành"
 										onChange={handleCityChange} // Update city change
-										value={userInfo?.province?.Name}
+										value={userInfo?.province}
 									>
 										{province &&
 											province.map((distance) => (
@@ -419,12 +436,11 @@ const CheckoutPage = () => {
 										<p className="text-red mr-1">*</p>Quận / Huyện
 									</label>
 									<Select
-										showSearch
 										placeholder="Chọn quận/huyện"
 										onChange={handleDistrictChange}
 										disabled={loading}
 										loading={loading}
-										value={userInfo?.district?.Name}
+										value={userInfo?.district}
 									>
 										{district &&
 											district?.map((distance) => (
@@ -443,12 +459,11 @@ const CheckoutPage = () => {
 										<p className="text-red mr-1">*</p>Phường / Xã
 									</label>
 									<Select
-										showSearch
 										placeholder="Chọn phường/xã"
 										onChange={handleWardChange}
 										disabled={loading}
 										loading={loading}
-										value={userInfo?.ward?.Name}
+										value={userInfo?.ward}
 									>
 										{ward &&
 											ward.map((distance) => (
@@ -470,6 +485,7 @@ const CheckoutPage = () => {
 										placeholder="Số nhà"
 										name="address"
 										onChange={handleChange}
+										value={userInfo.address}
 									/>
 									<p className="text-red mt-2">
 										* Không nhập lại thông tin Phường/Xã - Quận/Huyện -
@@ -766,7 +782,7 @@ const CheckoutPage = () => {
 								</div>
 								<div className="flex justify-between text-gray-800 mb-2">
 									<span>Phí vận chuyển:</span>
-									<span>{formatPrice(location?.DeliveryFee?.Cost)}</span>
+									<span>{formatPrice(location?.DeliveryFee?.Cost || 0)}</span>
 								</div>
 
 								{/* <div className="text-sm text-gray-600 mb-4">
@@ -795,7 +811,8 @@ const CheckoutPage = () => {
 									<p>
 										{formatPrice(
 											cartList?.OrderPrices?.FinalPrice +
-												location?.DeliveryFee?.Cost
+												location?.DeliveryFee?.Cost ||
+												cartList?.OrderPrices?.FinalPrice
 										)}
 									</p>
 								</div>
