@@ -10,6 +10,7 @@ import {convertToVietnamDate, formatPrice} from '../../../utils';
 export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder}) => {
 	const dispatch = useDispatch();
 	const orderDetail = useSelector(GetAllOrderDetailSelector);
+
 	const [isCancelModalVisible, setIsCancelModalVisible] = useState(false);
 	const [isReturnModalVisible, setIsReturnModalVisible] = useState(false);
 	const [currentStep, setCurrentStep] = useState(0);
@@ -28,6 +29,8 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 	}, [orderDetail]);
 
 	const orderStatus = order?.Status;
+
+	console.log('orderStatus', orderStatus);
 
 	useEffect(() => {
 		const getOrderStatus = (status) => {
@@ -100,15 +103,22 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 	const steps = [
 		// Step 0: Chờ Shop Xác Nhận
 		{
-			title: orderStatus === 3 ? 'Đã Hủy' : 'Chờ Shop Xác Nhận',
+			title:
+				orderStatus === 3
+					? 'Đã Bị Từ Chối'
+					: orderStatus === 4
+					? 'Đã Hủy'
+					: 'Chờ Shop Xác Nhận',
 			description:
 				orderStatus === 3
 					? 'Đơn hàng đã bị từ chối.'
+					: orderStatus === 4
+					? 'Đơn hàng đã bị hủy.'
 					: 'Đơn hàng đang chờ xác nhận từ shop.',
 			status:
-				orderStatus === 3 || orderStatus === 4
+				orderStatus === 4 || orderStatus === 3 // Nếu bị từ chối hoặc hủy bỏ
 					? 'error'
-					: orderStatus >= 1
+					: orderStatus >= 1 // Nếu có trạng thái từ 1 trở lên
 					? 'process'
 					: 'wait',
 		},
@@ -117,7 +127,9 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 			title: 'Chuẩn Bị Hàng',
 			description: 'Shop đang chuẩn bị hàng cho đơn hàng.',
 			status:
-				(orderStatus === 4 && orderStatus < 1) || orderStatus === 3 // Người dùng hủy hoặc bị từ chối
+				orderStatus === 4 // Người dùng hủy
+					? 'error'
+					: orderStatus === 3 // Bị từ chối
 					? 'error'
 					: orderStatus >= 2
 					? 'process'
@@ -147,19 +159,26 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 		},
 		// Step 4: Giao Hàng Thất Bại hoặc Hoàn Thành
 		{
-			title: orderStatus === 7 ? 'Giao Hàng Thất Bại' : 'Hoàn Thành',
+			title:
+				orderStatus === 7
+					? 'Giao Hàng Thất Bại'
+					: orderStatus === 8
+					? 'Hoàn Thành'
+					: 'Chờ Xác Nhận',
 			description:
 				orderStatus === 7
 					? 'Đơn hàng không được vận chuyển thành công.'
-					: 'Đơn hàng đã hoàn thành.',
+					: orderStatus === 8
+					? 'Đơn hàng đã hoàn thành.'
+					: 'Đơn hàng đang chờ xác nhận từ shop.',
 			status:
 				orderStatus === 7 // Trạng thái giao hàng thất bại
 					? 'error'
 					: orderStatus === 3 || orderStatus === 4 // Nếu bị từ chối hoặc hủy bỏ
 					? 'error'
-					: orderStatus === 5
+					: orderStatus === 8 // Hoàn thành
 					? 'finish'
-					: 'process',
+					: 'wait', // Đối với các trạng thái khác sẽ là 'wait'
 		},
 	];
 
@@ -178,8 +197,8 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 	steps.forEach((step, index) => {
 		if (
 			(orderStatus === 3 && index > 0) || // Bị từ chối thì dừng lại
-			(orderStatus === 4 && index > (orderStatus < 1 ? 0 : 1)) || // Hủy bỏ
-			(orderStatus === 7 && index > 4)
+			(orderStatus === 4 && index > 1) || // Hủy bỏ, dừng lại sau bước 1
+			(orderStatus === 7 && index > 4) // Giao hàng thất bại
 		) {
 			// Giao hàng thất bại
 			step.status = 'wait';
@@ -244,8 +263,11 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 								className="bg-red text-white"
 								onClick={handleReturnRequest}
 							>
-								Yêu cầu trả lại
+								Yêu cầu đổi hàng
 							</Button>
+						) : orderStatus === 3 || orderStatus === 4 || orderStatus === 7 ? (
+							// Không hiển thị nút nào khi orderStatus là 3 hoặc 4
+							<></>
 						) : (
 							<Button
 								type="text"
