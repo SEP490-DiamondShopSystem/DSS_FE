@@ -23,7 +23,7 @@ const infoMetal = {
 		},
 	],
 };
-export const InformationRight = ({diamondChoice, toggleSidebar, diamond}) => {
+export const InformationRight = ({diamondChoice, toggleSidebar, diamond, handleAddToCart}) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const [showDetail, setDetail] = useState(false);
@@ -110,10 +110,11 @@ export const InformationRight = ({diamondChoice, toggleSidebar, diamond}) => {
 				{diamondChoice.length > 0 ? (
 					<Button
 						type="text"
-						className="border py-7 px-14 font-bold text-lg bg-primary rounded hover:bg-second w-full"
-						onClick={toggleSidebar}
+						className="border py-7 px-14 font-bold text-lg bg-primary rounded hover:bg-second w-full uppercase"
+						// onClick={toggleSidebar}
+						onClick={handleAddToCart}
 					>
-						CHỌN VIÊN KIM CƯƠNG NÀY
+						Thêm Vào giỏ hàng
 					</Button>
 				) : (
 					<Button

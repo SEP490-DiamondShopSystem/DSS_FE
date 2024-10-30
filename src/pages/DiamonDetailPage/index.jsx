@@ -1,8 +1,8 @@
-import {Steps} from 'antd';
+import {message, Steps} from 'antd';
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
-import {GetDiamondDetailSelector} from '../../redux/selectors';
+import {GetDiamondDetailSelector, UserInfoSelector} from '../../redux/selectors';
 import {enums} from '../../utils/constant';
 import {ImageGallery} from './Left/ImageGallery';
 import {InformationLeft} from './Left/InformationLeft';
@@ -10,11 +10,14 @@ import {InformationRight} from './Right/InformationRight';
 import {Sidebar} from './Sidebar';
 import {getDiamondDetail} from '../../redux/slices/diamondSlice';
 import LoginModal from '../../components/LogModal/LoginModal';
+import {getUserId} from '../../components/GetUserId';
 
 const DiamondDetailPage = () => {
 	const {id} = useParams();
+	const userId = getUserId();
 	// const diamondAttributes = useSelector(GetDiamondAttributesSelector);
 	const diamondDetail = useSelector(GetDiamondDetailSelector);
+	const userSelector = useSelector(UserInfoSelector);
 	const dispatch = useDispatch();
 
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -127,6 +130,41 @@ const DiamondDetailPage = () => {
 
 	const mappedDiamond = mapAttributes(detail, enums);
 
+	const handleAddToCart = () => {
+		const isLoggedIn = userSelector && userSelector.UserId;
+
+		if (!isLoggedIn) {
+			message.warning('Bạn cần phải đăng nhập để thêm vào giỏ hàng!');
+			setIsLoginModalVisible(true);
+			setIsSidebarOpen(false);
+			return;
+		}
+
+		const data = {
+			...mappedDiamond,
+			DiamondPrice: mappedDiamond.Price,
+		};
+
+		// Lấy cart hiện tại từ localStorage
+		const existingCart = JSON.parse(localStorage.getItem(`cart_${userId}`)) || [];
+
+		const existingIndex = existingCart.findIndex(
+			(item) => item.DiamondId === mappedDiamond.DiamondId
+		);
+
+		if (existingIndex !== -1) {
+			// Nếu sản phẩm đã tồn tại, hiện thông báo
+			message.info('Sản phẩm này đã có trong giỏ hàng!');
+		} else {
+			// Nếu không tồn tại, thêm sản phẩm mới vào giỏ hàng thiết kế
+			existingCart.push(data);
+			message.success('Sản phẩm đã được thêm vào giỏ hàng!');
+		}
+
+		// Lưu cart cập nhật lại vào localStorage
+		localStorage.setItem(`cart_${userId}`, JSON.stringify(existingCart));
+	};
+
 	console.log('diamondDetail', diamondDetail);
 	console.log('detail', detail);
 	console.log('mappedDiamond', mappedDiamond);
@@ -173,6 +211,7 @@ const DiamondDetailPage = () => {
 							diamondChoice={diamondChoice}
 							toggleSidebar={toggleSidebar}
 							diamond={mappedDiamond}
+							handleAddToCart={handleAddToCart}
 						/>
 					</div>
 				</div>
