@@ -7,7 +7,7 @@ export const BannerJewelry = () => {
 	const navigate = useNavigate();
 
 	const handleNavigateJewelry = () => {
-		navigate('/jewelry/setting/all');
+		navigate('/jewelry/diamond-jewelry');
 		localStorage.setItem('jewelryChoice', 'jewelry choice');
 		localStorage.removeItem('diamondChoice');
 	};

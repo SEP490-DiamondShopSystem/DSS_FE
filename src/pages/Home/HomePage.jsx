@@ -20,7 +20,7 @@ const HomePage = () => {
 
 			<BannerDiamond />
 
-			<div className="grid grid-cols-4 divide-x-0 my-5">
+			<div className="grid grid-cols-4 divide-x-0 my-10">
 				{list.map((list, i) => (
 					<div key={i} className="flex items-center mx-auto">
 						<div className="mr-5">
@@ -38,11 +38,12 @@ const HomePage = () => {
 				))}
 			</div>
 
-			<BannerEarrings />
-			<BannerNecklace />
-
-			<BannerJewelry />
-			<BannerRings />
+			{/* <BannerEarrings />
+			<BannerNecklace /> */}
+			<div className="my-10">
+				<BannerJewelry />
+			</div>
+			{/* <BannerRings /> */}
 			<BannerShape />
 			{/* <PopularOnStore /> */}
 		</div>

@@ -333,6 +333,8 @@ const CheckoutPage = () => {
 		return Promise.reject(new Error('Số điện thoại không hợp lệ!'));
 	};
 
+	console.log('provinceId', provinceId);
+
 	console.log('userInfo', userInfo);
 	console.log('userDetail', userDetail);
 	console.log('cartList', cartList);

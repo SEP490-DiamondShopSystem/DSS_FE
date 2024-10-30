@@ -102,28 +102,22 @@ const LoginModal = ({isOpen, onClose}) => {
 							htmlType="submit"
 							type="text"
 							className="bg-primary text-black hover:bg-primary font-semibold w-full mt-5"
-							// loading={loading}
+							loading={loading}
 						>
 							Đăng nhập
 						</Button>
 					</div>
 				</Form.Item>
-				<div className="text-center">
+				{/* <div className="text-center">
 					<p className="my-5">hoặc đăng nhập bằng</p>
-					{/* <div className="w-full flex justify-center items-center">
+					<div className="w-full flex justify-center items-center">
 						<GoogleLoginButton
 							onSuccess={handleGoogleLogin}
 							onError={handleGoogleLoginFailure}
 						/>
-					</div> */}
-					<a
-						href="https://diamondshop-fqgcbagydmgxa4cx.eastasia-01.azurewebsites.net/Account/Register/External"
-						className=""
-						// onClick={handleGoogleLogin}
-					>
-						<GoogleOutlined />
-					</a>
-				</div>
+					</div>
+				
+				</div> */}
 			</Form>
 		</Modal>
 	);
