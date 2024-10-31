@@ -1,27 +1,32 @@
 import React, {useEffect, useState} from 'react';
 
 import {Image} from 'antd';
-import Loading from 'react-loading';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import jewelryImg from '../../assets/ring_classic.png';
 import {FilterDiamondJewelry} from '../../components/Filter/Filter';
-import {GetAllJewelrySelector, LoadingJewelrySelector} from '../../redux/selectors';
-import {getAllJewelry} from '../../redux/slices/jewelrySlice';
-import {formatPrice} from '../../utils';
+import {
+	GetAllJewelryModelSelector,
+	GetAllJewelrySelector,
+	LoadingJewelrySelector,
+} from '../../redux/selectors';
+import {getAllJewelry, getAllJewelryModel} from '../../redux/slices/jewelrySlice';
+import {formatPrice, StarRating} from '../../utils';
+import Loading from '../../components/Loading';
 
 export const DiamondJewelryList = () => {
 	const navigate = useNavigate();
-	const jewelryList = useSelector(GetAllJewelrySelector);
+	const jewelryList = useSelector(GetAllJewelryModelSelector);
 	const loading = useSelector(LoadingJewelrySelector);
 	const dispatch = useDispatch();
 
 	const [jewelries, setJewelries] = useState();
+	const [page, setPage] = useState(0);
 	const [filters, setFilters] = useState({
 		gender: [],
 		type: [],
 		metal: [],
-		price: {minPrice: 0, maxPrice: 1000},
+		price: {minPrice: 0, maxPrice: 40000000},
 	});
 
 	useEffect(() => {
@@ -35,8 +40,10 @@ export const DiamondJewelryList = () => {
 	}, []);
 
 	useEffect(() => {
-		dispatch(getAllJewelry());
-	}, [dispatch]);
+		dispatch(
+			getAllJewelryModel({minPrice: filters.price.minPrice, maxPrice: filters.price.maxPrice})
+		);
+	}, [dispatch, filters.price.minPrice, filters.price.maxPrice]);
 
 	useEffect(() => {
 		if (jewelryList) setJewelries(jewelryList.Values);
@@ -44,14 +51,15 @@ export const DiamondJewelryList = () => {
 
 	const handleReset = () => {
 		localStorage.removeItem('jewelry');
-		setFilters({gender: [], type: [], metal: [], price: {minPrice: 0, maxPrice: 1000}});
+		setFilters({gender: [], type: [], metal: [], price: {minPrice: 0, maxPrice: 40000000}});
 	};
 
 	const filteredJewelryPreset = Array.isArray(jewelries)
 		? jewelries.filter((item) => item.IsPreset === true)
 		: [];
 
-	console.log(filteredJewelryPreset);
+	console.log('jewelryList', jewelryList);
+	console.log('filters', filters);
 
 	return (
 		<>
@@ -80,9 +88,11 @@ export const DiamondJewelryList = () => {
 								{jewelries?.map((jewelry, i) => (
 									<div
 										key={i}
-										className="shadow-lg bg-white rounded-lg hover:border-2 cursor-pointer"
+										className="shadow-lg bg-white rounded-lg hover:border-2 border-2 border-white cursor-pointer"
 										onClick={() =>
-											navigate(`/jewelry/diamond-jewelry/${jewelry.Id}`)
+											navigate(
+												`/jewelry-model/search/${jewelry.JewelryModelId}`
+											)
 										}
 									>
 										<div className="w-80">
@@ -91,24 +101,34 @@ export const DiamondJewelryList = () => {
 												style={{background: '#b8b7b5'}}
 											>
 												<Image
-													src={jewelry.Thumbnail || jewelryImg}
+													src={jewelry.ThumbnailPath || jewelryImg}
 													alt={jewelry.Name}
 													className=""
 													preview={false}
 												/>
 											</div>
 											<div className="mx-5 my-5">
-												<p>{jewelry.Name}</p>
-												<div className="flex mt-2">
+												<div className="flex items-center">
+													<p>Model: </p>{' '}
+													<p className="ml-1">{jewelry.Name}</p>
+												</div>
+												<div className="flex items-center mt-2">
 													<p
 													// className="line-through"
 													// style={{color: '#b0b0b0'}}
 													>
-														{formatPrice(jewelry.TotalPrice)}
+														Giá Từ: {formatPrice(jewelry.MinPrice)} -{' '}
+														{formatPrice(jewelry.MaxPrice)}
 													</p>
 													{/* <p className="ml-5 " style={{color: '#707070'}}>
 														{jewelry.discountPrice}
 													</p> */}
+												</div>
+												<div className="flex items-center mt-2">
+													<p className="mr-3">
+														<StarRating rating={jewelry?.StarRating} />
+													</p>
+													<p>{jewelry.ReviewCount}</p>
 												</div>
 											</div>
 										</div>

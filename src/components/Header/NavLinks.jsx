@@ -35,7 +35,7 @@ const NavLinks = () => {
 				{
 					Head: 'Sản Phẩm',
 					sublink: [
-						{name: 'Trang Sức Kim Cương Đính Sẵn', link: '/jewelry/diamond-jewelry'},
+						{name: 'Trang Sức Kim Cương Đính Sẵn', link: '/jewelry-model/search'},
 						{name: 'Kim Cương', link: '/diamond/search'},
 					],
 				},

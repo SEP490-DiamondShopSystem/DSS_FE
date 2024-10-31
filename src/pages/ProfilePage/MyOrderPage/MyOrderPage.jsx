@@ -8,7 +8,12 @@ import {useNavigate} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import {GetAllOrderSelector, LoadingOrderSelector} from '../../../redux/selectors';
 import {getUserOrder, getUserOrderTransaction} from '../../../redux/slices/orderSlice';
-import {convertToVietnamDate, formatPrice} from '../../../utils/index';
+import {
+	convertToVietnamDate,
+	formatPrice,
+	getOrderPaymentStatus,
+	getOrderStatus,
+} from '../../../utils/index';
 import {ContainerOutlined, EyeFilled, TransactionOutlined} from '@ant-design/icons';
 
 const MyOrderPage = () => {
@@ -22,6 +27,8 @@ const MyOrderPage = () => {
 	const [openDetail, setOpenDetail] = useState(false);
 	const [openInvoice, setOpenInvoice] = useState(false);
 	const [selectedOrder, setSelectedOrder] = useState(null);
+	const [currentPage, setCurrentPage] = useState(1);
+	const [pageSize, setPageSize] = useState(100);
 
 	console.log(orderList);
 	console.log('dataSource', dataSource);
@@ -41,6 +48,42 @@ const MyOrderPage = () => {
 		{
 			title: 'Tổng Giá',
 			dataIndex: 'price',
+			align: 'center',
+		},
+		{
+			title: 'PT Thanh Toán',
+			dataIndex: 'paymentStatus',
+			render: (status) => {
+				// Sửa '=' thành ':'
+				let color = 'red';
+				switch (status) {
+					case 'Pending':
+						color = 'orange';
+						break;
+					case 'Deposited':
+						color = 'blue';
+						break;
+					case 'Paid All':
+						color = 'cyan';
+						break;
+
+					case 'Refunding':
+					case 'Refunded':
+						color = 'red';
+						break;
+
+					default:
+						color = 'grey';
+						break;
+				}
+				return (
+					<div className="text-center">
+						<Tag className="text-center" color={color}>
+							{status.toUpperCase()}
+						</Tag>
+					</div>
+				);
+			},
 			align: 'center',
 		},
 		{
@@ -69,7 +112,7 @@ const MyOrderPage = () => {
 					case 'Refused':
 						color = 'red';
 						break;
-					case 'Delivery_Failed':
+					case 'Delivery Failed':
 						color = 'volcano';
 						break;
 					default:
@@ -176,17 +219,24 @@ const MyOrderPage = () => {
 	};
 
 	useEffect(() => {
-		dispatch(getUserOrder());
-	}, [dispatch]);
+		dispatch(
+			getUserOrder({
+				pageSize: pageSize,
+				start: currentPage,
+				Status: status,
+			})
+		);
+		// dispatch(getAllOrder());
+	}, [pageSize, currentPage]);
 
 	useEffect(() => {
-		if (orderList?.Values) {
+		if (orderList && orderList?.Values) {
 			const formattedOrders = orderList?.Values?.map((order) => ({
 				orderId: order.Id,
 				orderTime: convertToVietnamDate(order.CreatedDate),
 				price: formatPrice(order.TotalPrice),
 				status: getOrderStatus(order.Status),
-				paymentStatus: order.PaymentStatus,
+				paymentStatus: getOrderPaymentStatus(order.PaymentStatus),
 				products: order.Items.map((item) => ({
 					productId: item.Id,
 					productName: item.Name,
@@ -195,33 +245,9 @@ const MyOrderPage = () => {
 			}));
 			setDataSource(formattedOrders); // Cập nhật dataSource cho bảng
 		}
-	}, [orderList?.Values]);
+	}, [orderList]);
 
 	// Hàm chuyển đổi status sang chuỗi dễ đọc
-	const getOrderStatus = (status) => {
-		switch (status) {
-			case 1:
-				return 'Pending';
-			case 2:
-				return 'Processing';
-			case 3:
-				return 'Rejected';
-			case 4:
-				return 'Cancelled';
-			case 5:
-				return 'Prepared';
-			case 6:
-				return 'Delivering';
-			case 7:
-				return 'Delivery_Failed';
-			case 8:
-				return 'Success';
-			case 9:
-				return 'Refused';
-			default:
-				return 'Unknown';
-		}
-	};
 
 	return (
 		<div>
@@ -244,11 +270,13 @@ const MyOrderPage = () => {
 					/>
 				</div>
 			</div>
+
 			<OrderDetailModal
 				toggleDetailModal={toggleDetailModal}
 				openDetail={openDetail}
 				selectedOrder={selectedOrder}
 			/>
+
 			<OrderInvoiceModal toggleInvoiceModal={toggleInvoiceModal} openInvoice={openInvoice} />
 		</div>
 	);

@@ -1,14 +1,11 @@
 import {Rate} from 'antd';
 
 export const StarRating = ({rating}) => {
+	console.log('rating', rating);
+
 	return (
 		<>
-			<Rate
-				allowHalf
-				defaultValue={rating}
-				style={{fontSize: 20, color: '#F9A825'}}
-				disabled
-			/>
+			<Rate allowHalf defaultValue={rating} disabled />
 		</>
 	);
 };
@@ -40,3 +37,68 @@ export function convertToVietnamDate(utcDateString) {
 	// Format to DD/MM/YYYY
 	return `${day}/${month}/${year}`;
 }
+
+export const getOrderStatus = (status) => {
+	switch (status) {
+		case 1:
+			return 'Pending';
+		case 2:
+			return 'Processing';
+		case 3:
+			return 'Rejected';
+		case 4:
+			return 'Cancelled';
+		case 5:
+			return 'Prepared';
+		case 6:
+			return 'Delivering';
+		case 7:
+			return 'Delivery Failed';
+		case 8:
+			return 'Success';
+		case 9:
+			return 'Refused';
+		default:
+			return 'Unknown';
+	}
+};
+
+export const getOrderPaymentStatus = (status) => {
+	switch (status) {
+		case 1:
+			return 'Paid All';
+		case 2:
+			return 'Deposited';
+		case 3:
+			return 'Refunding';
+		case 4:
+			return 'Refunded';
+		case 5:
+			return 'Pending';
+		case 6:
+
+		default:
+			return 'Unknown';
+	}
+};
+
+export const getStepFromStatus = (status) => {
+	switch (status) {
+		case 'Pending':
+			return 0;
+		case 'Processing':
+			return 1;
+		case 'Prepared':
+			return 2;
+		case 'Delivering':
+			return 3;
+		case 'Delivery_Failed':
+			return 4;
+		case 'Success':
+			return 5;
+		case 'Refused':
+			return 6;
+		default:
+			return 0;
+	}
+};

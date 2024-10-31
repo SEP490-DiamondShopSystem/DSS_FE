@@ -210,7 +210,9 @@ const PaymentPage = () => {
 								}}
 							>
 								<span style={{marginRight: '8px'}}>Tổng Cộng:</span>
-								<span style={{fontWeight: 'bold'}}>{formatPrice(totalPrice)}</span>
+								<span style={{fontWeight: 'bold'}}>
+									{formatPrice(cartList?.OrderPrices?.FinalPrice)}
+								</span>
 							</div>
 						</div>
 					</div>

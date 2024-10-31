@@ -22,7 +22,7 @@ const JewelryDetailPage = () => {
 	const [diamondJewelry, setDiamondJewelry] = useState(data);
 	const [size, setSize] = useState('');
 	const [jewelry, setJewelry] = useState();
-	const [selectedMetal, setSelectedMetal] = useState(diamondJewelry.Metal.Name);
+	const [selectedMetal, setSelectedMetal] = useState();
 	const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
 
 	useEffect(() => {
@@ -30,7 +30,11 @@ const JewelryDetailPage = () => {
 	}, []);
 
 	useEffect(() => {
-		if (jewelryDetail) setJewelry(jewelryDetail);
+		if (jewelryDetail) {
+			setJewelry(jewelryDetail);
+			setSelectedMetal(jewelryDetail?.Metal);
+			setSize(jewelryDetail?.SizeId);
+		}
 	}, [jewelryDetail]);
 
 	const hideLoginModal = () => setIsLoginModalVisible(false);

@@ -10,7 +10,7 @@ import banner_3 from '../assets/Lab_Grown_Diamonds.png';
 import jewelry from '../assets/jewelry.png';
 
 export const jewelries = [
-	{logo: basic_diamond, title: 'Diamond Basics', link: '/jewelry/diamond-jewelry'},
+	{logo: basic_diamond, title: 'Diamond Basics', link: '/jewelry-model/search'},
 	{logo: necklaces, title: 'Dây chuyền', link: '/jewelry/design-your-own-necklaces'},
 	{logo: earrings, title: 'Bông tai', link: '/jewelry/design-your-own-earrings'},
 	// { logo: basic_diamond, title: "Bracelets" },

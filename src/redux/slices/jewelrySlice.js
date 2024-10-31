@@ -18,10 +18,38 @@ export const getAllJewelry = createAsyncThunk(
 
 export const getAllJewelryModel = createAsyncThunk(
 	'jewelrySlice/getAllJewelryModel',
+	async (params, {rejectWithValue}) => {
+		console.log('params', params);
+
+		try {
+			const {minPrice, maxPrice} = params;
+			let url = '/JewelryModel/Selling';
+			const queryParams = new URLSearchParams();
+
+			if (minPrice) queryParams.append('MinPrice', minPrice);
+			if (maxPrice) queryParams.append('MaxPrice', maxPrice);
+
+			if (queryParams.toString()) {
+				url += `?${queryParams.toString()}`;
+			}
+
+			const response = await api.get(url);
+			// const response = await api.get(`/all_jewelry`);
+			console.log(response);
+
+			return response;
+		} catch (error) {
+			console.log('Error: ', JSON.stringify(error.response.data));
+			return rejectWithValue(error.response.data);
+		}
+	}
+);
+
+export const getAllJewelryMetal = createAsyncThunk(
+	'jewelrySlice/getAllJewelryMetal',
 	async (_, {rejectWithValue}) => {
 		try {
-			const response = await api.get(`/JewelryModel/All`);
-			// const response = await api.get(`/all_jewelry`);
+			const response = await api.get(`/JewelryModel/Metal/All`);
 			console.log(response);
 
 			return response;
@@ -36,7 +64,7 @@ export const getJewelryDetail = createAsyncThunk(
 	'jewelrySlice/getAllJewelryDetail',
 	async ({id}, {rejectWithValue}) => {
 		try {
-			const response = await api.get(`/Jewelry/Detail/${id}`);
+			const response = await api.get(`/JewelryModel/Selling/Detail?modelId=${id}`);
 			// const response = await api.get(`/all_jewelry`);
 			console.log(response);
 
@@ -54,6 +82,7 @@ export const jewelrySlice = createSlice({
 		jewelries: null,
 		jewelriesModel: null,
 		jewelryDetail: null,
+		metal: null,
 		cartItems: [],
 		loading: false,
 		error: null,
@@ -91,6 +120,17 @@ export const jewelrySlice = createSlice({
 				state.jewelryDetail = action.payload;
 			})
 			.addCase(getJewelryDetail.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload;
+			})
+			.addCase(getAllJewelryMetal.pending, (state) => {
+				state.loading = true;
+			})
+			.addCase(getAllJewelryMetal.fulfilled, (state, action) => {
+				state.loading = false;
+				state.metal = action.payload;
+			})
+			.addCase(getAllJewelryMetal.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload;
 			});

@@ -143,7 +143,7 @@ const CartPage = () => {
 		console.log(diamondId);
 
 		if (jewelryId) {
-			navigate(`/jewelry/diamond-jewelry/${jewelryId}`);
+			navigate(`/jewelry-model/search/${jewelryId}`);
 		} else if (diamondId) {
 			navigate(`/diamond-detail/${diamondId}`);
 		} else {
@@ -216,11 +216,12 @@ const CartPage = () => {
 	// 	return <Loading />;
 	// }
 
-	console.log('mappedProducts', mappedProducts.length);
+	console.log('cartList', cartList);
 
 	return (
 		<div className="flex justify-between p-8 bg-gray-50 min-h-screen mx-32 my-20">
 			{/* Left Segment: Engagement Ring, Loose Diamond, Promotions */}
+
 			<div
 				className="flex-1 lg:mr-8 space-y-8 shadow-lg bg-white rounded-lg"
 				style={{width: '70%'}}

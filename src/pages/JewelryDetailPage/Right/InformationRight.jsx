@@ -53,6 +53,10 @@ export const InformationRight = ({
 		setSize(value);
 	};
 
+	const handleJewelryChange = (value) => {
+		setSize(value);
+	};
+
 	console.log(diamondJewelry);
 
 	const handleAddCart = () => {
@@ -91,12 +95,14 @@ export const InformationRight = ({
 	};
 
 	console.log('diamondJewelry', diamondJewelry);
+	console.log('selectedMetal', selectedMetal);
+	console.log('size', size);
 
 	return (
 		<div>
 			<div className="border-tintWhite">
 				<h1 className="text-3xl">
-					{diamondJewelry?.Model?.Name} {selectedMetal?.Name || selectedMetal}
+					{diamondJewelry?.Name} {selectedMetal?.Name || selectedMetal}
 				</h1>
 				<div className="my-5 flex">
 					<Rate
@@ -121,7 +127,7 @@ export const InformationRight = ({
 				</div> */}
 			</div>
 			<div>
-				{/* <div className="my-5 flex items-center">
+				<div className="my-5 flex items-center">
 					<div className="font-semibold">Loại Kim Loại</div>
 					<div className={`font-semibold text-xl pl-4 text-primary`}>
 						{selectedMetal?.Name}
@@ -141,7 +147,7 @@ export const InformationRight = ({
 						</div>
 					</div>
 				</div>
-				<div className="my-5 flex items-center">
+				{/* <div className="my-5 flex items-center">
 					<div className="font-semibold">Độ dài</div>
 					<div className={`font-semibold text-xl pl-4 text-primary`}>
 						{diamondJewelry?.Width}mm
@@ -166,12 +172,12 @@ export const InformationRight = ({
 				</div> */}
 			</div>
 			<div className="border-y border-tintWhite my-5">
-				{/* {diamondJewelry && diamondJewelry.Model.Category.Name === 'Ring' && (
+				{diamondJewelry && diamondJewelry.Category === 'Ring' && (
 					<div className="my-5 flex items-center">
 						<div className="font-semibold">Chọn kích thước nhẫn:</div>
 						<div className={`font-semibold text-xl pl-4 text-primary`}>
 							<Select
-								defaultValue=""
+								value={size}
 								style={{width: 120}}
 								onChange={handleChange}
 								options={[
@@ -184,11 +190,32 @@ export const InformationRight = ({
 							/>
 						</div>
 					</div>
-				)} */}
-				<div className="flex items-center">
-					{/* <p className="line-through text-gray decoration-gray text-2xl">
+				)}
+				{selectedMetal !== '' && size !== '' && (
+					<div className="my-5 flex items-center">
+						<div className="font-semibold">Trang Sức Có Sẵn:</div>
+						<div className={`font-semibold text-xl pl-4 text-primary`}>
+							<Select
+								defaultValue=""
+								style={{width: 420, height: 40}}
+								className=""
+								onChange={handleJewelryChange}
+								options={[
+									{value: '', label: 'Chọn Trang Sức'},
+									{value: '1', label: '1'},
+									{value: '2', label: '2'},
+									{value: '3', label: '3'},
+									{value: '4', label: '4'},
+								]}
+							/>
+						</div>
+					</div>
+				)}
+
+				{/* <div className="flex items-center">
+					<p className="line-through text-gray decoration-gray text-2xl">
 						{metalType.price}
-					</p> */}
+					</p>
 					<p className="font-semibold text-2xl my-2">
 						{formatPrice(diamondJewelry?.TotalPrice)}
 					</p>
@@ -198,9 +225,10 @@ export const InformationRight = ({
 					<div className="text-xl pt-2 font-semibold">
 						*Mã giảm giá được áp dụng tự động
 					</div>
-				</div>
+				</div> */}
 			</div>
-			<div className="flex justify-between items-center mt-5">
+
+			{/* <div className="flex justify-between items-center mt-5">
 				<Button
 					type="text"
 					className="border py-7 px-14 font-bold text-lg bg-primary rounded hover:bg-second w-full uppercase"
@@ -208,7 +236,7 @@ export const InformationRight = ({
 				>
 					Thêm Vào Giỏ Hàng
 				</Button>
-			</div>
+			</div> */}
 			<div className="my-10">
 				<h2 className="font-bold text-xl pb-3">Đơn Hàng Của Bạn Bao Gồm:</h2>
 				<div className="flex bg-offWhite p-5">
