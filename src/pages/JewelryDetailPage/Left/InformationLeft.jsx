@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {MinusOutlined, PlusOutlined} from '@ant-design/icons';
 
-export const InformationLeft = ({diamondJewelry}) => {
+export const InformationLeft = ({diamondJewelry, selectedMetal}) => {
 	const [showMore, setShowMore] = useState(false);
 
 	const toggleShowMore = () => {
@@ -13,25 +13,25 @@ export const InformationLeft = ({diamondJewelry}) => {
 	return (
 		<>
 			<div className="bg-gray-50 rounded-lg shadow-md w-full mt-10 pr-36">
-				<div className="flex justify-between px-4 border-b border-tintWhite py-2">
+				{/* <div className="flex justify-between px-4 border-b border-tintWhite py-2">
 					<span className="text-gray-600">Mã Định Danh</span>
 					<span className="text-gray-800">{diamondJewelry?.SerialCode}</span>
-				</div>
+				</div> */}
 				<div className="flex justify-between px-4 border-b border-tintWhite py-2">
 					<span className="text-gray-600">Chất Liệu</span>
-					<span className="text-gray-800">{diamondJewelry?.Metal?.Name}</span>
+					<span className="text-gray-800">{selectedMetal?.Name}</span>
 				</div>
 				<div className="flex justify-between px-4 border-b border-tintWhite py-2">
 					<span className="text-gray-600">Chiều Rộng</span>
-					<span className="text-gray-800">{diamondJewelry?.Model?.Width}mm</span>
+					<span className="text-gray-800">{diamondJewelry?.Width}mm</span>
 				</div>
 				<div className="flex justify-between px-4 py-2">
 					<span className="text-gray-600">Hoàn Thiện Rhodium</span>
 					<span className="text-gray-800 flex items-center">
-						{diamondJewelry?.Model?.IsRhodiumFinish ? 'Có' : 'Không'}
+						{diamondJewelry?.IsRhodiumFinish ? 'Có' : 'Không'}
 					</span>
 				</div>
-				<div className="flex justify-between px-4 py-2">
+				{/* <div className="flex justify-between px-4 py-2">
 					<span className="text-gray-600">Trọng Lượng</span>
 					<span className="text-gray-800 flex items-center">
 						{diamondJewelry?.Weight}
@@ -42,7 +42,7 @@ export const InformationLeft = ({diamondJewelry}) => {
 					<span className="text-gray-800 flex items-center">
 						{diamondJewelry?.SizeId}
 					</span>
-				</div>
+				</div> */}
 			</div>
 			{diamondJewelry?.IsPreset === false && (
 				<>

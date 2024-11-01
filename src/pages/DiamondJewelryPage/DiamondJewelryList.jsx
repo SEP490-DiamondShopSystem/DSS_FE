@@ -11,7 +11,7 @@ import {
 	LoadingJewelrySelector,
 } from '../../redux/selectors';
 import {getAllJewelry, getAllJewelryModel} from '../../redux/slices/jewelrySlice';
-import {formatPrice, StarRating} from '../../utils';
+import {formatPrice, Rating, StarRating} from '../../utils';
 import Loading from '../../components/Loading';
 
 export const DiamondJewelryList = () => {
@@ -109,15 +109,15 @@ export const DiamondJewelryList = () => {
 											</div>
 											<div className="mx-5 my-5">
 												<div className="flex items-center">
-													<p>Model: </p>{' '}
-													<p className="ml-1">{jewelry.Name}</p>
+													{/* <p>Model: </p>{' '} */}
+													<p className="">{jewelry.Name}</p>
 												</div>
 												<div className="flex items-center mt-2">
 													<p
 													// className="line-through"
 													// style={{color: '#b0b0b0'}}
 													>
-														Giá Từ: {formatPrice(jewelry.MinPrice)} -{' '}
+														Giá Mẫu: {formatPrice(jewelry.MinPrice)} -{' '}
 														{formatPrice(jewelry.MaxPrice)}
 													</p>
 													{/* <p className="ml-5 " style={{color: '#707070'}}>
@@ -126,7 +126,7 @@ export const DiamondJewelryList = () => {
 												</div>
 												<div className="flex items-center mt-2">
 													<p className="mr-3">
-														<StarRating rating={jewelry?.StarRating} />
+														<Rating rating={jewelry?.StarRating} />
 													</p>
 													<p>{jewelry.ReviewCount}</p>
 												</div>

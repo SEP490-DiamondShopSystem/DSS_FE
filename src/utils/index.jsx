@@ -1,11 +1,43 @@
 import {Rate} from 'antd';
+import React from 'react';
+import {StarFilled, StarOutlined, StarTwoTone} from '@ant-design/icons';
+
+export const Rating = ({rating}) => {
+	const maxStars = 5;
+
+	// Tính số lượng sao đầy, nửa sao và sao trống
+	const fullStars = Math.floor(rating);
+	const halfStar = rating % 1 !== 0;
+	const emptyStars = maxStars - fullStars - (halfStar ? 1 : 0);
+
+	return (
+		<div className="flex items-center">
+			{/* Hiển thị sao đầy */}
+			{Array(fullStars)
+				.fill(0)
+				.map((_, index) => (
+					<StarFilled key={`full-${index}`} className="text-yellow-400 text-xl" />
+				))}
+
+			{/* Hiển thị nửa sao nếu có */}
+			{halfStar && <StarTwoTone twoToneColor="#fadb14" className="text-xl" />}
+
+			{/* Hiển thị sao trống */}
+			{Array(emptyStars)
+				.fill(0)
+				.map((_, index) => (
+					<StarOutlined key={`empty-${index}`} className="text-gray-300 text-xl" />
+				))}
+		</div>
+	);
+};
 
 export const StarRating = ({rating}) => {
 	console.log('rating', rating);
 
 	return (
 		<>
-			<Rate allowHalf defaultValue={rating} disabled />
+			<Rate allowHalf value={rating} disabled />
 		</>
 	);
 };
