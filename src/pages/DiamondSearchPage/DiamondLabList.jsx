@@ -96,6 +96,8 @@ export const DiamondLabList = ({diamond, setDiamond, diamondList}) => {
 		navigate(`/diamond-detail/${id}`);
 	};
 
+	console.log('diamondLab', diamondLab);
+
 	return (
 		<div>
 			<FilterDiamond setFilters={setFilters} filters={filters} handleReset={handleReset} />
@@ -155,17 +157,27 @@ export const DiamondLabList = ({diamond, setDiamond, diamondList}) => {
 														Color {diamondItem.Clarity} Clarity{' '}
 														{diamondItem.Cut}
 													</p>
-													<div className="flex">
-														<p
-															style={{color: '#707070'}}
-															className="line-through"
-														>
-															{formatPrice(diamondItem.TruePrice)}
-														</p>
-														<p className="ml-3">
-															{formatPrice(diamondItem.DiscountPrice)}
-														</p>
-													</div>
+													{diamondItem?.DiscountPrice !== null ? (
+														<div className="flex">
+															<p
+																style={{color: '#707070'}}
+																className="line-through"
+															>
+																{formatPrice(diamondItem.TruePrice)}
+															</p>
+															<p className="ml-3">
+																{formatPrice(
+																	diamondItem.DiscountPrice
+																)}
+															</p>
+														</div>
+													) : (
+														<div className="">
+															<p>
+																{formatPrice(diamondItem.TruePrice)}
+															</p>
+														</div>
+													)}
 												</div>
 											</div>
 										</div>
@@ -211,12 +223,27 @@ export const DiamondLabList = ({diamond, setDiamond, diamondList}) => {
 													<p className="text-xl w-1/5 text-center">
 														{diamondItem.Cut || '-'}
 													</p>
-													<p
-														className="text-xl w-1/5 text-center"
-														style={{color: '#707070'}}
-													>
-														{formatPrice(diamondItem.DiscountPrice)}
-													</p>
+													{diamondItem?.DiscountPrice !== null ? (
+														<div className="flex">
+															<p
+																style={{color: '#707070'}}
+																className="line-through"
+															>
+																{formatPrice(diamondItem.TruePrice)}
+															</p>
+															<p className="ml-3">
+																{formatPrice(
+																	diamondItem.DiscountPrice
+																)}
+															</p>
+														</div>
+													) : (
+														<div className="">
+															<p>
+																{formatPrice(diamondItem.TruePrice)}
+															</p>
+														</div>
+													)}
 													<p
 														className="text-xl w-1/5 text-center cursor-pointer"
 														onClick={(e) => {

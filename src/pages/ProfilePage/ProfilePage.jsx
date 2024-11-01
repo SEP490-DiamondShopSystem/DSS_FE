@@ -1,22 +1,23 @@
-import React, {useState, useEffect, useRef, useCallback} from 'react';
-import {Badge, Button, Divider, message, Space, Table, Tag} from 'antd';
-import {Helmet} from 'react-helmet';
-import {useNavigate} from 'react-router-dom';
-import LogoutModal from '../../components/LogModal/LogoutModal';
-import NavbarProfile from '../../components/NavbarProfile';
-import {removeLocalStorage} from '../../utils/localstorage';
-import {useDispatch, useSelector} from 'react-redux';
-import {handleRefreshToken, logout} from '../../redux/slices/userLoginSlice';
-import * as jwtDecode from 'jwt-decode';
-import {GetAllOrderSelector, LoadingOrderSelector, UserInfoSelector} from '../../redux/selectors';
-import {getUserOrder} from '../../redux/slices/orderSlice';
-import {convertToVietnamDate, formatPrice} from '../../utils';
 import {
 	CheckCircleOutlined,
 	DeliveredProcedureOutlined,
 	HourglassOutlined,
 	OrderedListOutlined,
 } from '@ant-design/icons';
+import {Table, Tag} from 'antd';
+import React, {useEffect, useRef, useState} from 'react';
+import {Helmet} from 'react-helmet';
+import {useDispatch, useSelector} from 'react-redux';
+import {useNavigate} from 'react-router-dom';
+import NavbarProfile from '../../components/NavbarProfile';
+import {GetAllOrderSelector, LoadingOrderSelector, UserInfoSelector} from '../../redux/selectors';
+import {getUserOrder} from '../../redux/slices/orderSlice';
+import {
+	convertToVietnamDate,
+	formatPrice,
+	getOrderPaymentStatus,
+	getOrderStatus,
+} from '../../utils';
 
 const ProfilePage = () => {
 	const navigate = useNavigate();
@@ -34,8 +35,6 @@ const ProfilePage = () => {
 	const [status, setStatus] = useState('');
 	const [currentPage, setCurrentPage] = useState(1);
 	const [pageSize, setPageSize] = useState(100);
-	const [itemsPerPage] = useState(3);
-	const [visibleGroups, setVisibleGroups] = useState([]);
 	const [orders, setOrders] = useState([]);
 	const [dataSource, setDataSource] = useState([]);
 	const orderStatus = [
@@ -68,6 +67,42 @@ const ProfilePage = () => {
 			align: 'center',
 		},
 		{
+			title: 'PT Thanh Toán',
+			dataIndex: 'paymentStatus',
+			render: (status) => {
+				// Sửa '=' thành ':'
+				let color = 'red';
+				switch (status) {
+					case 'Pending':
+						color = 'orange';
+						break;
+					case 'Deposited':
+						color = 'blue';
+						break;
+					case 'Paid All':
+						color = 'cyan';
+						break;
+
+					case 'Refunding':
+					case 'Refunded':
+						color = 'red';
+						break;
+
+					default:
+						color = 'grey';
+						break;
+				}
+				return (
+					<div className="text-center">
+						<Tag className="text-center" color={color}>
+							{status.toUpperCase()}
+						</Tag>
+					</div>
+				);
+			},
+			align: 'center',
+		},
+		{
 			title: 'Trạng thái',
 			dataIndex: 'status',
 			render: (status) => {
@@ -94,7 +129,7 @@ const ProfilePage = () => {
 					case 'Refused':
 						color = 'red';
 						break;
-					case 'Delivery_Failed':
+					case 'Delivery Failed':
 						color = 'volcano';
 						break;
 					default:
@@ -147,38 +182,14 @@ const ProfilePage = () => {
 		);
 	};
 
-	const getOrderStatus = (status) => {
-		switch (status) {
-			case 1:
-				return 'Pending';
-			case 2:
-				return 'Processing';
-			case 3:
-				return 'Rejected';
-			case 4:
-				return 'Cancelled';
-			case 5:
-				return 'Prepared';
-			case 6:
-				return 'Delivering';
-			case 7:
-				return 'Delivery_Failed';
-			case 8:
-				return 'Success';
-			case 9:
-				return 'Refused';
-			default:
-				return 'Unknown';
-		}
-	};
-
 	useEffect(() => {
-		if (orderList?.Values) {
+		if (orderList && orderList?.Values) {
 			const formattedOrders = orderList?.Values?.map((order) => ({
 				orderId: order.Id,
 				orderTime: convertToVietnamDate(order.CreatedDate),
 				price: formatPrice(order.TotalPrice),
 				status: getOrderStatus(order.Status),
+				paymentStatus: getOrderPaymentStatus(order.PaymentStatus),
 				products: order.Items.map((item) => ({
 					productId: item.Id,
 					productName: item.Name,
@@ -187,7 +198,7 @@ const ProfilePage = () => {
 			}));
 			setDataSource(formattedOrders); // Cập nhật dataSource cho bảng
 		}
-	}, [orderList?.Values]);
+	}, [orderList]);
 
 	useEffect(() => {
 		dispatch(

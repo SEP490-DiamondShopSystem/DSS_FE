@@ -283,7 +283,7 @@ export const FilterJewelry = ({handleFilter, setFilters, filters, handleReset}) 
 	);
 };
 export const FilterDiamondJewelry = ({handleFilter, setFilters, filters, handleReset}) => {
-	const filterTypes = ['gender', 'metal'];
+	const filterTypes = ['Loại trang sức', 'kim loại'];
 
 	const handleFilterChange = (filterType, selectedValues) => {
 		setFilters((prevFilters) => ({
@@ -310,7 +310,6 @@ export const FilterDiamondJewelry = ({handleFilter, setFilters, filters, handleR
 			{filterTypes.map((filterType) => (
 				<Select
 					key={filterType} // Use the filter type as key
-					mode="multiple"
 					placeholder={filterType.replace('_', ' ').toUpperCase()} // Display filter type in uppercase
 					allowClear
 					maxTagCount={0}
@@ -334,8 +333,8 @@ export const FilterDiamondJewelry = ({handleFilter, setFilters, filters, handleR
 				<Slider
 					range
 					min={0}
-					max={1000}
-					defaultValue={[0, 1000]} // Default price range
+					max={40000000}
+					defaultValue={[0, 40000000]} // Default price range
 					onChange={handlePriceChange} // Handle price change
 				/>
 			</div>

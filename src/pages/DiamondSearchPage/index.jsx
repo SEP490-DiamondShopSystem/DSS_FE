@@ -63,12 +63,15 @@ const mapAttributes = (data, attributes) => {
 const DiamondSearchPage = () => {
 	const dispatch = useDispatch();
 	const diamondList = useSelector(GetAllDiamondSelector);
+
 	const [changeDiamond, setChangeDiamond] = useState(true);
 	const [mappedDiamonds, setMappedDiamonds] = useState([]);
 	const [diamondChoice, setDiamondChoice] = useState(
 		localStorage.getItem('diamondChoice') || localStorage.getItem('selected') || ''
 	);
 	const [jewelryType, setJewelryType] = useState(localStorage.getItem('jewelryType') || '');
+
+	console.log(diamondList);
 
 	useEffect(() => {
 		dispatch(getAllDiamond());

@@ -40,7 +40,7 @@ export const PopularOnStore = () => {
 	}, [jewelries.length]); // Runs when the length of jewelry changes
 
 	const onProductClick = (id) => {
-		navigate(`/jewelry/diamond-jewelry/${id}`);
+		navigate(`/jewelry-model/search/${id}`);
 	};
 
 	// Function to display only the current set of items

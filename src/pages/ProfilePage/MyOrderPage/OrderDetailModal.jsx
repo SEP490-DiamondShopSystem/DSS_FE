@@ -1,11 +1,13 @@
-import {Button, Form, Image, Input, message, Modal, Steps} from 'antd';
 import React, {useEffect, useState} from 'react';
+
+import {Button, Form, Image, Input, message, Modal, Steps} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
 import logo from '../../../assets/logo-short-ex.png';
 import '../../../css/antd.css';
 import {GetAllOrderDetailSelector} from '../../../redux/selectors';
 import {getUserOrderDetail, handleOrderCancel} from '../../../redux/slices/orderSlice';
 import {convertToVietnamDate, formatPrice} from '../../../utils';
+import {OrderStatus} from './OrderStatus';
 
 export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder}) => {
 	const dispatch = useDispatch();
@@ -13,7 +15,6 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 
 	const [isCancelModalVisible, setIsCancelModalVisible] = useState(false);
 	const [isReturnModalVisible, setIsReturnModalVisible] = useState(false);
-	const [currentStep, setCurrentStep] = useState(0);
 	const [order, setOrder] = useState(null);
 
 	console.log('orderDetail', orderDetail);
@@ -29,52 +30,6 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 			setOrder(orderDetail);
 		}
 	}, [orderDetail]);
-
-	const orderStatus = order?.Status;
-
-	console.log('orderStatus', orderStatus);
-
-	useEffect(() => {
-		const getOrderStatus = (status) => {
-			switch (status) {
-				case 1:
-					return 'Chờ Shop Xác Nhận';
-				case 2:
-					return 'Shop Chấp Nhận';
-				case 3:
-					return 'Từ Chối';
-				case 4:
-					return 'Hủy Bỏ';
-				case 5:
-					return 'Chuẩn Bị Hàng';
-				case 6:
-					return 'Vận Chuyển';
-				case 7:
-					return 'Giao Hàng Thất Bại';
-				case 8:
-					return 'Nhận Hàng';
-				case 9:
-					return 'Hoàn Trả';
-				default:
-					return 'Unknown';
-			}
-		};
-
-		const statusToStep = {
-			'Chờ Shop Xác Nhận': 0,
-			'Shop Chấp Nhận': 1,
-			'Chuẩn Bị Hàng': 2,
-			'Vận Chuyển': 3,
-			'Nhận Hàng': 4,
-			'Từ Chối': 5,
-			'Hủy Hàng': 6,
-			'Giao Hàng Thất Bại': 7,
-			'Hoàn Trả': 8,
-		};
-
-		const statusName = getOrderStatus(orderStatus);
-		setCurrentStep(statusToStep[statusName] ?? 0);
-	}, [orderStatus]);
 
 	const handleCancelOrder = () => {
 		setIsCancelModalVisible(true);
@@ -102,120 +57,9 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 		setIsReturnModalVisible(false);
 	};
 
-	const steps = [
-		// Step 0: Chờ Shop Xác Nhận
-		{
-			title:
-				orderStatus === 3
-					? 'Đã Bị Từ Chối'
-					: orderStatus === 4
-					? 'Đã Hủy'
-					: 'Chờ Shop Xác Nhận',
-			description:
-				orderStatus === 3
-					? `Đơn hàng đã bị từ chối. Lý Do: ${orderDetail?.CancelledReason}`
-					: orderStatus === 4
-					? `Đơn hàng đã bị hủy. Lý Do: ${orderDetail?.CancelledReason}`
-					: 'Đơn hàng đang chờ xác nhận từ shop.',
-			status:
-				orderStatus === 4 || orderStatus === 3 // Nếu bị từ chối hoặc hủy bỏ
-					? 'error'
-					: orderStatus >= 1 // Nếu có trạng thái từ 1 trở lên
-					? 'process'
-					: 'wait',
-		},
-		// Step 1: Chuẩn Bị Hàng
-		{
-			title: 'Chuẩn Bị Hàng',
-			description: 'Shop đang chuẩn bị hàng cho đơn hàng.',
-			status:
-				orderStatus === 4 // Người dùng hủy
-					? 'error'
-					: orderStatus === 3 // Bị từ chối
-					? 'error'
-					: orderStatus >= 2
-					? 'process'
-					: 'wait',
-		},
-		// Step 2: Đang Vận Chuyển
-		{
-			title: 'Đang Vận Chuyển',
-			description: 'Đơn hàng đang được vận chuyển.',
-			status:
-				orderStatus === 3 || orderStatus === 4 // Nếu bị từ chối hoặc hủy bỏ
-					? 'error'
-					: orderStatus >= 3
-					? 'process'
-					: 'wait',
-		},
-		// Step 3: Giao Hàng
-		{
-			title: 'Giao Hàng',
-			description: 'Đơn hàng đang được giao.',
-			status:
-				orderStatus === 3 || orderStatus === 4 // Nếu bị từ chối hoặc hủy bỏ
-					? 'error'
-					: orderStatus >= 4
-					? 'process'
-					: 'wait',
-		},
-		// Step 4: Giao Hàng Thất Bại hoặc Hoàn Thành
-		{
-			title:
-				orderStatus === 7
-					? 'Giao Hàng Thất Bại'
-					: orderStatus === 8
-					? 'Hoàn Thành'
-					: 'Chờ Xác Nhận',
-			description:
-				orderStatus === 7
-					? 'Đơn hàng không được vận chuyển thành công.'
-					: orderStatus === 8
-					? 'Đơn hàng đã hoàn thành.'
-					: 'Đơn hàng đang chờ xác nhận từ shop.',
-			status:
-				orderStatus === 7 // Trạng thái giao hàng thất bại
-					? 'error'
-					: orderStatus === 3 || orderStatus === 4 // Nếu bị từ chối hoặc hủy bỏ
-					? 'error'
-					: orderStatus === 8 // Hoàn thành
-					? 'finish'
-					: 'wait', // Đối với các trạng thái khác sẽ là 'wait'
-		},
-	];
+	const orderStatus = order?.Status;
 
 	// Cập nhật trạng thái cho các bước trước khi có trạng thái process
-	for (let i = 0; i < steps.length; i++) {
-		if (steps[i].status === 'process') {
-			// Đặt tất cả các bước trước đó thành 'finish'
-			for (let j = 0; j < i; j++) {
-				steps[j].status = 'finish';
-			}
-			break; // Thoát vòng lặp khi đã cập nhật
-		}
-	}
-
-	// Kiểm tra để dừng lại nếu có lỗi
-	steps.forEach((step, index) => {
-		if (
-			(orderStatus === 3 && index > 0) || // Bị từ chối thì dừng lại
-			(orderStatus === 4 && index > 1) || // Hủy bỏ, dừng lại sau bước 1
-			(orderStatus === 7 && index > 4) // Giao hàng thất bại
-		) {
-			// Giao hàng thất bại
-			step.status = 'wait';
-		}
-	});
-
-	// Đảm bảo rằng nếu trạng thái Success thì chỉ có 'finish' và 'process'
-	steps.forEach((step, index) => {
-		if (orderStatus === 5) {
-			// Giả định rằng orderStatus 5 là Success
-			if (step.status === 'wait') {
-				step.status = 'finish'; // Đặt thành finish cho Success
-			}
-		}
-	});
 
 	return (
 		<>
@@ -252,11 +96,8 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 					<div className="mt-5">
 						<h2 className="text-2xl font-semibold">Địa chỉ giao hàng</h2>
 						<p>{order?.ShippingAddress}</p>
-						<div className="flex justify-center items-center space-x-4 my-10">
-							<Steps labelPlacement="vertical" current={currentStep} items={steps} />
-						</div>
 					</div>
-
+					<OrderStatus orderStatus={orderStatus} orderDetail={orderDetail} />
 					<div className="flex justify-between">
 						<h1 className="text-xl font-semibold">Chi tiết đơn hàng</h1>
 						{orderStatus === 8 ? (

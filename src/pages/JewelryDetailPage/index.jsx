@@ -20,17 +20,24 @@ const JewelryDetailPage = () => {
 
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 	const [diamondJewelry, setDiamondJewelry] = useState(data);
-	const [size, setSize] = useState('');
+	const [size, setSize] = useState(null);
 	const [jewelry, setJewelry] = useState();
-	const [selectedMetal, setSelectedMetal] = useState(diamondJewelry.Metal.Name);
+	const [selectedMetal, setSelectedMetal] = useState(null);
 	const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
+	const [sizePrice, setSizePrice] = useState();
+	const [selectedSideDiamond, setSelectedSideDiamond] = useState();
 
 	useEffect(() => {
 		dispatch(getJewelryDetail({id}));
 	}, []);
 
 	useEffect(() => {
-		if (jewelryDetail) setJewelry(jewelryDetail);
+		if (jewelryDetail) {
+			setJewelry(jewelryDetail);
+			setSelectedMetal(jewelryDetail?.Metals[0]);
+			setSelectedSideDiamond(jewelryDetail?.SideDiamonds[0]);
+			// setSize(jewelryDetail?.MetalGroups[0]?.SizeGroups[0].Size);
+		}
 	}, [jewelryDetail]);
 
 	const hideLoginModal = () => setIsLoginModalVisible(false);
@@ -39,12 +46,54 @@ const JewelryDetailPage = () => {
 		setIsSidebarOpen(!isSidebarOpen);
 	};
 
+	const filterMetalGroups = (metalGroups, selectedMetal, selectedSideDiamond) => {
+		// Check if metalGroups is defined and is an array
+		if (!Array.isArray(metalGroups)) {
+			console.warn('metalGroups is undefined or not an array');
+			return []; // Return an empty array if metalGroups is undefined or not an array
+		}
+
+		console.log('MetalGroups:', metalGroups);
+		console.log('Selected Metal:', selectedMetal);
+		console.log('Selected SideDiamond:', selectedSideDiamond);
+
+		return metalGroups
+			.map((group) => {
+				// Check if group matches the selected MetalId
+				const isMatchingMetal = group.MetalId === selectedMetal?.Id;
+
+				// Check if group matches the selected SideDiamondId (if provided)
+				const isMatchingSideDiamond = selectedSideDiamond
+					? group.SideDiamondId === selectedSideDiamond.Id
+					: true; // If no SideDiamondId is provided, consider it a match
+
+				// If both metal and side diamond match (or only metal if no SideDiamondId), add details
+				if (isMatchingMetal && isMatchingSideDiamond) {
+					return {
+						...group,
+						MetalDetails: selectedMetal,
+						SideDiamondDetails: selectedSideDiamond || null, // Set SideDiamondDetails to null if not provided
+					};
+				}
+
+				return null; // return null if no match
+			})
+			.filter((item) => item !== null); // filter out unmatched items
+	};
+
+	// Usage with individual selected items
+	const filteredGroups = filterMetalGroups(
+		jewelry?.MetalGroups,
+		selectedMetal,
+		selectedSideDiamond
+	);
+
 	return (
 		<div className="mx-32">
 			<div className="flex flex-col md:flex-row bg-white my-10 md:my-20 rounded-lg shadow-lg">
 				<div className="w-full md:w-1/2 p-6">
 					<ImageGallery />
-					<InformationLeft diamondJewelry={jewelry} />
+					<InformationLeft diamondJewelry={jewelry} selectedMetal={selectedMetal} />
 				</div>
 
 				<div className="w-full md:w-1/2 p-6 md:pr-32">
@@ -56,6 +105,11 @@ const JewelryDetailPage = () => {
 						size={size}
 						setIsLoginModalVisible={setIsLoginModalVisible}
 						user={user}
+						setSizePrice={setSizePrice}
+						sizePrice={sizePrice}
+						setSelectedSideDiamond={setSelectedSideDiamond}
+						selectedSideDiamond={selectedSideDiamond}
+						filteredGroups={filteredGroups}
 					/>
 				</div>
 			</div>

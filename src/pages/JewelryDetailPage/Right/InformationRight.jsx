@@ -1,15 +1,16 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {MinusOutlined, PlusOutlined} from '@ant-design/icons';
 import {faRefresh, faTruck} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {Button, message, Rate, Select} from 'antd';
-import {useNavigate} from 'react-router-dom';
-import {convertToVietnamDate, formatPrice} from '../../../utils';
-import {addToCart} from '../../../redux/slices/cartSlice';
+import {message, Select} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
-import {UserInfoSelector} from '../../../redux/selectors';
+import {useNavigate} from 'react-router-dom';
 import {getUserId} from '../../../components/GetUserId';
+import {UserInfoSelector} from '../../../redux/selectors';
+import {convertToVietnamDate, formatPrice, Rating} from '../../../utils';
+
+const {Option} = Select;
 
 export const InformationRight = ({
 	selectedMetal,
@@ -19,6 +20,11 @@ export const InformationRight = ({
 	setSize,
 	setIsLoginModalVisible,
 	user,
+	sizePrice,
+	setSizePrice,
+	setSelectedSideDiamond,
+	selectedSideDiamond,
+	filteredGroups,
 }) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
@@ -30,6 +36,13 @@ export const InformationRight = ({
 	const [showSecureShopping, setSecureShopping] = useState(false);
 	const [showProductWarranty, setProductWarranty] = useState(false);
 	const [jewelryType, setJewelryType] = useState(localStorage.getItem('jewelryType'));
+	const [sizeGroups, setSizeGroups] = useState();
+
+	useEffect(() => {
+		if (filteredGroups) {
+			setSizeGroups(filteredGroups[0]?.SizeGroups);
+		}
+	}, [filteredGroups]);
 
 	const toggleDetail = () => {
 		setDetail(!showDetail);
@@ -41,7 +54,6 @@ export const InformationRight = ({
 		setProductWarranty(!showProductWarranty);
 	};
 
-	// Function to handle metal selection
 	const handleSelectMetal = (metal) => {
 		setSelectedMetal(metal);
 		console.log(metal);
@@ -49,7 +61,19 @@ export const InformationRight = ({
 		localStorage.setItem('selectedMetal', JSON.stringify(metal));
 	};
 
+	const handleSelectSideDiamond = (diamond) => {
+		setSelectedSideDiamond(diamond);
+		console.log(diamond);
+
+		localStorage.setItem('selectedSideDiamond', JSON.stringify(diamond));
+	};
+
 	const handleChange = (value) => {
+		setSize(value);
+		console.log('value', value);
+	};
+
+	const handleJewelryChange = (value) => {
 		setSize(value);
 	};
 
@@ -90,26 +114,36 @@ export const InformationRight = ({
 		localStorage.setItem(`cart_${userId}`, JSON.stringify(existingCart));
 	};
 
-	console.log('diamondJewelry', diamondJewelry);
+	const findSize = diamondJewelry?.MetalGroups?.find(
+		(metal) => metal?.Name === filteredGroups[0]?.Name
+	);
 
+	const findSizePrice = findSize?.SizeGroups?.find(
+		(sizePrice) => sizePrice?.Size === Number(size)
+	);
+
+	console.log('diamondJewelry', diamondJewelry);
+	console.log('selectedMetal', selectedMetal);
+	console.log('selectedSideDiamond', selectedSideDiamond);
+	console.log('size', size);
+	console.log('findSize', findSize);
+	console.log('findSizePrice', findSizePrice);
+	console.log('MetalGroups', diamondJewelry?.MetalGroups);
+
+	console.log('filteredGroups', filteredGroups);
 	return (
 		<div>
 			<div className="border-tintWhite">
 				<h1 className="text-3xl">
-					{diamondJewelry?.Model?.Name} {selectedMetal?.Name || selectedMetal}
+					{diamondJewelry?.Name} {selectedMetal?.Name || selectedMetal}
 				</h1>
 				<div className="my-5 flex">
-					<Rate
-						allowHalf
-						defaultValue={5}
-						style={{fontSize: 20, color: '#F9A825'}}
-						disabled
-					/>
+					<Rating rating={0} />
 					<p className="ml-5">477 Đánh Giá</p>
 				</div>
-				<div className="font-semibold my-2">
+				{/* <div className="font-semibold my-2">
 					Ngày Giao Hàng Dự Kiến: {convertToVietnamDate(diamondJewelry?.ShippingDate)}
-				</div>
+				</div> */}
 				{/* <div className="flex mb-2">
 					<div className="font-semibold  text-green cursor-pointer">
 						Giao Hàng Miễn Phí Ngay
@@ -121,27 +155,64 @@ export const InformationRight = ({
 				</div> */}
 			</div>
 			<div>
-				{/* <div className="my-5 flex items-center">
+				<div className="my-5 flex items-center">
 					<div className="font-semibold">Loại Kim Loại</div>
 					<div className={`font-semibold text-xl pl-4 text-primary`}>
-						{selectedMetal?.Name}
+						{selectedMetal?.Name} - {formatPrice(selectedMetal?.Price)}
 					</div>
 				</div>
 				<div>
 					<div className="flex">
-						<div
-							className={`${
-								selectedMetal?.Name === diamondJewelry?.Metal?.Name
-									? 'border border-black'
-									: 'border border-white'
-							} m-2 py-2 px-4 rounded-lg cursor-pointer hover:bg-offWhite`}
-							onClick={() => handleSelectMetal(diamondJewelry?.Metal)} // Save selected metal on click
-						>
-							<div className={`rounded-full  p-1`}>{diamondJewelry?.Metal?.Name}</div>
-						</div>
+						{diamondJewelry?.Metals?.map((metal, i) => (
+							<div
+								key={i}
+								className={`${
+									selectedMetal?.Name === metal?.Name
+										? 'border-2 border-black'
+										: 'border-2 border-white'
+								} my-2 py-2 px-4 rounded-lg cursor-pointer hover:bg-offWhite`}
+								onClick={() => handleSelectMetal(metal)} // Save selected metal on click
+							>
+								<div className={`rounded-full p-1`}>{metal?.Name}</div>
+							</div>
+						))}
 					</div>
 				</div>
-				<div className="my-5 flex items-center">
+				{selectedSideDiamond !== undefined && (
+					<>
+						<div className="my-5 flex items-center">
+							<div className="font-semibold">Kim Cương Tấm</div>
+							<div className={`font-semibold text-xl pl-4 text-primary`}>
+								Số Lượng: {selectedSideDiamond?.Quantity} - Carat:{' '}
+								{selectedSideDiamond?.CaratWeight}
+							</div>
+						</div>
+						<div>
+							<div className="flex">
+								{diamondJewelry?.SideDiamonds?.map((diamond, i) => (
+									<div
+										key={i}
+										className={`
+								${
+									selectedSideDiamond.CaratWeight === diamond?.CaratWeight
+										? 'border-2 border-black'
+										: 'border-2 border-white'
+								}
+						my-2 py-2 px-4 rounded-lg cursor-pointer hover:bg-offWhite`}
+										onClick={() => handleSelectSideDiamond(diamond)} // Save selected diamond on click
+									>
+										<div className={`rounded-full p-1 flex items-center`}>
+											{/* <p className="mr-2">{diamond?.Quantity}</p> -{' '} */}
+											<p className="">{diamond?.CaratWeight}ct</p>
+										</div>
+									</div>
+								))}
+							</div>
+						</div>
+					</>
+				)}
+
+				{/* <div className="my-5 flex items-center">
 					<div className="font-semibold">Độ dài</div>
 					<div className={`font-semibold text-xl pl-4 text-primary`}>
 						{diamondJewelry?.Width}mm
@@ -166,16 +237,34 @@ export const InformationRight = ({
 				</div> */}
 			</div>
 			<div className="border-y border-tintWhite my-5">
-				{/* {diamondJewelry && diamondJewelry.Model.Category.Name === 'Ring' && (
-					<div className="my-5 flex items-center">
+				{diamondJewelry && diamondJewelry.Category === 'Ring' && (
+					<div className="mt-5 flex items-center">
 						<div className="font-semibold">Chọn kích thước nhẫn:</div>
 						<div className={`font-semibold text-xl pl-4 text-primary`}>
+							<Select value={size} style={{width: 120}} onChange={handleChange}>
+								{filteredGroups[0]?.SizeGroups.map((size, i) => (
+									<Option key={size?.Size}>
+										<p className="font-semibold mr-2">{size?.Size}</p>
+									</Option>
+								))}
+							</Select>
+						</div>
+					</div>
+				)}
+				<div>
+					<p className="text-red">* Vui lòng chọn cỡ nhẫn!</p>
+				</div>
+				{selectedMetal !== undefined && size !== undefined && (
+					<div className="my-5 flex items-center">
+						<div className="font-semibold">Trang Sức Có Sẵn:</div>
+						<div className={`font-semibold text-xl pl-4 text-primary`}>
 							<Select
-								defaultValue=""
-								style={{width: 120}}
-								onChange={handleChange}
+								// value={size?.Size}
+								style={{width: 420, height: 40}}
+								className=""
+								onChange={handleJewelryChange}
 								options={[
-									{value: '', label: 'Chọn size'},
+									{value: '', label: 'Chọn Trang Sức'},
 									{value: '1', label: '1'},
 									{value: '2', label: '2'},
 									{value: '3', label: '3'},
@@ -184,23 +273,23 @@ export const InformationRight = ({
 							/>
 						</div>
 					</div>
-				)} */}
+				)}
+
 				<div className="flex items-center">
-					{/* <p className="line-through text-gray decoration-gray text-2xl">
-						{metalType.price}
-					</p> */}
+					<p className="text-2xl mr-2 font-semibold">Giá Sàn:</p>
 					<p className="font-semibold text-2xl my-2">
-						{formatPrice(diamondJewelry?.TotalPrice)}
+						{formatPrice(findSizePrice?.Price || 0)}
 					</p>
-					<div className="text-sm pl-2">(Giá Gốc)</div>
+					{/* <div className="text-sm pl-2">(Giá Sàn)</div> */}
 				</div>
-				<div>
+				{/* <div>
 					<div className="text-xl pt-2 font-semibold">
 						*Mã giảm giá được áp dụng tự động
 					</div>
-				</div>
+				</div> */}
 			</div>
-			<div className="flex justify-between items-center mt-5">
+
+			{/* <div className="flex justify-between items-center mt-5">
 				<Button
 					type="text"
 					className="border py-7 px-14 font-bold text-lg bg-primary rounded hover:bg-second w-full uppercase"
@@ -208,7 +297,7 @@ export const InformationRight = ({
 				>
 					Thêm Vào Giỏ Hàng
 				</Button>
-			</div>
+			</div> */}
 			<div className="my-10">
 				<h2 className="font-bold text-xl pb-3">Đơn Hàng Của Bạn Bao Gồm:</h2>
 				<div className="flex bg-offWhite p-5">
