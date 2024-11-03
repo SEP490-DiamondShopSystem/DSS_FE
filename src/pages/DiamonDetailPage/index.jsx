@@ -172,7 +172,7 @@ const DiamondDetailPage = () => {
 	return (
 		<>
 			<div className="mx-6 md:mx-32">
-				{diamondChoice.length === 0 ? (
+				{/* {diamondChoice.length === 0 ? (
 					<Steps
 						current={1}
 						percent={100}
@@ -187,7 +187,7 @@ const DiamondDetailPage = () => {
 						items={itemsDiamond}
 						className="bg-white p-4 rounded-full mt-10"
 					/>
-				)}
+				)} */}
 
 				{diamondChoice.length > 0 && (
 					<Sidebar

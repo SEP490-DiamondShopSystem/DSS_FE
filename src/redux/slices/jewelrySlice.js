@@ -22,10 +22,12 @@ export const getAllJewelryModel = createAsyncThunk(
 		console.log('params', params);
 
 		try {
-			const {minPrice, maxPrice} = params;
+			const {Category, metalId, minPrice, maxPrice} = params;
 			let url = '/JewelryModel/Selling';
 			const queryParams = new URLSearchParams();
 
+			if (Category) queryParams.append('Category', Category);
+			if (metalId) queryParams.append('MetalId', metalId);
 			if (minPrice) queryParams.append('MinPrice', minPrice);
 			if (maxPrice) queryParams.append('MaxPrice', maxPrice);
 
@@ -60,6 +62,21 @@ export const getAllJewelryMetal = createAsyncThunk(
 	}
 );
 
+export const getAllJewelryModelCategory = createAsyncThunk(
+	'jewelrySlice/getAllJewelryModelCategory',
+	async (_, {rejectWithValue}) => {
+		try {
+			const response = await api.get(`/JewelryModelCategory/All`);
+			console.log(response);
+
+			return response;
+		} catch (error) {
+			console.log('Error: ', JSON.stringify(error.response.data));
+			return rejectWithValue(error.response.data);
+		}
+	}
+);
+
 export const getJewelryDetail = createAsyncThunk(
 	'jewelrySlice/getAllJewelryDetail',
 	async ({id}, {rejectWithValue}) => {
@@ -82,7 +99,8 @@ export const jewelrySlice = createSlice({
 		jewelries: null,
 		jewelriesModel: null,
 		jewelryDetail: null,
-		metal: null,
+		metals: null,
+		categories: null,
 		cartItems: [],
 		loading: false,
 		error: null,
@@ -128,9 +146,20 @@ export const jewelrySlice = createSlice({
 			})
 			.addCase(getAllJewelryMetal.fulfilled, (state, action) => {
 				state.loading = false;
-				state.metal = action.payload;
+				state.metals = action.payload;
 			})
 			.addCase(getAllJewelryMetal.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload;
+			})
+			.addCase(getAllJewelryModelCategory.pending, (state) => {
+				state.loading = true;
+			})
+			.addCase(getAllJewelryModelCategory.fulfilled, (state, action) => {
+				state.loading = false;
+				state.categories = action.payload;
+			})
+			.addCase(getAllJewelryModelCategory.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload;
 			});

@@ -12,8 +12,13 @@ import {
 	Shape,
 	typeChoice,
 } from '../../utils/constant';
-import {GetDiamondShapeSelector} from '../../redux/selectors';
+import {
+	GetAllJewelryMetalSelector,
+	GetAllJewelryModelCategoriesSelector,
+	GetDiamondShapeSelector,
+} from '../../redux/selectors';
 import {getDiamondShape} from '../../redux/slices/diamondSlice';
+import {getAllJewelryMetal, getAllJewelryModelCategory} from '../../redux/slices/jewelrySlice';
 
 export const FilterDiamond = ({filters, setFilters, handleReset}) => {
 	const dispatch = useDispatch();
@@ -283,7 +288,35 @@ export const FilterJewelry = ({handleFilter, setFilters, filters, handleReset}) 
 	);
 };
 export const FilterDiamondJewelry = ({handleFilter, setFilters, filters, handleReset}) => {
-	const filterTypes = ['Loại trang sức', 'kim loại'];
+	const dispatch = useDispatch();
+	const metalList = useSelector(GetAllJewelryMetalSelector);
+	const categoryList = useSelector(GetAllJewelryModelCategoriesSelector);
+
+	const [metals, setMetals] = useState();
+	const [categories, setCategories] = useState();
+
+	useEffect(() => {
+		dispatch(getAllJewelryMetal());
+	}, []);
+	useEffect(() => {
+		dispatch(getAllJewelryModelCategory());
+	}, []);
+
+	useEffect(() => {
+		if (metalList) {
+			setMetals(metalList);
+		}
+	}, [metalList]);
+	useEffect(() => {
+		if (categoryList) {
+			setCategories(categoryList);
+		}
+	}, [categoryList]);
+
+	console.log('metalList', metals);
+	console.log('categoryList', categories);
+
+	const filterTypes = ['Loại trang sức', 'Kim loại'];
 
 	const handleFilterChange = (filterType, selectedValues) => {
 		setFilters((prevFilters) => ({
@@ -300,32 +333,42 @@ export const FilterDiamondJewelry = ({handleFilter, setFilters, filters, handleR
 	};
 
 	const filterOptions = {
-		gender: genderChoice,
-		metal: metalChoice,
+		type: categories?.map((category) => ({id: category.Name, name: category.Name})),
+		metal: metals?.map((metal) => ({id: metal.Id, name: metal.Name})),
 	};
+
+	const filterTypeMapping = {
+		'Kim loại': 'metal',
+		'Loại trang sức': 'type',
+	};
+
+	console.log('filterOptions', filterOptions[1]);
 
 	// Render the filter UI
 	return (
 		<div wrap className="p-4 flex items-center">
-			{filterTypes.map((filterType) => (
-				<Select
-					key={filterType} // Use the filter type as key
-					placeholder={filterType.replace('_', ' ').toUpperCase()} // Display filter type in uppercase
-					allowClear
-					maxTagCount={0}
-					suffixIcon={<DownOutlined />} // Dropdown arrow icon
-					className="h-12 mx-5"
-					style={{width: '10%'}}
-					onChange={(value) => handleFilterChange(filterType, value)} // Handle filter change
-					value={filters[filterType]} // Current selected value for the filter
-				>
-					{filterOptions[filterType]?.map((item, i) => (
-						<Select.Option key={i} value={item}>
-							{item}
-						</Select.Option>
-					))}
-				</Select>
-			))}
+			{filterTypes.map((filterType) => {
+				const optionKey = filterTypeMapping[filterType]; // Map to the correct key in filterOptions
+				return (
+					<Select
+						key={filterType} // Use the filter type as key
+						placeholder={filterType.replace('_', ' ').toUpperCase()} // Display filter type in uppercase
+						allowClear
+						maxTagCount={0}
+						suffixIcon={<DownOutlined />} // Dropdown arrow icon
+						className="h-12 mx-5"
+						style={{width: '10%'}}
+						onChange={(value) => handleFilterChange(optionKey, value)} // Handle filter change
+						value={filters[optionKey]} // Current selected value for the filter
+					>
+						{filterOptions[optionKey]?.map((item) => (
+							<Select.Option key={item.id} value={item.id}>
+								{item.name}
+							</Select.Option>
+						))}
+					</Select>
+				);
+			})}
 
 			{/* Price Range Slider */}
 			<div className="ml-10 min-w-44">
