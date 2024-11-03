@@ -1,21 +1,6 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {api} from '../../services/api';
 
-export const getAllJewelry = createAsyncThunk(
-	'jewelrySlice/getAllJewelry',
-	async (_, {rejectWithValue}) => {
-		try {
-			const response = await api.get(`/Jewelry/Selling`);
-			console.log(response);
-
-			return response;
-		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.response.data));
-			return rejectWithValue(error.response.data);
-		}
-	}
-);
-
 export const getAllJewelryModel = createAsyncThunk(
 	'jewelrySlice/getAllJewelryModel',
 	async (params, {rejectWithValue}) => {
@@ -30,6 +15,39 @@ export const getAllJewelryModel = createAsyncThunk(
 			if (metalId) queryParams.append('MetalId', metalId);
 			if (minPrice) queryParams.append('MinPrice', minPrice);
 			if (maxPrice) queryParams.append('MaxPrice', maxPrice);
+
+			if (queryParams.toString()) {
+				url += `?${queryParams.toString()}`;
+			}
+
+			const response = await api.get(url);
+			// const response = await api.get(`/all_jewelry`);
+			console.log(response);
+
+			return response;
+		} catch (error) {
+			console.log('Error: ', JSON.stringify(error.response.data));
+			return rejectWithValue(error.response.data);
+		}
+	}
+);
+
+export const getAllJewelry = createAsyncThunk(
+	'jewelrySlice/getAllJewelry',
+	async (params, {rejectWithValue}) => {
+		console.log('params', params);
+
+		try {
+			const {ModelId, MetalId, SizeId, SideDiamondOptId} = params;
+			let url = '/Jewelry/Selling';
+			const queryParams = new URLSearchParams();
+
+			if (ModelId) queryParams.append('ModelId', ModelId);
+			if (MetalId) queryParams.append('MetalId', MetalId);
+			if (SizeId) queryParams.append('SizeId', SizeId);
+			if (SideDiamondOptId) queryParams.append('SideDiamondOptId', SideDiamondOptId);
+			// if (minPrice) queryParams.append('MinPrice', minPrice);
+			// if (maxPrice) queryParams.append('MaxPrice', maxPrice);
 
 			if (queryParams.toString()) {
 				url += `?${queryParams.toString()}`;

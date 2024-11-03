@@ -3,12 +3,13 @@ import React, {useEffect, useState} from 'react';
 import {MinusOutlined, PlusOutlined} from '@ant-design/icons';
 import {faRefresh, faTruck} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {message, Select} from 'antd';
+import {Button, message, Select} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import {getUserId} from '../../../components/GetUserId';
 import {UserInfoSelector} from '../../../redux/selectors';
 import {convertToVietnamDate, formatPrice, Rating} from '../../../utils';
+import JewelryPopup from '../Popup/JewelryPopup';
 
 const {Option} = Select;
 
@@ -25,6 +26,7 @@ export const InformationRight = ({
 	setSelectedSideDiamond,
 	selectedSideDiamond,
 	filteredGroups,
+	id,
 }) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
@@ -37,6 +39,7 @@ export const InformationRight = ({
 	const [showProductWarranty, setProductWarranty] = useState(false);
 	const [jewelryType, setJewelryType] = useState(localStorage.getItem('jewelryType'));
 	const [sizeGroups, setSizeGroups] = useState();
+	const [isModalVisible, setIsModalVisible] = useState(false);
 
 	useEffect(() => {
 		if (filteredGroups) {
@@ -77,42 +80,15 @@ export const InformationRight = ({
 		setSize(value);
 	};
 
+	const showModal = () => {
+		setIsModalVisible(true);
+	};
+
 	console.log(diamondJewelry);
 
-	const handleAddCart = () => {
-		if (!userId) {
-			message.warning('Bạn cần phải đăng nhập để thêm vào giỏ hàng!');
-			setIsLoginModalVisible(true);
-			return;
-		}
+	// const handleAddCart = () => {
 
-		const data = {
-			...diamondJewelry,
-			JewelryId: diamondJewelry.Id,
-			JewelryName: diamondJewelry.Name,
-			JewelryPrice: diamondJewelry.Price,
-			JewelryThumbnail: diamondJewelry.Thumbnail,
-		};
-
-		// Lấy cart hiện tại từ localStorage
-		const existingCart = JSON.parse(localStorage.getItem(`cart_${userId}`)) || [];
-
-		const existingIndex = existingCart.findIndex(
-			(item) => item.JewelryId === diamondJewelry.Id
-		);
-
-		if (existingIndex !== -1) {
-			// Nếu sản phẩm đã tồn tại, hiện thông báo
-			message.info('Sản phẩm này đã có trong giỏ hàng!');
-		} else {
-			// Nếu không tồn tại, thêm sản phẩm mới vào giỏ hàng thiết kế
-			existingCart.push(data);
-			message.success('Sản phẩm đã được thêm vào giỏ hàng!');
-		}
-
-		// Lưu cart cập nhật lại vào localStorage
-		localStorage.setItem(`cart_${userId}`, JSON.stringify(existingCart));
-	};
+	// };
 
 	const findSize = diamondJewelry?.MetalGroups?.find(
 		(metal) => metal?.Name === filteredGroups[0]?.Name
@@ -129,6 +105,8 @@ export const InformationRight = ({
 	console.log('findSize', findSize);
 	console.log('findSizePrice', findSizePrice);
 	console.log('MetalGroups', diamondJewelry?.MetalGroups);
+
+	console.log('id', id);
 
 	console.log('filteredGroups', filteredGroups);
 	return (
@@ -249,11 +227,12 @@ export const InformationRight = ({
 								))}
 							</Select>
 						</div>
+						<div>
+							<p className="text-red ml-5">* Vui lòng chọn cỡ nhẫn!</p>
+						</div>
 					</div>
 				)}
-				<div>
-					<p className="text-red">* Vui lòng chọn cỡ nhẫn!</p>
-				</div>
+
 				{selectedMetal !== undefined && size !== undefined && (
 					<div className="my-5 flex items-center">
 						<div className="font-semibold">Trang Sức Có Sẵn:</div>
@@ -289,15 +268,21 @@ export const InformationRight = ({
 				</div> */}
 			</div>
 
-			{/* <div className="flex justify-between items-center mt-5">
-				<Button
-					type="text"
-					className="border py-7 px-14 font-bold text-lg bg-primary rounded hover:bg-second w-full uppercase"
-					onClick={handleAddCart}
-				>
-					Thêm Vào Giỏ Hàng
-				</Button>
-			</div> */}
+			{size !== null &&
+				selectedMetal !== null &&
+				selectedSideDiamond !== null &&
+				diamondJewelry?.Category === 'Ring' && (
+					<div className="flex justify-between items-center mt-5">
+						<Button
+							type="text"
+							className="border py-7 px-14 font-bold text-lg bg-primary rounded hover:bg-second w-full uppercase"
+							onClick={() => showModal(diamondJewelry.Id)}
+						>
+							Các Sản Phẩm Có Sẵn
+						</Button>
+					</div>
+				)}
+
 			<div className="my-10">
 				<h2 className="font-bold text-xl pb-3">Đơn Hàng Của Bạn Bao Gồm:</h2>
 				<div className="flex bg-offWhite p-5">
@@ -391,6 +376,17 @@ export const InformationRight = ({
 					</div>
 				</div>
 			</div>
+			<JewelryPopup
+				showModal={showModal}
+				isModalVisible={isModalVisible}
+				setIsModalVisible={setIsModalVisible}
+				userId={userId}
+				size={size}
+				selectedMetal={selectedMetal}
+				selectedSideDiamond={selectedSideDiamond}
+				setIsLoginModalVisible={setIsLoginModalVisible}
+				id={id}
+			/>
 		</div>
 	);
 };
