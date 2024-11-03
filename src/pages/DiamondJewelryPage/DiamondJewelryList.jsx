@@ -5,14 +5,10 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import jewelryImg from '../../assets/ring_classic.png';
 import {FilterDiamondJewelry} from '../../components/Filter/Filter';
-import {
-	GetAllJewelryModelSelector,
-	GetAllJewelrySelector,
-	LoadingJewelrySelector,
-} from '../../redux/selectors';
-import {getAllJewelry, getAllJewelryModel} from '../../redux/slices/jewelrySlice';
-import {formatPrice, Rating, StarRating} from '../../utils';
 import Loading from '../../components/Loading';
+import {GetAllJewelryModelSelector, LoadingJewelrySelector} from '../../redux/selectors';
+import {getAllJewelryModel} from '../../redux/slices/jewelrySlice';
+import {formatPrice, Rating} from '../../utils';
 
 export const DiamondJewelryList = () => {
 	const navigate = useNavigate();
@@ -23,9 +19,9 @@ export const DiamondJewelryList = () => {
 	const [jewelries, setJewelries] = useState();
 	const [page, setPage] = useState(0);
 	const [filters, setFilters] = useState({
-		gender: [],
-		type: [],
-		metal: [],
+		// gender: [],
+		type: '',
+		metal: '',
 		price: {minPrice: 0, maxPrice: 40000000},
 	});
 
@@ -41,9 +37,14 @@ export const DiamondJewelryList = () => {
 
 	useEffect(() => {
 		dispatch(
-			getAllJewelryModel({minPrice: filters.price.minPrice, maxPrice: filters.price.maxPrice})
+			getAllJewelryModel({
+				Category: filters.type,
+				metalId: filters.metal,
+				minPrice: filters.price.minPrice,
+				maxPrice: filters.price.maxPrice,
+			})
 		);
-	}, [dispatch, filters.price.minPrice, filters.price.maxPrice]);
+	}, [dispatch, filters.type, filters.metal, filters.price.minPrice, filters.price.maxPrice]);
 
 	useEffect(() => {
 		if (jewelryList) setJewelries(jewelryList.Values);
@@ -51,7 +52,7 @@ export const DiamondJewelryList = () => {
 
 	const handleReset = () => {
 		localStorage.removeItem('jewelry');
-		setFilters({gender: [], type: [], metal: [], price: {minPrice: 0, maxPrice: 40000000}});
+		setFilters({gender: [], type: [], metal: '', price: {minPrice: 0, maxPrice: 40000000}});
 	};
 
 	const filteredJewelryPreset = Array.isArray(jewelries)

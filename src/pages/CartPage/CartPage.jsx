@@ -70,6 +70,7 @@ const mapAttributes = (data, attributes) => {
 		Symmetry: getEnumKey(attributes.Symmetry, data?.Diamond?.Symmetry),
 		Polish: getEnumKey(attributes.Polish, data?.Diamond?.Polish),
 
+		DiamondId: data?.Diamond?.Id,
 		Depth: data?.Diamond?.Depth,
 		Table: data?.Diamond?.Table,
 		Measurement: data?.Diamond?.Measurement,
@@ -217,6 +218,7 @@ const CartPage = () => {
 	// }
 
 	console.log('cartList', cartList);
+	console.log('mappedProducts', mappedProducts);
 
 	return (
 		<div className="flex justify-between p-8 bg-gray-50 min-h-screen mx-32 my-20">
@@ -283,9 +285,9 @@ const CartPage = () => {
 									<Button
 										className="cursor-pointer w-auto hover:text-black text-primary text-xl px-3 mr-2"
 										onClick={() => {
-											if (item.JewelryId !== null) {
+											if (item.JewelryId) {
 												handleViewCart(item.JewelryId, null);
-											} else if (item.DiamondId) {
+											} else if (item.DiamondId !== undefined) {
 												handleViewCart(null, item.DiamondId);
 											}
 										}}
