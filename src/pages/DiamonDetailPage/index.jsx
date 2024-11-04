@@ -26,30 +26,6 @@ const DiamondDetailPage = () => {
 	const [detail, setDetail] = useState({});
 	const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
 
-	const items = [
-		{
-			title: `Chọn ${jewelryType}`,
-		},
-		{
-			title: 'Chọn Kim Cương',
-		},
-		{
-			title: 'Hoàn Thành',
-		},
-	];
-
-	const itemsDiamond = [
-		{
-			title: `Chọn Kim Cương`,
-		},
-		{
-			title: `Chọn ${jewelryType}`,
-		},
-		{
-			title: 'Hoàn Thành',
-		},
-	];
-
 	useEffect(() => {
 		dispatch(getDiamondDetail(id));
 	}, [dispatch]);

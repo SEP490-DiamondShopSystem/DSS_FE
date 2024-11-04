@@ -27,6 +27,8 @@ const JewelryDetailPage = () => {
 	const [sizePrice, setSizePrice] = useState();
 	const [selectedSideDiamond, setSelectedSideDiamond] = useState();
 
+	console.log('idModel', id);
+
 	useEffect(() => {
 		dispatch(getJewelryDetail({id}));
 	}, []);
@@ -110,6 +112,7 @@ const JewelryDetailPage = () => {
 						setSelectedSideDiamond={setSelectedSideDiamond}
 						selectedSideDiamond={selectedSideDiamond}
 						filteredGroups={filteredGroups}
+						id={id}
 					/>
 				</div>
 			</div>
