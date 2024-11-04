@@ -5,48 +5,34 @@ import rose_gold from '../../../../../assets/rose-gold.png';
 import platinum from '../../../../../assets/platinum.png';
 import {Button, Image, Radio} from 'antd';
 import {notifyError} from '../../../../../utils/toast';
+import {formatPrice} from '../../../../../utils';
 
-export const Metal = ({setStep, customizeJewelry, setCustomizeJewelry}) => {
-	const metalItems = [
-		{
-			id: 1,
-			image: gold,
-			name: '14K Gold',
-			price: '$1,102/Gram',
-		},
-		{
-			id: 2,
-			image: rose_gold,
-			name: '14K Rose Gold',
-			price: '$1,102/Gram',
-		},
-		{id: 3, image: gold, name: '18K Gold', price: '$2,002 / Gram'},
-		{id: 4, image: platinum, name: 'Platinum', price: '$2,002 / Gram'},
-	];
-
-	const onChange = (e) => {
-		console.log('radio checked', e.target.value);
-		setCustomizeJewelry((prev) => ({
-			...prev,
-			metal: e.target.value,
-		}));
-	};
-
+export const Metal = ({
+	setStep,
+	customizeJewelry,
+	setCustomizeJewelry,
+	diamondJewelry,
+	selectedMetal,
+	setSelectedMetal,
+	handleSelectMetal,
+}) => {
 	const handleNextStep = () => {
-		if (customizeJewelry?.metal.length > 0) {
-			setStep(1);
-		} else {
-			notifyError('Vui lòng chọn vật liệu!');
-		}
+		setStep(1);
 	};
+
+	console.log('diamondJewelry', diamondJewelry);
+	console.log('selectedMetal', selectedMetal.length);
 
 	return (
 		<div>
 			<div>
-				{metalItems?.map((item) => (
-					<div key={item.id}>
-						<Radio.Group onChange={onChange} value={customizeJewelry.metal}>
-							<Radio value={item.name}>
+				{diamondJewelry?.Metals?.map((metal, i) => (
+					<div key={metal.Id}>
+						<Radio.Group
+							onChange={() => handleSelectMetal(metal)}
+							value={selectedMetal?.Name}
+						>
+							<Radio value={metal.Name}>
 								<div
 									className="flex items-center justify-between"
 									style={{width: 500}}
@@ -55,14 +41,14 @@ export const Metal = ({setStep, customizeJewelry, setCustomizeJewelry}) => {
 										<div className="mx-5 my-5">
 											<Image
 												preview={false}
-												src={item.image}
+												src={metal.image}
 												height={50}
 												width={50}
 											/>
 										</div>
-										<p className="">{item.name}</p>
+										<p className="">{metal.Name}</p>
 									</div>
-									<p className="font-semibold">{item.price}</p>
+									<p className="font-semibold">{formatPrice(metal.Price)}</p>
 								</div>
 							</Radio>
 						</Radio.Group>
@@ -73,7 +59,7 @@ export const Metal = ({setStep, customizeJewelry, setCustomizeJewelry}) => {
 				<Button
 					type="text"
 					className="bg-primary w-48 uppercase font-semibold"
-					disabled={customizeJewelry.metal.length === 0}
+					disabled={selectedMetal.length === 0}
 					onClick={handleNextStep}
 				>
 					Tiếp tục

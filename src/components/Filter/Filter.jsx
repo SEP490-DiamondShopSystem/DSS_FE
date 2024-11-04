@@ -4,21 +4,20 @@ import {DownOutlined, ReloadOutlined} from '@ant-design/icons';
 import {Button, Select, Slider} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
 import {
-	genderChoice,
-	marks,
-	marksClarity,
-	marksCut,
-	metalChoice,
-	Shape,
-	typeChoice,
-} from '../../utils/constant';
-import {
 	GetAllJewelryMetalSelector,
 	GetAllJewelryModelCategoriesSelector,
 	GetDiamondShapeSelector,
 } from '../../redux/selectors';
 import {getDiamondShape} from '../../redux/slices/diamondSlice';
 import {getAllJewelryMetal, getAllJewelryModelCategory} from '../../redux/slices/jewelrySlice';
+import {
+	genderChoice,
+	marks,
+	marksClarity,
+	marksCut,
+	metalChoice,
+	typeChoice,
+} from '../../utils/constant';
 
 export const FilterDiamond = ({filters, setFilters, handleReset}) => {
 	const dispatch = useDispatch();
@@ -41,6 +40,8 @@ export const FilterDiamond = ({filters, setFilters, handleReset}) => {
 			...prev,
 			[type]: value,
 		}));
+		console.log('value', value);
+
 		localStorage.setItem('selected', value);
 	};
 
@@ -73,7 +74,7 @@ export const FilterDiamond = ({filters, setFilters, handleReset}) => {
 					className="h-12 ml-10"
 					style={{width: '10%', lineHeight: 160}}
 					onChange={(value) => handleChange('shape', value)}
-					value={filters.shape || 'Hình dạng'}
+					value={filters.shape === undefined ? 'Hình dạng' : filters.shape}
 				>
 					{diamondShape?.map((shape, i) => (
 						<Select.Option key={i} value={shape?.ShapeName}>
@@ -102,13 +103,11 @@ export const FilterDiamond = ({filters, setFilters, handleReset}) => {
 						range
 						value={[filters.carat.minCarat, filters.carat.maxCarat]}
 						step={0.1}
-						min={0.5}
-						max={30.0}
+						min={0.1}
+						max={2}
 						onChange={handleCaratChange}
 					/>
 				</div>
-
-				{/* Color Slider */}
 			</div>
 			<div className="flex items-center mt-4">
 				<div className="ml-10 min-w-72">
@@ -116,8 +115,8 @@ export const FilterDiamond = ({filters, setFilters, handleReset}) => {
 					<Slider
 						range
 						marks={marks}
-						min={0}
-						max={7}
+						min={1}
+						max={8}
 						value={[filters.color.minColor, filters.color.maxColor]}
 						onChange={handleColorChange}
 					/>
@@ -127,8 +126,8 @@ export const FilterDiamond = ({filters, setFilters, handleReset}) => {
 					<Slider
 						range
 						marks={marksClarity}
-						min={0}
-						max={7}
+						min={1}
+						max={8}
 						value={[filters.clarity.minClarity, filters.clarity.maxClarity]}
 						onChange={handleClarityChange}
 					/>
@@ -138,7 +137,7 @@ export const FilterDiamond = ({filters, setFilters, handleReset}) => {
 					<Slider
 						range
 						marks={marksCut}
-						min={0}
+						min={1}
 						max={3}
 						value={[filters.cut.minCut, filters.cut.maxCut]}
 						onChange={handleCutChange}
@@ -156,7 +155,7 @@ export const FilterDiamond = ({filters, setFilters, handleReset}) => {
 
 // Component for filtering jewelry items
 export const FilterAllJewelry = ({handleFilter, setFilters, filters, handleReset}) => {
-	const filterTypes = ['gender', 'type', 'metal'];
+	const filterTypes = ['type', 'metal'];
 
 	const handleFilterChange = (filterType, selectedValues) => {
 		setFilters((prevFilters) => ({

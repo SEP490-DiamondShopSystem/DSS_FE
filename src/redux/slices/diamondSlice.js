@@ -3,9 +3,39 @@ import {api} from '../../services/api';
 
 export const getAllDiamond = createAsyncThunk(
 	'diamondSlice/getAllDiamond',
-	async (_, {rejectWithValue}) => {
+	async (params, {rejectWithValue}) => {
 		try {
-			const response = await api.get(`/Diamond/All`);
+			const {
+				pageSize,
+				start,
+				cutFrom,
+				cutTo,
+				colorFrom,
+				colorTo,
+				clarityFrom,
+				clarityTo,
+				caratFrom,
+				caratTo,
+			} = params;
+			let url = '/Diamond/Page';
+			const queryParams = new URLSearchParams();
+
+			if (pageSize) queryParams.append('pageSize', pageSize);
+			if (start) queryParams.append('start', start);
+			if (cutFrom) queryParams.append('diamond_4C.cutFrom', cutFrom);
+			if (cutTo) queryParams.append('diamond_4C.cutTo', cutTo);
+			if (colorFrom) queryParams.append('diamond_4C.colorFrom', colorFrom);
+			if (colorTo) queryParams.append('diamond_4C.colorTo', colorTo);
+			if (clarityFrom) queryParams.append('diamond_4C.clarityFrom', clarityFrom);
+			if (clarityTo) queryParams.append('diamond_4C.clarityTo', clarityTo);
+			if (caratFrom) queryParams.append('diamond_4C.caratFrom', caratFrom);
+			if (caratTo) queryParams.append('diamond_4C.caratTo', caratTo);
+
+			if (queryParams.toString()) {
+				url += `?${queryParams.toString()}`;
+			}
+
+			const response = await api.get(url);
 			return response;
 		} catch (error) {
 			console.log('Error: ', JSON.stringify(error.response.data));

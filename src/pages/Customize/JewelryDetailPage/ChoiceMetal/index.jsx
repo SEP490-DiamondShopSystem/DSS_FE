@@ -11,6 +11,10 @@ export const ChoiceMetal = ({
 	setCustomizeJewelry,
 	customizeJewelry,
 	setStepChoose,
+	diamondJewelry,
+	selectedMetal,
+	setSelectedMetal,
+	handleSelectMetal,
 }) => {
 	const [steps, setStep] = useState(0);
 
@@ -18,13 +22,14 @@ export const ChoiceMetal = ({
 		{
 			title: 'Chọn vật liệu',
 		},
-		{
-			title: 'Chọn khuôn',
-		},
+
 		{
 			title: 'Chữ khắc',
 		},
 	];
+
+	console.log('steps', steps);
+
 	return (
 		<div className="my-10 mx-5">
 			<div className="mx-10">
@@ -36,10 +41,14 @@ export const ChoiceMetal = ({
 						setStep={setStep}
 						customizeJewelry={customizeJewelry}
 						setCustomizeJewelry={setCustomizeJewelry}
+						diamondJewelry={diamondJewelry}
+						selectedMetal={selectedMetal}
+						setSelectedMetal={setSelectedMetal}
+						handleSelectMetal={handleSelectMetal}
 					/>
 				</div>
 			)}
-			{steps === 1 && (
+			{/* {steps === 1 && (
 				<div className="mx-20">
 					<Shape
 						setStep={setStep}
@@ -47,8 +56,8 @@ export const ChoiceMetal = ({
 						setCustomizeJewelry={setCustomizeJewelry}
 					/>
 				</div>
-			)}
-			{steps === 2 && (
+			)} */}
+			{steps === 1 && (
 				<div className="mx-20">
 					<Engrave
 						setImageData={setImageData}
@@ -59,7 +68,7 @@ export const ChoiceMetal = ({
 					/>
 				</div>
 			)}
-			{steps === 3 && (
+			{steps === 2 && (
 				<div className="mx-20 my-auto">
 					<div className="my-10 shadow-lg p-10 rounded-lg">
 						<div className="text-center">

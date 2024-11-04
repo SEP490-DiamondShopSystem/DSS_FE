@@ -92,7 +92,7 @@ export const Header = () => {
 							href="/customize/diamond-jewelry"
 							className={`py-7 px-3 inline-block no-underline text-black`}
 						>
-							Đặt trang sức
+							Thiết Kế Trang Sức
 						</a>
 					</li>
 					<li>

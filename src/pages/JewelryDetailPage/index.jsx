@@ -5,7 +5,6 @@ import {useParams} from 'react-router-dom';
 import LoginModal from '../../components/LogModal/LoginModal';
 import {GetJewelryDetailSelector} from '../../redux/selectors';
 import {getJewelryDetail} from '../../redux/slices/jewelrySlice';
-import {data} from '../../utils/constant';
 import {ImageGallery} from './Left/ImageGallery';
 import {InformationLeft} from './Left/InformationLeft';
 import {InformationRight} from './Right/InformationRight';
@@ -19,7 +18,6 @@ const JewelryDetailPage = () => {
 	const user = JSON.parse(storedUser);
 
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-	const [diamondJewelry, setDiamondJewelry] = useState(data);
 	const [size, setSize] = useState(null);
 	const [jewelry, setJewelry] = useState();
 	const [selectedMetal, setSelectedMetal] = useState(null);
@@ -43,10 +41,6 @@ const JewelryDetailPage = () => {
 	}, [jewelryDetail]);
 
 	const hideLoginModal = () => setIsLoginModalVisible(false);
-
-	const toggleSidebar = () => {
-		setIsSidebarOpen(!isSidebarOpen);
-	};
 
 	const filterMetalGroups = (metalGroups, selectedMetal, selectedSideDiamond) => {
 		// Check if metalGroups is defined and is an array
@@ -106,9 +100,6 @@ const JewelryDetailPage = () => {
 						setSize={setSize}
 						size={size}
 						setIsLoginModalVisible={setIsLoginModalVisible}
-						user={user}
-						setSizePrice={setSizePrice}
-						sizePrice={sizePrice}
 						setSelectedSideDiamond={setSelectedSideDiamond}
 						selectedSideDiamond={selectedSideDiamond}
 						filteredGroups={filteredGroups}

@@ -20,9 +20,6 @@ export const InformationRight = ({
 	size,
 	setSize,
 	setIsLoginModalVisible,
-	user,
-	sizePrice,
-	setSizePrice,
 	setSelectedSideDiamond,
 	selectedSideDiamond,
 	filteredGroups,
@@ -98,17 +95,6 @@ export const InformationRight = ({
 		(sizePrice) => sizePrice?.Size === Number(size)
 	);
 
-	console.log('diamondJewelry', diamondJewelry);
-	console.log('selectedMetal', selectedMetal);
-	console.log('selectedSideDiamond', selectedSideDiamond);
-	console.log('size', size);
-	console.log('findSize', findSize);
-	console.log('findSizePrice', findSizePrice);
-	console.log('MetalGroups', diamondJewelry?.MetalGroups);
-
-	console.log('id', id);
-
-	console.log('filteredGroups', filteredGroups);
 	return (
 		<div>
 			<div className="border-tintWhite">
@@ -217,7 +203,7 @@ export const InformationRight = ({
 			<div className="border-y border-tintWhite my-5">
 				{diamondJewelry && diamondJewelry.Category === 'Ring' && (
 					<div className="mt-5 flex items-center">
-						<div className="font-semibold">Chọn kích thước nhẫn:</div>
+						<div className="font-semibold">Chọn kích thước:</div>
 						<div className={`font-semibold text-xl pl-4 text-primary`}>
 							<Select value={size} style={{width: 120}} onChange={handleChange}>
 								{filteredGroups[0]?.SizeGroups.map((size, i) => (
@@ -228,12 +214,12 @@ export const InformationRight = ({
 							</Select>
 						</div>
 						<div>
-							<p className="text-red ml-5">* Vui lòng chọn cỡ nhẫn!</p>
+							<p className="text-red ml-5">* Vui lòng chọn kích thước!</p>
 						</div>
 					</div>
 				)}
 
-				{selectedMetal !== undefined && size !== undefined && (
+				{/* {selectedMetal !== undefined && size !== undefined && (
 					<div className="my-5 flex items-center">
 						<div className="font-semibold">Trang Sức Có Sẵn:</div>
 						<div className={`font-semibold text-xl pl-4 text-primary`}>
@@ -252,7 +238,7 @@ export const InformationRight = ({
 							/>
 						</div>
 					</div>
-				)}
+				)} */}
 
 				<div className="flex items-center">
 					<p className="text-2xl mr-2 font-semibold">Giá Sàn:</p>

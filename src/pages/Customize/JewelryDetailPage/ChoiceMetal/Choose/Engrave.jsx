@@ -148,31 +148,24 @@ export const Engrave = ({
 		<div className="mt-10">
 			<div>
 				<h1 className="text-2xl font-semibold text-center my-2">Thiết kế chữ khắc</h1>
-				<div className="flex items-center">
-					<label>Text:</label>
+				<div className="flex items-center justify-between">
+					<label>Nội Dung:</label>
 					<Input
 						type="text"
+						style={{width: 500}}
 						value={customizeJewelry.textValue}
 						onChange={handleTextChange}
 						className="ml-5"
 					/>
 				</div>
-				<div className="flex items-center my-5">
-					<label>Font Size:</label>
-					<Input
-						type="number"
-						value={fontSize}
-						onChange={(e) => setFontSize(parseInt(e.target.value))}
-						className="ml-5 w-16"
-					/>
-				</div>
-				<div className="mb-10">
-					<label>Font Family:</label>
+
+				<div className="mb-10 flex items-center justify-between">
+					<label>Kiểu Chữ:</label>
 					<Select
 						value={fontFamily}
 						onChange={handleFontChange}
-						style={{width: 200}}
-						className="ml-5"
+						style={{width: 500}}
+						className="ml-5 my-5"
 					>
 						<Option value="Arial">Arial</Option>
 						<Option value="Courier">Courier</Option>
@@ -182,10 +175,6 @@ export const Engrave = ({
 						<Option value="Impact">Impact</Option>
 						<Option value="Lora">Lora</Option>
 					</Select>
-				</div>
-				<div className="flex items-center my-5">
-					<label>Font Color:</label>
-					<SketchPicker color={textColor} onChange={handleColorChange} className="ml-5" />
 				</div>
 
 				{/* <div className="flex items-center mb-5">
@@ -203,7 +192,7 @@ export const Engrave = ({
 				<Button
 					type="text"
 					className="bg-primary w-32 uppercase font-semibold"
-					onClick={() => setStep(1)}
+					onClick={() => setStep(0)}
 				>
 					Quay lại
 				</Button>
@@ -225,7 +214,7 @@ export const Engrave = ({
 				<Button
 					type="text"
 					className="bg-primary w-32 uppercase font-semibold"
-					onClick={() => setStep(3)}
+					onClick={() => setStep(2)}
 				>
 					Tiếp Tục
 				</Button>
