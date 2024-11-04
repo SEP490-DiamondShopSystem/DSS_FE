@@ -3,32 +3,8 @@ import {Modal, Button, Card, Row, Col, Divider, message, Slider, Image} from 'an
 import {useDispatch, useSelector} from 'react-redux';
 import {getAllJewelry} from '../../../redux/slices/jewelrySlice';
 import {GetAllJewelrySelector} from '../../../redux/selectors';
-
-const fakeJewelryList = [
-	{
-		id: 1,
-		name: 'Engagement Ring (Completed)',
-		description: 'French Pavé Diamond Engagement Ring in 14k White Gold (1/4 ct. tw.)',
-		sku: '5103456',
-		sizeOptions: [5, 6, 7, 8, 9],
-		diamondDetails: '1.02 Carat H&A Excellent Cut Round Diamond',
-		price: 1512,
-		originalPrice: 1979,
-		thumbnail: 'https://via.placeholder.com/100',
-	},
-	{
-		id: 2,
-		name: 'Classic Solitaire Ring',
-		description: 'Classic Solitaire Diamond Ring in 18k Yellow Gold (1/3 ct. tw.)',
-		sku: '6103457',
-		sizeOptions: [5, 6, 7, 8],
-		diamondDetails: '1.50 Carat Excellent Cut Round Diamond',
-		price: 1899,
-		originalPrice: 2399,
-		thumbnail: 'https://via.placeholder.com/100',
-	},
-	// Add more fake items as needed
-];
+import {formatPrice} from '../../../utils';
+import {enumMappings, enums} from '../../../utils/constant';
 
 const JewelryPopup = ({
 	showModal,
@@ -46,7 +22,7 @@ const JewelryPopup = ({
 	const jewelryList = useSelector(GetAllJewelrySelector);
 
 	const [compareList, setCompareList] = useState([]);
-	const [jewelries, setJewelries] = useState(fakeJewelryList);
+	const [jewelries, setJewelries] = useState([]);
 	const [isCompareModalVisible, setIsCompareModalVisible] = useState(false);
 	const [isSliderVisible, setIsSliderVisible] = useState(false);
 	const [priceRange, setPriceRange] = useState([0, 5000]); // Min and Max price range
@@ -55,19 +31,32 @@ const JewelryPopup = ({
 
 	console.log('minPrice', minPrice);
 	console.log('maxPrice', maxPrice);
+	console.log('jewelryList', jewelryList);
+	console.log('compareList', compareList);
+	console.log('userId', userId);
 
 	useEffect(() => {
 		dispatch(
 			getAllJewelry({
-				ModelId: id,
-				MetalId: selectedMetal?.Id,
-				SizeId: size,
+				ModelId: 'c0530ffb-f954-41c9-8793-650478e43546',
+				MetalId: '3',
+				SizeId: '8',
 				SideDiamondOptId: selectedSideDiamond?.Id,
+				// ModelId: id,
+				// MetalId: selectedMetal?.Id,
+				// SizeId: size,
+				// SideDiamondOptId: selectedSideDiamond?.Id,
 			})
 		);
 	}, [id, selectedMetal, size, selectedSideDiamond]);
 
-	const handleOk = () => {
+	useEffect(() => {
+		if (jewelryList) {
+			setJewelries(jewelryList?.Values);
+		}
+	}, [jewelryList]);
+
+	const handleOk = (item) => {
 		if (!userId) {
 			message.warning('Bạn cần phải đăng nhập để thêm vào giỏ hàng!');
 			setIsLoginModalVisible(true);
@@ -75,18 +64,15 @@ const JewelryPopup = ({
 		}
 
 		const data = {
-			...diamondJewelry,
-			JewelryId: diamondJewelry.Id,
-			JewelryName: diamondJewelry.Name,
-			JewelryPrice: diamondJewelry.Price,
-			JewelryThumbnail: diamondJewelry.Thumbnail,
+			...item,
+			JewelryId: item.Id,
+			JewelryName: item.Name,
+			JewelryPrice: item.TotalPrice,
+			JewelryThumbnail: item.Thumbnail,
 		};
 
 		const existingCart = JSON.parse(localStorage.getItem(`cart_${userId}`)) || [];
-
-		const existingIndex = existingCart.findIndex(
-			(item) => item.JewelryId === diamondJewelry.Id
-		);
+		const existingIndex = existingCart.findIndex((cartItem) => cartItem.JewelryId === item.Id);
 
 		if (existingIndex !== -1) {
 			message.info('Sản phẩm này đã có trong giỏ hàng!');
@@ -96,7 +82,6 @@ const JewelryPopup = ({
 		}
 
 		localStorage.setItem(`cart_${userId}`, JSON.stringify(existingCart));
-		setIsModalVisible(false);
 	};
 
 	const handlePriceChange = (value) => {
@@ -105,10 +90,6 @@ const JewelryPopup = ({
 		setMaxPrice(value[1]);
 
 		// Filter jewelryList based on the selected price range
-		const filteredList = fakeJewelryList.filter(
-			(item) => item.price >= value[0] && item.price <= value[1]
-		);
-		setJewelries(filteredList);
 	};
 
 	const handleCancel = () => {
@@ -185,43 +166,83 @@ const JewelryPopup = ({
 					</div>
 				)}
 				<Divider />
-				{jewelries.map((item) => (
-					<Card key={item.id} style={{marginBottom: 16}}>
-						<Row>
-							<Col span={6} className="flex items-center justify-center">
-								<Image
-									src={item.thumbnail}
-									alt="Jewelry"
-									style={{width: '100%'}}
-									preview={false}
-								/>
-							</Col>
-							<Col span={18}>
-								<h3>{item.name}</h3>
-								<p>{item.description}</p>
-								<p>SKU: {item.sku}</p>
-								<p>Size: {item.sizeOptions.join(', ')}</p>
-								<p>{item.diamondDetails}</p>
-								<Row justify="space-between" align="middle">
-									<Col>
-										<p style={{textDecoration: 'line-through', color: '#999'}}>
-											${item.originalPrice}
-										</p>
-										<p style={{fontWeight: 'bold', fontSize: '18px'}}>
-											${item.price}
-										</p>
-									</Col>
-									<Col>
-										<Button type="link" onClick={() => addToCompare(item)}>
-											So Sánh
-										</Button>
-										<Button type="primary">Thêm Vào Giỏ</Button>
-									</Col>
-								</Row>
-							</Col>
-						</Row>
-					</Card>
-				))}
+				{jewelries &&
+					jewelries.map((item) => (
+						<Card key={item?.Id} style={{marginBottom: 16}}>
+							<Row>
+								<Col span={6} className="flex items-center justify-center">
+									<Image
+										src={item?.Thumbnail}
+										alt="Jewelry"
+										style={{width: '100%'}}
+										preview={false}
+									/>
+								</Col>
+
+								<Col span={18}>
+									<div className="flex items-center justify-around">
+										<div>
+											<div className="flex items-center font-semibold text-lg">
+												<h3 className="mr-5">{item?.Name}</h3>
+												<p>{item?.Metal?.Name}</p>
+											</div>
+											<p>SKU: {item?.SerialCode}</p>
+											{/* <p>Kích Thước: {item?.SizeId}</p> */}
+
+											<div className="flex items-center mb-5">
+												{/* <p
+													style={{
+														textDecoration: 'line-through',
+														color: '#999',
+													}}
+													className="mr-5"
+												>
+													{formatPrice(item?.D_Price)}
+												</p> */}
+												<p style={{fontWeight: 'bold', fontSize: '16px'}}>
+													Giá: {formatPrice(item?.TotalPrice)}
+												</p>
+											</div>
+											{item?.Diamonds?.map((diamond) => (
+												<div>
+													<div className="flex items-center">
+														<h3 className="mr-5 font-semibold text-lg">
+															{diamond?.Title}
+														</h3>
+													</div>
+													<p>SKU: </p>
+													<p
+														style={{
+															fontWeight: 'bold',
+															fontSize: '16px',
+														}}
+													>
+														Giá: {formatPrice(diamond?.TruePrice)}
+													</p>
+												</div>
+											))}
+										</div>
+										<Col>
+											<Button
+												type="link"
+												className="text-primary font-semibold"
+												onClick={() => addToCompare(item)}
+											>
+												So Sánh
+											</Button>
+											<Button
+												type="text"
+												className="bg-primary font-semibold"
+												onClick={() => handleOk(item)}
+											>
+												Thêm Vào Giỏ
+											</Button>
+										</Col>
+									</div>
+								</Col>
+							</Row>
+						</Card>
+					))}
 				<Button type="default" block style={{marginTop: 16}}>
 					Xem Thêm
 				</Button>
@@ -244,21 +265,51 @@ const JewelryPopup = ({
 					{compareList.map((item) => (
 						<Col span={12} key={item.id}>
 							<Card>
-								<div className="flex justify-center items-center my-5">
-									<img
-										src={item.thumbnail}
-										alt="Jewelry"
-										style={{width: '60%'}}
-									/>
+								<div className="flex items-center justify-around">
+									<div>
+										<div className="flex items-center font-semibold text-lg">
+											<h3 className="mr-5">{item?.Name}</h3>
+											<p>{item?.Metal?.Name}</p>
+										</div>
+										<p>SKU: {item?.SerialCode}</p>
+										{/* <p>Kích Thước: {item?.SizeId}</p> */}
+
+										<div className="flex items-center mb-5">
+											<p
+												style={{
+													textDecoration: 'line-through',
+													color: '#999',
+												}}
+											>
+												{formatPrice(item?.D_Price)}
+											</p>
+											<p
+												style={{fontWeight: 'bold', fontSize: '16px'}}
+												className="ml-5"
+											>
+												{formatPrice(item?.ND_Price)}
+											</p>
+										</div>
+										{item?.Diamonds?.map((diamond) => (
+											<div>
+												<div className="flex items-center">
+													<h3 className="mr-5 font-semibold text-lg">
+														{diamond?.Title}
+													</h3>
+												</div>
+												<p>SKU: </p>
+												<p
+													style={{
+														fontWeight: 'bold',
+														fontSize: '16px',
+													}}
+												>
+													Giá: {formatPrice(diamond?.TruePrice)}
+												</p>
+											</div>
+										))}
+									</div>
 								</div>
-								<h3>{item.name}</h3>
-								<p>{item.description}</p>
-								<p>SKU: {item.sku}</p>
-								<p>Size Options: {item.sizeOptions.join(', ')}</p>
-								<p>{item.diamondDetails}</p>
-								<p>
-									Price: <span style={{fontWeight: 'bold'}}>${item.price}</span>
-								</p>
 							</Card>
 						</Col>
 					))}

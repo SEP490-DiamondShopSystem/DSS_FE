@@ -223,7 +223,7 @@ const MyOrderPage = () => {
 			getUserOrder({
 				pageSize: pageSize,
 				start: currentPage,
-				Status: status,
+				// Status: status,
 			})
 		);
 		// dispatch(getAllOrder());

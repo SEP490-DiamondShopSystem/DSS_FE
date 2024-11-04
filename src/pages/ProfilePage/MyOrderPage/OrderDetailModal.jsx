@@ -17,6 +17,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 	const [isReturnModalVisible, setIsReturnModalVisible] = useState(false);
 	const [order, setOrder] = useState(null);
 
+	console.log('selectedOrder', selectedOrder);
 	console.log('orderDetail', orderDetail);
 
 	useEffect(() => {
