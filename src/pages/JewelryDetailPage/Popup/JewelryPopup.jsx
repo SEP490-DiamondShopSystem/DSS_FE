@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {Modal, Button, Card, Row, Col, Divider, message, Slider, Image} from 'antd';
+
+import {Button, Card, Col, Divider, Image, message, Modal, Row, Slider} from 'antd';
+import debounce from 'lodash/debounce';
 import {useDispatch, useSelector} from 'react-redux';
-import {getAllJewelry} from '../../../redux/slices/jewelrySlice';
 import {GetAllJewelrySelector} from '../../../redux/selectors';
+import {getAllJewelry} from '../../../redux/slices/jewelrySlice';
 import {formatPrice} from '../../../utils';
-import {enumMappings, enums} from '../../../utils/constant';
 
 const JewelryPopup = ({
 	showModal,
@@ -25,17 +26,11 @@ const JewelryPopup = ({
 	const [jewelries, setJewelries] = useState([]);
 	const [isCompareModalVisible, setIsCompareModalVisible] = useState(false);
 	const [isSliderVisible, setIsSliderVisible] = useState(false);
-	const [priceRange, setPriceRange] = useState([0, 5000]); // Min and Max price range
+	const [priceRange, setPriceRange] = useState([0, 400000000]); // Min and Max price range
 	const [minPrice, setMinPrice] = useState(0);
-	const [maxPrice, setMaxPrice] = useState(5000);
+	const [maxPrice, setMaxPrice] = useState(400000000);
 
-	console.log('minPrice', minPrice);
-	console.log('maxPrice', maxPrice);
-	console.log('jewelryList', jewelryList);
-	console.log('compareList', compareList);
-	console.log('userId', userId);
-
-	useEffect(() => {
+	const fetchJewelryData = debounce(() => {
 		dispatch(
 			getAllJewelry({
 				ModelId: 'c0530ffb-f954-41c9-8793-650478e43546',
@@ -46,9 +41,17 @@ const JewelryPopup = ({
 				// MetalId: selectedMetal?.Id,
 				// SizeId: size,
 				// SideDiamondOptId: selectedSideDiamond?.Id,
+				MinPrice: minPrice,
+				MaxPrice: maxPrice,
 			})
 		);
-	}, [id, selectedMetal, size, selectedSideDiamond]);
+	}, 500);
+
+	useEffect(() => {
+		fetchJewelryData();
+
+		return () => fetchJewelryData.cancel();
+	}, [id, selectedMetal, size, selectedSideDiamond, minPrice, maxPrice]);
 
 	useEffect(() => {
 		if (jewelryList) {
@@ -102,7 +105,7 @@ const JewelryPopup = ({
 			return;
 		}
 
-		if (!compareList.find((jewelry) => jewelry.id === item.id)) {
+		if (!compareList.find((jewelry) => jewelry.Id === item.Id)) {
 			setCompareList([...compareList, item]);
 			message.success('Sản phẩm đã được thêm vào danh sách so sánh!');
 		} else {
@@ -141,27 +144,26 @@ const JewelryPopup = ({
 					</Col>
 				</Row>{' '}
 				<Row>
-					<Col span={18}></Col>
-					<Col span={6} style={{textAlign: 'right'}}>
+					<Col span={14}></Col>
+					<Col span={10} style={{textAlign: 'right'}}>
 						{isSliderVisible && (
 							<div style={{padding: '10px 20px'}}>
-								<h4>Select Price Range:</h4>
 								<Slider
 									range
 									min={0}
-									max={5000}
+									max={400000000}
 									step={50}
 									value={priceRange}
 									onChange={handlePriceChange}
 									marks={{
-										0: '$0',
-										1000: '$1000',
-										2500: '$2500',
-										5000: '$5000',
+										0: `${formatPrice(0)}`,
+										10000000: `${formatPrice(10000000)}`,
+										20000000: `${formatPrice(20000000)}`,
+										400000000: `${formatPrice(400000000)}`,
 									}}
 								/>
-								<p>
-									Selected Range: ${minPrice} - ${maxPrice}
+								<p className="font-semibold text-lg">
+									Giá: {formatPrice(minPrice)} -{formatPrice(maxPrice)}
 								</p>
 							</div>
 						)}
