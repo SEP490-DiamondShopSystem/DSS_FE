@@ -125,9 +125,6 @@ const JewelryPopup = ({
 
 	return (
 		<>
-			<Button type="primary" onClick={showModal}>
-				Hiển Thị Trang Sức Có Sẵn
-			</Button>
 			<Modal
 				title="Trang Sức Có Sẵn"
 				visible={isModalVisible}
@@ -135,36 +132,41 @@ const JewelryPopup = ({
 				width={1200}
 				footer={null}
 			>
-				<Row justify="space-between">
-					<Col span={12}>
-						<h1>Trang Sức</h1>
-					</Col>
-					<Col span={12} style={{textAlign: 'right'}}>
+				<Row>
+					{/* <Col span={12}>
+						<h1 className="font-semibold text-xl">Trang Sức Có Sẵn</h1>
+					</Col> */}
+					<Col span={24} style={{textAlign: 'right'}}>
 						<Button onClick={toggleSlider}>Lọc Theo Giá</Button>
 					</Col>
+				</Row>{' '}
+				<Row>
+					<Col span={18}></Col>
+					<Col span={6} style={{textAlign: 'right'}}>
+						{isSliderVisible && (
+							<div style={{padding: '10px 20px'}}>
+								<h4>Select Price Range:</h4>
+								<Slider
+									range
+									min={0}
+									max={5000}
+									step={50}
+									value={priceRange}
+									onChange={handlePriceChange}
+									marks={{
+										0: '$0',
+										1000: '$1000',
+										2500: '$2500',
+										5000: '$5000',
+									}}
+								/>
+								<p>
+									Selected Range: ${minPrice} - ${maxPrice}
+								</p>
+							</div>
+						)}
+					</Col>
 				</Row>
-				{isSliderVisible && (
-					<div style={{padding: '10px 20px'}}>
-						<h4>Select Price Range:</h4>
-						<Slider
-							range
-							min={0}
-							max={5000}
-							step={50}
-							value={priceRange}
-							onChange={handlePriceChange}
-							marks={{
-								0: '$0',
-								1000: '$1000',
-								2500: '$2500',
-								5000: '$5000',
-							}}
-						/>
-						<p>
-							Selected Range: ${minPrice} - ${maxPrice}
-						</p>
-					</div>
-				)}
 				<Divider />
 				{jewelries &&
 					jewelries.map((item) => (
