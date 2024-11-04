@@ -9,6 +9,7 @@ import Loading from '../../components/Loading';
 import {GetAllJewelryModelSelector, LoadingJewelrySelector} from '../../redux/selectors';
 import {getAllJewelryModel} from '../../redux/slices/jewelrySlice';
 import {formatPrice, Rating} from '../../utils';
+import debounce from 'lodash/debounce';
 
 export const DiamondJewelryList = () => {
 	const navigate = useNavigate();
@@ -25,6 +26,17 @@ export const DiamondJewelryList = () => {
 		price: {minPrice: 0, maxPrice: 40000000},
 	});
 
+	const fetchJewelryData = debounce(() => {
+		dispatch(
+			getAllJewelryModel({
+				Category: filters.type,
+				metalId: filters.metal,
+				minPrice: filters.price.minPrice,
+				maxPrice: filters.price.maxPrice,
+			})
+		);
+	}, 500);
+
 	useEffect(() => {
 		const saved = localStorage.getItem('jewelry');
 		if (saved) {
@@ -36,15 +48,10 @@ export const DiamondJewelryList = () => {
 	}, []);
 
 	useEffect(() => {
-		dispatch(
-			getAllJewelryModel({
-				Category: filters.type,
-				metalId: filters.metal,
-				minPrice: filters.price.minPrice,
-				maxPrice: filters.price.maxPrice,
-			})
-		);
-	}, [dispatch, filters.type, filters.metal, filters.price.minPrice, filters.price.maxPrice]);
+		fetchJewelryData();
+
+		return () => fetchJewelryData.cancel();
+	}, [filters.type, filters.metal, filters.price.minPrice, filters.price.maxPrice]);
 
 	useEffect(() => {
 		if (jewelryList) setJewelries(jewelryList.Values);

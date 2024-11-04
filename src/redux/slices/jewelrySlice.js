@@ -38,7 +38,7 @@ export const getAllJewelry = createAsyncThunk(
 		console.log('params', params);
 
 		try {
-			const {ModelId, MetalId, SizeId, SideDiamondOptId} = params;
+			const {ModelId, MetalId, SizeId, SideDiamondOptId, MinPrice, MaxPrice} = params;
 			let url = '/Jewelry/Selling';
 			const queryParams = new URLSearchParams();
 
@@ -46,8 +46,8 @@ export const getAllJewelry = createAsyncThunk(
 			if (MetalId) queryParams.append('MetalId', MetalId);
 			if (SizeId) queryParams.append('SizeId', SizeId);
 			if (SideDiamondOptId) queryParams.append('SideDiamondOptId', SideDiamondOptId);
-			// if (minPrice) queryParams.append('MinPrice', minPrice);
-			// if (maxPrice) queryParams.append('MaxPrice', maxPrice);
+			if (MinPrice) queryParams.append('MinPrice', MinPrice);
+			if (MaxPrice) queryParams.append('MaxPrice', MaxPrice);
 
 			if (queryParams.toString()) {
 				url += `?${queryParams.toString()}`;
