@@ -8,6 +8,7 @@ export const getAllDiamond = createAsyncThunk(
 			const {
 				pageSize,
 				start,
+				shapeId,
 				cutFrom,
 				cutTo,
 				colorFrom,
@@ -22,6 +23,7 @@ export const getAllDiamond = createAsyncThunk(
 
 			if (pageSize) queryParams.append('pageSize', pageSize);
 			if (start) queryParams.append('start', start);
+			if (shapeId) queryParams.append('shapeId', shapeId);
 			if (cutFrom) queryParams.append('diamond_4C.cutFrom', cutFrom);
 			if (cutTo) queryParams.append('diamond_4C.cutTo', cutTo);
 			if (colorFrom) queryParams.append('diamond_4C.colorFrom', colorFrom);

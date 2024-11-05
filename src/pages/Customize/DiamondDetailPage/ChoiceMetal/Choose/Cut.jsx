@@ -7,27 +7,17 @@ export const Cut = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 	const cutItems = [
 		{
 			id: 1,
-			value: 'poor',
-			cut: 'Poor',
-		},
-		{
-			id: 2,
-			value: 'fair',
-			cut: 'Fair',
-		},
-		{
-			id: 3,
-			value: 'good',
+			value: 1,
 			cut: 'Good',
 		},
 		{
-			id: 4,
-			value: 'very good',
+			id: 2,
+			value: 2,
 			cut: 'Very Good',
 		},
 		{
-			id: 5,
-			value: 'excellent',
+			id: 3,
+			value: 3,
 			cut: 'Excellent',
 		},
 	];
@@ -41,12 +31,9 @@ export const Cut = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 	};
 
 	const handleNextStep = () => {
-		if (customizeDiamond.cut?.length > 0) {
-			setStep(2);
-		} else {
-			notifyError('Vui lòng chọn cut!');
-		}
+		setStep(2);
 	};
+
 	return (
 		<div>
 			<Image className="mt-5" src={cutChart} preview={false} alt="" />
@@ -54,7 +41,7 @@ export const Cut = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 				{cutItems?.map((item) => (
 					<div key={item.id}>
 						<Radio.Group onChange={onChange} value={customizeDiamond.cut}>
-							<Radio value={item.cut}>
+							<Radio value={item.value}>
 								<div className="flex justify-between items-center">
 									<p className="font-semibold text-xl">{item.cut}</p>
 									{/* <p className="font-semibold ml-20">{item.price}</p> */}

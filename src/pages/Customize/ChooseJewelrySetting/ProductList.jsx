@@ -1,30 +1,35 @@
 import React, {useEffect, useState} from 'react';
 
 import {Image} from 'antd';
+import debounce from 'lodash/debounce';
 import Loading from 'react-loading';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
-import {FilterAllJewelry, FilterDiamondJewelry} from '../../../components/Filter/Filter';
-import {GetAllJewelryModelSelector, LoadingJewelrySelector} from '../../../redux/selectors';
-import {getAllJewelryModel} from '../../../redux/slices/jewelrySlice';
 import jewelryImg from '../../../assets/jewelry.png';
-import debounce from 'lodash/debounce';
+import {FilterJewelryCustomize} from '../../../components/Filter/Filter';
+import {
+	GetAllJewelryModelCustomizeSelector,
+	LoadingJewelrySelector,
+} from '../../../redux/selectors';
+import {getAllJewelryModelCustomize} from '../../../redux/slices/customizeSlice';
 
 export const ProductList = () => {
 	const navigate = useNavigate();
-	const jewelryList = useSelector(GetAllJewelryModelSelector);
+	const jewelryList = useSelector(GetAllJewelryModelCustomizeSelector);
 	const loading = useSelector(LoadingJewelrySelector);
 	const dispatch = useDispatch();
 
 	const [jewelries, setJewelries] = useState();
+	// const [page, setPage] = useState(100);
 	const [filters, setFilters] = useState({
 		// gender: [],
 		type: '',
-		metal: '',
-		price: {minPrice: 0, maxPrice: 40000000},
+		name: '',
+		IsRhodiumFinished: null,
+		IsEngravable: null,
 	});
 
-	console.log(filters);
+	console.log('filters', filters);
 
 	useEffect(() => {
 		const saved = localStorage.getItem('jewelry');
@@ -41,11 +46,11 @@ export const ProductList = () => {
 
 	const fetchJewelryData = debounce(() => {
 		dispatch(
-			getAllJewelryModel({
+			getAllJewelryModelCustomize({
 				Category: filters.type,
-				metalId: filters.metal,
-				minPrice: filters.price.minPrice,
-				maxPrice: filters.price.maxPrice,
+				name: filters?.name,
+				IsRhodiumFinished: filters?.IsRhodiumFinished,
+				IsEngravable: filters?.IsEngravable,
 			})
 		);
 	}, 500);
@@ -54,7 +59,7 @@ export const ProductList = () => {
 		fetchJewelryData();
 
 		return () => fetchJewelryData.cancel();
-	}, [filters.type, filters.metal, filters.price.minPrice, filters.price.maxPrice]);
+	}, [filters]);
 
 	useEffect(() => {
 		if (jewelryList) setJewelries(jewelryList.Values);
@@ -68,7 +73,7 @@ export const ProductList = () => {
 	return (
 		<>
 			<div className="mt-10">
-				<FilterDiamondJewelry
+				<FilterJewelryCustomize
 					setFilters={setFilters}
 					filters={filters}
 					handleReset={handleReset}
@@ -87,9 +92,7 @@ export const ProductList = () => {
 							<div
 								key={i}
 								className="shadow-lg bg-white rounded-lg border-2 border-white hover:border-2 hover:border-black cursor-pointer"
-								onClick={() =>
-									navigate(`/customize/diamond-jewelry/${jewelry.JewelryModelId}`)
-								}
+								onClick={() => navigate(`/customize/diamond-jewelry/${jewelry.Id}`)}
 							>
 								<div className="w-80">
 									<div

@@ -34,7 +34,7 @@ export const InformationRight = ({
 
 	useEffect(() => {
 		if (filteredGroups) {
-			setSizeGroups(filteredGroups[0]?.SizeGroups);
+			setSizeGroups(filteredGroups[0]);
 		}
 	}, [filteredGroups]);
 
@@ -52,17 +52,10 @@ export const InformationRight = ({
 		setStepChoose(1);
 	};
 
-	const findSize = diamondJewelry?.MetalGroups?.find(
-		(metal) => metal?.Name === filteredGroups[0]?.Name
-	);
-
-	const findSizePrice = findSize?.SizeGroups?.find(
-		(sizePrice) => sizePrice?.Size === Number(size)
-	);
-
 	console.log('size', size);
 	console.log('selectedSideDiamond', selectedSideDiamond);
 	console.log('selectedMetal', selectedMetal);
+	console.log('filteredGroups', filteredGroups);
 
 	return (
 		<div>
@@ -90,23 +83,21 @@ export const InformationRight = ({
 			<div>
 				<div className="my-5 flex items-center">
 					<div className="font-semibold">Loại Kim Loại</div>
-					<div className={`font-semibold text-xl pl-4 text-primary`}>
-						{selectedMetal?.Name}
-					</div>
+					<div className={`font-semibold text-xl pl-4 text-primary`}>{selectedMetal}</div>
 				</div>
 				<div>
 					<div className="flex">
-						{diamondJewelry?.Metals?.map((metal, i) => (
+						{diamondJewelry?.MetalSupported?.map((metal, i) => (
 							<div
 								key={i}
 								className={`${
-									selectedMetal?.Name === metal?.Name
+									selectedMetal === metal
 										? 'border-2 border-black'
 										: 'border-2 border-white'
 								} my-2 py-2 px-4 rounded-lg cursor-pointer hover:bg-offWhite`}
 								onClick={() => handleSelectMetal(metal)} // Save selected metal on click
 							>
-								<div className={`rounded-full p-1`}>{metal?.Name}</div>
+								<div className={`rounded-full p-1`}>{metal}</div>
 							</div>
 						))}
 					</div>
@@ -170,14 +161,14 @@ export const InformationRight = ({
 				</div> */}
 			</div>
 			<div className="border-y border-tintWhite my-5">
-				{diamondJewelry && diamondJewelry.Category === 'Ring' && (
+				{diamondJewelry && diamondJewelry.Category?.Name === 'Ring' && (
 					<div className="mt-5 flex items-center">
 						<div className="font-semibold">Chọn kích thước:</div>
 						<div className={`font-semibold text-xl pl-4 text-primary`}>
-							<Select value={size} style={{width: 120}} onChange={handleChange}>
-								{filteredGroups[0]?.SizeGroups.map((size, i) => (
-									<Option key={size?.Size}>
-										<p className="font-semibold mr-2">{size?.Size}</p>
+							<Select style={{width: 120}} onChange={handleChange}>
+								{filteredGroups.map((size, i) => (
+									<Option key={i} value={size?.SizeId}>
+										<p className="font-semibold mr-2">{size?.SizeId}</p>
 									</Option>
 								))}
 							</Select>
@@ -225,7 +216,7 @@ export const InformationRight = ({
 			{size !== null &&
 				selectedMetal !== null &&
 				selectedSideDiamond !== null &&
-				diamondJewelry?.Category === 'Ring' && (
+				diamondJewelry?.Category.Name === 'Ring' && (
 					<div className="flex justify-between items-center mt-5">
 						<Button
 							type="text"

@@ -7,28 +7,43 @@ export const Color = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 	const colorItems = [
 		{
 			id: 1,
-			value: 'colorless',
-			color: 'COLORLESS',
+			value: 1,
+			color: 'K',
 		},
 		{
 			id: 2,
-			value: 'near_colorless',
-			color: 'NEAR COLORLESS',
+			value: 2,
+			color: 'J',
 		},
 		{
 			id: 3,
-			value: 'faint_yellow',
-			color: 'FAINT YELLOW',
+			value: 3,
+			color: 'I',
 		},
 		{
 			id: 4,
-			value: 'light_yellow',
-			color: 'VERY LIGHT YELLOW',
+			value: 4,
+			color: 'H',
 		},
 		{
 			id: 5,
-			value: 'light_yellow',
-			color: 'LIGHT YELLOW',
+			value: 5,
+			color: 'G',
+		},
+		{
+			id: 6,
+			value: 6,
+			color: 'F',
+		},
+		{
+			id: 7,
+			value: 7,
+			color: 'E',
+		},
+		{
+			id: 8,
+			value: 8,
+			color: 'D',
 		},
 	];
 
@@ -41,11 +56,7 @@ export const Color = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 	};
 
 	const handleNextStep = () => {
-		if (customizeDiamond.color?.length > 0) {
-			setStep(3);
-		} else {
-			notifyError('Vui lòng chọn color!');
-		}
+		setStep(3);
 	};
 	return (
 		<div>
@@ -54,7 +65,7 @@ export const Color = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 				{colorItems?.map((item) => (
 					<div key={item.id}>
 						<Radio.Group onChange={onChange} value={customizeDiamond.color}>
-							<Radio value={item.color}>
+							<Radio value={item.value}>
 								<div className="flex justify-between items-center">
 									<p className="font-semibold text-xl">{item.color}</p>
 									{/* <p className="font-semibold ml-20">{item.price}</p> */}

@@ -13,11 +13,14 @@ export const Engrave = ({
 	imageData,
 	customizeJewelry,
 	setCustomizeJewelry,
+	setFontFamily,
+	fontFamily,
+	setTextValue,
+	textValue,
 }) => {
 	const canvasRef = useRef(null);
 	const [canvas, setCanvas] = useState(null);
 	const [fontSize, setFontSize] = useState(30);
-	const [fontFamily, setFontFamily] = useState('Arial');
 	const [textColor, setTextColor] = useState('#000'); // New state for text color
 	const [textObject, setTextObject] = useState(null);
 	const [isUploading, setIsUploading] = useState(false);
@@ -41,7 +44,7 @@ export const Engrave = ({
 			fabricCanvas.renderAll(); // Render the canvas
 
 			// Add initial text after the image has been added
-			const initialText = new fabric.Text(customizeJewelry.textValue, {
+			const initialText = new fabric.Text(textValue, {
 				left: 150,
 				top: 250,
 				fontSize: fontSize,
@@ -63,14 +66,14 @@ export const Engrave = ({
 	useEffect(() => {
 		if (textObject && canvas) {
 			textObject.set({
-				text: customizeJewelry.textValue,
+				text: textValue,
 				fontSize: fontSize,
 				fontFamily: fontFamily,
 				fill: textColor, // Update text color
 			});
 			canvas.renderAll(); // Render the canvas again after text changes
 		}
-	}, [customizeJewelry.textValue, fontSize, fontFamily, textColor, textObject, canvas]);
+	}, [textValue, fontSize, fontFamily, textColor, textObject, canvas]);
 
 	// Function to export image from canvas and save to state
 	const handleExportImage = () => {
@@ -87,8 +90,6 @@ export const Engrave = ({
 		}
 	};
 
-	// Function to upload image data to Azure
-	// Function to upload image data to Azure
 	const uploadImage = async () => {
 		if (!imageData) return; // Ensure there's image data to upload
 
@@ -130,10 +131,7 @@ export const Engrave = ({
 	// Handler for curved text toggle
 
 	const handleTextChange = (e) => {
-		setCustomizeJewelry((prev) => ({
-			...prev,
-			textValue: e.target.value,
-		}));
+		setTextValue(e.target.value);
 	};
 
 	const showModal = () => {
@@ -153,7 +151,7 @@ export const Engrave = ({
 					<Input
 						type="text"
 						style={{width: 500}}
-						value={customizeJewelry.textValue}
+						value={textValue}
 						onChange={handleTextChange}
 						className="ml-5"
 					/>

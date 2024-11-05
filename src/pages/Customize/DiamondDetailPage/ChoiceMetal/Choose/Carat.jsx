@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Button, Image, Input} from 'antd';
+import {Button, Image, Input, Space} from 'antd';
 import caratImage from '../../../../../assets/carat-weight.png';
 import {notifyError} from '../../../../../utils/toast';
 
@@ -14,9 +14,9 @@ export const Carat = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 	};
 
 	const handleNextStep = () => {
-		const {carat} = customizeDiamond;
+		const {caratForm, caratTo} = customizeDiamond;
 
-		if (carat < 0.05 || carat > 2) {
+		if (caratForm < 0.05 || caratTo > 2) {
 			notifyError('Vui lòng chọn giới hạn carat hợp lệ!'); // Show an error
 		}
 
@@ -32,13 +32,24 @@ export const Carat = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 				<Image preview={false} src={caratImage} />
 			</div>
 			<div className="flex items-center justify-center">
-				<Input
-					addonBefore="Carat"
-					name="carat"
-					value={customizeDiamond.carat}
-					className="w-32 ml-10"
-					onChange={onChange}
-				/>
+				<Space>
+					<Input
+						addonBefore="Carat From"
+						name="caratFrom"
+						value={customizeDiamond.caratFrom}
+						className="w-32 ml-10"
+						style={{width: 150}}
+						onChange={onChange}
+					/>
+					<Input
+						addonBefore="Carat To"
+						name="caratTo"
+						value={customizeDiamond.caratTo}
+						className="w-32 ml-10"
+						style={{width: 150}}
+						onChange={onChange}
+					/>
+				</Space>
 			</div>
 			<div className="flex justify-center items-center mt-10">
 				<Button

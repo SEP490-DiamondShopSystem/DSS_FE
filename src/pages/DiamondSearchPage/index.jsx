@@ -91,6 +91,7 @@ const DiamondSearchPage = () => {
 			getAllDiamond({
 				pageSize,
 				start,
+				shapeId: filters?.shape,
 				cutFrom: filters?.cut?.minCut,
 				cutTo: filters?.cut?.maxCut,
 				colorFrom: filters?.color?.minColor,

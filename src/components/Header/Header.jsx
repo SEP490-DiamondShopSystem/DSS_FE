@@ -72,8 +72,6 @@ export const Header = () => {
 		navigate('/cart');
 	};
 
-	console.log('localCart', localCart);
-
 	return (
 		<nav className="bg-white">
 			<div className="flex items-center font-semibold justify-around">

@@ -1,9 +1,8 @@
 import React, {useState} from 'react';
 
 import {Button, Steps} from 'antd';
-import {Metal} from './Choose/Metal';
-import {Shape} from './Choose/Shape';
 import {Engrave} from './Choose/Engrave';
+import {Metal} from './Choose/Metal';
 
 export const ChoiceMetal = ({
 	setImageData,
@@ -15,6 +14,11 @@ export const ChoiceMetal = ({
 	selectedMetal,
 	setSelectedMetal,
 	handleSelectMetal,
+	setFontFamily,
+	fontFamily,
+	setTextValue,
+	textValue,
+	filteredGroups,
 }) => {
 	const [steps, setStep] = useState(0);
 
@@ -27,8 +31,6 @@ export const ChoiceMetal = ({
 			title: 'Chữ khắc',
 		},
 	];
-
-	console.log('steps', steps);
 
 	return (
 		<div className="my-10 mx-5">
@@ -45,6 +47,7 @@ export const ChoiceMetal = ({
 						selectedMetal={selectedMetal}
 						setSelectedMetal={setSelectedMetal}
 						handleSelectMetal={handleSelectMetal}
+						filteredGroups={filteredGroups}
 					/>
 				</div>
 			)}
@@ -65,6 +68,10 @@ export const ChoiceMetal = ({
 						setStep={setStep}
 						customizeJewelry={customizeJewelry}
 						setCustomizeJewelry={setCustomizeJewelry}
+						setFontFamily={setFontFamily}
+						fontFamily={fontFamily}
+						setTextValue={setTextValue}
+						textValue={textValue}
 					/>
 				</div>
 			)}

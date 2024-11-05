@@ -15,6 +15,7 @@ export const Metal = ({
 	selectedMetal,
 	setSelectedMetal,
 	handleSelectMetal,
+	filteredGroups,
 }) => {
 	const handleNextStep = () => {
 		setStep(1);
@@ -26,13 +27,13 @@ export const Metal = ({
 	return (
 		<div>
 			<div>
-				{diamondJewelry?.Metals?.map((metal, i) => (
+				{diamondJewelry?.MetalSupported?.map((metal, i) => (
 					<div key={metal.Id}>
 						<Radio.Group
 							onChange={() => handleSelectMetal(metal)}
-							value={selectedMetal?.Name}
+							value={selectedMetal}
 						>
-							<Radio value={metal.Name}>
+							<Radio value={metal}>
 								<div
 									className="flex items-center justify-between"
 									style={{width: 500}}
@@ -46,9 +47,9 @@ export const Metal = ({
 												width={50}
 											/>
 										</div>
-										<p className="">{metal.Name}</p>
+										<p className="">{metal}</p>
 									</div>
-									<p className="font-semibold">{formatPrice(metal.Price)}</p>
+									{/* <p className="font-semibold">{formatPrice(metal.Price)}</p> */}
 								</div>
 							</Radio>
 						</Radio.Group>
