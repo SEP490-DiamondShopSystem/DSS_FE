@@ -76,26 +76,25 @@ const JewelryCustomDetail = () => {
 
 	const items = [
 		{
-			title: `Chọn Trang Sức`,
+			title: `Chọn Thông Số Vỏ`,
 		},
 		{
-			title: 'Chọn Kim Cương',
+			title: 'Chọn Thông Số Kim Cương',
 		},
 		{
 			title: 'Hoàn Thành',
 		},
 	];
 
-	const handleSizeChange = (e) => {
-		setCustomizeJewelry((prev) => ({
-			...prev,
-			size: e.target.value,
-		}));
-	};
+	// const handleSizeChange = (e) => {
+	// 	setCustomizeJewelry((prev) => ({
+	// 		...prev,
+	// 		size: e.target.value,
+	// 	}));
+	// };
 
-	const handleChange = (value) => {
-		setSize(value);
-		console.log('value', value);
+	const handleSizeChange = (e) => {
+		setSize(e.target.value);
 	};
 
 	const handleSelectSideDiamond = (diamond) => {
@@ -161,7 +160,7 @@ const JewelryCustomDetail = () => {
 
 	return (
 		<div className="mx-32">
-			{stepChoose === 0 && (
+			{/* {stepChoose === 0 && (
 				<>
 					<Steps
 						current={0}
@@ -196,8 +195,8 @@ const JewelryCustomDetail = () => {
 						</div>
 					</div>
 				</>
-			)}
-			{stepChoose === 1 && (
+			)} */}
+			{stepChoose === 0 && (
 				<>
 					<Steps
 						current={0}
@@ -222,6 +221,9 @@ const JewelryCustomDetail = () => {
 								setTextValue={setTextValue}
 								textValue={textValue}
 								filteredGroups={filteredGroups}
+								size={size}
+								setSize={setSize}
+								handleSizeChange={handleSizeChange}
 							/>
 						</div>
 
@@ -237,7 +239,7 @@ const JewelryCustomDetail = () => {
 					</div>
 				</>
 			)}
-			{stepChoose === 2 && (
+			{stepChoose === 1 && (
 				<>
 					<Steps current={1} items={items} className="bg-white p-4 rounded-full my-10" />
 					<div className="flex w-full bg-white my-10 md:my-20 rounded-lg shadow-lg">

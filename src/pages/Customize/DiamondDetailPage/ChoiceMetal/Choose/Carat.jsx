@@ -1,10 +1,22 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 
-import {Button, Image, Input, Space} from 'antd';
+import {Button, Image, Input, message, Space} from 'antd';
 import caratImage from '../../../../../assets/carat-weight.png';
-import {notifyError} from '../../../../../utils/toast';
 
-export const Carat = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
+export const Carat = ({setStep, customizeDiamond, setCustomizeDiamond, currentDiamond}) => {
+	const [caratFormShape, setCaratFromShape] = useState();
+	const [caratToShape, setCaratToShape] = useState();
+
+	useEffect(() => {
+		if (currentDiamond) {
+			setCaratFromShape(currentDiamond?.Shapes[0]?.CaratFrom);
+			setCaratToShape(currentDiamond?.Shapes[0]?.CaratTo);
+		}
+	}, [currentDiamond]);
+
+	console.log('caratFormShape', caratFormShape);
+	console.log('caratToShape', caratToShape);
+
 	const onChange = (e) => {
 		const {name, value} = e.target;
 		setCustomizeDiamond((prev) => ({
@@ -16,8 +28,8 @@ export const Carat = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 	const handleNextStep = () => {
 		const {caratForm, caratTo} = customizeDiamond;
 
-		if (caratForm < 0.05 || caratTo > 2) {
-			notifyError('Vui lòng chọn giới hạn carat hợp lệ!'); // Show an error
+		if (caratForm < caratFormShape || caratTo > caratToShape) {
+			message.warning('Vui lòng chọn giới hạn carat hợp lệ!');
 		}
 
 		// If all conditions are valid, move to the next step
@@ -26,10 +38,16 @@ export const Carat = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 		}
 	};
 
+	console.log('currentDiamond', currentDiamond);
+	console.log('caratForm', customizeDiamond.caratFrom);
 	return (
 		<div>
 			<div>
 				<Image preview={false} src={caratImage} />
+			</div>
+
+			<div className="my-10 text-red text-lg font-semibold">
+				Kim Cương Được Nhập Carat: {caratFormShape} - {caratToShape}
 			</div>
 			<div className="flex items-center justify-center">
 				<Space>

@@ -6,6 +6,7 @@ export const GetUserDetailSelector = (state) => state.userLoginSlice.userDetail;
 //DIAMOND
 export const GetAllDiamondSelector = (state) => state.diamondSlice.diamonds;
 export const GetDiamondDetailSelector = (state) => state.diamondSlice.diamondDetail;
+export const GetDiamondFilterSelector = (state) => state.diamondSlice.filterLimits;
 export const GetDiamondShapeSelector = (state) => state.diamondSlice.diamondShape;
 export const GetDiamondAttributesSelector = (state) => state.diamondSlice.diamondAttributes;
 export const LoadingDiamondSelector = (state) => state.diamondSlice.loading;

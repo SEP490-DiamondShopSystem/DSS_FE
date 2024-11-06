@@ -1,14 +1,15 @@
 import React, {useEffect, useState} from 'react';
 
 import {DownOutlined, ReloadOutlined} from '@ant-design/icons';
-import {Button, Input, Select, Slider} from 'antd';
+import {Button, Image, Input, Select, Slider} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
 import {
 	GetAllJewelryMetalSelector,
 	GetAllJewelryModelCategoriesSelector,
+	GetDiamondFilterSelector,
 	GetDiamondShapeSelector,
 } from '../../redux/selectors';
-import {getDiamondShape} from '../../redux/slices/diamondSlice';
+import {getDiamondFilter, getDiamondShape} from '../../redux/slices/diamondSlice';
 import {getAllJewelryMetal, getAllJewelryModelCategory} from '../../redux/slices/jewelrySlice';
 import {
 	genderChoice,
@@ -16,17 +17,25 @@ import {
 	marksClarity,
 	marksCut,
 	metalChoice,
+	shapeItems,
 	typeChoice,
 } from '../../utils/constant';
 
 export const FilterDiamond = ({filters, setFilters, handleReset}) => {
 	const dispatch = useDispatch();
 	const shape = useSelector(GetDiamondShapeSelector);
+	const filterLimits = useSelector(GetDiamondFilterSelector);
 
 	const [diamondShape, setDiamondShape] = useState();
+	const [filter, setFilter] = useState({});
+
+	console.log('filter', filter);
 
 	useEffect(() => {
 		dispatch(getDiamondShape());
+	}, []);
+	useEffect(() => {
+		dispatch(getDiamondFilter());
 	}, []);
 
 	useEffect(() => {
@@ -34,6 +43,12 @@ export const FilterDiamond = ({filters, setFilters, handleReset}) => {
 			setDiamondShape(shape);
 		}
 	}, [shape]);
+
+	useEffect(() => {
+		if (filterLimits) {
+			setFilter(filterLimits);
+		}
+	}, [filterLimits]);
 
 	const handleChange = (type, value) => {
 		setFilters((prev) => ({
@@ -62,92 +77,96 @@ export const FilterDiamond = ({filters, setFilters, handleReset}) => {
 	const handleCutChange = (value) => {
 		handleChange('cut', {minCut: value[0], maxCut: value[1]});
 	};
+	const handleShapeChange = (value) => {
+		if (filters?.shape === value) {
+			setFilters((prev) => ({
+				...prev,
+				shape: '',
+			}));
+		} else {
+			handleChange('shape', value);
+		}
+	};
 
 	return (
-		<div className="py-4 ">
-			<div className="flex items-center">
-				<Select
-					placeholder="SHAPE"
-					allowClear
-					maxTagCount={0}
-					suffixIcon={<DownOutlined />}
-					className="h-12 ml-10"
-					style={{width: '10%', lineHeight: 160}}
-					onChange={(value) => handleChange('shape', value)}
-					value={filters.shape === undefined ? 'Hình dạng' : filters.shape}
-				>
-					{diamondShape?.map((shape, i) => (
-						<Select.Option key={i} value={shape?.Id}>
-							{shape?.ShapeName}
-						</Select.Option>
+		<div className="grid grid-cols-3">
+			<div className="ml-10 min-w-44">
+				<p className="mb-4">Hình Dạng:</p>
+				<div className="grid grid-cols-5 gap-10 w-96 mx-auto">
+					{shapeItems?.map((item) => (
+						<div
+							className={`flex items-center flex-col border-2 hover:border-2 hover:border-black px-10 ${
+								filters?.shape === item?.value ? 'border-black' : 'border-white'
+							}`}
+							onClick={() => handleShapeChange(item?.value)}
+						>
+							<div className="my-5 mx-10">
+								<Image preview={false} src={item.image} height={30} width={30} />
+							</div>
+							<p className="font-semibold">{item.shape}</p>
+							{/* <p className="font-semibold ml-20">{item.price}</p> */}
+						</div>
 					))}
-				</Select>
-			</div>
-			<div className="flex items-center mt-4">
-				{/* Price Range Slider */}
-				<div className="ml-10 min-w-44">
-					<p className="mb-4">Giá:</p>
-					<Slider
-						range
-						value={[filters.price.minPrice, filters.price.maxPrice]}
-						min={0}
-						max={1000}
-						onChange={handlePriceChange}
-					/>
 				</div>
+			</div>
 
-				{/* Carat Range Slider */}
-				<div className="ml-10 min-w-44">
-					<p className="mb-4">Carat:</p>
-					<Slider
-						range
-						value={[filters.carat.minCarat, filters.carat.maxCarat]}
-						step={0.1}
-						min={0.1}
-						max={2}
-						onChange={handleCaratChange}
-					/>
-				</div>
+			{/* Price Range Slider */}
+			<div className="ml-10 min-w-44">
+				<p className="mb-4">Giá:</p>
+				<Slider
+					range
+					value={[filters?.price?.minPrice, filters?.price?.maxPrice]}
+					min={filter?.Price?.Min}
+					max={filter?.Price?.Max}
+					onChange={handlePriceChange}
+				/>
 			</div>
-			<div className="flex items-center mt-4">
-				<div className="ml-10 min-w-72">
-					<p className="my-4">Color:</p>
-					<Slider
-						range
-						marks={marks}
-						min={1}
-						max={8}
-						value={[filters.color.minColor, filters.color.maxColor]}
-						onChange={handleColorChange}
-					/>
-				</div>
-				<div className="ml-10 min-w-72">
-					<p className="my-4">Clarity:</p>
-					<Slider
-						range
-						marks={marksClarity}
-						min={1}
-						max={8}
-						value={[filters.clarity.minClarity, filters.clarity.maxClarity]}
-						onChange={handleClarityChange}
-					/>
-				</div>
-				<div className="ml-10 min-w-72">
-					<p className="my-4">Cut:</p>
-					<Slider
-						range
-						marks={marksCut}
-						min={1}
-						max={3}
-						value={[filters.cut.minCut, filters.cut.maxCut]}
-						onChange={handleCutChange}
-					/>
-				</div>
+
+			{/* Carat Range Slider */}
+			<div className="ml-10 min-w-44">
+				<p className="mb-4">Carat:</p>
+				<Slider
+					range
+					value={[filters?.carat?.minCarat, filters?.carat?.maxCarat]}
+					step={0.1}
+					min={filter?.Carat?.Min}
+					max={filter?.Carat?.Max}
+					onChange={handleCaratChange}
+				/>
 			</div>
-			<div className="ml-8 mt-6">
-				<Button onClick={handleReset} danger>
-					<ReloadOutlined />
-				</Button>
+
+			<div className="ml-10 min-w-72">
+				<p className="my-4">Color:</p>
+				<Slider
+					range
+					marks={marks}
+					min={filter?.Color?.Min}
+					max={filter?.Color?.Max}
+					value={[filters?.color?.minColor, filters?.color?.maxColor]}
+					onChange={handleColorChange}
+				/>
+			</div>
+			<div className="ml-10 min-w-72">
+				<p className="my-4">Clarity:</p>
+				<Slider
+					range
+					marks={marksClarity}
+					min={filter?.Clarity?.Min}
+					max={filter?.Clarity?.Max}
+					value={[filters?.clarity?.minClarity, filters?.clarity?.maxClarity]}
+					onChange={handleClarityChange}
+				/>
+			</div>
+			<div className="ml-10 min-w-72">
+				<p className="my-4">Cut:</p>
+				<Slider
+					range
+					marks={marksCut}
+					min={filter?.Cut?.Min}
+					max={filter?.Cut?.Max}
+					value={[filters?.cut?.minCut, filters?.cut?.maxCut]}
+					onChange={handleCutChange}
+				/>
 			</div>
 		</div>
 	);

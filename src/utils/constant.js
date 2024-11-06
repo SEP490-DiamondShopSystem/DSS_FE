@@ -8,6 +8,15 @@ import banner_1 from '../assets/diamond-jewelry.png';
 import banner_2 from '../assets/Diamond_rings.png';
 import banner_3 from '../assets/Lab_Grown_Diamonds.png';
 import jewelry from '../assets/jewelry.png';
+import round from '../assets/diamondShapes/round.png';
+import princess from '../assets/diamondShapes/princess.png';
+import cushion from '../assets/diamondShapes/cushionSquare.png';
+import emerald from '../assets/diamondShapes/emerald.png';
+import oval from '../assets/diamondShapes/oval.png';
+import radiant from '../assets/diamondShapes/radiant.png';
+import asscher from '../assets/diamondShapes/asscher.png';
+import marquise from '../assets/diamondShapes/marquise.png';
+import heart from '../assets/diamondShapes/heart.png';
 
 export const jewelries = [
 	{logo: basic_diamond, title: 'Diamond Basics', link: '/jewelry-model/search'},
@@ -388,3 +397,26 @@ export const enumMappings = {
 	Polish: {1: 'Poor', 2: 'Fair', 3: 'Good', 4: 'Very Good', 5: 'Excellent'},
 	Symmetry: {1: 'Poor', 2: 'Fair', 3: 'Good', 4: 'Very Good', 5: 'Excellent'},
 };
+
+export const shapeItems = [
+	{
+		id: 1,
+		image: round,
+		value: '1',
+		shape: 'Round',
+	},
+	{
+		id: 2,
+		image: cushion,
+		shape: 'Cushion',
+		value: '3',
+	},
+	{id: 3, image: emerald, shape: 'Emerald', value: '4'},
+	{id: 4, image: oval, shape: 'Oval', value: '5'},
+	{id: 5, image: radiant, shape: 'Radiant', value: '6'},
+	{id: 6, image: asscher, shape: 'Asscher', value: '7'},
+	{id: 7, image: marquise, shape: 'Marquise', value: '8'},
+	{id: 8, image: heart, shape: 'Heart', value: '9'},
+	{id: 9, image: princess, shape: 'Princess', value: '2'},
+	{id: 9, image: princess, shape: 'Pear', value: '10'},
+];

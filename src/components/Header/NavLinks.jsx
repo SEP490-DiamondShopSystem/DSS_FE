@@ -4,6 +4,7 @@ import {DownOutlined} from '@ant-design/icons';
 import {Image} from 'antd';
 import {Link, useNavigate} from 'react-router-dom';
 import Logo from '../../assets/logo-short-ex.png';
+import {getUserId} from '../GetUserId';
 
 const NavLinks = () => {
 	const navigate = useNavigate();
@@ -35,70 +36,17 @@ const NavLinks = () => {
 				{
 					Head: 'Sản Phẩm',
 					sublink: [
-						{name: 'Trang Sức Kim Cương Đính Sẵn', link: '/jewelry-model/search'},
+						{name: 'Vỏ Trang Sức', link: '/jewelry-model/search'},
 						{name: 'Kim Cương', link: '/diamond/search'},
 					],
 				},
-
-				// {
-				// 	Head: 'Thiết Kế Trang Sức Của Bạn',
-				// 	sublink: [
-				// 		{name: 'Nhẫn', link: '/jewelry/design-your-own-rings'},
-				// 		{name: 'Bông Tai', link: '/jewelry/design-your-own-earrings'},
-				// 		{name: 'Dây Chuyền', link: '/jewelry/design-your-own-necklaces'},
-				// 	],
-				// },
 			],
 		},
-		// {
-		// 	name: 'Trang Sức',
-		// 	ref: 'jewelry',
-		// 	col: 3,
-		// 	submenu: true,
-		// 	link: '/jewelry/all-jewelry',
-		// 	mess: 'Xem Tất Cả Trang Sức',
-		// 	sublinks: [
-		// 		{
-		// 			Head: 'Bông Tai',
-		// 			sublink: [
-		// 				{
-		// 					name: 'Tự Thiết Kế Bông Tai',
-		// 					link: '/jewelry/design-your-own-earrings',
-		// 				},
-		// 				{name: 'Bông Tai Kim Cương', link: '/'},
-		// 				{name: 'Bông Tai Đinh', link: '/'},
-		// 			],
-		// 		},
-		// 		{
-		// 			Head: 'Nhẫn',
-		// 			sublink: [
-		// 				{name: 'Nhẫn Kim Cương', link: '/'},
-		// 				{name: 'Nhẫn Cưới', link: '/'},
-		// 				{name: 'Nhẫn Đính Hôn', link: '/'},
-		// 			],
-		// 		},
-		// 		{
-		// 			Head: 'Trang Sức Thiết Kế',
-		// 			sublink: [
-		// 				{name: 'Monica Rich Kosann', link: '/'},
-		// 				{name: 'Zac Zac Posen', link: '/'},
-		// 				{name: 'Bella Vaughan', link: '/'},
-		// 				{name: 'Blue Nile Studio', link: '/'},
-		// 				{name: 'The Gallery Collection™', link: '/'},
-		// 			],
-		// 		},
-		// 		{
-		// 			Head: 'Dây Chuyền',
-		// 			sublink: [
-		// 				{name: 'Tự Thiết Kế Mặt Dây Chuyền', link: '/'},
-		// 				{name: 'Dây Chuyền Kim Cương', link: '/'},
-		// 			],
-		// 		},
-		// 	],
-		// },
 	];
 
 	const handleClick = (shape, type, diamond, jewelry) => {
+		const userId = getUserId();
+
 		if (shape) {
 			localStorage.setItem('selected', shape);
 			localStorage.removeItem('jewelryType');
@@ -120,6 +68,7 @@ const NavLinks = () => {
 			localStorage.removeItem('jewelryChoice');
 			localStorage.removeItem('jewelryType');
 			localStorage.removeItem('selected');
+			localStorage.removeItem(`jewelryModel_${userId}`);
 		}
 	};
 
@@ -185,7 +134,7 @@ const NavLinks = () => {
 																		// }
 																		else if (
 																			sl.name ===
-																			'Trang Sức Kim Cương Đính Sẵn'
+																			'Vỏ Trang Sức'
 																		) {
 																			handleClick(
 																				null,

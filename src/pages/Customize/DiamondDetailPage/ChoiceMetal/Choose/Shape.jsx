@@ -1,14 +1,7 @@
 import React from 'react';
-import round from '../../../../../assets/diamondShapes/round.png';
-import princess from '../../../../../assets/diamondShapes/princess.png';
-import cushion from '../../../../../assets/diamondShapes/cushionSquare.png';
-import emerald from '../../../../../assets/diamondShapes/emerald.png';
-import oval from '../../../../../assets/diamondShapes/oval.png';
-import radiant from '../../../../../assets/diamondShapes/radiant.png';
-import asscher from '../../../../../assets/asscher-ring.png';
-import marquise from '../../../../../assets/diamondShapes/marquise.png';
-import heart from '../../../../../assets/diamondShapes/heart.png';
+
 import {Button, Image, Radio} from 'antd';
+import {shapeItems} from '../../../../../utils/constant';
 
 export const Shape = ({
 	setStepChooseDiamond,
@@ -20,29 +13,6 @@ export const Shape = ({
 	setStep,
 	currentJewelry,
 }) => {
-	const shapeItems = [
-		{
-			id: 1,
-			image: round,
-			value: '1',
-			shape: 'Round',
-		},
-		{
-			id: 2,
-			image: cushion,
-			shape: 'Cushion',
-			value: '3',
-		},
-		{id: 3, image: emerald, shape: 'Emerald', value: '4'},
-		{id: 4, image: oval, shape: 'Oval', value: '5'},
-		{id: 5, image: radiant, shape: 'Radiant', value: '6'},
-		{id: 6, image: asscher, shape: 'Asscher', value: '7'},
-		{id: 7, image: marquise, shape: 'Marquise', value: '8'},
-		{id: 8, image: heart, shape: 'Heart', value: '9'},
-		{id: 9, image: princess, shape: 'Princess', value: '2'},
-		{id: 9, image: princess, shape: 'Pear', value: '10'},
-	];
-
 	const onChange = (e) => {
 		console.log('radio checked', e.target.value);
 		setCustomizeDiamond((prev) => ({
@@ -89,12 +59,18 @@ export const Shape = ({
 		setStepChooseDiamond((prev) => prev + 1); // Proceed to the next step
 	};
 
+	const matchedShapeItems = shapeItems.filter((item) =>
+		currentDiamond.Shapes.some((shape) => shape.ShapeId === item.value)
+	);
+
+	console.log(matchedShapeItems);
+
 	console.log('currentDiamond', currentDiamond);
 
 	return (
 		<div>
 			<div className="grid gap-x-8 gap-y-4 grid-cols-2 items-center">
-				{shapeItems?.map((item) => (
+				{matchedShapeItems?.map((item) => (
 					<div key={item.id}>
 						<Radio.Group onChange={onChange} value={customizeDiamond.shape}>
 							<Radio value={item.value}>

@@ -167,7 +167,7 @@ export const ChoiceMetalDiamond = ({
 	useEffect(() => {
 		if (diamondList && enums) {
 			// Map diamond attributes to more readable values
-			const mappedData = diamondList?.Values.map((diamond) => mapAttributes(diamond, enums));
+			const mappedData = diamondList?.Values?.map((diamond) => mapAttributes(diamond, enums));
 			setMappedDiamonds(mappedData);
 		}
 	}, [diamondList, enums]);
@@ -239,21 +239,21 @@ export const ChoiceMetalDiamond = ({
 				metalId: filterShape?.Id,
 				sizeId: size,
 				sideDiamondOptId: selectedSideDiamond?.Id,
-				engravedText: null,
-				engravedFont: null,
-				// engravedText: textValue,
-				// engravedFont: fontFamily,
+				// engravedText: null,
+				// engravedFont: null,
+				engravedText: textValue,
+				engravedFont: fontFamily,
 				note: null,
 				customizeDiamondRequests,
 			})
 		).then((res) => {
 			if (res.payload !== undefined) {
 				message.success('Thiết kế trang sức thành công!');
+				setStepChoose(3);
 			} else {
 				message.error('Có lỗi khi thiết kế.');
 			}
 		});
-		// setStepChoose(3);
 	};
 
 	console.log('currentDiamond', currentDiamond);
@@ -320,6 +320,7 @@ export const ChoiceMetalDiamond = ({
 								setStep={setStep}
 								customizeDiamond={customizeDiamond}
 								setCustomizeDiamond={setCustomizeDiamond}
+								currentDiamond={currentDiamond}
 							/>
 						</div>
 					)}

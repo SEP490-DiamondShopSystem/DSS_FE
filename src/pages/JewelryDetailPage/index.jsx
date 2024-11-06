@@ -8,6 +8,19 @@ import {getJewelryDetail} from '../../redux/slices/jewelrySlice';
 import {ImageGallery} from './Left/ImageGallery';
 import {InformationLeft} from './Left/InformationLeft';
 import {InformationRight} from './Right/InformationRight';
+import {Steps} from 'antd';
+
+const items = [
+	{
+		title: 'Chọn Vỏ',
+	},
+	{
+		title: 'Chọn Kim Cương',
+	},
+	{
+		title: 'Hoàn Thành',
+	},
+];
 
 const JewelryDetailPage = () => {
 	const {id} = useParams();
@@ -86,6 +99,7 @@ const JewelryDetailPage = () => {
 
 	return (
 		<div className="mx-32">
+			<Steps items={items} current={0} />
 			<div className="flex flex-col md:flex-row bg-white my-10 md:my-20 rounded-lg shadow-lg">
 				<div className="w-full md:w-1/2 p-6">
 					<ImageGallery />
