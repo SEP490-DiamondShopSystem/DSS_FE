@@ -1,8 +1,7 @@
 import React from 'react';
 
-import {Button, Image, Input, Radio} from 'antd';
+import {Button, Image, Radio} from 'antd';
 import polishImage from '../../../../../assets/Polish.png';
-import {notifyError} from '../../../../../utils/toast';
 
 const polishItems = [
 	{
