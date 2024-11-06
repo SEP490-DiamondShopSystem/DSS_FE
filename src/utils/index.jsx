@@ -46,7 +46,8 @@ export const formatPrice = (price) => {
 	return new Intl.NumberFormat('vi-VN', {
 		style: 'currency',
 		currency: 'VND',
-		minimumFractionDigits: 0, // To avoid decimal places for whole numbers
+		minimumFractionDigits: 0,
+		maximumFractionDigits: 0,
 	}).format(price);
 };
 

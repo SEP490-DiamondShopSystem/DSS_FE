@@ -7,7 +7,7 @@ import {Button, Image, Radio} from 'antd';
 import {notifyError} from '../../../../../utils/toast';
 import {formatPrice} from '../../../../../utils';
 
-export const Metal = ({
+export const Size = ({
 	setStep,
 	customizeJewelry,
 	setCustomizeJewelry,
@@ -16,37 +16,31 @@ export const Metal = ({
 	setSelectedMetal,
 	handleSelectMetal,
 	filteredGroups,
+	size,
+	setSize,
+	handleSizeChange,
 }) => {
 	const handleNextStep = () => {
 		setStep(1);
 	};
 
-	console.log('selectedMetal', selectedMetal);
+	console.log('diamondJewelry', diamondJewelry);
+	console.log('size', size);
+	console.log('selectedMetal', selectedMetal.length);
 
 	return (
 		<div>
 			<div>
-				{diamondJewelry?.MetalSupported?.map((metal, i) => (
-					<div key={metal.Id}>
-						<Radio.Group
-							onChange={() => handleSelectMetal(metal)}
-							value={selectedMetal}
-						>
-							<Radio value={metal}>
+				{filteredGroups?.map((metal, i) => (
+					<div key={i}>
+						<Radio.Group onChange={handleSizeChange} value={size}>
+							<Radio value={metal?.SizeId}>
 								<div
 									className="flex items-center justify-between"
-									style={{width: 500}}
+									style={{width: 1000}}
 								>
-									<div className="flex items-center">
-										<div className="mx-5 my-5">
-											<Image
-												preview={false}
-												src={metal.image}
-												height={50}
-												width={50}
-											/>
-										</div>
-										<p className="">{metal}</p>
+									<div className="flex items-center justify-between">
+										<p className="">{metal?.SizeId}</p>
 									</div>
 									{/* <p className="font-semibold">{formatPrice(metal.Price)}</p> */}
 								</div>
@@ -59,7 +53,7 @@ export const Metal = ({
 				<Button
 					type="text"
 					className="bg-primary w-48 uppercase font-semibold"
-					// disabled={selectedMetal.length === 0}
+					disabled={selectedMetal.length === 0}
 					onClick={handleNextStep}
 				>
 					Tiếp tục

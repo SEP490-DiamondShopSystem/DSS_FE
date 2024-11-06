@@ -20,9 +20,6 @@ export const InformationRight = ({
 	size,
 	setSize,
 	setIsLoginModalVisible,
-	user,
-	sizePrice,
-	setSizePrice,
 	setSelectedSideDiamond,
 	selectedSideDiamond,
 	filteredGroups,
@@ -86,9 +83,25 @@ export const InformationRight = ({
 
 	console.log(diamondJewelry);
 
-	// const handleAddCart = () => {
+	const handleDiamondNavigate = () => {
+		const jewelryModel = {
+			size,
+			selectedMetal,
+			selectedSideDiamond,
+			jewelryModelId: id,
+		};
 
-	// };
+		const existingJewelryModel = JSON.parse(localStorage.getItem(`jewelryModel_${userId}`));
+
+		if (existingJewelryModel && existingJewelryModel.jewelryModelId === id) {
+			localStorage.setItem(`jewelryModel_${userId}`, JSON.stringify(jewelryModel));
+		} else {
+			localStorage.setItem(`jewelryModel_${userId}`, JSON.stringify(jewelryModel));
+		}
+
+		localStorage.removeItem('diamondChoice');
+		navigate('/diamond/search');
+	};
 
 	const findSize = diamondJewelry?.MetalGroups?.find(
 		(metal) => metal?.Name === filteredGroups[0]?.Name
@@ -99,16 +112,7 @@ export const InformationRight = ({
 	);
 
 	console.log('diamondJewelry', diamondJewelry);
-	console.log('selectedMetal', selectedMetal);
-	console.log('selectedSideDiamond', selectedSideDiamond);
-	console.log('size', size);
-	console.log('findSize', findSize);
-	console.log('findSizePrice', findSizePrice);
-	console.log('MetalGroups', diamondJewelry?.MetalGroups);
 
-	console.log('id', id);
-
-	console.log('filteredGroups', filteredGroups);
 	return (
 		<div>
 			<div className="border-tintWhite">
@@ -217,23 +221,26 @@ export const InformationRight = ({
 			<div className="border-y border-tintWhite my-5">
 				{diamondJewelry && diamondJewelry.Category === 'Ring' && (
 					<div className="mt-5 flex items-center">
-						<div className="font-semibold">Chọn kích thước nhẫn:</div>
-						<div className={`font-semibold text-xl pl-4 text-primary`}>
+						<div className="font-semibold">Chọn kích thước:</div>
+						<div className="font-semibold text-xl pl-4 text-primary">
 							<Select value={size} style={{width: 120}} onChange={handleChange}>
-								{filteredGroups[0]?.SizeGroups.map((size, i) => (
-									<Option key={size?.Size}>
-										<p className="font-semibold mr-2">{size?.Size}</p>
-									</Option>
-								))}
+								{filteredGroups[0]?.SizeGroups.map(
+									(size, i) =>
+										size?.IsInStock === true && (
+											<Option key={size?.Size} value={size?.Size}>
+												<p className="font-semibold mr-2">{size?.Size}</p>
+											</Option>
+										)
+								)}
 							</Select>
 						</div>
 						<div>
-							<p className="text-red ml-5">* Vui lòng chọn cỡ nhẫn!</p>
+							<p className="text-red ml-5">* Vui lòng chọn kích thước!</p>
 						</div>
 					</div>
 				)}
 
-				{selectedMetal !== undefined && size !== undefined && (
+				{/* {selectedMetal !== undefined && size !== undefined && (
 					<div className="my-5 flex items-center">
 						<div className="font-semibold">Trang Sức Có Sẵn:</div>
 						<div className={`font-semibold text-xl pl-4 text-primary`}>
@@ -252,7 +259,7 @@ export const InformationRight = ({
 							/>
 						</div>
 					</div>
-				)}
+				)} */}
 
 				<div className="flex items-center">
 					<p className="text-2xl mr-2 font-semibold">Giá Sàn:</p>
@@ -276,9 +283,9 @@ export const InformationRight = ({
 						<Button
 							type="text"
 							className="border py-7 px-14 font-bold text-lg bg-primary rounded hover:bg-second w-full uppercase"
-							onClick={() => showModal(diamondJewelry.Id)}
+							onClick={handleDiamondNavigate}
 						>
-							Các Sản Phẩm Có Sẵn
+							Chọn Kim Cương
 						</Button>
 					</div>
 				)}

@@ -16,7 +16,7 @@ import {LoadingDiamondSelector} from '../../redux/selectors';
 import {formatPrice} from '../../utils';
 import Loading from '../../components/Loading';
 
-export const DiamondList = ({diamond, diamondList, setDiamond}) => {
+export const DiamondList = ({diamond, filters, setFilters, handleReset, filterLimits}) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
@@ -24,14 +24,7 @@ export const DiamondList = ({diamond, diamondList, setDiamond}) => {
 
 	const [changeGrid, setChangeGrid] = useState(false);
 	const [like, setLike] = useState({});
-	const [filters, setFilters] = useState({
-		shape: '',
-		price: {minPrice: 0, maxPrice: 1000},
-		carat: {minCarat: 0.5, maxCarat: 30.0},
-		color: {minColor: 0, maxColor: 7},
-		clarity: {minClarity: 0, maxClarity: 7},
-		cut: {minCut: 0, maxCut: 3},
-	});
+
 	const [hasMore, setHasMore] = useState(true);
 	const [visibleDiamonds, setVisibleDiamonds] = useState([]);
 	const [diamondChoice, setDiamondChoice] = useState(localStorage.getItem('diamondChoice') || '');
@@ -81,18 +74,6 @@ export const DiamondList = ({diamond, diamondList, setDiamond}) => {
 		}));
 	};
 
-	const handleReset = () => {
-		localStorage.removeItem('selected');
-		setFilters({
-			shape: '',
-			price: {minPrice: 0, maxPrice: 1000},
-			carat: {minCarat: 0.5, maxCarat: 30.0},
-			color: {minColor: 0, maxColor: 7},
-			clarity: {minClarity: 0, maxClarity: 7},
-			cut: {minCut: 0, maxCut: 3},
-		});
-	};
-
 	const handleDiamondChoiceClick = (id) => {
 		navigate(`/diamond-detail/${id}`);
 		console.log(id);
@@ -103,11 +84,14 @@ export const DiamondList = ({diamond, diamondList, setDiamond}) => {
 		navigate(`/diamond-detail/${id}`);
 	};
 
-	// if (!diamondList) return <div>Loading....</div>;
-
 	return (
 		<div>
-			<FilterDiamond setFilters={setFilters} filters={filters} handleReset={handleReset} />
+			<FilterDiamond
+				setFilters={setFilters}
+				filters={filters}
+				handleReset={handleReset}
+				filterLimits={filterLimits}
+			/>
 
 			{loading ? (
 				<Loading />
@@ -158,12 +142,7 @@ export const DiamondList = ({diamond, diamondList, setDiamond}) => {
 													/>
 												</div>
 												<div className="mx-10 my-5">
-													<p>
-														{diamondItem.DiamondShape}{' '}
-														{diamondItem.Carat}ct {diamondItem.Color}{' '}
-														Color {diamondItem.Clarity} Clarity{' '}
-														{diamondItem.Cut}
-													</p>
+													<p>{diamondItem?.Title}</p>
 													<div className="flex">
 														{diamondItem?.DiscountPrice !== null ? (
 															<div className="flex">

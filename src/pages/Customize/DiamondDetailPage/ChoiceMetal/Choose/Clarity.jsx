@@ -7,28 +7,43 @@ export const Clarity = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 	const clarityItems = [
 		{
 			id: 1,
-			value: 'clarityless',
-			clarity: 'FLAWLESS',
+			value: 1,
+			clarity: 'S12',
 		},
 		{
 			id: 2,
-			value: 'near_clarityless',
-			clarity: 'VERY VERY SMALL INCLUSIONS',
+			value: 2,
+			clarity: 'S11',
 		},
 		{
 			id: 3,
-			value: 'faint_yellow',
-			clarity: 'VERY SMALL INCLUSIONS',
+			value: 3,
+			clarity: 'VS2',
 		},
 		{
 			id: 4,
-			value: 'light_yellow',
-			clarity: 'SMALL INCLUSIONS',
+			value: 4,
+			clarity: 'VS1',
 		},
 		{
 			id: 5,
-			value: 'light_yellow',
-			clarity: 'INCLUSIONS',
+			value: 5,
+			clarity: 'VVS2',
+		},
+		{
+			id: 6,
+			value: 6,
+			clarity: 'VVS1',
+		},
+		{
+			id: 7,
+			value: 7,
+			clarity: 'IF',
+		},
+		{
+			id: 8,
+			value: 8,
+			clarity: 'F',
 		},
 	];
 
@@ -41,11 +56,7 @@ export const Clarity = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 	};
 
 	const handleNextStep = () => {
-		if (customizeDiamond.clarity?.length > 0) {
-			setStep(4);
-		} else {
-			notifyError('Vui lòng chọn clarity!');
-		}
+		setStep(4);
 	};
 	return (
 		<div>
@@ -54,7 +65,7 @@ export const Clarity = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 				{clarityItems?.map((item) => (
 					<div key={item.id}>
 						<Radio.Group onChange={onChange} value={customizeDiamond.clarity}>
-							<Radio value={item.clarity}>
+							<Radio value={item.value}>
 								<div className="flex justify-between items-center">
 									<p className="font-semibold text-xl">{item.clarity}</p>
 									{/* <p className="font-semibold ml-20">{item.price}</p> */}

@@ -26,9 +26,9 @@ const JewelryPopup = ({
 	const [jewelries, setJewelries] = useState([]);
 	const [isCompareModalVisible, setIsCompareModalVisible] = useState(false);
 	const [isSliderVisible, setIsSliderVisible] = useState(false);
-	const [priceRange, setPriceRange] = useState([0, 400000000]); // Min and Max price range
+	const [priceRange, setPriceRange] = useState([0, 40000000000]); // Min and Max price range
 	const [minPrice, setMinPrice] = useState(0);
-	const [maxPrice, setMaxPrice] = useState(400000000);
+	const [maxPrice, setMaxPrice] = useState(40000000000);
 
 	const fetchJewelryData = debounce(() => {
 		dispatch(
@@ -126,6 +126,8 @@ const JewelryPopup = ({
 		setIsSliderVisible(!isSliderVisible);
 	};
 
+	console.log('jewelry', jewelries);
+
 	return (
 		<>
 			<Modal
@@ -151,7 +153,7 @@ const JewelryPopup = ({
 								<Slider
 									range
 									min={0}
-									max={400000000}
+									max={40000000000}
 									step={50}
 									value={priceRange}
 									onChange={handlePriceChange}
@@ -159,7 +161,7 @@ const JewelryPopup = ({
 										0: `${formatPrice(0)}`,
 										10000000: `${formatPrice(10000000)}`,
 										20000000: `${formatPrice(20000000)}`,
-										400000000: `${formatPrice(400000000)}`,
+										40000000000: `${formatPrice(40000000000)}`,
 									}}
 								/>
 								<p className="font-semibold text-lg">
@@ -187,7 +189,7 @@ const JewelryPopup = ({
 									<div className="flex items-center justify-around">
 										<div>
 											<div className="flex items-center font-semibold text-lg">
-												<h3 className="mr-5">{item?.Name}</h3>
+												<h3 className="mr-2">{item?.SerialCode}</h3>
 												<p>{item?.Metal?.Name}</p>
 											</div>
 											<p>SKU: {item?.SerialCode}</p>
@@ -204,7 +206,7 @@ const JewelryPopup = ({
 													{formatPrice(item?.D_Price)}
 												</p> */}
 												<p style={{fontWeight: 'bold', fontSize: '16px'}}>
-													Giá: {formatPrice(item?.TotalPrice)}
+													Giá: {formatPrice(item?.ND_Price)}
 												</p>
 											</div>
 											{item?.Diamonds?.map((diamond) => (
@@ -221,11 +223,22 @@ const JewelryPopup = ({
 															fontSize: '16px',
 														}}
 													>
-														Giá: {formatPrice(diamond?.TruePrice)}
+														Giá: {formatPrice(item?.D_Price)}
 													</p>
 												</div>
 											))}
+											<div className="flex items-center justify-end mt-10">
+												<p
+													style={{
+														fontWeight: 'bold',
+														fontSize: '16px',
+													}}
+												>
+													Tổng Giá: {formatPrice(item?.TotalPrice)}
+												</p>
+											</div>
 										</div>
+
 										<Col>
 											<Button
 												type="link"
@@ -259,7 +272,7 @@ const JewelryPopup = ({
 
 			{/* Compare Modal */}
 			<Modal
-				title="Compare Jewelry"
+				title="So Sánh Trang Sức"
 				visible={isCompareModalVisible}
 				onCancel={closeCompareModal}
 				footer={null}
@@ -272,26 +285,24 @@ const JewelryPopup = ({
 								<div className="flex items-center justify-around">
 									<div>
 										<div className="flex items-center font-semibold text-lg">
-											<h3 className="mr-5">{item?.Name}</h3>
+											<h3 className="mr-2">{item?.SerialCode}</h3>
 											<p>{item?.Metal?.Name}</p>
 										</div>
 										<p>SKU: {item?.SerialCode}</p>
 										{/* <p>Kích Thước: {item?.SizeId}</p> */}
 
 										<div className="flex items-center mb-5">
-											<p
-												style={{
-													textDecoration: 'line-through',
-													color: '#999',
-												}}
-											>
-												{formatPrice(item?.D_Price)}
-											</p>
-											<p
-												style={{fontWeight: 'bold', fontSize: '16px'}}
-												className="ml-5"
-											>
-												{formatPrice(item?.ND_Price)}
+											{/* <p
+													style={{
+														textDecoration: 'line-through',
+														color: '#999',
+													}}
+													className="mr-5"
+												>
+													{formatPrice(item?.D_Price)}
+												</p> */}
+											<p style={{fontWeight: 'bold', fontSize: '16px'}}>
+												Giá: {formatPrice(item?.ND_Price)}
 											</p>
 										</div>
 										{item?.Diamonds?.map((diamond) => (
@@ -308,10 +319,20 @@ const JewelryPopup = ({
 														fontSize: '16px',
 													}}
 												>
-													Giá: {formatPrice(diamond?.TruePrice)}
+													Giá: {formatPrice(item?.D_Price)}
 												</p>
 											</div>
 										))}
+										<div className="flex items-center justify-end mt-10">
+											<p
+												style={{
+													fontWeight: 'bold',
+													fontSize: '16px',
+												}}
+											>
+												Tổng Giá: {formatPrice(item?.TotalPrice)}
+											</p>
+										</div>
 									</div>
 								</div>
 							</Card>

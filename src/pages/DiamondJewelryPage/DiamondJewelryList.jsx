@@ -125,7 +125,7 @@ export const DiamondJewelryList = () => {
 													// className="line-through"
 													// style={{color: '#b0b0b0'}}
 													>
-														Giá Mẫu: {formatPrice(jewelry.MinPrice)} -{' '}
+														Giá Vỏ: {formatPrice(jewelry.MinPrice)} -{' '}
 														{formatPrice(jewelry.MaxPrice)}
 													</p>
 													{/* <p className="ml-5 " style={{color: '#707070'}}>

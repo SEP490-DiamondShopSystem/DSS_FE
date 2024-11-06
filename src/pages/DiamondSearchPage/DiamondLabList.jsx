@@ -14,21 +14,13 @@ import {LoadingDiamondSelector} from '../../redux/selectors';
 import {formatPrice} from '../../utils';
 import Loading from '../../components/Loading';
 
-export const DiamondLabList = ({diamond, setDiamond, diamondList}) => {
+export const DiamondLabList = ({diamond, filters, setFilters, handleReset}) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const loading = useSelector(LoadingDiamondSelector);
 
 	const [changeGrid, setChangeGrid] = useState(false);
 	const [like, setLike] = useState({});
-	const [filters, setFilters] = useState({
-		shape: '',
-		price: {minPrice: 0, maxPrice: 1000},
-		carat: {minCarat: 0.5, maxCarat: 30.0},
-		color: {minColor: 0, maxColor: 7},
-		clarity: {minClarity: 0, maxClarity: 7},
-		cut: {minCut: 0, maxCut: 3},
-	});
 	const [hasMore, setHasMore] = useState(true);
 	const [visibleDiamonds, setVisibleDiamonds] = useState([]);
 	const [diamondChoice, setDiamondChoice] = useState(localStorage.getItem('diamondChoice') || '');
@@ -73,18 +65,6 @@ export const DiamondLabList = ({diamond, setDiamond, diamondList}) => {
 			...prevLike,
 			[id]: !prevLike[id],
 		}));
-	};
-
-	const handleReset = () => {
-		localStorage.removeItem('selected');
-		setFilters({
-			shape: '',
-			price: {minPrice: 0, maxPrice: 1000},
-			carat: {minCarat: 0.5, maxCarat: 30.0},
-			color: {minColor: 0, maxColor: 7},
-			clarity: {minClarity: 0, maxClarity: 7},
-			cut: {minCut: 0, maxCut: 3},
-		});
 	};
 
 	const handleDiamondChoiceClick = (id) => {
@@ -151,12 +131,7 @@ export const DiamondLabList = ({diamond, setDiamond, diamondList}) => {
 													/>
 												</div>
 												<div className="mx-10 my-5">
-													<p>
-														{diamondItem.DiamondShape}{' '}
-														{diamondItem.Carat}ct {diamondItem.Color}{' '}
-														Color {diamondItem.Clarity} Clarity{' '}
-														{diamondItem.Cut}
-													</p>
+													<p>{diamondItem?.Title}</p>
 													{diamondItem?.DiscountPrice !== null ? (
 														<div className="flex">
 															<p

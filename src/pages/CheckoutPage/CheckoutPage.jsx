@@ -129,6 +129,8 @@ const CheckoutPage = () => {
 		note: '',
 	});
 
+	console.log('provinceI', userInfo?.province);
+
 	useEffect(() => {
 		form.setFieldsValue(userInfo);
 	}, [form, userInfo]);
@@ -136,7 +138,7 @@ const CheckoutPage = () => {
 	useEffect(() => {
 		if (userDetail) {
 			const firstAddress = userDetail.Addresses[0];
-			console.log(firstAddress);
+			console.log('firstAddress', firstAddress);
 			setUserInfo((prev) => ({
 				...prev,
 				district: firstAddress.District,
@@ -160,7 +162,7 @@ const CheckoutPage = () => {
 
 	useEffect(() => {
 		dispatch(fetchDistrict(provinceId));
-	}, [dispatch, userInfo]);
+	}, [dispatch, provinceId]);
 
 	useEffect(() => {
 		if (districts) {
@@ -170,7 +172,7 @@ const CheckoutPage = () => {
 
 	useEffect(() => {
 		dispatch(fetchWard(districtId));
-	}, [dispatch, userInfo]);
+	}, [dispatch, districtId]);
 
 	useEffect(() => {
 		if (wards) {
@@ -418,7 +420,9 @@ const CheckoutPage = () => {
 								>
 									<Select
 										placeholder="Chọn tỉnh thành"
-										onChange={handleCityChange} // Update city change
+										onChange={handleCityChange}
+										disabled={loading}
+										loading={loading}
 										value={userInfo?.province}
 									>
 										{province &&

@@ -72,8 +72,6 @@ export const Header = () => {
 		navigate('/cart');
 	};
 
-	console.log('localCart', localCart);
-
 	return (
 		<nav className="bg-white">
 			<div className="flex items-center font-semibold justify-around">
@@ -92,7 +90,7 @@ export const Header = () => {
 							href="/customize/diamond-jewelry"
 							className={`py-7 px-3 inline-block no-underline text-black`}
 						>
-							Đặt trang sức
+							Thiết Kế Trang Sức
 						</a>
 					</li>
 					<li>

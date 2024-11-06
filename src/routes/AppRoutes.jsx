@@ -30,130 +30,137 @@ import MyOrderPage from '../pages/ProfilePage/MyOrderPage/MyOrderPage';
 import ProfilePage from '../pages/ProfilePage/ProfilePage';
 import PromotionPage from '../pages/PromotionPage/PromotionPage';
 import PaymentPage from '../pages/PaymentPage';
+import ScrollToTop from '../components/ScrollToTop';
 
 export const AppRouters = () => {
 	return (
-		<Routes>
-			<Route path="/" element={<HomePage />} />
-			<Route path="/jewelry" element={<HomeJewelryPage />} />
-			<Route path="/jewelry/design-your-own-earrings" element={<HomeEarringPage />} />
-			<Route path="/jewelry/design-your-own-necklaces" element={<HomeNecklacePage />} />
-			<Route path="/jewelry/design-your-own-rings" element={<HomeRingPage />} />
-			<Route path="/jewelry/design-your-own-rings/setting/all" element={<RingSearchPage />} />
-			<Route
-				path="/jewelry/design-your-own-necklaces/setting/all"
-				element={<NecklaceSearchPage />}
-			/>
-			<Route
-				path="/jewelry/design-your-own-earrings/setting/all"
-				element={<EarringSearchPage />}
-			/>
-			<Route
-				path="/jewelry/design-your-own-rings/setting/:id"
-				element={<ProductDetailPage />}
-			/>
-			<Route
-				path="/jewelry/design-your-own-necklaces/setting/:id"
-				element={<ProductDetailPage />}
-			/>
-			<Route
-				path="/jewelry/design-your-own-earrings/setting/:id"
-				element={<ProductDetailPage />}
-			/>
-			<Route path="/jewelry/setting/:id" element={<ProductDetailPage />} />
-			<Route path="/jewelry-model/search" element={<DiamondJewelryPage />} />
-			<Route path="/jewelry-model/search/:id" element={<JewelryDetailPage />} />
-			<Route path="/diamond-detail/:id" element={<DiamondDetailPage />} />
-			<Route path="/completed-jewelry/:id" element={<FinishProductPage />} />
-			<Route path="/customize/diamond-jewelry" element={<ChooseJewelrySetting />} />
-			<Route path="/customize/diamond-jewelry/:id" element={<JewelryCustomDetail />} />
+		<>
+			<ScrollToTop /> {/* Moved outside Routes to apply for every route change */}
+			<Routes>
+				<Route path="/" element={<HomePage />} />
+				<Route path="/jewelry" element={<HomeJewelryPage />} />
+				<Route path="/jewelry/design-your-own-earrings" element={<HomeEarringPage />} />
+				<Route path="/jewelry/design-your-own-necklaces" element={<HomeNecklacePage />} />
+				<Route path="/jewelry/design-your-own-rings" element={<HomeRingPage />} />
+				<Route
+					path="/jewelry/design-your-own-rings/setting/all"
+					element={<RingSearchPage />}
+				/>
+				<Route
+					path="/jewelry/design-your-own-necklaces/setting/all"
+					element={<NecklaceSearchPage />}
+				/>
+				<Route
+					path="/jewelry/design-your-own-earrings/setting/all"
+					element={<EarringSearchPage />}
+				/>
+				<Route
+					path="/jewelry/design-your-own-rings/setting/:id"
+					element={<ProductDetailPage />}
+				/>
+				<Route
+					path="/jewelry/design-your-own-necklaces/setting/:id"
+					element={<ProductDetailPage />}
+				/>
+				<Route
+					path="/jewelry/design-your-own-earrings/setting/:id"
+					element={<ProductDetailPage />}
+				/>
+				<Route path="/jewelry/setting/:id" element={<ProductDetailPage />} />
+				<Route path="/jewelry-model/search" element={<DiamondJewelryPage />} />
+				<Route path="/jewelry-model/search/:id" element={<JewelryDetailPage />} />
+				<Route path="/diamond-detail/:id" element={<DiamondDetailPage />} />
+				<Route path="/completed-jewelry/:id" element={<FinishProductPage />} />
+				<Route path="/customize/diamond-jewelry" element={<ChooseJewelrySetting />} />
+				<Route path="/customize/diamond-jewelry/:id" element={<JewelryCustomDetail />} />
 
-			<Route path="/jewelry/setting/all" element={<ProductPage />} />
-			<Route path="/diamond/search" element={<DiamondSearchPage />} />
+				<Route path="/jewelry/setting/all" element={<ProductPage />} />
+				<Route path="/diamond/search" element={<DiamondSearchPage />} />
 
-			{/* Private routes */}
-			<Route
-				path="/cart"
-				element={
-					<PrivateRoute roles={'customer'}>
-						<CartPage />
-					</PrivateRoute>
-				}
-			/>
-			<Route
-				path="/checkout"
-				element={
-					<PrivateRoute roles={'customer'}>
-						<CheckoutPage />
-					</PrivateRoute>
-				}
-			/>
-			<Route
-				path="/payment"
-				element={
-					<PrivateRoute roles={'customer'}>
-						<PaymentPage />
-					</PrivateRoute>
-				}
-			/>
-			<Route
-				path="/invoice"
-				element={
-					<PrivateRoute roles={'customer'}>
-						<Invoice />
-					</PrivateRoute>
-				}
-			/>
-			<Route
-				path="/coupons"
-				element={
-					<PrivateRoute roles={'customer'}>
-						<CouponPage />
-					</PrivateRoute>
-				}
-			/>
-			<Route
-				path="/promotion"
-				element={
-					<PrivateRoute roles={'customer'}>
-						<PromotionPage />
-					</PrivateRoute>
-				}
-			/>
-			<Route
-				path="/profile"
-				element={
-					<PrivateRoute roles={'customer'}>
-						<ProfilePage />
-					</PrivateRoute>
-				}
-			/>
-			<Route
-				path="/my-orders"
-				element={
-					<PrivateRoute roles={'customer'}>
-						<MyOrderPage />
-					</PrivateRoute>
-				}
-			/>
-			<Route
-				path="/my-info"
-				element={
-					<PrivateRoute roles={'customer'}>
-						<MyInfoPage />
-					</PrivateRoute>
-				}
-			/>
-			<Route
-				path="/change-password"
-				element={
-					<PrivateRoute roles={'customer'}>
-						<ChangePassword />
-					</PrivateRoute>
-				}
-			/>
+				{/* Private routes */}
+				<Route
+					path="/cart"
+					element={
+						<PrivateRoute roles={'customer'}>
+							<CartPage />
+						</PrivateRoute>
+					}
+				/>
+				<Route
+					path="/checkout"
+					element={
+						<PrivateRoute roles={'customer'}>
+							<CheckoutPage />
+						</PrivateRoute>
+					}
+				/>
+				<Route
+					path="/payment"
+					element={
+						<PrivateRoute roles={'customer'}>
+							<PaymentPage />
+						</PrivateRoute>
+					}
+				/>
+				<Route
+					path="/invoice"
+					element={
+						<PrivateRoute roles={'customer'}>
+							<Invoice />
+						</PrivateRoute>
+					}
+				/>
+				<Route
+					path="/coupons"
+					element={
+						<PrivateRoute roles={'customer'}>
+							<CouponPage />
+						</PrivateRoute>
+					}
+				/>
+				<Route
+					path="/promotion"
+					element={
+						<PrivateRoute roles={'customer'}>
+							<PromotionPage />
+						</PrivateRoute>
+					}
+				/>
+				<Route
+					path="/profile"
+					element={
+						<PrivateRoute roles={'customer'}>
+							<ProfilePage />
+						</PrivateRoute>
+					}
+				/>
+				<Route
+					path="/my-orders"
+					element={
+						<PrivateRoute roles={'customer'}>
+							<MyOrderPage />
+						</PrivateRoute>
+					}
+				/>
+				<Route
+					path="/my-info"
+					element={
+						<PrivateRoute roles={'customer'}>
+							<MyInfoPage />
+						</PrivateRoute>
+					}
+				/>
+				<Route
+					path="/change-password"
+					element={
+						<PrivateRoute roles={'customer'}>
+							<ChangePassword />
+						</PrivateRoute>
+					}
+				/>
 
-			<Route path="*" element={<NotFoundPage />} />
-		</Routes>
+				<Route path="*" element={<NotFoundPage />} />
+			</Routes>
+		</>
 	);
 };
