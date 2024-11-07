@@ -8,6 +8,7 @@ import {formatPrice} from '../../../utils';
 import {useDispatch} from 'react-redux';
 import {addOrUpdateCartDesignDiamondItem} from '../../../redux/slices/cartSlice';
 import {jewelries} from '../../../utils/constant';
+import {getUserId} from '../../../components/GetUserId';
 
 const infoMetal = {
 	name: 'Kim cương tròn 1.00 Carat',
@@ -26,6 +27,9 @@ const infoMetal = {
 export const InformationRight = ({diamondChoice, toggleSidebar, diamond, handleAddToCart}) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+
+	const userId = getUserId();
+
 	const [showDetail, setDetail] = useState(false);
 	const [showSecureShopping, setSecureShopping] = useState(false);
 	const [showProductWarranty, setProductWarranty] = useState(false);
@@ -42,10 +46,6 @@ export const InformationRight = ({diamondChoice, toggleSidebar, diamond, handleA
 		}
 	});
 
-	const jewelryItem = cartDesign.find((item) => item.JewelryId);
-
-	console.log(jewelryItem);
-
 	const handleDetailOpen = () => {
 		setDetail(!showDetail);
 	};
@@ -56,13 +56,16 @@ export const InformationRight = ({diamondChoice, toggleSidebar, diamond, handleA
 		setProductWarranty(!showProductWarranty);
 	};
 
-	console.log(diamond);
+	console.log('diamond', diamond);
 
 	const handleCompleted = (id) => {
-		// Get the current diamond's ID for comparison
-		const jewelryDiamondId = jewelryItem.JewelryId + id;
+		const jewelryItem = JSON.parse(localStorage.getItem(`jewelryModel_${userId}`));
+		console.log('jewelryItem', jewelryItem);
 
-		dispatch(addOrUpdateCartDesignDiamondItem({diamond}));
+		localStorage.setItem(`diamond_${userId}`, JSON.stringify(diamond));
+		// Get the current diamond's ID for comparison
+
+		const jewelryDiamondId = jewelryItem?.jewelryModelId + id;
 
 		navigate(`/completed-jewelry/${jewelryDiamondId}`);
 	};

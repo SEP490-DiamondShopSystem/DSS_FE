@@ -1,13 +1,9 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 
-import {Button, Image, Input} from 'antd';
-import caratImage from '../../../../../assets/carat-weight.png';
-import {notifyError} from '../../../../../utils/toast';
-import {HeartFilled, HeartOutlined} from '@ant-design/icons';
-import {useDispatch} from 'react-redux';
-import {FilterDiamond, FilterDiamondCustomize} from '../../../../../components/Filter/Filter';
-import Loading from '../../../../../components/Loading';
+import {Button, Image} from 'antd';
 import diamondImg from '../../../../../assets/img-diamond.png';
+import {FilterDiamondCustomize} from '../../../../../components/Filter/Filter';
+import Loading from '../../../../../components/Loading';
 import {formatPrice} from '../../../../../utils';
 
 export const Diamond = ({

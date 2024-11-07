@@ -3,11 +3,9 @@ import React, {useEffect, useState} from 'react';
 import {MinusOutlined, PlusOutlined} from '@ant-design/icons';
 import {faRefresh, faTruck} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {Button, message, Select} from 'antd';
-import {useNavigate} from 'react-router-dom';
-import {notifyError} from '../../../../utils/toast';
 import {Rating} from '@mui/material';
-import {formatPrice} from '../../../../utils';
+import {Button, Select} from 'antd';
+import {useNavigate} from 'react-router-dom';
 
 const {Option} = Select;
 

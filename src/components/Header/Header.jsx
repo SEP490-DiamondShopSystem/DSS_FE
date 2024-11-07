@@ -3,14 +3,13 @@ import React, {useEffect, useState} from 'react';
 import {HeartOutlined} from '@ant-design/icons';
 import {faShoppingBag} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {Badge, Button} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
 import {Link, useNavigate} from 'react-router-dom';
 import {handleCartValidate} from '../../redux/slices/cartSlice';
+import {getUserId} from '../GetUserId';
 import Logo from './../../assets/logo-ex.png';
 import ActionLinks from './ActionLinks';
 import NavLinks from './NavLinks';
-import {getUserId} from '../GetUserId';
 
 export const Header = () => {
 	const userId = getUserId();

@@ -1,11 +1,6 @@
 import React from 'react';
 
-import gold from '../../../../../assets/gold.png';
-import rose_gold from '../../../../../assets/rose-gold.png';
-import platinum from '../../../../../assets/platinum.png';
-import {Button, Image, Radio} from 'antd';
-import {notifyError} from '../../../../../utils/toast';
-import {formatPrice} from '../../../../../utils';
+import {Button, Radio} from 'antd';
 
 export const Size = ({
 	setStep,
@@ -21,7 +16,7 @@ export const Size = ({
 	handleSizeChange,
 }) => {
 	const handleNextStep = () => {
-		setStep(1);
+		setStep(2);
 	};
 
 	console.log('diamondJewelry', diamondJewelry);

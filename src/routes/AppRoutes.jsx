@@ -71,9 +71,6 @@ export const AppRouters = () => {
 				<Route path="/jewelry-model/search/:id" element={<JewelryDetailPage />} />
 				<Route path="/diamond-detail/:id" element={<DiamondDetailPage />} />
 				<Route path="/completed-jewelry/:id" element={<FinishProductPage />} />
-				<Route path="/customize/diamond-jewelry" element={<ChooseJewelrySetting />} />
-				<Route path="/customize/diamond-jewelry/:id" element={<JewelryCustomDetail />} />
-
 				<Route path="/jewelry/setting/all" element={<ProductPage />} />
 				<Route path="/diamond/search" element={<DiamondSearchPage />} />
 
@@ -83,6 +80,22 @@ export const AppRouters = () => {
 					element={
 						<PrivateRoute roles={'customer'}>
 							<CartPage />
+						</PrivateRoute>
+					}
+				/>
+				<Route
+					path="/customize/diamond-jewelry"
+					element={
+						<PrivateRoute roles={'customer'}>
+							<ChooseJewelrySetting />
+						</PrivateRoute>
+					}
+				/>
+				<Route
+					path="/customize/diamond-jewelry/:id"
+					element={
+						<PrivateRoute roles={'customer'}>
+							<JewelryCustomDetail />
 						</PrivateRoute>
 					}
 				/>

@@ -209,6 +209,16 @@ export const ChoiceMetalDiamond = ({
 		setSelectedDiamonds([]);
 	};
 
+	const onChange = (value) => {
+		console.log('onChange:', value);
+		setStep(value);
+	};
+
+	const onChangeDiamond = (value) => {
+		console.log('onChange:', value);
+		setStepChooseDiamond(value);
+	};
+
 	const filterShape = metals?.find((metal) => metal.Name === selectedMetal);
 
 	const handleSendReqCustomize = () => {
@@ -262,7 +272,12 @@ export const ChoiceMetalDiamond = ({
 
 	return (
 		<div className="my-10 mx-5">
-			<Steps items={itemsDiamond} current={stepChooseDiamond} type="navigation" />
+			<Steps
+				items={itemsDiamond}
+				current={stepChooseDiamond}
+				type="navigation"
+				onChange={onChangeDiamond}
+			/>
 			<div className="mx-10"></div>
 			{/* {steps < items.length && (
 				<div className="mx-20">
@@ -313,7 +328,7 @@ export const ChoiceMetalDiamond = ({
 			)} */}
 			{stepChooseDiamond < itemsDiamond.length && (
 				<>
-					<Steps items={items} current={steps} type="navigation" />
+					<Steps items={items} current={steps} type="navigation" onChange={onChange} />
 					{steps === 0 && (
 						<div className="mx-20">
 							<Carat
@@ -396,7 +411,7 @@ export const ChoiceMetalDiamond = ({
 						<div className="flex items-center justify-between mt-10">
 							<div className="flex items-center ">
 								<Button danger onClick={handleResetStep}>
-									Cài lại
+									Cài Lại
 								</Button>
 							</div>
 							<Button
@@ -404,7 +419,7 @@ export const ChoiceMetalDiamond = ({
 								className="bg-primary border"
 								onClick={handleSendReqCustomize}
 							>
-								Xác Nhận
+								Đặt Hàng
 							</Button>
 						</div>
 					</div>

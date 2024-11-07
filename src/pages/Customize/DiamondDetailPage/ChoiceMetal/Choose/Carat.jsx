@@ -4,7 +4,7 @@ import {Button, Image, Input, message, Space} from 'antd';
 import caratImage from '../../../../../assets/carat-weight.png';
 
 export const Carat = ({setStep, customizeDiamond, setCustomizeDiamond, currentDiamond}) => {
-	const [caratFormShape, setCaratFromShape] = useState();
+	const [caratFromShape, setCaratFromShape] = useState();
 	const [caratToShape, setCaratToShape] = useState();
 
 	useEffect(() => {
@@ -14,7 +14,7 @@ export const Carat = ({setStep, customizeDiamond, setCustomizeDiamond, currentDi
 		}
 	}, [currentDiamond]);
 
-	console.log('caratFormShape', caratFormShape);
+	console.log('caratFormShape', caratFromShape);
 	console.log('caratToShape', caratToShape);
 
 	const onChange = (e) => {
@@ -26,20 +26,25 @@ export const Carat = ({setStep, customizeDiamond, setCustomizeDiamond, currentDi
 	};
 
 	const handleNextStep = () => {
-		const {caratForm, caratTo} = customizeDiamond;
+		const {caratFrom, caratTo} = customizeDiamond;
+		console.log(caratFrom);
+		console.log(caratTo);
 
-		if (caratForm < caratFormShape || caratTo > caratToShape) {
-			message.warning('Vui lòng chọn giới hạn carat hợp lệ!');
-		}
-
-		// If all conditions are valid, move to the next step
-		else {
+		if (
+			Number(caratFrom) >= Number(caratFromShape) &&
+			Number(caratTo) <= Number(caratToShape)
+		) {
 			setStep(1);
+		} else {
+			message.warning('Vui lòng chọn giới hạn carat hợp lệ!');
 		}
 	};
 
 	console.log('currentDiamond', currentDiamond);
-	console.log('caratForm', customizeDiamond.caratFrom);
+	console.log('caratForm', Number(customizeDiamond.caratFrom));
+	console.log('caratTo', Number(customizeDiamond.caratTo));
+	console.log('caratToShape', Number(caratToShape));
+	console.log('caratFromShape', Number(caratFromShape));
 	return (
 		<div>
 			<div>
@@ -47,7 +52,7 @@ export const Carat = ({setStep, customizeDiamond, setCustomizeDiamond, currentDi
 			</div>
 
 			<div className="my-10 text-red text-lg font-semibold">
-				Kim Cương Được Nhập Carat: {caratFormShape} - {caratToShape}
+				Kim Cương Được Nhập Carat: {caratFromShape} - {caratToShape}
 			</div>
 			<div className="flex items-center justify-center">
 				<Space>

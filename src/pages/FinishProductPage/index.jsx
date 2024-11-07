@@ -6,54 +6,30 @@ import {ImageGallery} from './Left/ImageGallery';
 import {InformationLeft} from './Left/InformationLeft';
 import {InformationRight} from './Right/InformationRight';
 import LoginModal from '../../components/LogModal/LoginModal';
+import {getUserId} from '../../components/GetUserId';
 
 const FinishProductPage = () => {
+	const userId = getUserId();
+
 	const [jewelryChoice, setJewelryChoice] = useState(localStorage.getItem('jewelryChoice') || '');
 	const [diamondChoice, setDiamondChoice] = useState(localStorage.getItem('diamondChoice') || '');
 	const [jewelryType, setJewelryType] = useState(localStorage.getItem('jewelryType') || '');
 	const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
-	const [diamondDetail, setDiamondDetail] = useState(() => {
-		const cartDesign = localStorage.getItem('cartDesign');
+	const [diamondDetail, setDiamondDetail] = useState(
+		JSON.parse(localStorage.getItem(`diamond_${userId}`)) || ''
+	);
+	const [jewelryDetail, setJewelryDetail] = useState(
+		JSON.parse(localStorage.getItem(`jewelryModel_${userId}`)) || ''
+	);
 
-		if (cartDesign) {
-			try {
-				const parsedCartDesign = JSON.parse(cartDesign);
-
-				const diamond = parsedCartDesign.find((item) => item.DiamondId);
-
-				return diamond || null;
-			} catch (error) {
-				console.error('Error parsing cartDesign from localStorage:', error);
-				return null;
-			}
-		}
-
-		return null;
-	});
-	const [jewelryDetail, setJewelryDetail] = useState(() => {
-		const cartDesign = localStorage.getItem('cartDesign');
-
-		if (cartDesign) {
-			try {
-				const parsedCartDesign = JSON.parse(cartDesign);
-
-				const jewelry = parsedCartDesign.find((item) => item.JewelryId);
-
-				return jewelry || null;
-			} catch (error) {
-				console.error('Error parsing cartDesign from localStorage:', error);
-				return null;
-			}
-		}
-
-		return null;
-	});
+	console.log('diamondDetail', diamondDetail);
+	console.log('jewelryDetail', jewelryDetail);
 
 	const hideLoginModal = () => setIsLoginModalVisible(false);
 
 	const items = [
 		{
-			title: `Chọn ${jewelryType}`,
+			title: `Chọn Vỏ`,
 		},
 		{
 			title: 'Chọn Kim Cương',
@@ -62,34 +38,15 @@ const FinishProductPage = () => {
 			title: 'Hoàn Thành',
 		},
 	];
-	const itemsDiamond = [
-		{
-			title: `Chọn Kim Cương`,
-		},
-		{
-			title: `Chọn ${jewelryType}`,
-		},
-		{
-			title: 'Hoàn Thành',
-		},
-	];
+
 	return (
 		<div className="mx-32">
-			{diamondChoice.length > 0 ? (
-				<Steps
-					current={2}
-					labelPlacement="horizontal"
-					items={itemsDiamond}
-					className="bg-white p-4 rounded-full my-10"
-				/>
-			) : (
-				<Steps
-					current={2}
-					labelPlacement="horizontal"
-					items={items}
-					className="bg-white p-4 rounded-full my-10"
-				/>
-			)}
+			<Steps
+				current={3}
+				labelPlacement="horizontal"
+				items={items}
+				className="bg-white p-4 rounded-full my-10"
+			/>
 
 			<div className="flex flex-col md:flex-row bg-white my-10 md:my-20 rounded-lg shadow-lg">
 				<div className="w-full md:w-1/2 p-6">

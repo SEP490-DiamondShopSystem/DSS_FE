@@ -212,7 +212,7 @@ export const Engrave = ({
 				<Button
 					type="text"
 					className="bg-primary w-32 uppercase font-semibold"
-					onClick={() => setStep(2)}
+					onClick={() => setStep(3)}
 				>
 					Tiếp Tục
 				</Button>

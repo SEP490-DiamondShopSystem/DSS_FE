@@ -40,7 +40,7 @@ export const getAllJewelryModelCustomize = createAsyncThunk(
 export const handleSendRequest = createAsyncThunk(
 	'customizeSlice/handleSendRequest',
 	async (body, {rejectWithValue}) => {
-		console.log('body', body);
+		console.log('body', JSON.stringify(body));
 
 		try {
 			const response = await api.post(`/CustomizeRequest/Send`, body);

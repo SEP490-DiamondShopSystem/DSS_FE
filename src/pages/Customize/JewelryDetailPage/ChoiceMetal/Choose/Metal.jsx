@@ -1,11 +1,6 @@
 import React from 'react';
 
-import gold from '../../../../../assets/gold.png';
-import rose_gold from '../../../../../assets/rose-gold.png';
-import platinum from '../../../../../assets/platinum.png';
 import {Button, Image, Radio} from 'antd';
-import {notifyError} from '../../../../../utils/toast';
-import {formatPrice} from '../../../../../utils';
 
 export const Metal = ({
 	setStep,
@@ -27,7 +22,7 @@ export const Metal = ({
 		<div>
 			<div>
 				{diamondJewelry?.MetalSupported?.map((metal, i) => (
-					<div key={metal.Id}>
+					<div key={i}>
 						<Radio.Group
 							onChange={() => handleSelectMetal(metal)}
 							value={selectedMetal}

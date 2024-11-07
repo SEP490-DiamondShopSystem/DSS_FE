@@ -100,7 +100,7 @@ const DiamondSearchPage = () => {
 	useEffect(() => {
 		if (filterLimits) {
 			setFilters({
-				shape: '',
+				shape: JSON.parse(localStorage.getItem('selected')) || '',
 				price: {minPrice: filterLimits?.Price?.Min, maxPrice: filterLimits?.Price?.Max},
 				carat: {minCarat: filterLimits?.Carat?.Min, maxCarat: filterLimits?.Carat?.Max},
 				color: {minColor: filterLimits?.Color?.Min, maxColor: filterLimits?.Color?.Max},
@@ -117,7 +117,7 @@ const DiamondSearchPage = () => {
 
 	console.log('diamondList', diamondList);
 	console.log('mappedDiamonds', mappedDiamonds);
-	console.log('filter', filters);
+	console.log('filters', filters);
 	console.log('jewelryModel', jewelryModel);
 	console.log('jewelryModel.length', jewelryModel.length);
 
