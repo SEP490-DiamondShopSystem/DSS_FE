@@ -16,7 +16,7 @@ export const Size = ({
 	handleSizeChange,
 }) => {
 	const handleNextStep = () => {
-		setStep(1);
+		setStep(2);
 	};
 
 	console.log('diamondJewelry', diamondJewelry);

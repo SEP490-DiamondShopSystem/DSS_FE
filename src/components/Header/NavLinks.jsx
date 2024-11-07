@@ -21,22 +21,22 @@ const NavLinks = () => {
 				{
 					Head: 'Mua Kim Cương Theo Hình Dạng',
 					sublink: [
-						{name: 'Round', link: '/diamond/search'},
-						{name: 'Princess', link: '/diamond/search'},
-						{name: 'Cushion', link: '/diamond/search'},
-						{name: 'Oval', link: '/diamond/search'},
-						{name: 'Emerald', link: '/diamond/search'},
-						{name: 'Pear', link: '/diamond/search'},
-						{name: 'Asscher', link: '/diamond/search'},
-						{name: 'Heart', link: '/diamond/search'},
-						{name: 'Radiant', link: '/diamond/search'},
-						{name: 'Marquise', link: '/diamond/search'},
+						{name: 'Round', link: '/diamond/search', value: '1'},
+						{name: 'Princess', link: '/diamond/search', value: '2'},
+						{name: 'Cushion', link: '/diamond/search', value: '3'},
+						{name: 'Oval', link: '/diamond/search', value: '5'},
+						{name: 'Emerald', link: '/diamond/search', value: '4'},
+						{name: 'Pear', link: '/diamond/search', value: '10'},
+						{name: 'Asscher', link: '/diamond/search', value: '7'},
+						{name: 'Heart', link: '/diamond/search', value: '9'},
+						{name: 'Radiant', link: '/diamond/search', value: '6'},
+						{name: 'Marquise', link: '/diamond/search', value: '8'},
 					],
 				},
 				{
 					Head: 'Sản Phẩm',
 					sublink: [
-						{name: 'Vỏ Trang Sức', link: '/jewelry-model/search'},
+						{name: 'Trang Sức', link: '/jewelry-model/search'},
 						{name: 'Kim Cương', link: '/diamond/search'},
 					],
 				},
@@ -48,7 +48,7 @@ const NavLinks = () => {
 		const userId = getUserId();
 
 		if (shape) {
-			localStorage.setItem('selected', shape);
+			localStorage.setItem('selected', JSON.stringify(shape));
 			localStorage.removeItem('jewelryType');
 			localStorage.setItem('diamondChoice', 'Kim Cương');
 			localStorage.removeItem('jewelryChoice');
@@ -115,7 +115,7 @@ const NavLinks = () => {
 																			'Mua Kim Cương Theo Hình Dạng'
 																		) {
 																			handleClick(
-																				sl.name,
+																				sl.value,
 																				null,
 																				null,
 																				null
@@ -133,8 +133,7 @@ const NavLinks = () => {
 																		// 	);
 																		// }
 																		else if (
-																			sl.name ===
-																			'Vỏ Trang Sức'
+																			sl.name === 'Trang Sức'
 																		) {
 																			handleClick(
 																				null,

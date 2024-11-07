@@ -147,7 +147,7 @@ export const ChoiceMetal = ({
 							<Button
 								type="text"
 								className="bg-primary border"
-								onClick={() => setStepChoose(2)}
+								onClick={() => setStepChoose(1)}
 							>
 								Xác Nhận
 							</Button>

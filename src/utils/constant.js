@@ -420,3 +420,90 @@ export const shapeItems = [
 	{id: 9, image: princess, shape: 'Princess', value: '2'},
 	{id: 9, image: princess, shape: 'Pear', value: '10'},
 ];
+
+export const Clarity = {
+	S12: 1,
+	S11: 2,
+	VS2: 3,
+	VS1: 4,
+	VVS2: 5,
+	VVS1: 6,
+	IF: 7,
+	FL: 8,
+};
+
+export const Color = {
+	K: 1,
+	J: 2,
+	I: 3,
+	H: 4,
+	G: 5,
+	F: 6,
+	E: 7,
+	D: 8,
+};
+
+export const Culet = {
+	None: 1,
+	Very_Small: 2,
+	Small: 3,
+	Medium: 4,
+	Slightly_Large: 5,
+	Large: 6,
+	Very_Large: 7,
+	Extremely_Large: 8,
+};
+
+export const Cut = {
+	Good: 1,
+	Very_Good: 2,
+	Ideal: 3,
+	Astor_Ideal: 4,
+};
+
+export const Fluorescence = {
+	None: 1,
+	Faint: 2,
+	Medium: 3,
+	Strong: 4,
+};
+
+export const Girdle = {
+	Extremely_Thin: 1,
+	Very_Thin: 2,
+	Thin: 3,
+	Medium: 4,
+	Slightly_Thick: 5,
+	Thick: 6,
+	Very_Thick: 7,
+	Extremely_Thick: 8,
+};
+
+export const Polish = {
+	Poor: 1,
+	Fair: 2,
+	Good: 3,
+	Very_Good: 4,
+	Excellent: 5,
+};
+
+export const Symmetry = {
+	Poor: 1,
+	Fair: 2,
+	Good: 3,
+	Very_Good: 4,
+	Excellent: 5,
+};
+
+export const ShapeName = {
+	Round: '1',
+	Princess: '2',
+	Emerald: '3',
+	Asscher: '4',
+	Marquise: '5',
+	Oval: '6',
+	Radiant: '7',
+	Pear: '8',
+	Heart: '9',
+	Cushion: '10',
+};

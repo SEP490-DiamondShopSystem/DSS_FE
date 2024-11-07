@@ -12,6 +12,80 @@ import {getDiamondDetail} from '../../redux/slices/diamondSlice';
 import LoginModal from '../../components/LogModal/LoginModal';
 import {getUserId} from '../../components/GetUserId';
 
+const mapAttributes = (data, attributes) => {
+	return {
+		DiamondId: data.Id,
+		Carat: data.Carat,
+		Clarity:
+			attributes.Clarity && data.Clarity !== undefined
+				? Object.keys(attributes.Clarity).find(
+						(key) => attributes.Clarity[key] === data.Clarity
+				  ) || 'Unknown Clarity' // Thêm giá trị mặc định nếu không tìm thấy
+				: '',
+		Color:
+			attributes.Color && data.Color !== undefined
+				? Object.keys(attributes.Color).find(
+						(key) => attributes.Color[key] === data.Color
+				  ) || 'Unknown Color'
+				: '',
+		Culet:
+			attributes.Culet && data.Culet !== undefined
+				? Object.keys(attributes.Culet)
+						.find((key) => attributes.Culet[key] === data.Culet)
+						.replace('_', ' ') || 'Unknown Culet'
+				: '',
+		Cut:
+			attributes.Cut && data.Cut !== undefined
+				? Object.keys(attributes.Cut)
+						.find((key) => attributes.Cut[key] === data.Cut)
+						.replace('_', ' ') || 'Unknown Cut'
+				: '',
+		Fluorescence:
+			attributes.Fluorescence && data.Fluorescence !== undefined
+				? Object.keys(attributes.Fluorescence).find(
+						(key) => attributes.Fluorescence[key] === data.Fluorescence
+				  ) || 'Unknown Fluorescence'
+				: '',
+		Girdle:
+			attributes.Girdle && data.Girdle !== undefined
+				? Object.keys(attributes.Girdle)
+						.find((key) => attributes.Girdle[key] === data.Girdle)
+						.replace('_', ' ') || 'Unknown Girdle'
+				: '',
+		Polish:
+			attributes.Polish && data.Polish !== undefined
+				? Object.keys(attributes.Polish)
+						.find((key) => attributes.Polish[key] === data.Polish)
+						.replace('_', ' ') || 'Unknown Polish'
+				: '',
+		Symmetry:
+			attributes.Symmetry && data.Symmetry !== undefined
+				? Object.keys(attributes.Symmetry)
+						.find((key) => attributes.Symmetry[key] === data.Symmetry)
+						.replace('_', ' ') || 'Unknown Symmetry'
+				: '',
+		Depth: data.Depth,
+		Table: data.Table,
+		Measurement: data.Measurement,
+		DiamondShape: data.DiamondShape?.ShapeName,
+		Price: data.DiamondPrice?.Price,
+		IsLabDiamond: data.IsLabDiamond,
+		Criteria: data.DiamondPrice?.CriteriaId,
+	};
+};
+
+const items = [
+	{
+		title: 'Chọn Vỏ',
+	},
+	{
+		title: 'Chọn Kim Cương',
+	},
+	{
+		title: 'Hoàn Thành',
+	},
+];
+
 const DiamondDetailPage = () => {
 	const {id} = useParams();
 	const userId = getUserId();
@@ -40,68 +114,6 @@ const DiamondDetailPage = () => {
 
 	const toggleSidebar = () => {
 		setIsSidebarOpen(!isSidebarOpen);
-	};
-
-	const mapAttributes = (data, attributes) => {
-		return {
-			DiamondId: data.Id,
-			Carat: data.Carat,
-			Clarity:
-				attributes.Clarity && data.Clarity !== undefined
-					? Object.keys(attributes.Clarity).find(
-							(key) => attributes.Clarity[key] === data.Clarity
-					  ) || 'Unknown Clarity' // Thêm giá trị mặc định nếu không tìm thấy
-					: '',
-			Color:
-				attributes.Color && data.Color !== undefined
-					? Object.keys(attributes.Color).find(
-							(key) => attributes.Color[key] === data.Color
-					  ) || 'Unknown Color'
-					: '',
-			Culet:
-				attributes.Culet && data.Culet !== undefined
-					? Object.keys(attributes.Culet)
-							.find((key) => attributes.Culet[key] === data.Culet)
-							.replace('_', ' ') || 'Unknown Culet'
-					: '',
-			Cut:
-				attributes.Cut && data.Cut !== undefined
-					? Object.keys(attributes.Cut)
-							.find((key) => attributes.Cut[key] === data.Cut)
-							.replace('_', ' ') || 'Unknown Cut'
-					: '',
-			Fluorescence:
-				attributes.Fluorescence && data.Fluorescence !== undefined
-					? Object.keys(attributes.Fluorescence).find(
-							(key) => attributes.Fluorescence[key] === data.Fluorescence
-					  ) || 'Unknown Fluorescence'
-					: '',
-			Girdle:
-				attributes.Girdle && data.Girdle !== undefined
-					? Object.keys(attributes.Girdle)
-							.find((key) => attributes.Girdle[key] === data.Girdle)
-							.replace('_', ' ') || 'Unknown Girdle'
-					: '',
-			Polish:
-				attributes.Polish && data.Polish !== undefined
-					? Object.keys(attributes.Polish)
-							.find((key) => attributes.Polish[key] === data.Polish)
-							.replace('_', ' ') || 'Unknown Polish'
-					: '',
-			Symmetry:
-				attributes.Symmetry && data.Symmetry !== undefined
-					? Object.keys(attributes.Symmetry)
-							.find((key) => attributes.Symmetry[key] === data.Symmetry)
-							.replace('_', ' ') || 'Unknown Symmetry'
-					: '',
-			Depth: data.Depth,
-			Table: data.Table,
-			Measurement: data.Measurement,
-			DiamondShape: data.DiamondShape?.ShapeName,
-			Price: data.DiamondPrice?.Price,
-			IsLabDiamond: data.IsLabDiamond,
-			Criteria: data.DiamondPrice?.CriteriaId,
-		};
 	};
 
 	const mappedDiamond = mapAttributes(detail, enums);
@@ -144,11 +156,12 @@ const DiamondDetailPage = () => {
 	console.log('diamondDetail', diamondDetail);
 	console.log('detail', detail);
 	console.log('mappedDiamond', mappedDiamond);
+	console.log('diamondChoice', diamondChoice);
 
 	return (
 		<>
 			<div className="mx-6 md:mx-32">
-				{/* {diamondChoice.length === 0 ? (
+				{diamondChoice.length === 0 && (
 					<Steps
 						current={1}
 						percent={100}
@@ -156,14 +169,7 @@ const DiamondDetailPage = () => {
 						items={items}
 						className="bg-white p-4 rounded-full mt-10"
 					/>
-				) : (
-					<Steps
-						current={0}
-						labelPlacement="horizontal"
-						items={itemsDiamond}
-						className="bg-white p-4 rounded-full mt-10"
-					/>
-				)} */}
+				)}
 
 				{diamondChoice.length > 0 && (
 					<Sidebar

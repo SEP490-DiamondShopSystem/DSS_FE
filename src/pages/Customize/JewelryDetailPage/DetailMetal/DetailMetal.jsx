@@ -51,22 +51,23 @@ export const DetailMetal = ({customizeJewelry, imageData, selectedMetal, jewelry
 			<Divider />
 			<div className="flex items-center justify-between">
 				<p className="font-semibold">Vật liệu có sẵn:</p>
-				<p>{metalNames}</p>
+				<p>{jewelry?.MetalSupported.join(', ')}</p>
 			</div>
 			<Divider />
 			<div>
 				<h1 className="text-center text-2xl font-semibold my-10">Lựa chọn của bạn</h1>
 			</div>
-			<div className="flex items-center justify-between ">
-				<p className="font-semibold text-primary">Kích thước vỏ:</p>
-				<p>{size}</p>
-			</div>
-			<Divider />
 			<div className="flex items-center justify-between">
 				<p className="font-semibold text-primary">Vật liệu đã chọn:</p>
 				<p>{selectedMetal}</p>
 			</div>
 			<Divider />
+			<div className="flex items-center justify-between ">
+				<p className="font-semibold text-primary">Kích thước vỏ:</p>
+				<p>{size}</p>
+			</div>
+			<Divider />
+
 			{/* <div className="flex items-center justify-between">
 				<p className="font-semibold text-primary">Hình dạng vỏ đã chọn:</p>
 				<p>{customizeJewelry.shape}</p>

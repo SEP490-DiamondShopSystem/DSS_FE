@@ -22,7 +22,7 @@ export const Metal = ({
 		<div>
 			<div>
 				{diamondJewelry?.MetalSupported?.map((metal, i) => (
-					<div key={metal.Id}>
+					<div key={i}>
 						<Radio.Group
 							onChange={() => handleSelectMetal(metal)}
 							value={selectedMetal}
