@@ -40,7 +40,7 @@ export const InformationLeft = ({diamond}) => {
 					<span class="text-gray-800 flex items-center">{diamond.Carat}</span>
 				</div>
 				<div class="flex justify-between px-4 border-b border-tintWhite py-2">
-					<span class="text-gray-600">Huỳnh quang</span>
+					<span class="text-gray-600">Fluorescence</span>
 					<span class="text-gray-800 flex items-center">{diamond.Fluorescence}</span>
 				</div>
 				{/* <div

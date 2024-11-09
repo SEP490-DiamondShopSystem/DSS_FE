@@ -16,54 +16,24 @@ export const Header = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	const [productId, setProductId] = useState([]);
-
-	const [localCart, setLocalCart] = useState(() => {
-		return JSON.parse(localStorage.getItem(`cart_${userId}`)) || [];
-	});
-	useEffect(() => {
-		const handleStorageChange = () => {
-			const updatedCart = JSON.parse(localStorage.getItem(`cart_${userId}`)) || [];
-			setLocalCart(updatedCart);
-		};
-
-		// Lắng nghe sự kiện 'storage' trên window
-		window.addEventListener('storage', handleStorageChange);
-
-		// Dọn dẹp khi component unmount
-		return () => {
-			window.removeEventListener('storage', handleStorageChange);
-		};
-	}, [userId]);
-
-	const cartFromRedux = useSelector((state) => {
-		const cartByUserId = state.cartSlice?.cartByUserId || {};
-		return cartByUserId[userId] || [];
-	});
-	const localCartFinish = JSON.parse(localStorage.getItem(`cartFinish_${userId}`)) || [];
-
-	const cartFinishFromRedux = useSelector((state) => {
-		const cartFinishByUserId = state.cartSlice?.cartFinishByUserId || {};
-		return cartFinishByUserId[userId] || [];
-	});
-
-	const cart = localCart.length > 0 ? localCart : cartFromRedux;
-	const cartFinish = localCart.length > 0 ? localCartFinish : cartFinishFromRedux;
-
-	const cartTotal = (localCart?.length || 0) + (cartFinish?.length || 0);
-
 	const handleValidate = () => {
 		const local = JSON.parse(localStorage.getItem(`cart_${userId}`));
 		const transformedData = local?.map((productId, index) => ({
 			id: Math.floor(1000000 + Math.random() * 9000000).toString(),
-			jewelryId: productId.Id || null,
+			jewelryId: productId.JewelryId || null,
 			diamondId: productId.DiamondId || null,
-			jewelryModelId: null,
-			sizeId: null,
-			metalId: null,
+			jewelryModelId: productId.ModelId || null,
+			sizeId: productId?.SizeId || null,
+			metalId: productId?.MetalId,
 			sideDiamondChoices: [],
-			engravedText: null,
-			engravedFont: null,
+			engravedText: productId?.engravedText || null,
+			engravedFont: productId?.engravedFont || null,
+			warrantyCode:
+				productId?.warrantyJewelry?.warrantyCode ||
+				productId?.warrantyDiamond?.warrantyCode,
+			warrantyType:
+				productId?.warrantyJewelry?.warrantyType ||
+				productId?.warrantyDiamond?.warrantyType,
 		}));
 
 		dispatch(handleCartValidate({promotionId: null, transformedData}));

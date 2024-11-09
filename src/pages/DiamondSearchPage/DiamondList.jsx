@@ -16,7 +16,17 @@ import {LoadingDiamondSelector} from '../../redux/selectors';
 import {formatPrice} from '../../utils';
 import Loading from '../../components/Loading';
 
-export const DiamondList = ({diamond, filters, setFilters, handleReset, filterLimits}) => {
+export const DiamondList = ({
+	diamond,
+	filters,
+	setFilters,
+	handleReset,
+	filterLimits,
+	diamondForFilter,
+	findShape,
+	diamondList,
+	jewelryModel,
+}) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
@@ -50,16 +60,6 @@ export const DiamondList = ({diamond, filters, setFilters, handleReset, filterLi
 		}
 	}, [diamond]);
 
-	const loadMoreData = () => {
-		if (visibleDiamonds.length >= diamond.length) {
-			setHasMore(false);
-			return;
-		}
-
-		const nextData = diamond?.slice(visibleDiamonds.length, visibleDiamonds.length + 3);
-		setVisibleDiamonds([...visibleDiamonds, ...nextData]);
-	};
-
 	const handleGridClick = () => {
 		setChangeGrid(true);
 	};
@@ -91,6 +91,8 @@ export const DiamondList = ({diamond, filters, setFilters, handleReset, filterLi
 				filters={filters}
 				handleReset={handleReset}
 				filterLimits={filterLimits}
+				diamondForFilter={diamondForFilter}
+				findShape={findShape}
 			/>
 
 			{loading ? (

@@ -18,6 +18,7 @@ export const GetJewelryDetailSelector = (state) => state.jewelrySlice.jewelryDet
 export const LoadingJewelrySelector = (state) => state.jewelrySlice.loading;
 export const GetAllJewelryMetalSelector = (state) => state.jewelrySlice.metals;
 export const GetAllJewelryModelCategoriesSelector = (state) => state.jewelrySlice.categories;
+export const GetJewelryDetailPresetSelector = (state) => state.jewelrySlice.jewelryDetailPreset;
 
 // DISTANCE
 export const selectDistances = (state) => state.distanceSlice.distances;
@@ -34,6 +35,7 @@ export const GetCartDesignSelector = (state) => state.cartSlice.cartDesign;
 export const GetCartFinishSelector = (state) => state.cartSlice.cartFinish;
 
 //PROMOTION
+export const LoadingPromotionSelector = (state) => state.promotionSlice.loading;
 export const GetPromotionSelector = (state) => state.promotionSlice.promotion;
 
 //ORDER
@@ -47,3 +49,7 @@ export const GetLoadingCustomizeSelector = (state) => state.customizeSlice.loadi
 export const GetAllJewelryModelCustomizeSelector = (state) => state.customizeSlice.jewelriesModel;
 export const GetAllJewelryModelDetailCustomizeSelector = (state) =>
 	state.customizeSlice.jewelryDetail;
+
+//WARRANTY
+export const LoadingWarrantySelector = (state) => state.warrantySlice.loading;
+export const GetOrderWarrantySelector = (state) => state.warrantySlice.warranties;

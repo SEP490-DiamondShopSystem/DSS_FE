@@ -37,7 +37,9 @@ export const InformationRight = ({
 	const [jewelryType, setJewelryType] = useState(localStorage.getItem('jewelryType'));
 	const [sizeGroups, setSizeGroups] = useState();
 	const [isModalVisible, setIsModalVisible] = useState(false);
-
+	const [diamondDetail, setDiamondDetail] = useState(
+		JSON.parse(localStorage.getItem(`diamond_${userId}`)) || undefined
+	);
 	useEffect(() => {
 		if (filteredGroups) {
 			setSizeGroups(filteredGroups[0]?.SizeGroups);
@@ -73,22 +75,28 @@ export const InformationRight = ({
 		console.log('value', value);
 	};
 
-	const handleJewelryChange = (value) => {
-		setSize(value);
-	};
-
 	const showModal = () => {
 		setIsModalVisible(true);
 	};
 
+	const findSize = diamondJewelry?.MetalGroups?.find(
+		(metal) => metal?.Name === filteredGroups[0]?.Name
+	);
+
+	const findSizePrice = findSize?.SizeGroups?.find(
+		(sizePrice) => sizePrice?.Size === Number(size)
+	);
 	console.log(diamondJewelry);
 
 	const handleDiamondNavigate = () => {
 		const jewelryModel = {
+			...diamondJewelry,
+			findSizePrice,
 			size,
 			selectedMetal,
 			selectedSideDiamond,
 			jewelryModelId: id,
+			filteredGroups,
 		};
 
 		const existingJewelryModel = JSON.parse(localStorage.getItem(`jewelryModel_${userId}`));
@@ -100,18 +108,11 @@ export const InformationRight = ({
 		}
 
 		localStorage.removeItem('diamondChoice');
-		navigate('/diamond/search');
+
+		navigate('/diamond-choose/search');
 	};
-
-	const findSize = diamondJewelry?.MetalGroups?.find(
-		(metal) => metal?.Name === filteredGroups[0]?.Name
-	);
-
-	const findSizePrice = findSize?.SizeGroups?.find(
-		(sizePrice) => sizePrice?.Size === Number(size)
-	);
-
-	console.log('diamondJewelry', diamondJewelry);
+	console.log('findSize', findSize);
+	console.log('filteredGroups', filteredGroups);
 
 	return (
 		<div>
@@ -193,30 +194,6 @@ export const InformationRight = ({
 						</div>
 					</>
 				)}
-
-				{/* <div className="my-5 flex items-center">
-					<div className="font-semibold">Độ dài</div>
-					<div className={`font-semibold text-xl pl-4 text-primary`}>
-						{diamondJewelry?.Width}mm
-					</div>
-				</div> */}
-				{/* <div>
-					<div className="flex">
-						{metalType?.optionsWidth?.map((metal, i) => (
-							<div
-								key={i}
-								className={`${
-									selectedWidth?.width === metal?.width
-										? 'border border-black'
-										: 'border border-white'
-								} m-2 py-2 px-4 rounded-lg cursor-pointer hover:bg-offWhite`}
-								onClick={() => handleSelectWidth(metal)} // Save selected metal on click
-							>
-								<div className={`rounded-full p-1`}>{metal.width}</div>
-							</div>
-						))}
-					</div>
-				</div> */}
 			</div>
 			<div className="border-y border-tintWhite my-5">
 				{diamondJewelry && diamondJewelry.Category === 'Ring' && (
@@ -240,39 +217,18 @@ export const InformationRight = ({
 					</div>
 				)}
 
-				{/* {selectedMetal !== undefined && size !== undefined && (
-					<div className="my-5 flex items-center">
-						<div className="font-semibold">Trang Sức Có Sẵn:</div>
-						<div className={`font-semibold text-xl pl-4 text-primary`}>
-							<Select
-								// value={size?.Size}
-								style={{width: 420, height: 40}}
-								className=""
-								onChange={handleJewelryChange}
-								options={[
-									{value: '', label: 'Chọn Trang Sức'},
-									{value: '1', label: '1'},
-									{value: '2', label: '2'},
-									{value: '3', label: '3'},
-									{value: '4', label: '4'},
-								]}
-							/>
-						</div>
-					</div>
-				)} */}
-
-				<div className="flex items-center">
+				<div className="flex items-center mt-2">
 					<p className="text-2xl mr-2 font-semibold">Giá Sàn:</p>
 					<p className="font-semibold text-2xl my-2">
 						{formatPrice(findSizePrice?.Price || 0)}
 					</p>
 					{/* <div className="text-sm pl-2">(Giá Sàn)</div> */}
 				</div>
-				{/* <div>
+				<div>
 					<div className="text-xl pt-2 font-semibold">
 						*Mã giảm giá được áp dụng tự động
 					</div>
-				</div> */}
+				</div>
 			</div>
 
 			{size !== null &&

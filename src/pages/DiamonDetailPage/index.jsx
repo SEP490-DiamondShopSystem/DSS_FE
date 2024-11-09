@@ -2,7 +2,11 @@ import {message, Steps} from 'antd';
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
-import {GetDiamondDetailSelector, UserInfoSelector} from '../../redux/selectors';
+import {
+	GetDiamondDetailSelector,
+	GetOrderWarrantySelector,
+	UserInfoSelector,
+} from '../../redux/selectors';
 import {enums} from '../../utils/constant';
 import {ImageGallery} from './Left/ImageGallery';
 import {InformationLeft} from './Left/InformationLeft';
@@ -11,11 +15,13 @@ import {Sidebar} from './Sidebar';
 import {getDiamondDetail} from '../../redux/slices/diamondSlice';
 import LoginModal from '../../components/LogModal/LoginModal';
 import {getUserId} from '../../components/GetUserId';
+import {getAllWarranty} from '../../redux/slices/warrantySlice';
 
 const mapAttributes = (data, attributes) => {
 	return {
 		DiamondId: data.Id,
 		Carat: data.Carat,
+		Title: data.Title,
 		Clarity:
 			attributes.Clarity && data.Clarity !== undefined
 				? Object.keys(attributes.Clarity).find(
@@ -68,7 +74,7 @@ const mapAttributes = (data, attributes) => {
 		Table: data.Table,
 		Measurement: data.Measurement,
 		DiamondShape: data.DiamondShape?.ShapeName,
-		Price: data.DiamondPrice?.Price,
+		Price: data.TruePrice,
 		IsLabDiamond: data.IsLabDiamond,
 		Criteria: data.DiamondPrice?.CriteriaId,
 	};
@@ -89,16 +95,30 @@ const items = [
 const DiamondDetailPage = () => {
 	const {id} = useParams();
 	const userId = getUserId();
+	const dispatch = useDispatch();
 	// const diamondAttributes = useSelector(GetDiamondAttributesSelector);
 	const diamondDetail = useSelector(GetDiamondDetailSelector);
 	const userSelector = useSelector(UserInfoSelector);
-	const dispatch = useDispatch();
+	const warrantyList = useSelector(GetOrderWarrantySelector);
 
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 	const [diamondChoice, setDiamondChoice] = useState(localStorage.getItem('diamondChoice') || '');
 	const [jewelryType, setJewelryType] = useState(localStorage.getItem('jewelryType') || '');
 	const [detail, setDetail] = useState({});
 	const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
+	const [selectedIndex, setSelectedIndex] = useState(0);
+	const [warrantyDiamond, setWarrantyDiamond] = useState([]);
+	const [warrantyDiamondSelected, setWarrantyDiamondSelected] = useState('');
+
+	useEffect(() => {
+		dispatch(getAllWarranty());
+	}, []);
+
+	useEffect(() => {
+		if (warrantyList) {
+			setWarrantyDiamond(warrantyList?.Values?.filter((warranty) => warranty?.Type === 1));
+		}
+	}, [warrantyList]);
 
 	useEffect(() => {
 		dispatch(getDiamondDetail(id));
@@ -118,6 +138,16 @@ const DiamondDetailPage = () => {
 
 	const mappedDiamond = mapAttributes(detail, enums);
 
+	const handleChangeWarranty = (value) => {
+		if (value !== undefined) {
+			const parseValue = JSON.parse(value);
+			console.log('parseValue', parseValue);
+			setWarrantyDiamondSelected(parseValue);
+		} else {
+			console.warn('Giá trị "value" là undefined, không có hành động nào được thực hiện');
+		}
+	};
+
 	const handleAddToCart = () => {
 		const isLoggedIn = userSelector && userSelector.UserId;
 
@@ -128,9 +158,19 @@ const DiamondDetailPage = () => {
 			return;
 		}
 
+		if (
+			warrantyDiamondSelected === undefined ||
+			warrantyDiamondSelected === '' ||
+			warrantyDiamondSelected === null
+		) {
+			message.warning('Bạn cần phải chọn phiếu bảo hành!');
+			return;
+		}
+
 		const data = {
 			...mappedDiamond,
 			DiamondPrice: mappedDiamond.Price,
+			warrantyDiamond: warrantyDiamondSelected,
 		};
 
 		// Lấy cart hiện tại từ localStorage
@@ -157,6 +197,8 @@ const DiamondDetailPage = () => {
 	console.log('detail', detail);
 	console.log('mappedDiamond', mappedDiamond);
 	console.log('diamondChoice', diamondChoice);
+	console.log('warrantyDiamond', warrantyDiamond);
+	console.log('warrantyDiamondSelected', warrantyDiamondSelected);
 
 	return (
 		<>
@@ -194,6 +236,8 @@ const DiamondDetailPage = () => {
 							toggleSidebar={toggleSidebar}
 							diamond={mappedDiamond}
 							handleAddToCart={handleAddToCart}
+							warrantyDiamond={warrantyDiamond}
+							handleChangeWarranty={handleChangeWarranty}
 						/>
 					</div>
 				</div>

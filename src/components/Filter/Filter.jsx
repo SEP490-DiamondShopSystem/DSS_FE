@@ -21,28 +21,23 @@ import {
 	typeChoice,
 } from '../../utils/constant';
 
-export const FilterDiamond = ({filters, setFilters, handleReset}) => {
+export const FilterDiamond = ({filters, setFilters, handleReset, diamondForFilter, findShape}) => {
 	const dispatch = useDispatch();
-	const shape = useSelector(GetDiamondShapeSelector);
 	const filterLimits = useSelector(GetDiamondFilterSelector);
 
-	const [diamondShape, setDiamondShape] = useState();
 	const [filter, setFilter] = useState({});
+	const [diamondChoice, setDiamondChoice] = useState(localStorage.getItem('diamondChoice'));
 
-	console.log('filter', filter);
+	const filteredShapes = diamondForFilter?.Shapes?.map((shape) => shape?.ShapeId);
 
-	useEffect(() => {
-		dispatch(getDiamondShape());
-	}, []);
+	const filteredShapeItems =
+		filteredShapes?.length > 0
+			? shapeItems.filter((item) => filteredShapes.includes(item.value))
+			: [];
+
 	useEffect(() => {
 		dispatch(getDiamondFilter());
 	}, []);
-
-	useEffect(() => {
-		if (shape) {
-			setDiamondShape(shape);
-		}
-	}, [shape]);
 
 	useEffect(() => {
 		if (filterLimits) {
@@ -93,20 +88,55 @@ export const FilterDiamond = ({filters, setFilters, handleReset}) => {
 			<div className="ml-10 min-w-44">
 				<p className="mb-4">Hình Dạng:</p>
 				<div className="grid grid-cols-5 gap-10 w-96 mx-auto">
-					{shapeItems?.map((item) => (
-						<div
-							className={`flex items-center flex-col border-2 hover:border-2 hover:border-black px-10 ${
-								filters?.shape === item?.value ? 'border-black' : 'border-white'
-							}`}
-							onClick={() => handleShapeChange(item?.value)}
-						>
-							<div className="my-5 mx-10">
-								<Image preview={false} src={item.image} height={30} width={30} />
-							</div>
-							<p className="font-semibold">{item.shape}</p>
-							{/* <p className="font-semibold ml-20">{item.price}</p> */}
-						</div>
-					))}
+					{diamondChoice === null ? (
+						<>
+							{filteredShapeItems?.map((item) => (
+								<div
+									className={`flex items-center flex-col border-2 hover:border-2 hover:border-black px-10 ${
+										filters?.shape === item?.value
+											? 'border-black'
+											: 'border-white'
+									}`}
+									onClick={() => handleShapeChange(item?.value)}
+								>
+									<div className="my-5 mx-10">
+										<Image
+											preview={false}
+											src={item.image}
+											height={30}
+											width={30}
+										/>
+									</div>
+									<p className="font-semibold">{item.shape}</p>
+									{/* <p className="font-semibold ml-20">{item.price}</p> */}
+								</div>
+							))}
+						</>
+					) : (
+						<>
+							{shapeItems?.map((item) => (
+								<div
+									className={`flex items-center flex-col border-2 hover:border-2 hover:border-black px-10 ${
+										filters?.shape === item?.value
+											? 'border-black'
+											: 'border-white'
+									}`}
+									onClick={() => handleShapeChange(item?.value)}
+								>
+									<div className="my-5 mx-10">
+										<Image
+											preview={false}
+											src={item.image}
+											height={30}
+											width={30}
+										/>
+									</div>
+									<p className="font-semibold">{item.shape}</p>
+									{/* <p className="font-semibold ml-20">{item.price}</p> */}
+								</div>
+							))}
+						</>
+					)}
 				</div>
 			</div>
 
@@ -129,8 +159,8 @@ export const FilterDiamond = ({filters, setFilters, handleReset}) => {
 					range
 					value={[filters?.carat?.minCarat, filters?.carat?.maxCarat]}
 					step={0.1}
-					min={filter?.Carat?.Min}
-					max={filter?.Carat?.Max}
+					min={findShape?.CaratFrom || filter?.Carat?.Min}
+					max={findShape?.CaratTo || filter?.Carat?.Max}
 					onChange={handleCaratChange}
 				/>
 			</div>

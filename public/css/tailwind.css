@@ -2385,3 +2385,11 @@ video {
 .gap-10 {
 	gap: 2.5rem /* 40px */;
 }
+
+.hover\:text-lightGray:hover {
+	color: dddddd;
+}
+
+.underline {
+	text-decoration-line: underline;
+}

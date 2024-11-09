@@ -1,7 +1,7 @@
 import {MinusOutlined, PlusOutlined} from '@ant-design/icons';
 import {faRefresh, faTruck} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {Button, Rate} from 'antd';
+import {Button, Rate, Select} from 'antd';
 import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {formatPrice} from '../../../utils';
@@ -24,7 +24,14 @@ const infoMetal = {
 		},
 	],
 };
-export const InformationRight = ({diamondChoice, toggleSidebar, diamond, handleAddToCart}) => {
+export const InformationRight = ({
+	diamondChoice,
+	toggleSidebar,
+	diamond,
+	handleAddToCart,
+	handleChangeWarranty,
+	warrantyDiamond,
+}) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
@@ -70,12 +77,12 @@ export const InformationRight = ({diamondChoice, toggleSidebar, diamond, handleA
 		navigate(`/completed-jewelry/${jewelryDiamondId}`);
 	};
 
+	console.log('warrantyDiamond', warrantyDiamond);
+
 	return (
 		<div>
 			<div className="border-tintWhite">
-				<h1 className="text-3xl">
-					{diamond.DiamondShape} {diamond.Carat}ct
-				</h1>
+				<h1 className="text-3xl">{diamond.Title}</h1>
 				{/* <div className="font-semibold my-2">
 					Giao hàng như một viên kim cương rời vào: {infoMetal?.delivery}
 				</div> */}
@@ -103,6 +110,27 @@ export const InformationRight = ({diamondChoice, toggleSidebar, diamond, handleA
 			</div>
 
 			<div className="border-y border-tintWhite py-5 my-5">
+				{diamondChoice && (
+					<Select
+						allowClear
+						className="w-64 mb-5"
+						placeholder="Chọn bảo hành kim cương"
+						onChange={handleChangeWarranty}
+					>
+						{warrantyDiamond &&
+							warrantyDiamond?.map((warranty, i) => (
+								<Select.Option
+									key={i}
+									value={JSON.stringify({
+										warrantyCode: warranty.Code,
+										warrantyType: warranty?.Type,
+									})}
+								>
+									{warranty.Name.replace(/_/g, ' ')}
+								</Select.Option>
+							))}
+					</Select>
+				)}
 				<div className="flex items-center">
 					<p className="font-semibold pl-2 text-2xl">{formatPrice(diamond.Price)}</p>
 					<div className="text-sm pl-2">(Giá Kim Cương)</div>
