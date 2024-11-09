@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {Steps} from 'antd';
 import {items} from '../../components/StepProgressBar/StepProgressBar-1';
@@ -7,13 +7,18 @@ import {InformationLeft} from './Left/InformationLeft';
 import {InformationRight} from './Right/InformationRight';
 import LoginModal from '../../components/LogModal/LoginModal';
 import {getUserId} from '../../components/GetUserId';
+import {useParams} from 'react-router-dom';
+import {useDispatch, useSelector} from 'react-redux';
+import {GetJewelryDetailPresetSelector} from '../../redux/selectors';
+import {getJewelryDetailPreset} from '../../redux/slices/jewelrySlice';
 
 const FinishProductPage = () => {
 	const userId = getUserId();
+	const {id} = useParams();
+	const dispatch = useDispatch();
+	const jewelryDetailPreset = useSelector(GetJewelryDetailPresetSelector);
 
-	const [jewelryChoice, setJewelryChoice] = useState(localStorage.getItem('jewelryChoice') || '');
-	const [diamondChoice, setDiamondChoice] = useState(localStorage.getItem('diamondChoice') || '');
-	const [jewelryType, setJewelryType] = useState(localStorage.getItem('jewelryType') || '');
+	const [jewelry, setJewelry] = useState({});
 	const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
 	const [diamondDetail, setDiamondDetail] = useState(
 		JSON.parse(localStorage.getItem(`diamond_${userId}`)) || ''
@@ -24,6 +29,17 @@ const FinishProductPage = () => {
 
 	console.log('diamondDetail', diamondDetail);
 	console.log('jewelryDetail', jewelryDetail);
+	console.log('jewelry', jewelry);
+
+	useEffect(() => {
+		dispatch(getJewelryDetailPreset(id));
+	}, []);
+
+	useEffect(() => {
+		if (jewelryDetailPreset) {
+			setJewelry(jewelryDetailPreset);
+		}
+	}, [jewelryDetailPreset]);
 
 	const hideLoginModal = () => setIsLoginModalVisible(false);
 
@@ -51,7 +67,11 @@ const FinishProductPage = () => {
 			<div className="flex flex-col md:flex-row bg-white my-10 md:my-20 rounded-lg shadow-lg">
 				<div className="w-full md:w-1/2 p-6">
 					<ImageGallery />
-					<InformationLeft jewelryDetail={jewelryDetail} diamondDetail={diamondDetail} />
+					<InformationLeft
+						jewelryDetail={jewelryDetail}
+						diamondDetail={diamondDetail}
+						jewelry={jewelry}
+					/>
 				</div>
 
 				<div className="w-full md:w-1/2 p-6 md:pr-32">
@@ -60,6 +80,8 @@ const FinishProductPage = () => {
 						diamondDetail={diamondDetail}
 						setIsLoginModalVisible={setIsLoginModalVisible}
 						isLoginModalVisible={isLoginModalVisible}
+						userId={userId}
+						jewelry={jewelry}
 					/>
 				</div>
 			</div>

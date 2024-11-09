@@ -31,6 +31,7 @@ import ProfilePage from '../pages/ProfilePage/ProfilePage';
 import PromotionPage from '../pages/PromotionPage/PromotionPage';
 import PaymentPage from '../pages/PaymentPage';
 import ScrollToTop from '../components/ScrollToTop';
+import DiamondChoosePage from '../pages/DiamondSearchPage/DiamondChoose';
 
 export const AppRouters = () => {
 	return (
@@ -73,6 +74,7 @@ export const AppRouters = () => {
 				<Route path="/completed-jewelry/:id" element={<FinishProductPage />} />
 				<Route path="/jewelry/setting/all" element={<ProductPage />} />
 				<Route path="/diamond/search" element={<DiamondSearchPage />} />
+				<Route path="/diamond-choose/search" element={<DiamondChoosePage />} />
 
 				{/* Private routes */}
 				<Route

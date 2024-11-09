@@ -69,7 +69,8 @@ const mapAttributes = (data, attributes) => {
 		Girdle: getEnumKey(attributes.Girdle, data?.Diamond?.Girdle),
 		Symmetry: getEnumKey(attributes.Symmetry, data?.Diamond?.Symmetry),
 		Polish: getEnumKey(attributes.Polish, data?.Diamond?.Polish),
-
+		CurrentWarrantyApplied: data?.CurrentWarrantyApplied,
+		CurrentWarrantyPrice: data?.CurrentWarrantyPrice,
 		DiamondId: data?.Diamond?.Id,
 		Depth: data?.Diamond?.Depth,
 		Table: data?.Diamond?.Table,
@@ -78,6 +79,7 @@ const mapAttributes = (data, attributes) => {
 		DiamondShape: data?.Diamond?.DiamondShape?.ShapeName,
 		DiscountPrice: data?.Diamond?.DiscountPrice,
 		DiamondTruePrice: data?.Diamond?.TruePrice,
+		Title: data?.Diamond?.Title,
 		DiamondPriceOffset: data?.Diamond?.PriceOffset,
 		IsLabDiamond: data?.IsLabDiamond,
 		DiamondThumbnail: data?.Diamond?.Thumbnail,
@@ -247,33 +249,72 @@ const CartPage = () => {
 									{item.JewelryId ? (
 										<div>
 											<p className="mb-1 text-gray-800 font-semibold">
-												{item.JewelryName} {item.MetalName}
+												{item.SerialCode} {item.MetalName}
 											</p>
-											<p className="text-gray-700 text-sm py-3">
+											<p className="text-gray-700 text-sm py-3 ml-1">
 												Giá:
 												<span className="text-gray-900 font-semibold">
 													{formatPrice(item.JewelryPrice)}
 												</span>
 											</p>
-											{item.CategoryName === 'Ring' && (
+											<p className="text-gray-700 text-sm">
+												Bảo hành:
+												<span className="text-gray-900 font-semibold mx-3">
+													{(
+														item.CurrentWarrantyApplied?.Code || ''
+													).replace(/_/g, ' ')}
+												</span>
+												<span>
+													{formatPrice(
+														item?.CurrentWarrantyApplied?.Price
+													)}
+												</span>
+											</p>
+											{/* {item?.Diamonds?.map((diamond) => (
+												<>
+													<p className="mb-1 text-gray-800 font-semibold">
+														{diamond.Title}
+													</p>
+													<p className="text-gray-700 text-sm py-3">
+														Giá:
+														<span className="text-gray-900 font-semibold">
+															{formatPrice(diamond.TruePrice)}
+														</span>
+													</p>
+												</>
+											))} */}
+
+											{/* {item.CategoryName === 'Ring' && (
 												<div className="flex items-center mt-2">
 													<label className="mr-2 text-gray-700">
 														Kích thước nhẫn:
 													</label>
 													<p>{item.SizeId}</p>
 												</div>
-											)}
+											)} */}
 										</div>
 									) : item.Carat ? (
 										<div>
 											<p className="mb-1 text-gray-800 font-semibold">
-												{item.Carat}ct {item.Color}-{item.Clarity}{' '}
-												{item.Cut} {item.ShapeName}
+												{item?.Title}
+											</p>
+											<p className="text-gray-700 text-sm py-3">
+												Giá:
+												<span className="text-gray-900 font-semibold py-3 ml-1">
+													{formatPrice(item.DiamondTruePrice)}
+												</span>
 											</p>
 											<p className="text-gray-700 text-sm">
-												Giá:
-												<span className="text-gray-900 font-semibold py-3">
-													{formatPrice(item.DiamondTruePrice)}
+												Bảo hành:
+												<span className="text-gray-900 font-semibold mx-3">
+													{(
+														item.CurrentWarrantyApplied?.Code || ''
+													).replace(/_/g, ' ')}
+												</span>
+												<span>
+													{formatPrice(
+														item?.CurrentWarrantyApplied?.Price
+													)}
 												</span>
 											</p>
 										</div>

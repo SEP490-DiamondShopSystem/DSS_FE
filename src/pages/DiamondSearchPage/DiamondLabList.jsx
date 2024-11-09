@@ -14,7 +14,7 @@ import {LoadingDiamondSelector} from '../../redux/selectors';
 import {formatPrice} from '../../utils';
 import Loading from '../../components/Loading';
 
-export const DiamondLabList = ({diamond, filters, setFilters, handleReset}) => {
+export const DiamondLabList = ({diamond, filters, setFilters, handleReset, diamondForFilter}) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const loading = useSelector(LoadingDiamondSelector);
@@ -80,7 +80,12 @@ export const DiamondLabList = ({diamond, filters, setFilters, handleReset}) => {
 
 	return (
 		<div>
-			<FilterDiamond setFilters={setFilters} filters={filters} handleReset={handleReset} />
+			<FilterDiamond
+				setFilters={setFilters}
+				filters={filters}
+				handleReset={handleReset}
+				diamondForFilter={diamondForFilter}
+			/>
 
 			{loading ? (
 				<Loading />
