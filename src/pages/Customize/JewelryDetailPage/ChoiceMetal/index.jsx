@@ -3,7 +3,6 @@ import React, {useState} from 'react';
 import {Button, Steps} from 'antd';
 import {Engrave} from './Choose/Engrave';
 import {Metal} from './Choose/Metal';
-import {Size} from './Choose/Size';
 
 export const ChoiceMetal = ({
 	setImageData,
@@ -28,22 +27,32 @@ export const ChoiceMetal = ({
 
 	const items = [
 		{
-			title: 'Chọn vật liệu',
+			title: 'Chọn mẫu',
 		},
-		{
-			title: 'Kích thước',
-		},
+		// {
+		// 	title: 'Kích thước',
+		// },
 		...(diamondJewelry?.IsEngravable ? [{title: 'Chữ khắc'}] : []),
 	];
 
-	console.log('diamondJewelry', diamondJewelry);
-	console.log('steps', steps);
-	console.log('filteredGroups', filteredGroups);
+	const handleStepClick = (index) => {
+		if (index <= steps) {
+			setStep(index); // Set step only if the index is less than or equal to the current step
+		}
+	};
 
 	return (
 		<div className="my-10 mx-5">
 			<div className="mx-10">
-				<Steps items={items} current={steps} type="navigation" />
+				<Steps
+					items={items.map((item, index) => ({
+						...item,
+						onClick: () => handleStepClick(index),
+						disabled: index > steps,
+					}))}
+					current={steps}
+					type="navigation"
+				/>
 			</div>
 			{steps === 0 && (
 				<div className="mx-20">
@@ -56,28 +65,14 @@ export const ChoiceMetal = ({
 						setSelectedMetal={setSelectedMetal}
 						handleSelectMetal={handleSelectMetal}
 						filteredGroups={filteredGroups}
-					/>
-				</div>
-			)}
-			{steps === 1 && (
-				<div className="mx-20">
-					<Size
-						setStep={setStep}
-						customizeJewelry={customizeJewelry}
-						setCustomizeJewelry={setCustomizeJewelry}
-						diamondJewelry={diamondJewelry}
-						selectedMetal={selectedMetal}
-						setSelectedMetal={setSelectedMetal}
-						handleSelectMetal={handleSelectMetal}
-						filteredGroups={filteredGroups}
-						size={size}
 						handleSizeChange={handleSizeChange}
-						setSize={setSize}
+						size={size}
 					/>
 				</div>
 			)}
+
 			{diamondJewelry && diamondJewelry?.IsEngravable
-				? steps === 2 && (
+				? steps === 1 && (
 						<div className="mx-20">
 							<Engrave
 								setImageData={setImageData}
@@ -92,7 +87,7 @@ export const ChoiceMetal = ({
 							/>
 						</div>
 				  )
-				: steps === 2 && (
+				: steps === 1 && (
 						<div className="mx-20 my-auto">
 							<div className="my-10 shadow-lg p-10 rounded-lg">
 								<div className="text-center">
@@ -102,15 +97,15 @@ export const ChoiceMetal = ({
 								<div className="flex items-center justify-between mt-10">
 									<div className="flex items-center">
 										<Button danger onClick={() => setStep(0)}>
-											Cài lại
+											Chọn lại
 										</Button>
-										<Button
+										{/* <Button
 											type="text"
 											className="bg-tintWhite border ml-4"
-											onClick={() => setStep(2)}
+											onClick={() => setStep((prev) => prev - 1)}
 										>
 											Quay lại
-										</Button>
+										</Button> */}
 									</div>
 									<Button
 										type="text"
@@ -134,20 +129,20 @@ export const ChoiceMetal = ({
 						<div className="flex items-center justify-between mt-10">
 							<div className="flex items-center ">
 								<Button danger onClick={() => setStep(0)}>
-									Cài lại
+									Chọn lại
 								</Button>
-								<Button
+								{/* <Button
 									type="text"
 									className="bg-tintWhite border ml-4"
 									onClick={() => setStep(2)}
 								>
 									Quay lại
-								</Button>
+								</Button> */}
 							</div>
 							<Button
 								type="text"
 								className="bg-primary border"
-								onClick={() => setStepChoose(1)}
+								onClick={() => setStepChoose((prev) => prev + 1)}
 							>
 								Xác Nhận
 							</Button>

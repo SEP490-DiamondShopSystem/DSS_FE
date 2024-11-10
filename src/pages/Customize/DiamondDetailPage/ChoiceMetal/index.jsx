@@ -7,20 +7,15 @@ import Loading from '../../../../components/Loading';
 import {
 	GetAllDiamondSelector,
 	GetAllJewelryMetalSelector,
-	GetDiamondShapeSelector,
 	LoadingDiamondSelector,
 } from '../../../../redux/selectors';
-import {getAllDiamond, getDiamondShape} from '../../../../redux/slices/diamondSlice';
-import {enums} from '../../../../utils/constant';
-import {Carat} from './Choose/Carat';
-import {Clarity} from './Choose/Clarity';
-import {Color} from './Choose/Color';
-import {Cut} from './Choose/Cut';
-import {Polish} from './Choose/Polish';
-import {Specs} from './Choose/Specs';
-import {Shape} from './Choose/Shape';
 import {handleSendRequest} from '../../../../redux/slices/customizeSlice';
+import {getAllDiamond} from '../../../../redux/slices/diamondSlice';
 import {getAllJewelryMetal} from '../../../../redux/slices/jewelrySlice';
+import {enums} from '../../../../utils/constant';
+import {Diamond} from './Choose/Diamond';
+import {Shape} from './Choose/Shape';
+import {Specs} from './Choose/Specs';
 
 const mapAttributes = (data, attributes) => {
 	return {
@@ -101,6 +96,7 @@ export const ChoiceMetalDiamond = ({
 	const [stepChooseDiamond, setStepChooseDiamond] = useState(0);
 	const [steps, setStep] = useState(0);
 	const [mappedDiamonds, setMappedDiamonds] = useState();
+	const [advanced, setAdvanced] = useState(false);
 	const [filters, setFilters] = useState({
 		shape: '',
 		// price: {minPrice: 0, maxPrice: 1000},
@@ -112,25 +108,13 @@ export const ChoiceMetalDiamond = ({
 
 	const items = [
 		{
-			title: 'Carat Weight',
+			title: 'Chọn 4C',
+			disabled: steps < 0, // Disable if current step is less than this step
 		},
-		{
-			title: 'Cut',
-		},
-		{
-			title: 'Color',
-		},
-		{
-			title: 'Clarity',
-		},
-		{
-			title: 'Polish',
-		},
-		{
-			title: 'Specs',
-		},
+		...(advanced ? [{title: 'Chọn Nâng Cao', disabled: steps < 1}] : []),
 		{
 			title: 'Shape',
+			disabled: steps < (advanced ? 2 : 1),
 		},
 	];
 
@@ -179,6 +163,7 @@ export const ChoiceMetalDiamond = ({
 	const itemsDiamond =
 		jewelry?.MainDiamonds?.map((diamond, index) => ({
 			title: `Kim Cương Chính ${index + 1}`,
+			disabled: index > stepChooseDiamond,
 		})) || [];
 
 	useEffect(() => {
@@ -236,13 +221,6 @@ export const ChoiceMetalDiamond = ({
 			culet: diamond?.culet,
 		}));
 
-		console.log('jewelryModelId', id);
-		console.log('metalId', filterShape?.Id);
-		console.log('sizeId', size);
-		console.log('sideDiamondOptId', selectedSideDiamond);
-		console.log('engravedText', textValue);
-		console.log('engravedFont', fontFamily);
-
 		dispatch(
 			handleSendRequest({
 				jewelryModelId: id,
@@ -266,10 +244,6 @@ export const ChoiceMetalDiamond = ({
 		});
 	};
 
-	console.log('currentDiamond', currentDiamond);
-	console.log('shapes', metals);
-	console.log('filterShape', filterShape);
-
 	return (
 		<div className="my-10 mx-5">
 			<Steps
@@ -279,112 +253,48 @@ export const ChoiceMetalDiamond = ({
 				onChange={onChangeDiamond}
 			/>
 			<div className="mx-10"></div>
-			{/* {steps < items.length && (
-				<div className="mx-20">
-					<Diamond
-						steps={steps}
-						setStep={setStep}
-						customizeDiamond={customizeDiamond}
-						setCustomizeDiamond={setCustomizeDiamond}
-						jewelry={jewelry}
-						filters={filters}
-						setFilters={setFilters}
-						handleReset={handleReset}
-						loading={loading}
-						mappedDiamonds={mappedDiamonds}
-						handleSelectDiamond={handleSelectDiamond}
-						diamondSelect={diamondSelect}
-						currentDiamond={currentDiamond}
-						selectedDiamonds={selectedDiamonds}
-						setSelectedDiamonds={setSelectedDiamonds}
-					/>
-				</div>
-			)} */}
 
-			{/* {steps === items.length && (
-				<div className="mx-20">
-					<div className="my-10 shadow-lg p-10 rounded-lg">
-						<div className="text-center">
-							Chọn kim cương thành công. Vui lòng kiểm tra lại lựa chọn của bạn để
-							hoàn tất!
-						</div>
-						<div className="flex items-center justify-between mt-10">
-							<div className="flex items-center ">
-								<Button danger onClick={handleResetStep}>
-									Cài lại
-								</Button>
-							
-							</div>
-							<Button
-								type="text"
-								className="bg-primary border"
-								onClick={handleSendReqCustomize}
-							>
-								Xác Nhận
-							</Button>
-						</div>
-					</div>
-				</div>
-			)} */}
 			{stepChooseDiamond < itemsDiamond.length && (
 				<>
 					<Steps items={items} current={steps} type="navigation" onChange={onChange} />
 					{steps === 0 && (
 						<div className="mx-20">
-							<Carat
+							<Diamond
 								setStep={setStep}
 								customizeDiamond={customizeDiamond}
 								setCustomizeDiamond={setCustomizeDiamond}
 								currentDiamond={currentDiamond}
+								setAdvanced={setAdvanced}
+								steps={steps}
+								advanced={advanced}
 							/>
 						</div>
 					)}
+
 					{steps === 1 && (
 						<div className="mx-20">
-							<Cut
-								setStep={setStep}
-								customizeDiamond={customizeDiamond}
-								setCustomizeDiamond={setCustomizeDiamond}
-							/>
+							{advanced ? (
+								<Specs
+									setStep={setStep}
+									customizeDiamond={customizeDiamond}
+									setCustomizeDiamond={setCustomizeDiamond}
+								/>
+							) : (
+								<Shape
+									setStep={setStep}
+									customizeDiamond={customizeDiamond}
+									setCustomizeDiamond={setCustomizeDiamond}
+									setStepChooseDiamond={setStepChooseDiamond}
+									currentDiamond={currentDiamond}
+									selectedDiamonds={selectedDiamonds}
+									setSelectedDiamonds={setSelectedDiamonds}
+									currentJewelry={currentJewelry}
+								/>
+							)}
 						</div>
 					)}
-					{steps === 2 && (
-						<div className="mx-20">
-							<Color
-								setStep={setStep}
-								customizeDiamond={customizeDiamond}
-								setCustomizeDiamond={setCustomizeDiamond}
-							/>
-						</div>
-					)}
-					{steps === 3 && (
-						<div className="mx-20">
-							<Clarity
-								setStep={setStep}
-								customizeDiamond={customizeDiamond}
-								setCustomizeDiamond={setCustomizeDiamond}
-							/>
-						</div>
-					)}
-					{steps === 4 && (
-						<div className="mx-20">
-							<Polish
-								setStep={setStep}
-								customizeDiamond={customizeDiamond}
-								setCustomizeDiamond={setCustomizeDiamond}
-							/>
-						</div>
-					)}
-					{steps === 5 && (
-						<div className="mx-20">
-							<Specs
-								setStep={setStep}
-								customizeDiamond={customizeDiamond}
-								setCustomizeDiamond={setCustomizeDiamond}
-							/>
-						</div>
-					)}
-					{steps === 6 && (
+
+					{steps === 2 && advanced && (
 						<div className="mx-20">
 							<Shape
 								setStep={setStep}
@@ -411,7 +321,7 @@ export const ChoiceMetalDiamond = ({
 						<div className="flex items-center justify-between mt-10">
 							<div className="flex items-center ">
 								<Button danger onClick={handleResetStep}>
-									Cài Lại
+									Chọn lại
 								</Button>
 							</div>
 							<Button

@@ -56,7 +56,7 @@ export const Shape = ({
 			isLabGrown: null,
 		});
 		setStep(0);
-		setStepChooseDiamond((prev) => prev + 1); // Proceed to the next step
+		setStepChooseDiamond((prev) => prev + 1);
 	};
 
 	const matchedShapeItems = shapeItems.filter((item) =>
@@ -95,7 +95,7 @@ export const Shape = ({
 				<Button
 					type="text"
 					className="bg-primary w-48 uppercase font-semibold"
-					onClick={() => setStep(0)}
+					onClick={() => setStep((prev) => prev - 1)}
 				>
 					Quay lại
 				</Button>

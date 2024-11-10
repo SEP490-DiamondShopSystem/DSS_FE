@@ -23,10 +23,10 @@ export const ProductList = () => {
 	// const [page, setPage] = useState(100);
 	const [filters, setFilters] = useState({
 		// gender: [],
-		type: '',
-		name: '',
-		IsRhodiumFinished: null,
-		IsEngravable: null,
+		Type: undefined,
+		name: undefined,
+		IsRhodiumFinished: undefined,
+		IsEngravable: undefined,
 	});
 
 	console.log('filters', filters);
@@ -47,7 +47,7 @@ export const ProductList = () => {
 	const fetchJewelryData = debounce(() => {
 		dispatch(
 			getAllJewelryModelCustomize({
-				Category: filters.type,
+				Category: filters.Type,
 				name: filters?.name,
 				IsRhodiumFinished: filters?.IsRhodiumFinished,
 				IsEngravable: filters?.IsEngravable,
@@ -67,7 +67,7 @@ export const ProductList = () => {
 
 	const handleReset = () => {
 		localStorage.removeItem('jewelry');
-		setFilters({gender: [], type: [], metal: [], price: {minPrice: 0, maxPrice: 1000}});
+		setFilters({gender: [], Type: [], metal: [], price: {minPrice: 0, maxPrice: 1000}});
 	};
 
 	return (
@@ -94,7 +94,7 @@ export const ProductList = () => {
 								className="shadow-lg bg-white rounded-lg border-2 border-white hover:border-2 hover:border-black cursor-pointer"
 								onClick={() => navigate(`/customize/diamond-jewelry/${jewelry.Id}`)}
 							>
-								<div className="w-80">
+								<div className="">
 									<div
 										className=" flex justify-center mb-5"
 										style={{background: '#b8b7b5'}}

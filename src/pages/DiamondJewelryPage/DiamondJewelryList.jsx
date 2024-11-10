@@ -21,18 +21,22 @@ export const DiamondJewelryList = () => {
 	const [page, setPage] = useState(0);
 	const [filters, setFilters] = useState({
 		// gender: [],
-		type: '',
-		metal: '',
+		Type: undefined,
+		IsRhodiumFinished: undefined,
+		IsEngravable: undefined,
+		Metal: undefined,
 		price: {minPrice: 0, maxPrice: 40000000},
 	});
 
 	const fetchJewelryData = debounce(() => {
 		dispatch(
 			getAllJewelryModel({
-				Category: filters.type,
-				metalId: filters.metal,
+				Category: filters.Type,
+				metalId: filters.Metal,
 				minPrice: filters.price.minPrice,
 				maxPrice: filters.price.maxPrice,
+				IsRhodiumFinished: filters?.IsRhodiumFinished,
+				IsEngravable: filters?.IsEngravable,
 			})
 		);
 	}, 500);
@@ -42,7 +46,7 @@ export const DiamondJewelryList = () => {
 		if (saved) {
 			setFilters((prevFilters) => ({
 				...prevFilters,
-				type: saved,
+				Type: saved,
 			}));
 		}
 	}, []);
@@ -51,7 +55,7 @@ export const DiamondJewelryList = () => {
 		fetchJewelryData();
 
 		return () => fetchJewelryData.cancel();
-	}, [filters.type, filters.metal, filters.price.minPrice, filters.price.maxPrice]);
+	}, [filters]);
 
 	useEffect(() => {
 		if (jewelryList) setJewelries(jewelryList.Values);
@@ -59,12 +63,14 @@ export const DiamondJewelryList = () => {
 
 	const handleReset = () => {
 		localStorage.removeItem('jewelry');
-		setFilters({gender: [], type: [], metal: '', price: {minPrice: 0, maxPrice: 40000000}});
+		setFilters({
+			IsRhodiumFinished: '',
+			IsEngravable: '',
+			Type: [],
+			Metal: '',
+			price: {minPrice: 0, maxPrice: 40000000},
+		});
 	};
-
-	const filteredJewelryPreset = Array.isArray(jewelries)
-		? jewelries.filter((item) => item.IsPreset === true)
-		: [];
 
 	console.log('jewelryList', jewelryList);
 	console.log('filters', filters);
@@ -96,14 +102,14 @@ export const DiamondJewelryList = () => {
 								{jewelries?.map((jewelry, i) => (
 									<div
 										key={i}
-										className="shadow-lg bg-white rounded-lg hover:border-2 border-2 border-white cursor-pointer"
+										className="shadow-lg bg-white rounded-lg hover:border-2 border-2 border-white cursor-pointer hover:border-black"
 										onClick={() =>
 											navigate(
 												`/jewelry-model/search/${jewelry.JewelryModelId}`
 											)
 										}
 									>
-										<div className="w-80">
+										<div className="">
 											<div
 												className="flex justify-center mb-5"
 												style={{background: '#b8b7b5'}}

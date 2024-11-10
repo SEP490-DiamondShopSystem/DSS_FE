@@ -142,6 +142,8 @@ export const Engrave = ({
 		setIsModalOpen(false);
 	};
 
+	console.log('image', imageData);
+
 	return (
 		<div className="mt-10">
 			<div>
@@ -183,10 +185,10 @@ export const Engrave = ({
 				</div> */}
 				<canvas ref={canvasRef} className="border" />
 			</div>
-			<div className="text-red my-10">
+			{/* <div className="text-red my-10">
 				*Cần phải upload hình mới có thể thiết kế chữ khắc thành công
-			</div>
-			<div className="flex justify-between items-center">
+			</div> */}
+			<div className="flex justify-between items-center my-10">
 				<Button
 					type="text"
 					className="bg-primary w-32 uppercase font-semibold"
@@ -201,18 +203,19 @@ export const Engrave = ({
 				>
 					Hoàn Thành
 				</Button>
-				<Button
+				{/* <Button
 					type="text"
 					className="bg-primary w-32 uppercase font-semibold"
 					onClick={showModal}
 					disabled={!imageData || isUploading}
 				>
 					Tải Hình
-				</Button>
+				</Button> */}
 				<Button
 					type="text"
 					className="bg-primary w-32 uppercase font-semibold"
 					onClick={() => setStep(3)}
+					disabled={imageData === null}
 				>
 					Tiếp Tục
 				</Button>

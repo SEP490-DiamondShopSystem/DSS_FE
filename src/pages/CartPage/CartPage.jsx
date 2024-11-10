@@ -126,27 +126,35 @@ const CartPage = () => {
 		}
 	}, [cartValidateProduct]);
 
-	const handleRemoveCartFinish = (index) => {
-		const updatedCart = [...cartFinish];
+	useEffect(() => {
+		const local = JSON.parse(localStorage.getItem(`cart_${userId}`));
+		const transformedData = local?.map((productId, index) => ({
+			id: Math.floor(1000000 + Math.random() * 9000000).toString(),
+			jewelryId: productId.JewelryId || null,
+			diamondId: productId.DiamondId || null,
+			jewelryModelId: productId.ModelId || null,
+			sizeId: productId?.SizeId || null,
+			metalId: productId?.MetalId,
+			sideDiamondChoices: [],
+			engravedText: productId?.engravedText || null,
+			engravedFont: productId?.engravedFont || null,
+			warrantyCode:
+				productId?.warrantyJewelry?.warrantyCode ||
+				productId?.warrantyDiamond?.warrantyCode,
+			warrantyType:
+				productId?.warrantyJewelry?.warrantyType ||
+				productId?.warrantyDiamond?.warrantyType,
+		}));
 
-		updatedCart.splice(index, 1);
-
-		dispatch(removeFromCartFinish(updatedCart));
-
-		localStorage.setItem('cartFinish', JSON.stringify(updatedCart));
-	};
-
-	const handleViewCartFinish = (jewelryId, diamondId) => {
-		const jewelryDiamondId = jewelryId + diamondId;
-		navigate(`/completed-jewelry/${jewelryDiamondId}`);
-	};
+		dispatch(handleCartValidate({promotionId: null, transformedData}));
+	}, []);
 
 	const handleViewCart = (jewelryId, diamondId) => {
 		console.log(jewelryId);
 		console.log(diamondId);
 
 		if (jewelryId) {
-			navigate(`/jewelry-model/search/${jewelryId}`);
+			navigate(`/completed-jewelry/${jewelryId}`);
 		} else if (diamondId) {
 			navigate(`/diamond-detail/${diamondId}`);
 		} else {
@@ -233,44 +241,49 @@ const CartPage = () => {
 				{mappedProducts?.length > 0 ? (
 					<div className="bg-white p-6 mx-5 my-5 border rounded-lg shadow-md">
 						<h2 className="text-xl font-semibold mb-2 border-b pb-2">Giỏ Hàng</h2>
-						{mappedProducts.map((item, index) => (
-							<div
-								className="relative flex mt-4 shadow-xl p-5 rounded-lg"
-								key={item.Id}
-							>
-								<div className="mr-4 flex-shrink-0">
-									<img
-										src="path-to-image"
-										alt={item?.JewelryName || 'Loose Diamond'}
-										className="w-32 h-32 object-cover rounded-lg border"
-									/>
-								</div>
-								<div className="flex-1 mx-5">
-									{item.JewelryId ? (
-										<div>
-											<p className="mb-1 text-gray-800 font-semibold">
-												{item.SerialCode} {item.MetalName}
-											</p>
-											<p className="text-gray-700 text-sm py-3 ml-1">
-												Giá:
-												<span className="text-gray-900 font-semibold">
-													{formatPrice(item.JewelryPrice)}
-												</span>
-											</p>
-											<p className="text-gray-700 text-sm">
-												Bảo hành:
-												<span className="text-gray-900 font-semibold mx-3">
-													{(
-														item.CurrentWarrantyApplied?.Code || ''
-													).replace(/_/g, ' ')}
-												</span>
-												<span>
-													{formatPrice(
-														item?.CurrentWarrantyApplied?.Price
-													)}
-												</span>
-											</p>
-											{/* {item?.Diamonds?.map((diamond) => (
+						{loading ? (
+							<Loading />
+						) : (
+							<>
+								{mappedProducts.map((item, index) => (
+									<div
+										className="relative flex mt-4 shadow-xl p-5 rounded-lg"
+										key={item.Id}
+									>
+										<div className="mr-4 flex-shrink-0">
+											<img
+												src="path-to-image"
+												alt={item?.JewelryName || 'Loose Diamond'}
+												className="w-32 h-32 object-cover rounded-lg border"
+											/>
+										</div>
+										<div className="flex-1 mx-5">
+											{item.JewelryId ? (
+												<div>
+													<p className="mb-1 text-gray-800 font-semibold">
+														{item.SerialCode} {item.MetalName}
+													</p>
+													<p className="text-gray-700 text-sm py-3 ml-1">
+														Giá:
+														<span className="text-gray-900 font-semibold">
+															{formatPrice(item.JewelryPrice)}
+														</span>
+													</p>
+													<p className="text-gray-700 text-sm">
+														Bảo hành:
+														<span className="text-gray-900 font-semibold mx-3">
+															{(
+																item.CurrentWarrantyApplied?.Code ||
+																''
+															).replace(/_/g, ' ')}
+														</span>
+														<span>
+															{formatPrice(
+																item?.CurrentWarrantyApplied?.Price
+															)}
+														</span>
+													</p>
+													{/* {item?.Diamonds?.map((diamond) => (
 												<>
 													<p className="mb-1 text-gray-800 font-semibold">
 														{diamond.Title}
@@ -284,7 +297,7 @@ const CartPage = () => {
 												</>
 											))} */}
 
-											{/* {item.CategoryName === 'Ring' && (
+													{/* {item.CategoryName === 'Ring' && (
 												<div className="flex items-center mt-2">
 													<label className="mr-2 text-gray-700">
 														Kích thước nhẫn:
@@ -292,65 +305,68 @@ const CartPage = () => {
 													<p>{item.SizeId}</p>
 												</div>
 											)} */}
+												</div>
+											) : item.Carat ? (
+												<div>
+													<p className="mb-1 text-gray-800 font-semibold">
+														{item?.Title}
+													</p>
+													<p className="text-gray-700 text-sm py-3">
+														Giá:
+														<span className="text-gray-900 font-semibold py-3 ml-1">
+															{formatPrice(item.DiamondTruePrice)}
+														</span>
+													</p>
+													<p className="text-gray-700 text-sm">
+														Bảo hành:
+														<span className="text-gray-900 font-semibold mx-3">
+															{(
+																item.CurrentWarrantyApplied?.Code ||
+																''
+															).replace(/_/g, ' ')}
+														</span>
+														<span>
+															{formatPrice(
+																item?.CurrentWarrantyApplied?.Price
+															)}
+														</span>
+													</p>
+												</div>
+											) : (
+												<p className="text-gray-800">Không có thông tin</p>
+											)}
 										</div>
-									) : item.Carat ? (
-										<div>
-											<p className="mb-1 text-gray-800 font-semibold">
-												{item?.Title}
-											</p>
-											<p className="text-gray-700 text-sm py-3">
-												Giá:
-												<span className="text-gray-900 font-semibold py-3 ml-1">
-													{formatPrice(item.DiamondTruePrice)}
-												</span>
-											</p>
-											<p className="text-gray-700 text-sm">
-												Bảo hành:
-												<span className="text-gray-900 font-semibold mx-3">
-													{(
-														item.CurrentWarrantyApplied?.Code || ''
-													).replace(/_/g, ' ')}
-												</span>
-												<span>
-													{formatPrice(
-														item?.CurrentWarrantyApplied?.Price
-													)}
-												</span>
-											</p>
+										<div className="flex items-center justify-end space-y-2 text-sm">
+											<Button
+												className="cursor-pointer w-auto hover:text-black text-primary text-xl px-3 mr-2"
+												onClick={() => {
+													if (item.JewelryId) {
+														handleViewCart(item.JewelryId, null);
+													} else if (item.DiamondId !== undefined) {
+														handleViewCart(null, item.DiamondId);
+													}
+												}}
+											>
+												<EyeOutlined />
+											</Button>
+											<Button
+												loading={loading}
+												danger
+												className="cursor-pointer px-3"
+												onClick={() => handleRemoveCart(index)}
+											>
+												<DeleteOutlined />
+											</Button>
 										</div>
-									) : (
-										<p className="text-gray-800">Không có thông tin</p>
-									)}
-								</div>
-								<div className="flex items-center justify-end space-y-2 text-sm">
-									<Button
-										className="cursor-pointer w-auto hover:text-black text-primary text-xl px-3 mr-2"
-										onClick={() => {
-											if (item.JewelryId) {
-												handleViewCart(item.JewelryId, null);
-											} else if (item.DiamondId !== undefined) {
-												handleViewCart(null, item.DiamondId);
-											}
-										}}
-									>
-										<EyeOutlined />
-									</Button>
-									<Button
-										loading={loading}
-										danger
-										className="cursor-pointer px-3"
-										onClick={() => handleRemoveCart(index)}
-									>
-										<DeleteOutlined />
-									</Button>
-								</div>
-								{item.IsValid === false && (
-									<div className="absolute right-2 bottom-2 text-red font-semibold">
-										<p>Hàng Không Còn</p>
+										{item.IsValid === false && (
+											<div className="absolute right-2 bottom-2 text-red font-semibold">
+												<p>Hàng Không Còn</p>
+											</div>
+										)}
 									</div>
-								)}
-							</div>
-						))}
+								))}
+							</>
+						)}
 					</div>
 				) : (
 					<div className="flex flex-col items-center justify-center p-10">

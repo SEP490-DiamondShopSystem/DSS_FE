@@ -1,6 +1,8 @@
 import React from 'react';
 
-import {Button, Radio} from 'antd';
+import {InfoCircleFilled} from '@ant-design/icons';
+import {Button, Popover, Radio} from 'antd';
+import {Polish} from './Polish';
 
 const symmetryItems = [
 	{
@@ -156,16 +158,61 @@ export const Specs = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 	};
 
 	const handleNextStep = () => {
-		setStep(6);
+		setStep((prev) => prev + 1);
 	};
+
+	const textSymmetry = <span>Symmetry</span>;
+
+	const contentSymmetry = (
+		<div style={{width: 300, textAlign: 'justify'}}>
+			<p>
+				Độ chính xác và sự sắp xếp thẳng hàng của các mặt cắt trên viên kim cương và ảnh
+				hưởng của chúng đến độ sáng lấp lánh của viên đá.
+			</p>
+		</div>
+	);
+
+	const textGirdle = <span>Girdle</span>;
+
+	const contentGirdle = (
+		<div style={{width: 300, textAlign: 'justify'}}>
+			<p>
+				Độ chính xác và sự sắp xếp thẳng hàng của các mặt cắt trên viên kim cương và ảnh
+				hưởng của chúng đến độ sáng lấp lánh của viên đá.
+			</p>
+		</div>
+	);
+
+	const textCulet = <span>Culet</span>;
+
+	const contentCulet = (
+		<div style={{width: 300, textAlign: 'justify'}}>
+			<p>
+				Độ chính xác và sự sắp xếp thẳng hàng của các mặt cắt trên viên kim cương và ảnh
+				hưởng của chúng đến độ sáng lấp lánh của viên đá.
+			</p>
+		</div>
+	);
 
 	return (
 		<div>
 			{/* <Image className="my-10" src={symmetryImage} preview={false} alt="" /> */}
-			<h1 className="my-5 font-semibold text-xl">Symmetry</h1>
+			<Polish
+				setStep={setStep}
+				customizeDiamond={customizeDiamond}
+				setCustomizeDiamond={setCustomizeDiamond}
+			/>
+			<div className="flex items-center justify-center mt-10">
+				<label className="my-5 font-semibold text-xl">
+					Chọn Symmetry{' '}
+					<Popover placement="topLeft" title={textSymmetry} content={contentSymmetry}>
+						<InfoCircleFilled />
+					</Popover>
+				</label>
+			</div>
 			<div className="grid gap-x-8 gap-y-4 grid-cols-2 items-center">
 				{symmetryItems?.map((item) => (
-					<div key={item.id}>
+					<div key={item.id} className="mx-auto">
 						<Radio.Group onChange={onChangeSymmetry} value={customizeDiamond.symmetry}>
 							<Radio value={item.value}>
 								<div className="flex justify-between items-center">
@@ -177,10 +224,17 @@ export const Specs = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 					</div>
 				))}
 			</div>
-			<h1 className="my-5 font-semibold text-xl">Girdle</h1>
+			<div className="flex items-center justify-center mt-10">
+				<label className="my-5 font-semibold text-xl">
+					Chọn Girdle{' '}
+					<Popover placement="topLeft" title={textGirdle} content={contentGirdle}>
+						<InfoCircleFilled />
+					</Popover>
+				</label>
+			</div>
 			<div className="grid gap-x-8 gap-y-4 grid-cols-2 items-center">
 				{girdleItems?.map((item) => (
-					<div key={item.id}>
+					<div key={item.id} className="mx-auto">
 						<Radio.Group onChange={onChangeGirdle} value={customizeDiamond.girdle}>
 							<Radio value={item.value}>
 								<div className="flex justify-between items-center">
@@ -192,10 +246,17 @@ export const Specs = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 					</div>
 				))}
 			</div>
-			<h1 className="my-5 font-semibold text-xl">Culet</h1>
+			<div className="flex items-center justify-center mt-10">
+				<label className="my-5 font-semibold text-xl">
+					Chọn Culet{' '}
+					<Popover placement="topLeft" title={textCulet} content={contentCulet}>
+						<InfoCircleFilled />
+					</Popover>
+				</label>
+			</div>
 			<div className="grid gap-x-8 gap-y-4 grid-cols-2 items-center">
 				{culetItems?.map((item) => (
-					<div key={item.id}>
+					<div key={item.id} className="mx-auto">
 						<Radio.Group onChange={onChangeCulet} value={customizeDiamond.culet}>
 							<Radio value={item.value}>
 								<div className="flex justify-between items-center">
@@ -207,10 +268,12 @@ export const Specs = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 					</div>
 				))}
 			</div>
-			<h1 className="my-5 font-semibold text-xl">Nguồn Gốc</h1>
+			<div className="flex items-center justify-center mt-10">
+				<label className="my-5 font-semibold text-xl">Chọn Nguồn Gốc </label>
+			</div>
 			<div className="grid gap-x-8 gap-y-4 grid-cols-2 items-center">
 				{diamondLabItems?.map((item) => (
-					<div key={item.id}>
+					<div key={item.id} className="mx-auto">
 						<Radio.Group
 							onChange={onChangeDiamondLab}
 							value={customizeDiamond.isLabGrown}
@@ -229,7 +292,7 @@ export const Specs = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 				<Button
 					type="text"
 					className="bg-primary w-48 uppercase font-semibold"
-					onClick={() => setStep(1)}
+					onClick={() => setStep((prev) => prev - 1)}
 				>
 					Quay lại
 				</Button>

@@ -12,6 +12,7 @@ import {promotionSlice} from './slices/promotionSlice';
 import {orderSlice} from './slices/orderSlice';
 import {customizeSlice} from './slices/customizeSlice';
 import {warrantySlice} from './slices/warrantySlice';
+import {paymentSlice} from './slices/paymentSlice';
 
 const rootPersistConfig = {
 	key: 'root',
@@ -30,6 +31,7 @@ const rootReducer = combineReducers({
 	promotionSlice: promotionSlice.reducer,
 	customizeSlice: customizeSlice.reducer,
 	warrantySlice: warrantySlice.reducer,
+	paymentSlice: paymentSlice.reducer,
 });
 
 const persistedReducer = persistReducer(rootPersistConfig, rootReducer);

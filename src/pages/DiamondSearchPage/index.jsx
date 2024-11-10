@@ -73,9 +73,10 @@ const mapAttributes = (data, attributes) => {
 		Table: data.Table,
 		Title: data.Title,
 		Measurement: data.Measurement,
-		DiamondShape: data?.DiamondShape?.ShapeName,
+		DiamondShape: data?.DiamondPrice?.Shape?.ShapeName,
 		DiscountPrice: data?.DiscountReducedAmount,
 		TruePrice: data?.TruePrice,
+		SalePrice: data?.SalePrice,
 		IsLabDiamond: data.IsLabDiamond,
 	};
 };
@@ -84,7 +85,6 @@ const DiamondSearchPage = () => {
 	const dispatch = useDispatch();
 	const diamondList = useSelector(GetAllDiamondSelector);
 	const filterLimits = useSelector(GetDiamondFilterSelector);
-	const jewelryList = useSelector(GetAllJewelrySelector);
 	const userId = getUserId();
 
 	const [changeDiamond, setChangeDiamond] = useState(true);
@@ -99,33 +99,9 @@ const DiamondSearchPage = () => {
 	const [start, setStart] = useState(0);
 	const [filters, setFilters] = useState({});
 	const [selectedIndex, setSelectedIndex] = useState(0);
-	const [diamond, setDiamond] = useState();
 
 	useEffect(() => {
 		dispatch(getDiamondFilter());
-	}, []);
-
-	const fetchJewelryData = debounce(() => {
-		dispatch(
-			getAllJewelry({
-				// ModelId: 'c0530ffb-f954-41c9-8793-650478e43546',
-				// MetalId: '3',
-				// SizeId: '8',
-				// SideDiamondOptId: selectedSideDiamond?.Id,
-				ModelId: jewelryModel?.jewelryModelId,
-				MetalId: jewelryModel?.selectedMetal?.Id,
-				SizeId: jewelryModel?.size,
-				// SideDiamondOptId: selectedSideDiamond?.Id,
-				// MinPrice: minPrice,
-				// MaxPrice: maxPrice,
-			})
-		);
-	}, 500);
-
-	useEffect(() => {
-		fetchJewelryData();
-
-		return () => fetchJewelryData.cancel();
 	}, []);
 
 	const getDiamondForFilter = (index) => {
@@ -191,12 +167,6 @@ const DiamondSearchPage = () => {
 	}, [dispatch, filters]);
 
 	useEffect(() => {
-		if (jewelryList) {
-			setDiamond(jewelryList?.Values);
-		}
-	}, [jewelryList]);
-
-	useEffect(() => {
 		if (diamondList && enums) {
 			// Map diamond attributes to more readable values
 			const mappedData = diamondList?.Values?.map((diamond) => mapAttributes(diamond, enums));
@@ -216,9 +186,8 @@ const DiamondSearchPage = () => {
 		});
 	};
 
-	console.log('jewelryList', jewelryList);
 	console.log('jewelryModel', jewelryModel);
-	console.log('diamond', diamond);
+	console.log('diamondList', diamondList);
 
 	return (
 		<div className="mx-32">
@@ -277,7 +246,6 @@ const DiamondSearchPage = () => {
 					diamondForFilter={diamondForFilter}
 					findShape={findShape}
 					jewelryMode={jewelryModel}
-					diamondList={diamond}
 				/>
 			) : (
 				<DiamondLabList
@@ -288,7 +256,6 @@ const DiamondSearchPage = () => {
 					handleReset={handleReset}
 					diamondForFilter={diamondForFilter}
 					findShape={findShape}
-					diamondList={diamond}
 				/>
 			)}
 		</div>

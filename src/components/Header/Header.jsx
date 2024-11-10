@@ -17,26 +17,26 @@ export const Header = () => {
 	const navigate = useNavigate();
 
 	const handleValidate = () => {
-		const local = JSON.parse(localStorage.getItem(`cart_${userId}`));
-		const transformedData = local?.map((productId, index) => ({
-			id: Math.floor(1000000 + Math.random() * 9000000).toString(),
-			jewelryId: productId.JewelryId || null,
-			diamondId: productId.DiamondId || null,
-			jewelryModelId: productId.ModelId || null,
-			sizeId: productId?.SizeId || null,
-			metalId: productId?.MetalId,
-			sideDiamondChoices: [],
-			engravedText: productId?.engravedText || null,
-			engravedFont: productId?.engravedFont || null,
-			warrantyCode:
-				productId?.warrantyJewelry?.warrantyCode ||
-				productId?.warrantyDiamond?.warrantyCode,
-			warrantyType:
-				productId?.warrantyJewelry?.warrantyType ||
-				productId?.warrantyDiamond?.warrantyType,
-		}));
+		// const local = JSON.parse(localStorage.getItem(`cart_${userId}`));
+		// const transformedData = local?.map((productId, index) => ({
+		// 	id: Math.floor(1000000 + Math.random() * 9000000).toString(),
+		// 	jewelryId: productId.JewelryId || null,
+		// 	diamondId: productId.DiamondId || null,
+		// 	jewelryModelId: productId.ModelId || null,
+		// 	sizeId: productId?.SizeId || null,
+		// 	metalId: productId?.MetalId,
+		// 	sideDiamondChoices: [],
+		// 	engravedText: productId?.engravedText || null,
+		// 	engravedFont: productId?.engravedFont || null,
+		// 	warrantyCode:
+		// 		productId?.warrantyJewelry?.warrantyCode ||
+		// 		productId?.warrantyDiamond?.warrantyCode,
+		// 	warrantyType:
+		// 		productId?.warrantyJewelry?.warrantyType ||
+		// 		productId?.warrantyDiamond?.warrantyType,
+		// }));
 
-		dispatch(handleCartValidate({promotionId: null, transformedData}));
+		// dispatch(handleCartValidate({promotionId: null, transformedData}));
 
 		navigate('/cart');
 	};

@@ -217,25 +217,10 @@ export const DiamondList = ({
 													<p className="text-xl w-1/5 text-center">
 														{diamondItem.Cut || '-'}
 													</p>
-													{diamondItem?.DiscountPrice !== null ? (
-														<div className="flex">
-															<p
-																style={{color: '#707070'}}
-																className="line-through"
-															>
-																{formatPrice(diamondItem.TruePrice)}
-															</p>
-															<p className="ml-3">
-																{formatPrice(
-																	diamondItem.DiscountPrice
-																)}
-															</p>
-														</div>
-													) : (
-														<div className="">
-															<p>
-																{formatPrice(diamondItem.TruePrice)}
-															</p>
+													{diamondItem.SalePrice ===
+														diamondItem.TruePrice && (
+														<div>
+															<p>{formatPrice(jewelry.D_Price)}</p>
 														</div>
 													)}
 													<p

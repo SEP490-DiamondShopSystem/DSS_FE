@@ -479,6 +479,7 @@ export const FilterJewelry = ({handleFilter, setFilters, filters, handleReset}) 
 		</div>
 	);
 };
+
 export const FilterDiamondJewelry = ({handleFilter, setFilters, filters, handleReset}) => {
 	const dispatch = useDispatch();
 	const metalList = useSelector(GetAllJewelryMetalSelector);
@@ -508,7 +509,7 @@ export const FilterDiamondJewelry = ({handleFilter, setFilters, filters, handleR
 	console.log('metalList', metals);
 	console.log('categoryList', categories);
 
-	const filterTypes = ['Loại trang sức', 'Kim loại'];
+	const filterTypes = ['Loại trang sức', 'Kim loại', 'Hoàn Thiện Rhodium', 'Được Khắc Chữ'];
 
 	const handleFilterChange = (filterType, selectedValues) => {
 		setFilters((prevFilters) => ({
@@ -525,13 +526,23 @@ export const FilterDiamondJewelry = ({handleFilter, setFilters, filters, handleR
 	};
 
 	const filterOptions = {
-		type: categories?.map((category) => ({id: category.Name, name: category.Name})),
-		metal: metals?.map((metal) => ({id: metal.Id, name: metal.Name})),
+		Type: categories?.map((category) => ({id: category.Name, name: category.Name})),
+		Metal: metals?.map((metal) => ({id: metal.Id, name: metal.Name})),
+		IsRhodiumFinished: [
+			{id: true, name: 'Có'},
+			{id: false, name: 'Không'},
+		],
+		IsEngravable: [
+			{id: true, name: 'Có'},
+			{id: false, name: 'Không'},
+		],
 	};
 
 	const filterTypeMapping = {
-		'Kim loại': 'metal',
-		'Loại trang sức': 'type',
+		'Kim loại': 'Metal',
+		'Loại trang sức': 'Type',
+		'Hoàn Thiện Rhodium': 'IsRhodiumFinished',
+		'Được Khắc Chữ': 'IsEngravable',
 	};
 
 	console.log('filterOptions', filterOptions[1]);
@@ -542,29 +553,32 @@ export const FilterDiamondJewelry = ({handleFilter, setFilters, filters, handleR
 			{filterTypes.map((filterType) => {
 				const optionKey = filterTypeMapping[filterType]; // Map to the correct key in filterOptions
 				return (
-					<Select
-						key={filterType} // Use the filter type as key
-						placeholder={filterType.replace('_', ' ').toUpperCase()} // Display filter type in uppercase
-						allowClear
-						maxTagCount={0}
-						suffixIcon={<DownOutlined />} // Dropdown arrow icon
-						className="h-12 mx-5"
-						style={{width: '10%'}}
-						onChange={(value) => handleFilterChange(optionKey, value)} // Handle filter change
-						value={filters[optionKey]} // Current selected value for the filter
-					>
-						{filterOptions[optionKey]?.map((item) => (
-							<Select.Option key={item.id} value={item.id}>
-								{item.name}
-							</Select.Option>
-						))}
-					</Select>
+					<div className="flex flex-col">
+						<label className="block text-gray-700 mb-1">{filterType}</label>
+						<Select
+							key={filterType} // Use the filter type as key
+							placeholder={filterType.replace('_', ' ').toUpperCase()} // Display filter type in uppercase
+							allowClear
+							maxTagCount={0}
+							suffixIcon={<DownOutlined />} // Dropdown arrow icon
+							className="h-12 mr-10"
+							style={{width: 190}}
+							onChange={(value) => handleFilterChange(optionKey, value)} // Handle filter change
+							value={filters[optionKey]} // Current selected value for the filter
+						>
+							{filterOptions[optionKey]?.map((item) => (
+								<Select.Option key={item.id} value={item.id}>
+									{item.name}
+								</Select.Option>
+							))}
+						</Select>
+					</div>
 				);
 			})}
 
 			{/* Price Range Slider */}
 			<div className="ml-10 min-w-44">
-				<p className="mb-4">Price:</p>
+				<p className="mb-4">Giá:</p>
 				<Slider
 					range
 					min={0}
@@ -573,14 +587,10 @@ export const FilterDiamondJewelry = ({handleFilter, setFilters, filters, handleR
 					onChange={handlePriceChange} // Handle price change
 				/>
 			</div>
-			<div className="ml-8 mt-6">
-				<Button onClick={handleReset} danger>
-					<ReloadOutlined />
-				</Button>
-			</div>
 		</div>
 	);
 };
+
 export const FilterJewelryCustomize = ({handleFilter, setFilters, filters, handleReset}) => {
 	const dispatch = useDispatch();
 
@@ -597,8 +607,6 @@ export const FilterJewelryCustomize = ({handleFilter, setFilters, filters, handl
 			setCategories(categoryList);
 		}
 	}, [categoryList]);
-
-	console.log('categoryList', categories);
 
 	const filterTypes = ['Loại trang sức', 'Hoàn Thiện Rhodium', 'Được Khắc Chữ'];
 
@@ -617,7 +625,7 @@ export const FilterJewelryCustomize = ({handleFilter, setFilters, filters, handl
 	};
 
 	const filterOptions = {
-		type: categories?.map((category) => ({id: category.Name, name: category.Name})),
+		Type: categories?.map((category) => ({id: category.Name, name: category.Name})),
 		IsRhodiumFinished: [
 			{id: true, name: 'Có'},
 			{id: false, name: 'Không'},
@@ -629,52 +637,47 @@ export const FilterJewelryCustomize = ({handleFilter, setFilters, filters, handl
 	};
 
 	const filterTypeMapping = {
-		'Loại trang sức': 'type',
+		'Loại trang sức': 'Type',
 		'Hoàn Thiện Rhodium': 'IsRhodiumFinished',
 		'Được Khắc Chữ': 'IsEngravable',
 	};
 
-	console.log('filterOptions', filterOptions[1]);
-
-	// Render the filter UI
 	return (
-		<div wrap className="p-4 flex items-center">
+		<div className="p-4 flex items-center">
 			{filterTypes.map((filterType) => {
-				const optionKey = filterTypeMapping[filterType]; // Map to the correct key in filterOptions
+				const optionKey = filterTypeMapping[filterType];
 				return (
-					<Select
-						key={filterType} // Use the filter type as key
-						placeholder={filterType.replace('_', ' ').toUpperCase()} // Display filter type in uppercase
-						allowClear
-						maxTagCount={0}
-						suffixIcon={<DownOutlined />} // Dropdown arrow icon
-						className="h-12 mx-5"
-						style={{width: '10%'}}
-						onChange={(value) => handleFilterChange(optionKey, value)} // Handle filter change
-						value={filters[optionKey]} // Current selected value for the filter
-					>
-						{filterOptions[optionKey]?.map((item) => (
-							<Select.Option key={item.id} value={item.id}>
-								{item.name}
-							</Select.Option>
-						))}
-					</Select>
+					<div key={filterType} className="mx-5">
+						<label className="block text-gray-700 mb-1">{filterType}</label>
+						<Select
+							placeholder={filterType.replace('_', ' ').toUpperCase()}
+							allowClear
+							maxTagCount={0}
+							suffixIcon={<DownOutlined />}
+							className="h-12"
+							style={{width: 190}}
+							onChange={(value) => handleFilterChange(optionKey, value)}
+							value={filters[optionKey]}
+						>
+							{filterOptions[optionKey]?.map((item) => (
+								<Select.Option key={item.id} value={item.id}>
+									{item.name}
+								</Select.Option>
+							))}
+						</Select>
+					</div>
 				);
 			})}
 
-			<div className="ml-10 min-w-44">
+			<div className="ml-5 min-w-44">
+				<label className="block text-gray-700 mb-1">Tên Trang Sức</label>
 				<Input
 					allowClear
 					onChange={handleChange}
-					placeholder="Tên Trang Sức"
-					className="h-12 "
+					placeholder="TÊN TRANG SỨC"
+					className="h-12"
 				/>
 			</div>
-			{/* <div className="ml-8 mt-6">
-				<Button onClick={handleReset} danger>
-					<ReloadOutlined />
-				</Button>
-			</div> */}
 		</div>
 	);
 };
