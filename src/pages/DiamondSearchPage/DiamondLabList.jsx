@@ -125,7 +125,7 @@ export const DiamondLabList = ({diamond, filters, setFilters, handleReset, diamo
 													: handleJewelryChoiceClick(diamondItem.Id)
 											}
 										>
-											<div className="w-80">
+											<div className="">
 												<div
 													className="flex justify-center mb-5"
 													style={{background: '#b8b7b5'}}
@@ -137,24 +137,25 @@ export const DiamondLabList = ({diamond, filters, setFilters, handleReset, diamo
 												</div>
 												<div className="mx-10 my-5">
 													<p>{diamondItem?.Title}</p>
-													{diamondItem?.DiscountPrice !== null ? (
+													{diamondItem.SalePrice ===
+													diamondItem.TruePrice ? (
+														<div>
+															<p>
+																{formatPrice(diamondItem.TruePrice)}
+															</p>
+														</div>
+													) : (
 														<div className="flex">
 															<p
-																style={{color: '#707070'}}
+																style={{
+																	color: '#707070',
+																}}
 																className="line-through"
 															>
 																{formatPrice(diamondItem.TruePrice)}
 															</p>
 															<p className="ml-3">
-																{formatPrice(
-																	diamondItem.DiscountPrice
-																)}
-															</p>
-														</div>
-													) : (
-														<div className="">
-															<p>
-																{formatPrice(diamondItem.TruePrice)}
+																{formatPrice(diamondItem.SalePrice)}
 															</p>
 														</div>
 													)}
@@ -203,40 +204,15 @@ export const DiamondLabList = ({diamond, filters, setFilters, handleReset, diamo
 													<p className="text-xl w-1/5 text-center">
 														{diamondItem.Cut || '-'}
 													</p>
-													{diamondItem?.DiscountPrice !== null ? (
-														<div className="flex">
-															<p
-																style={{color: '#707070'}}
-																className="line-through"
-															>
-																{formatPrice(diamondItem.TruePrice)}
-															</p>
-															<p className="ml-3">
-																{formatPrice(
-																	diamondItem.DiscountPrice
-																)}
-															</p>
-														</div>
-													) : (
-														<div className="">
+													{diamondItem.SalePrice ===
+														diamondItem.TruePrice && (
+														<div>
 															<p>
 																{formatPrice(diamondItem.TruePrice)}
 															</p>
 														</div>
 													)}
-													<p
-														className="text-xl w-1/5 text-center cursor-pointer"
-														onClick={(e) => {
-															e.stopPropagation(); // Prevent onClick propagation
-															handleHeartClick(diamondItem.Id);
-														}}
-													>
-														{like[diamondItem.Id] ? (
-															<HeartFilled color="#F65252" />
-														) : (
-															<HeartOutlined />
-														)}
-													</p>
+													<p className="text-xl w-1/5 text-center cursor-pointer"></p>
 												</div>
 											</div>
 										</div>

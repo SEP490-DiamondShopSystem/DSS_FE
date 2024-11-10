@@ -508,7 +508,7 @@ export const FilterDiamondJewelry = ({handleFilter, setFilters, filters, handleR
 	console.log('metalList', metals);
 	console.log('categoryList', categories);
 
-	const filterTypes = ['Loại trang sức', 'Kim loại'];
+	const filterTypes = ['Loại trang sức', 'Kim loại', 'Hoàn Thiện Rhodium', 'Được Khắc Chữ'];
 
 	const handleFilterChange = (filterType, selectedValues) => {
 		setFilters((prevFilters) => ({
@@ -525,13 +525,23 @@ export const FilterDiamondJewelry = ({handleFilter, setFilters, filters, handleR
 	};
 
 	const filterOptions = {
-		type: categories?.map((category) => ({id: category.Name, name: category.Name})),
-		metal: metals?.map((metal) => ({id: metal.Id, name: metal.Name})),
+		Type: categories?.map((category) => ({id: category.Name, name: category.Name})),
+		Metal: metals?.map((metal) => ({id: metal.Id, name: metal.Name})),
+		IsRhodiumFinished: [
+			{id: true, name: 'Có'},
+			{id: false, name: 'Không'},
+		],
+		IsEngravable: [
+			{id: true, name: 'Có'},
+			{id: false, name: 'Không'},
+		],
 	};
 
 	const filterTypeMapping = {
-		'Kim loại': 'metal',
-		'Loại trang sức': 'type',
+		'Kim loại': 'Metal',
+		'Loại trang sức': 'Type',
+		'Hoàn Thiện Rhodium': 'IsRhodiumFinished',
+		'Được Khắc Chữ': 'IsEngravable',
 	};
 
 	console.log('filterOptions', filterOptions[1]);
@@ -564,7 +574,7 @@ export const FilterDiamondJewelry = ({handleFilter, setFilters, filters, handleR
 
 			{/* Price Range Slider */}
 			<div className="ml-10 min-w-44">
-				<p className="mb-4">Price:</p>
+				<p className="mb-4">Giá:</p>
 				<Slider
 					range
 					min={0}
@@ -572,11 +582,6 @@ export const FilterDiamondJewelry = ({handleFilter, setFilters, filters, handleR
 					defaultValue={[0, 40000000]} // Default price range
 					onChange={handlePriceChange} // Handle price change
 				/>
-			</div>
-			<div className="ml-8 mt-6">
-				<Button onClick={handleReset} danger>
-					<ReloadOutlined />
-				</Button>
 			</div>
 		</div>
 	);
@@ -617,7 +622,7 @@ export const FilterJewelryCustomize = ({handleFilter, setFilters, filters, handl
 	};
 
 	const filterOptions = {
-		type: categories?.map((category) => ({id: category.Name, name: category.Name})),
+		Type: categories?.map((category) => ({id: category.Name, name: category.Name})),
 		IsRhodiumFinished: [
 			{id: true, name: 'Có'},
 			{id: false, name: 'Không'},
@@ -629,7 +634,7 @@ export const FilterJewelryCustomize = ({handleFilter, setFilters, filters, handl
 	};
 
 	const filterTypeMapping = {
-		'Loại trang sức': 'type',
+		'Loại trang sức': 'Type',
 		'Hoàn Thiện Rhodium': 'IsRhodiumFinished',
 		'Được Khắc Chữ': 'IsEngravable',
 	};
@@ -662,11 +667,11 @@ export const FilterJewelryCustomize = ({handleFilter, setFilters, filters, handl
 				);
 			})}
 
-			<div className="ml-10 min-w-44">
+			<div className="ml-5 min-w-44">
 				<Input
 					allowClear
 					onChange={handleChange}
-					placeholder="Tên Trang Sức"
+					placeholder="TÊN TRANG SỨC"
 					className="h-12 "
 				/>
 			</div>

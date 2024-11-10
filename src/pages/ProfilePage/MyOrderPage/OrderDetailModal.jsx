@@ -19,6 +19,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 
 	console.log('selectedOrder', selectedOrder);
 	console.log('orderDetail', orderDetail);
+	console.log('order', order);
 
 	useEffect(() => {
 		if (selectedOrder?.orderId) {
@@ -89,7 +90,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 							<h2 className="uppercase text-2xl font-semibold">
 								Trạng thái đơn hàng
 							</h2>
-							<p>Hóa đơn ID: #{order?.Id}</p>
+							<p>Hóa đơn: #{order?.OrderCode}</p>
 							<p>Ngày: {convertToVietnamDate(order?.CreatedDate)}</p>
 						</div>
 					</div>
@@ -145,7 +146,9 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 										{convertToVietnamDate(order?.CreatedDate)}
 									</p>
 									<p style={{width: '33%'}} className="flex justify-center">
-										{item?.Jewelry?.Model?.name || 'Unknown Jewelry'}
+										{item?.Diamond?.Title ||
+											item?.Jewelry?.SerialCode ||
+											'Unknown Jewelry'}
 									</p>
 									<p style={{width: '33%'}} className="flex justify-center">
 										{formatPrice(item?.PurchasedPrice)}

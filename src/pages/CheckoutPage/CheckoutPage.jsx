@@ -18,10 +18,12 @@ import {
 	GetAllDistrictSelector,
 	GetAllWardSelector,
 	CalculateLocationSelector,
+	GetAllPaymentSelector,
 } from '../../redux/selectors';
 import {handleCheckoutOrder} from '../../redux/slices/orderSlice';
 import {enums} from '../../utils/constant';
-import {formatPrice} from '../../utils';
+import {convertToVietnamDate, formatPrice} from '../../utils';
+import {getAllPayment} from '../../redux/slices/paymentSlice';
 
 const getEnumKey = (enumObj, value) => {
 	return enumObj
@@ -88,6 +90,7 @@ const mapAttributes = (data, attributes) => {
 		DiscountPrice: data?.Diamond?.DiscountPrice,
 		DiamondTruePrice: data?.Diamond?.TruePrice,
 		DiamondPriceOffset: data?.Diamond?.PriceOffset,
+		Title: data?.Diamond?.Title,
 		IsLabDiamond: data?.IsLabDiamond,
 		DiamondThumbnail: data?.Diamond?.Thumbnail,
 		CriteriaId: data?.Diamond?.DiamondPrice?.CriteriaId,
@@ -106,6 +109,7 @@ const CheckoutPage = () => {
 	const userDetail = useSelector(GetUserDetailSelector);
 	const cartList = useSelector(GetCartSelector);
 	const location = useSelector(CalculateLocationSelector);
+	const paymentList = useSelector(GetAllPaymentSelector);
 
 	const [paymentMethod, setPaymentMethod] = useState(null);
 	const [paymentForm, setPaymentForm] = useState(null);
@@ -117,15 +121,16 @@ const CheckoutPage = () => {
 	const [provinceId, setProvinceId] = useState('');
 	const [wardId, setWardId] = useState('');
 	const [districtId, setDistrictId] = useState('');
+	const [payment, setPayment] = useState();
 	const [userInfo, setUserInfo] = useState({
-		firstName: userDetail.FirstName,
-		lastName: userDetail.LastName,
-		email: userDetail.Email,
+		firstName: userDetail.FirstName || '',
+		lastName: userDetail.LastName || '',
+		email: userDetail.Email || '',
 		phone: '',
-		province: '',
-		district: '',
-		ward: '',
-		address: '',
+		province: userDetail?.Addresses?.[0]?.Province || '',
+		district: userDetail?.Addresses?.[0]?.District || '',
+		ward: userDetail?.Addresses?.[0]?.Ward || '',
+		address: userDetail?.Addresses?.[0]?.Street || '',
 		note: '',
 	});
 
@@ -136,15 +141,15 @@ const CheckoutPage = () => {
 	}, [form, userInfo]);
 
 	useEffect(() => {
-		if (userDetail) {
+		if (userDetail && userDetail.Addresses && userDetail.Addresses.length > 0) {
 			const firstAddress = userDetail.Addresses[0];
 			console.log('firstAddress', firstAddress);
 			setUserInfo((prev) => ({
 				...prev,
-				district: firstAddress.District,
-				province: firstAddress.Province,
-				ward: firstAddress.Ward,
-				address: firstAddress.Street,
+				district: firstAddress?.District || '',
+				province: firstAddress?.Province || '',
+				ward: firstAddress?.Ward || '',
+				address: firstAddress?.Street || '',
 			}));
 		}
 	}, [userDetail]);
@@ -155,24 +160,31 @@ const CheckoutPage = () => {
 	}, [dispatch]);
 
 	useEffect(() => {
+		dispatch(getAllPayment());
+	}, [dispatch]);
+
+	useEffect(() => {
 		if (distances) {
 			setProvince(distances);
 		}
 	}, [distances]);
 
 	useEffect(() => {
-		dispatch(fetchDistrict(provinceId));
-	}, [dispatch, provinceId]);
+		if (paymentList) {
+			setPayment(paymentList);
+		}
+	}, [paymentList]);
+
+	useEffect(() => {
+		if (provinceId) dispatch(fetchDistrict(provinceId));
+		if (districtId) dispatch(fetchWard(districtId));
+	}, [dispatch, provinceId, districtId]);
 
 	useEffect(() => {
 		if (districts) {
 			setDistrict(districts);
 		}
 	}, [districts]);
-
-	useEffect(() => {
-		dispatch(fetchWard(districtId));
-	}, [dispatch, districtId]);
 
 	useEffect(() => {
 		if (wards) {
@@ -208,45 +220,31 @@ const CheckoutPage = () => {
 	);
 
 	const mappedProducts = useMemo(() => {
-		if (jewelryOrDiamondProducts && enums) {
-			return jewelryOrDiamondProducts.map((product) => mapAttributes(product, enums));
-		}
-		return [];
+		return jewelryOrDiamondProducts.map((product) => mapAttributes(product, enums));
 	}, [jewelryOrDiamondProducts, enums]);
+
 	// Hàm xử lý gửi form
 	const onFinish = async () => {
 		const orderItemRequestDtos = cartList?.Products?.map((product) => {
-			const diamondId = product?.Diamond?.Id || null;
-			const jewelryId = product?.Jewelry?.Id || null;
-
-			let warrantyCode = null;
-			let warrantyType = null;
-			if (diamondId) {
-				warrantyCode = 'Default_Diamond_Warranty';
-			} else if (jewelryId) {
-				warrantyCode = 'Default_Jewelry_Warranty';
-			}
-
-			if (diamondId) {
-				warrantyType = 1;
-			} else if (jewelryId) {
-				warrantyType = 2;
-			}
-
 			return {
 				// id: Math.floor(1000000 + Math.random() * 9000000).toString(),
-				jewelryId,
-				diamondId,
+				jewelryId: product?.Jewelry?.Id || null,
+				diamondId: product?.Diamond?.Id || null,
+				// product?.Jewelry?.Diamonds?.map((diamond) => ({
+				// 	diamondId: diamond?.Id,
+				// })),
 				engravedText: product?.EngravedText || null,
 				engravedFont: product?.EngravedFont || null,
-				warrantyCode,
-				warrantyType,
+				warrantyCode: product?.CurrentWarrantyApplied?.Code || null,
+				warrantyType: product?.CurrentWarrantyApplied?.Type || null,
 			};
 		});
+
 		const createOrderInfo = {
 			orderRequestDto: {
 				paymentType: paymentForm,
-				paymentName: paymentMethod,
+				paymentId: paymentMethod,
+				paymentName: 'zalopay',
 				promotionId: null,
 				isTransfer: true,
 			},
@@ -272,7 +270,7 @@ const CheckoutPage = () => {
 			message.success('Đặt hàng thành công!');
 			// window.open(res.payload?.PaymentUrl, '_blank');
 			localStorage.removeItem(`cart_${userDetail.Id}`);
-			navigate('/payment');
+			navigate('/my-orders');
 		} else {
 			message.error('Đặt hàng không thành công. Vui lòng kiểm tra thông tin của bạn!');
 		}
@@ -335,12 +333,17 @@ const CheckoutPage = () => {
 		return Promise.reject(new Error('Số điện thoại không hợp lệ!'));
 	};
 
+	const shippingDate = mappedProducts?.find((ship) => ship?.ShippingDate);
+
 	console.log('provinceId', provinceId);
 
 	console.log('userInfo', userInfo);
 	console.log('userDetail', userDetail);
 	console.log('cartList', cartList);
 	console.log('mappedProducts', mappedProducts);
+	console.log('payment', payment);
+	console.log('paymentMethod', paymentMethod);
+	console.log('shippingDate', shippingDate);
 
 	return (
 		<div className="min-h-screen flex justify-center items-center bg-gray-100 my-10">
@@ -423,7 +426,8 @@ const CheckoutPage = () => {
 										onChange={handleCityChange}
 										disabled={loading}
 										loading={loading}
-										value={userInfo?.province}
+										defaultValue={userInfo.province || undefined}
+										value={userInfo.province || undefined}
 									>
 										{province &&
 											province.map((distance) => (
@@ -597,22 +601,19 @@ const CheckoutPage = () => {
 													name="paymentMethod"
 													value={paymentMethod}
 												>
-													<Radio
-														value="creditCard"
-														className="border p-4 rounded-md hover:border-blue-500 transition duration-300 mb-4"
-													>
-														Chuyển Khoản Ngân Hàng
-													</Radio>
-													<Radio
-														value="zalopay"
-														className="border p-4 rounded-md hover:border-blue-500 transition duration-300 mb-4"
-													>
-														Thanh Toán Qua ZaloPay
-													</Radio>
+													{payment &&
+														payment?.map((method) => (
+															<Radio
+																value={method.Id}
+																className="border p-4 rounded-md hover:border-blue-500 transition duration-300 mb-4"
+															>
+																{method?.MethodName}
+															</Radio>
+														))}
 												</Radio.Group>
 											</div>
 											{/* Hiển thị thông tin thẻ nếu 'Chuyển Khoản Ngân Hàng' được chọn */}
-											{paymentMethod === 'creditCard' && (
+											{/* {paymentMethod === 'creditCard' && (
 												<div className="space-y-4">
 													<Form.Item
 														label="Số thẻ"
@@ -678,7 +679,7 @@ const CheckoutPage = () => {
 														<Input placeholder="Tên chủ thẻ" />
 													</Form.Item>
 												</div>
-											)}
+											)} */}
 										</div>
 									</div>
 								)}
@@ -733,7 +734,7 @@ const CheckoutPage = () => {
 								<div className="mr-4 flex-shrink-0">
 									<img
 										src="path-to-image"
-										alt={item?.JewelryName || 'Loose Diamond'}
+										alt={item?.SerialCode || item?.Title}
 										className="w-32 h-32 object-cover rounded-lg border"
 									/>
 								</div>
@@ -742,7 +743,7 @@ const CheckoutPage = () => {
 									{item.JewelryId ? (
 										<div>
 											<p className="mb-1 text-gray-800 font-semibold">
-												{item.JewelryName}
+												{item.SerialCode}
 											</p>
 											<p className="text-gray-700 text-sm py-3">
 												Giá:
@@ -762,8 +763,7 @@ const CheckoutPage = () => {
 									) : item.Carat ? (
 										<div>
 											<p className="mb-1 text-gray-800 font-semibold">
-												{item?.Carat}ct {item.Color}-{item.Clarity}{' '}
-												{item.Cut} {item.ShapeName}
+												{item?.Title}
 											</p>
 											<p className="text-gray-700 text-sm">
 												Giá:
@@ -799,10 +799,9 @@ const CheckoutPage = () => {
 									<span>Free Overnight Shipping, Hassle-Free Returns</span>
 								</div> */}
 								<div className="flex  text-sm text-gray-600">
-									<span>📅</span>
+									<span className="mr-2">📅 Thời gian giao hàng</span>
 									<span>
-										Giao hàng vào: For an exact shipping date, please select a
-										ring size first.
+										{convertToVietnamDate(shippingDate?.ShippingDate) || null}
 									</span>
 								</div>
 								{/* <div className="text-green-600 font-semibold text-base mt-4">
@@ -813,7 +812,7 @@ const CheckoutPage = () => {
 									)}
 								</div> */}
 								<div className="flex justify-between items-center font-semibold mt-4 text-lg">
-									<p>Tổng giá trị đơn hàng:</p>
+									<p>Tổng:</p>
 									<p>
 										{formatPrice(
 											cartList?.OrderPrices?.FinalPrice +

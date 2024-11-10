@@ -154,21 +154,26 @@ export const InformationRight = ({
 
 		const existingCart = JSON.parse(localStorage.getItem(`cart_${userId}`)) || [];
 
-		// Kiểm tra xem sản phẩm với cả JewelryId và DiamondId đã tồn tại chưa
+		// Kiểm tra xem sản phẩm với JewelryId và các thuộc tính đã tồn tại chưa
 		const existingIndex = existingCart.findIndex(
-			(cartItem) => cartItem.JewelryId === jewelry.Id
+			(cartItem) =>
+				cartItem.JewelryId === jewelry.Id &&
+				cartItem.warrantyJewelry === warrantiesJewelrySelected &&
+				cartItem.engravedFont === engravedFont &&
+				cartItem.engravedText === engravedText &&
+				cartItem.Size === (sizeChange || jewelry.Size)
 		);
 
 		if (existingIndex !== -1) {
 			message.info('Sản phẩm này đã có trong giỏ hàng!');
 		} else {
-			// Kiểm tra nếu có cùng JewelryId nhưng khác DiamondId
+			// Kiểm tra nếu có cùng JewelryId nhưng các thuộc tính khác nhau
 			const similarJewelryIndex = existingCart.findIndex(
 				(cartItem) => cartItem.JewelryId === jewelry.Id
 			);
 
 			if (similarJewelryIndex !== -1) {
-				// Thay thế sản phẩm cũ với JewelryModelId giống nhưng DiamondId khác
+				// Thay thế sản phẩm cũ với các thuộc tính khác nhau
 				existingCart[similarJewelryIndex] = data;
 				message.success('Sản phẩm đã được cập nhật trong giỏ hàng!');
 			} else {
@@ -295,19 +300,21 @@ export const InformationRight = ({
 													style={{width: 120}}
 													onChange={handleChange}
 												>
-													{jewelryDetail?.filteredGroups[0]?.SizeGroups.map(
-														(size, i) =>
-															size?.IsInStock === true && (
-																<Option
-																	key={size?.Size}
-																	value={size?.Size}
-																>
-																	<p className="font-semibold mr-2">
-																		{size?.Size}
-																	</p>
-																</Option>
-															)
-													)}
+													{jewelryDetail?.filteredGroups?.[0]
+														?.SizeGroups &&
+														jewelryDetail.filteredGroups[0].SizeGroups.map(
+															(size, i) =>
+																size?.IsInStock === true && (
+																	<Option
+																		key={size?.Size}
+																		value={size?.Size}
+																	>
+																		<p className="font-semibold mr-2">
+																			{size?.Size}
+																		</p>
+																	</Option>
+																)
+														)}
 												</Select>
 											</div>
 										)}

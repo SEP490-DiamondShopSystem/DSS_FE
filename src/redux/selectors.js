@@ -53,3 +53,7 @@ export const GetAllJewelryModelDetailCustomizeSelector = (state) =>
 //WARRANTY
 export const LoadingWarrantySelector = (state) => state.warrantySlice.loading;
 export const GetOrderWarrantySelector = (state) => state.warrantySlice.warranties;
+
+//PAYMENT
+export const LoadingPaymentSelector = (state) => state.paymentSlice.loading;
+export const GetAllPaymentSelector = (state) => state.paymentSlice.payment;

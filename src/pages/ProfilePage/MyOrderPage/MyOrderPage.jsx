@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Table, Tag, Tooltip} from 'antd';
+import {Button, message, Table, Tag, Tooltip} from 'antd';
 import {Helmet} from 'react-helmet';
 import NavbarProfile from '../../../components/NavbarProfile';
 import {OrderDetailModal} from './OrderDetailModal';
@@ -142,7 +142,7 @@ const MyOrderPage = () => {
 							<EyeFilled />
 						</Button>
 					</Tooltip>
-					{record?.paymentStatus === 5 ? (
+					{isPriceGreaterThan50Mil(record?.price) === false && (
 						<Tooltip title={'Thanh Toán'}>
 							<Button
 								type="text"
@@ -150,16 +150,6 @@ const MyOrderPage = () => {
 								onClick={() => toggleTransactionModal(record.orderId)}
 							>
 								<TransactionOutlined />
-							</Button>
-						</Tooltip>
-					) : (
-						<Tooltip title={'Hóa Đơn'}>
-							<Button
-								type="text"
-								className="p-2 bg-primary border rounded-lg  transition-colors duration-300"
-								onClick={toggleInvoiceModal}
-							>
-								<ContainerOutlined />
 							</Button>
 						</Tooltip>
 					)}
@@ -246,6 +236,16 @@ const MyOrderPage = () => {
 			setDataSource(formattedOrders); // Cập nhật dataSource cho bảng
 		}
 	}, [orderList]);
+
+	const isPriceGreaterThan50Mil = (price) => {
+		// Loại bỏ ký tự không phải số và dấu thập phân
+		const numericPrice = parseFloat(price.replace(/\D/g, ''));
+
+		// So sánh giá trị đã chuyển đổi với 50,000,000
+		return numericPrice > 50000000;
+	};
+
+	// Ví dụ sử dụng
 
 	// Hàm chuyển đổi status sang chuỗi dễ đọc
 
