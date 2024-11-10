@@ -1,28 +1,22 @@
 import React, {useEffect, useState} from 'react';
 
-import {Button, Steps} from 'antd';
-import {ImageGallery} from './Left/ImageGallery';
-import {InformationLeft} from './Left/InformationLeft';
-import {InformationRight} from './Right/InformationRight';
-import {ChoiceMetal} from './ChoiceMetal';
-import {DetailMetal} from './DetailMetal/DetailMetal';
+import {faCheckCircle} from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {Button, Space, Steps} from 'antd';
+import {useDispatch, useSelector} from 'react-redux';
+import {useNavigate, useParams} from 'react-router-dom';
+import {GetAllJewelryModelDetailCustomizeSelector} from '../../../redux/selectors';
+import {getJewelryModelDetail} from '../../../redux/slices/customizeSlice';
 import {ChoiceMetalDiamond} from '../DiamondDetailPage/ChoiceMetal';
 import {DetailMetalDiamond} from '../DiamondDetailPage/DetailMetal/DetailMetal';
-import {getJewelryDetail} from '../../../redux/slices/jewelrySlice';
-import {
-	GetAllJewelryModelDetailCustomizeSelector,
-	GetJewelryDetailSelector,
-} from '../../../redux/selectors';
-import {useDispatch, useSelector} from 'react-redux';
-import {useParams} from 'react-router-dom';
-import {CheckCircleFilled} from '@ant-design/icons';
-import logo from '../../../assets/logo-ex.png';
-import {getJewelryModelDetail} from '../../../redux/slices/customizeSlice';
+import {ChoiceMetal} from './ChoiceMetal';
+import {DetailMetal} from './DetailMetal/DetailMetal';
 
 const JewelryCustomDetail = () => {
 	const {id} = useParams();
 	const dispatch = useDispatch();
 	const jewelryDetail = useSelector(GetAllJewelryModelDetailCustomizeSelector);
+	const navigate = useNavigate();
 
 	const [stepChoose, setStepChoose] = useState(0);
 	const [imageData, setImageData] = useState(null);
@@ -53,14 +47,6 @@ const JewelryCustomDetail = () => {
 		isLabGrown: null,
 	});
 
-	console.log('customizeDiamond', customizeDiamond);
-	console.log('selectedDiamonds', selectedDiamonds);
-	console.log('id', id);
-	console.log('customizeJewelry', customizeJewelry);
-	console.log('jewelry', jewelry);
-	console.log('fontFamily', fontFamily);
-	console.log('textValue', textValue);
-
 	useEffect(() => {
 		dispatch(getJewelryModelDetail({id}));
 	}, []);
@@ -77,12 +63,15 @@ const JewelryCustomDetail = () => {
 	const items = [
 		{
 			title: `Chọn Thông Số Vỏ`,
+			disabled: stepChoose < 0,
 		},
 		{
 			title: 'Chọn Thông Số Kim Cương',
+			disabled: stepChoose < 1,
 		},
 		{
 			title: 'Hoàn Thành',
+			disabled: stepChoose < 2,
 		},
 	];
 
@@ -122,11 +111,6 @@ const JewelryCustomDetail = () => {
 			return []; // Return an empty array if metalGroups is undefined or not an array
 		}
 
-		console.log('MetalGroups:', metalGroups);
-		console.log('Selected Metal:', selectedMetal);
-		console.log('Selected SideDiamond:', selectedSideDiamond);
-		console.log(`selectedDiamonds: `, selectedDiamonds);
-
 		return metalGroups
 			.map((group) => {
 				// Check if group matches the selected MetalId
@@ -158,52 +142,23 @@ const JewelryCustomDetail = () => {
 		selectedSideDiamond
 	);
 
+	const onChange = (step) => {
+		if (step <= stepChoose) {
+			setStepChoose(step);
+		}
+	};
+
 	return (
 		<div className="mx-32">
-			{/* {stepChoose === 0 && (
-				<>
-					<Steps
-						current={0}
-						items={items}
-						percent={67}
-						className="bg-white p-4 rounded-full my-10"
-					/>
-					<div className="flex flex-col md:flex-row bg-white my-10 md:my-20 rounded-lg shadow-lg">
-						<div className="w-full md:w-1/2 p-6">
-							<ImageGallery />
-							<InformationLeft />
-						</div>
-
-						<div className="w-full md:w-1/2 p-6 md:pr-32">
-							<InformationRight
-								handleSizeChange={handleSizeChange}
-								setStepChoose={setStepChoose}
-								customizeJewelry={customizeJewelry}
-								id={id}
-								filteredGroups={filteredGroups}
-								diamondJewelry={jewelry}
-								setSelectedMetal={setSelectedMetal}
-								selectedMetal={selectedMetal}
-								setSize={setSize}
-								size={size}
-								setSelectedSideDiamond={setSelectedSideDiamond}
-								selectedSideDiamond={selectedSideDiamond}
-								handleChange={handleChange}
-								handleSelectMetal={handleSelectMetal}
-								handleSelectSideDiamond={handleSelectSideDiamond}
-							/>
-						</div>
-					</div>
-				</>
-			)} */}
+			<Steps
+				current={stepChoose}
+				items={items}
+				percent={100}
+				className="bg-white p-4 rounded-full my-10"
+				onChange={onChange}
+			/>
 			{stepChoose === 0 && (
 				<>
-					<Steps
-						current={0}
-						items={items}
-						percent={100}
-						className="bg-white p-4 rounded-full my-10"
-					/>
 					<div className="flex w-full bg-white my-10 md:my-20 rounded-lg shadow-lg">
 						<div className="w-1/2">
 							<ChoiceMetal
@@ -241,7 +196,6 @@ const JewelryCustomDetail = () => {
 			)}
 			{stepChoose === 1 && (
 				<>
-					<Steps current={1} items={items} className="bg-white p-4 rounded-full my-10" />
 					<div className="flex w-full bg-white my-10 md:my-20 rounded-lg shadow-lg">
 						<div className="w-2/3">
 							<ChoiceMetalDiamond
@@ -264,7 +218,7 @@ const JewelryCustomDetail = () => {
 							/>
 						</div>
 
-						<div className="w-1/3s">
+						<div className="w-1/3">
 							<DetailMetalDiamond
 								imageData={imageData}
 								customizeJewelry={customizeJewelry}
@@ -280,24 +234,37 @@ const JewelryCustomDetail = () => {
 			)}
 			{stepChoose === 3 && (
 				<>
-					<Steps current={3} items={items} className="bg-white p-4 rounded-full my-10" />
 					<div className="flex w-full bg-white my-10 md:my-20 rounded-lg shadow-lg">
 						<div className="text-center w-full p-6">
 							<div className="my-10">
-								<CheckCircleFilled
-									style={{fontSize: '64px', color: '#dec986 !important'}}
+								<FontAwesomeIcon
+									icon={faCheckCircle}
+									color="green"
+									style={{fontSize: 64}}
 								/>
 							</div>
 
 							<h2 className="text-2xl font-semibold text-primary">
-								Đơn hàng của bạn đã được đặt hàng thành công!
+								Đơn hàng của bạn đã đặt hàng thành công!
 							</h2>
 							<h2 className="text-2xl font-semibold text-primary">
 								Xin vui lòng kiểm tra giỏ hàng!
 							</h2>
-						</div>
-						<div>
-							<Button className=""></Button>
+							<Space className="my-5">
+								<Button
+									type="text"
+									className="bg-primary w-48 uppercase font-semibold"
+									onClick={() => navigate('/customize/diamond-jewelry')}
+								>
+									Tiếp Tục Thiết Kế
+								</Button>
+								<Button
+									type="text"
+									className="bg-primary w-48 uppercase font-semibold"
+								>
+									Vào Giỏ Hàng
+								</Button>
+							</Space>
 						</div>
 					</div>
 				</>

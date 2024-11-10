@@ -11,16 +11,21 @@ export const Metal = ({
 	setSelectedMetal,
 	handleSelectMetal,
 	filteredGroups,
+	handleSizeChange,
+	size,
 }) => {
 	const handleNextStep = () => {
-		setStep(1);
+		setStep((prev) => prev + 1);
 	};
 
-	console.log('selectedMetal', selectedMetal);
+	console.log('size', size);
 
 	return (
 		<div>
 			<div>
+				<div className="flex items-center justify-center mt-10">
+					<label className=" font-semibold text-xl">Chọn Vật Liệu</label>
+				</div>
 				{diamondJewelry?.MetalSupported?.map((metal, i) => (
 					<div key={i}>
 						<Radio.Group
@@ -50,11 +55,33 @@ export const Metal = ({
 					</div>
 				))}
 			</div>
+			<div className="flex items-center justify-center mt-10">
+				<label className=" font-semibold text-xl">Chọn Kích Thước</label>
+			</div>
+			<div>
+				{filteredGroups?.map((metal, i) => (
+					<div key={i}>
+						<Radio.Group onChange={handleSizeChange} value={size}>
+							<Radio value={metal?.SizeId}>
+								<div
+									className="flex items-center justify-between"
+									style={{width: 1000}}
+								>
+									<div className="flex items-center justify-between">
+										<p className="">{metal?.SizeId}</p>
+									</div>
+									{/* <p className="font-semibold">{formatPrice(metal.Price)}</p> */}
+								</div>
+							</Radio>
+						</Radio.Group>
+					</div>
+				))}
+			</div>
 			<div className="flex justify-center items-center mt-10">
 				<Button
 					type="text"
 					className="bg-primary w-48 uppercase font-semibold"
-					// disabled={selectedMetal.length === 0}
+					disabled={size === null}
 					onClick={handleNextStep}
 				>
 					Tiếp tục

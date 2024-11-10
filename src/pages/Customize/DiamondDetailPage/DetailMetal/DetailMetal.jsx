@@ -21,35 +21,33 @@ export const DetailMetalDiamond = ({
 	size,
 	selectedDiamonds,
 }) => {
-	function convertFields(diamond) {
+	const convertFields = (diamond) => {
 		const findKeyByValue = (obj, value) => {
 			return Object.keys(obj).find((key) => obj[key] === value);
 		};
 
-		// Chuyển đổi tên trường có gạch dưới thành không có gạch dưới
-		const convertToCamelCase = (str) => {
+		// Chuyển đổi dấu gạch dưới thành dấu cách
+		const convertToSpace = (str) => {
 			if (typeof str !== 'string') {
 				return str; // Trả về giá trị nguyên gốc nếu không phải chuỗi
 			}
-			return str.replace(/_./g, (match) => match.charAt(1).toUpperCase());
+			return str.replace(/_/g, ' '); // Thay thế tất cả dấu gạch dưới bằng dấu cách
 		};
 
 		return {
 			...diamond,
-			clarity: convertToCamelCase(
-				findKeyByValue(Clarity, diamond.clarity) || diamond.clarity
-			),
-			color: convertToCamelCase(findKeyByValue(Color, diamond.color) || diamond.color),
-			culet: convertToCamelCase(findKeyByValue(Culet, diamond.culet) || diamond.culet),
-			cut: convertToCamelCase(findKeyByValue(Cut, diamond.cut) || diamond.cut),
-			girdle: convertToCamelCase(findKeyByValue(Girdle, diamond.girdle) || diamond.girdle),
-			polish: convertToCamelCase(findKeyByValue(Polish, diamond.polish) || diamond.polish),
-			symmetry: convertToCamelCase(
+			clarity: convertToSpace(findKeyByValue(Clarity, diamond.clarity) || diamond.clarity),
+			color: convertToSpace(findKeyByValue(Color, diamond.color) || diamond.color),
+			culet: convertToSpace(findKeyByValue(Culet, diamond.culet) || diamond.culet),
+			cut: convertToSpace(findKeyByValue(Cut, diamond.cut) || diamond.cut),
+			girdle: convertToSpace(findKeyByValue(Girdle, diamond.girdle) || diamond.girdle),
+			polish: convertToSpace(findKeyByValue(Polish, diamond.polish) || diamond.polish),
+			symmetry: convertToSpace(
 				findKeyByValue(Symmetry, diamond.symmetry) || diamond.symmetry
 			),
-			shape: convertToCamelCase(findKeyByValue(ShapeName, diamond.shape) || diamond.shape), // thêm dòng này
+			shape: convertToSpace(findKeyByValue(ShapeName, diamond.shape) || diamond.shape), // thêm dòng này
 		};
-	}
+	};
 
 	// Sử dụng hàm để chuyển đổi tất cả các phần tử trong mảng selectedDiamonds
 	const convertedDiamonds = selectedDiamonds.map(convertFields);
@@ -65,17 +63,17 @@ export const DetailMetalDiamond = ({
 				<p>123456</p>
 			</div>
 			<Divider /> */}
-			<div className="flex items-center justify-between">
+			<div className="flex items-center justify-between pr-5">
 				<p className="font-semibold">Vỏ:</p>
 				<p>{jewelry?.Name}</p>
 			</div>
 			<Divider />
-			<div className="flex items-center justify-between">
+			<div className="flex items-center justify-between pr-5">
 				<p className="font-semibold text-primary">Kích thước vỏ:</p>
 				<p>{size}</p>
 			</div>
 			<Divider />
-			<div className="flex items-center justify-between">
+			<div className="flex items-center justify-between pr-5">
 				<p className="font-semibold text-primary">Vật liệu đã chọn:</p>
 				<p>{selectedMetal}</p>
 			</div>
@@ -99,45 +97,45 @@ export const DetailMetalDiamond = ({
 				? convertedDiamonds.map((diamond, i) => (
 						<div key={diamond?.Id} className="flex flex-col items-start my-4">
 							<p className="font-semibold text-primary">Kim Cương {i + 1}:</p>
-							<div className="flex items-center justify-between my-2">
-								<p className="font-semibold">Carat From:</p>
+							<div className="flex items-center justify-between my-2 pr-5">
+								<p className="font-semibold ">Carat From:</p>
 								<p>{diamond?.caratFrom}</p>
 							</div>
-							<div className="flex items-center justify-between my-2">
+							<div className="flex items-center justify-between my-2 pr-5">
 								<p className="font-semibold">Carat To:</p>
 								<p>{diamond?.caratTo}</p>
 							</div>
-							<div className="flex items-center justify-between my-2">
+							<div className="flex items-center justify-between my-2 pr-5">
 								<p className="font-semibold">Clarity:</p>
 								<p>{diamond?.clarity}</p>
 							</div>
-							<div className="flex items-center justify-between my-2">
+							<div className="flex items-center justify-between my-2 pr-5">
 								<p className="font-semibold">Color:</p>
 								<p>{diamond?.color}</p>
 							</div>
-							<div className="flex items-center justify-between my-2">
-								<p className="font-semibold">Culet:</p>
-								<p>{diamond?.culet}</p>
-							</div>
-							<div className="flex items-center justify-between my-2">
+							<div className="flex items-center justify-between my-2 pr-5">
 								<p className="font-semibold">Cut:</p>
 								<p>{diamond?.cut}</p>
 							</div>
-							<div className="flex items-center justify-between my-2">
-								<p className="font-semibold">Girdle:</p>
-								<p>{diamond?.girdle}</p>
+							<div className="flex items-center justify-between my-2 pr-5">
+								<p className="font-semibold">Shape:</p>
+								<p>{diamond?.shape}</p>
 							</div>
-							<div className="flex items-center justify-between my-2">
+							<div className="flex items-center justify-between my-2 pr-5">
 								<p className="font-semibold">Polish:</p>
 								<p>{diamond?.polish}</p>
 							</div>
-							<div className="flex items-center justify-between my-2">
+							<div className="flex items-center justify-between my-2 pr-5">
+								<p className="font-semibold">Girdle:</p>
+								<p>{diamond?.girdle}</p>
+							</div>
+							<div className="flex items-center justify-between my-2 pr-5">
+								<p className="font-semibold">Culet:</p>
+								<p>{diamond?.culet}</p>
+							</div>
+							<div className="flex items-center justify-between my-2 pr-5">
 								<p className="font-semibold">Symmetry:</p>
 								<p>{diamond?.symmetry}</p>
-							</div>
-							<div className="flex items-center justify-between my-2">
-								<p className="font-semibold">Shape:</p>
-								<p>{diamond?.shape}</p>
 							</div>
 						</div>
 				  ))
@@ -147,7 +145,7 @@ export const DetailMetalDiamond = ({
 						</div>
 				  ))}
 
-			<Divider />
+			{/* <Divider /> */}
 			{/* <div className="flex items-center justify-between">
 				<p className="font-semibold text-primary">Cut:</p>
 				<p>{customizeDiamond.cut}</p>
@@ -168,10 +166,10 @@ export const DetailMetalDiamond = ({
 				<p className="font-semibold">$2,040</p>
 			</div> */}
 			{/* <Divider /> */}
-			<div className="flex items-center justify-between">
+			{/* <div className="flex items-center justify-between">
 				<p className="font-semibold">Ngày vận chuyển dự kiến:</p>
 				<p style={{color: '#c0c0c0'}}>7 ngày 2 giờ sau khi thanh toán thành công</p>
-			</div>
+			</div> */}
 		</div>
 	);
 };

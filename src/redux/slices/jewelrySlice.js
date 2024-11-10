@@ -7,12 +7,16 @@ export const getAllJewelryModel = createAsyncThunk(
 		console.log('params', params);
 
 		try {
-			const {Category, metalId, minPrice, maxPrice} = params;
+			const {Category, metalId, minPrice, maxPrice, IsEngravable, IsRhodiumFinished} = params;
 			let url = '/JewelryModel/Selling';
 			const queryParams = new URLSearchParams();
 
 			if (Category) queryParams.append('Category', Category);
 			if (metalId) queryParams.append('MetalId', metalId);
+			if (IsEngravable !== undefined && IsEngravable !== null)
+				queryParams.append('IsEngravable', IsEngravable);
+			if (IsRhodiumFinished !== undefined && IsRhodiumFinished !== null)
+				queryParams.append('IsRhodiumFinished', IsRhodiumFinished);
 			if (minPrice) queryParams.append('MinPrice', minPrice);
 			if (maxPrice) queryParams.append('MaxPrice', maxPrice);
 
@@ -21,7 +25,6 @@ export const getAllJewelryModel = createAsyncThunk(
 			}
 
 			const response = await api.get(url);
-			// const response = await api.get(`/all_jewelry`);
 			console.log(response);
 
 			return response;

@@ -1,22 +1,16 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 
-import {Button, Image, Input, message, Space} from 'antd';
-import caratImage from '../../../../../assets/carat-weight.png';
+import {InfoCircleFilled} from '@ant-design/icons';
+import {Input, Popover, Space} from 'antd';
 
-export const Carat = ({setStep, customizeDiamond, setCustomizeDiamond, currentDiamond}) => {
-	const [caratFromShape, setCaratFromShape] = useState();
-	const [caratToShape, setCaratToShape] = useState();
-
-	useEffect(() => {
-		if (currentDiamond) {
-			setCaratFromShape(currentDiamond?.Shapes[0]?.CaratFrom);
-			setCaratToShape(currentDiamond?.Shapes[0]?.CaratTo);
-		}
-	}, [currentDiamond]);
-
-	console.log('caratFormShape', caratFromShape);
-	console.log('caratToShape', caratToShape);
-
+export const Carat = ({
+	setStep,
+	customizeDiamond,
+	setCustomizeDiamond,
+	currentDiamond,
+	caratFromShape,
+	caratToShape,
+}) => {
 	const onChange = (e) => {
 		const {name, value} = e.target;
 		setCustomizeDiamond((prev) => ({
@@ -25,34 +19,33 @@ export const Carat = ({setStep, customizeDiamond, setCustomizeDiamond, currentDi
 		}));
 	};
 
-	const handleNextStep = () => {
-		const {caratFrom, caratTo} = customizeDiamond;
-		console.log(caratFrom);
-		console.log(caratTo);
+	const text = <span>Carat (ct.)</span>;
 
-		if (
-			Number(caratFrom) >= Number(caratFromShape) &&
-			Number(caratTo) <= Number(caratToShape)
-		) {
-			setStep(1);
-		} else {
-			message.warning('Vui lòng chọn giới hạn carat hợp lệ!');
-		}
-	};
+	const content = (
+		<div style={{width: 300, textAlign: 'justify'}}>
+			<p>
+				Đơn vị trọng lượng quốc tế, được sử dụng để đo kim cương và đá quý. 1 carat bằng 200
+				miligam hoặc 0,2 gam.
+			</p>
+		</div>
+	);
 
-	console.log('currentDiamond', currentDiamond);
-	console.log('caratForm', Number(customizeDiamond.caratFrom));
-	console.log('caratTo', Number(customizeDiamond.caratTo));
-	console.log('caratToShape', Number(caratToShape));
-	console.log('caratFromShape', Number(caratFromShape));
 	return (
 		<div>
-			<div>
+			{/* <div>
 				<Image preview={false} src={caratImage} />
-			</div>
+			</div> */}
 
+			<div className="flex items-center justify-center mt-10">
+				<label className=" font-semibold text-xl">
+					Chọn Carat{' '}
+					<Popover placement="topLeft" title={text} content={content}>
+						<InfoCircleFilled />
+					</Popover>
+				</label>
+			</div>
 			<div className="my-10 text-red text-lg font-semibold">
-				Kim Cương Được Nhập Carat: {caratFromShape} - {caratToShape}
+				Kim Cương Được Chọn Carat: {caratFromShape} - {caratToShape}
 			</div>
 			<div className="flex items-center justify-center">
 				<Space>
@@ -74,7 +67,7 @@ export const Carat = ({setStep, customizeDiamond, setCustomizeDiamond, currentDi
 					/>
 				</Space>
 			</div>
-			<div className="flex justify-center items-center mt-10">
+			{/* <div className="flex justify-center items-center mt-10">
 				<Button
 					type="text"
 					className="bg-primary w-48 uppercase font-semibold"
@@ -83,7 +76,7 @@ export const Carat = ({setStep, customizeDiamond, setCustomizeDiamond, currentDi
 				>
 					Tiếp tục
 				</Button>
-			</div>
+			</div> */}
 		</div>
 	);
 };

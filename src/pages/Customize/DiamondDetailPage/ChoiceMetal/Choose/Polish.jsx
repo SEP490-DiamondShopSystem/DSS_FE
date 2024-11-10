@@ -1,7 +1,8 @@
 import React from 'react';
 
-import {Button, Image, Radio} from 'antd';
+import {Button, Image, Popover, Radio} from 'antd';
 import polishImage from '../../../../../assets/Polish.png';
+import {InfoCircleFilled} from '@ant-design/icons';
 
 const polishItems = [
 	{
@@ -43,12 +44,33 @@ export const Polish = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 		setStep(5);
 	};
 
+	const text = <span>Polish</span>;
+
+	const content = (
+		<div style={{width: 300, textAlign: 'justify'}}>
+			<p>
+				Tình trạng tổng thể của các bề mặt đã được mài của viên kim cương hoàn thiện, bao
+				gồm độ mịn của các mặt cắt, có vết xước nào từ bánh mài hay không, và mức độ sắc nét
+				của các cạnh mỗi mặt cắt. Các vết từ quá trình mài thường gần như không thể thấy
+				bằng mắt thường, nhưng độ mài bóng tốt là điều cần thiết để tối ưu hóa hiệu suất
+				phản chiếu ánh sáng.
+			</p>
+		</div>
+	);
+
 	return (
 		<div>
-			<Image className="my-10" src={polishImage} preview={false} alt="" />
+			<div className="flex items-center justify-center mt-10">
+				<label className=" font-semibold text-xl">
+					Chọn Carat{' '}
+					<Popover placement="topLeft" title={text} content={content}>
+						<InfoCircleFilled />
+					</Popover>
+				</label>
+			</div>
 			<div className="grid gap-x-8 gap-y-4 grid-cols-2 items-center">
 				{polishItems?.map((item) => (
-					<div key={item.id}>
+					<div key={item.id} className="mx-auto">
 						<Radio.Group onChange={onChange} value={customizeDiamond.polish}>
 							<Radio value={item.value}>
 								<div className="flex justify-between items-center">
@@ -60,7 +82,7 @@ export const Polish = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 					</div>
 				))}
 			</div>
-			<div className="flex justify-between items-center mt-10">
+			{/* <div className="flex justify-between items-center mt-10">
 				<Button
 					type="text"
 					className="bg-primary w-48 uppercase font-semibold"
@@ -76,7 +98,7 @@ export const Polish = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 				>
 					Tiếp tục
 				</Button>
-			</div>
+			</div> */}
 		</div>
 	);
 };
