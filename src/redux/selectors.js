@@ -57,3 +57,7 @@ export const GetOrderWarrantySelector = (state) => state.warrantySlice.warrantie
 //PAYMENT
 export const LoadingPaymentSelector = (state) => state.paymentSlice.loading;
 export const GetAllPaymentSelector = (state) => state.paymentSlice.payment;
+
+//REVIEW
+export const LoadingReviewSelector = (state) => state.reviewSlice.loading;
+export const GetAllReviewSelector = (state) => state.reviewSlice.reviews;

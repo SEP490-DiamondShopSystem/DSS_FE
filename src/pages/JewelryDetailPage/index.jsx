@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 
+import {Steps} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
 import LoginModal from '../../components/LogModal/LoginModal';
@@ -8,7 +9,7 @@ import {getJewelryDetail} from '../../redux/slices/jewelrySlice';
 import {ImageGallery} from './Left/ImageGallery';
 import {InformationLeft} from './Left/InformationLeft';
 import {InformationRight} from './Right/InformationRight';
-import {Steps} from 'antd';
+import ProductReviews from './Popup/ProductReviews';
 
 const items = [
 	{
@@ -47,9 +48,10 @@ const JewelryDetailPage = () => {
 	useEffect(() => {
 		if (jewelryDetail) {
 			setJewelry(jewelryDetail);
-			setSelectedMetal(jewelryDetail?.Metals[0]);
-			setSelectedSideDiamond(jewelryDetail?.SideDiamonds[0]);
-			// setSize(jewelryDetail?.MetalGroups[0]?.SizeGroups[0].Size);
+
+			setSelectedMetal(jewelryDetail?.Metals?.[0] || null);
+
+			setSelectedSideDiamond(jewelryDetail?.SideDiamonds?.[0] || null);
 		}
 	}, [jewelryDetail]);
 
@@ -121,6 +123,7 @@ const JewelryDetailPage = () => {
 					/>
 				</div>
 			</div>
+			<ProductReviews />
 			<LoginModal isOpen={isLoginModalVisible} onClose={hideLoginModal} />
 		</div>
 	);
