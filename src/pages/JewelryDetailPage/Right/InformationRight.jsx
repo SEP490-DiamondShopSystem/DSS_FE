@@ -40,10 +40,17 @@ export const InformationRight = ({
 	const [isModalVisible, setIsModalVisible] = useState(false);
 	const [reviewLength, setReviewLength] = useState(null);
 	const [reviews, setReviews] = useState(null);
+	const [orderBy, setOrderBy] = useState(false);
 
 	useEffect(() => {
-		dispatch(getAllJewelryModelReview({ModelId: id, MetalId: selectedMetal?.Id}));
-	}, [id, selectedMetal]);
+		dispatch(
+			getAllJewelryModelReview({
+				ModelId: id,
+				MetalId: selectedMetal?.Id,
+				OrderByOldest: orderBy,
+			})
+		);
+	}, [id, selectedMetal, orderBy]);
 
 	useEffect(() => {
 		if (reviewList) {
@@ -119,9 +126,8 @@ export const InformationRight = ({
 
 	const someSize = filteredGroups[0]?.SizeGroups?.some((size) => size?.IsInStock);
 
-	console.log('filteredGroups', filteredGroups);
-	console.log('size', size);
-	console.log('someSize', someSize);
+	console.log('reviews', reviews);
+	console.log('orderBy', orderBy);
 
 	return (
 		<div>
@@ -136,6 +142,8 @@ export const InformationRight = ({
 						reviewLength={reviewLength}
 						reviewList={reviews}
 						averageRating={averageRating}
+						setOrderBy={setOrderBy}
+						orderBy={orderBy}
 					/>
 				</div>
 			</div>

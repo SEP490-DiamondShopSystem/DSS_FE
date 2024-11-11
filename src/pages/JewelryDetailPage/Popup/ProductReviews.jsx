@@ -10,11 +10,13 @@ import {
 	Popover,
 	Modal,
 	Image,
+	Select,
 } from 'antd';
+import {convertToVietnamDate} from '../../../utils';
 
 const {Text} = Typography;
 
-const ProductReviews = ({reviewLength, reviewList, averageRating}) => {
+const ProductReviews = ({reviewLength, reviewList, averageRating, setOrderBy, orderBy}) => {
 	const [visibleReviews, setVisibleReviews] = useState(3);
 	const [showModal, setShowModal] = useState(false);
 
@@ -43,12 +45,10 @@ const ProductReviews = ({reviewLength, reviewList, averageRating}) => {
 
 	return (
 		<div>
-			{/* Popover sẽ mở khi nhấp vào phần tử span */}
 			<Popover content={popoverContent} title="Phản Hồi Sản Phẩm" trigger="hover">
 				<span className="ml-5 underline md:cursor-pointer">{reviewLength} Đánh Giá</span>
 			</Popover>
 
-			{/* Modal hiển thị danh sách đánh giá */}
 			<Modal
 				title="Ý Kiến Khách Hàng"
 				visible={showModal}
@@ -56,6 +56,14 @@ const ProductReviews = ({reviewLength, reviewList, averageRating}) => {
 				footer={null}
 				width={600}
 			>
+				<Select
+					value={orderBy}
+					onChange={(value) => setOrderBy(value)}
+					style={{marginBottom: 16}}
+				>
+					<Select.Option value={false}>Mới nhất</Select.Option>
+					<Select.Option value={true}>Cũ nhất</Select.Option>
+				</Select>
 				<List
 					dataSource={reviewList}
 					renderItem={(review) => (
@@ -77,6 +85,9 @@ const ProductReviews = ({reviewLength, reviewList, averageRating}) => {
 										/>
 									))}
 								</div>
+								<p className="font-semibold">
+									Đã Đánh Giá: {convertToVietnamDate(review?.CreatedDate)}
+								</p>
 
 								<p>{review.Content}</p>
 							</Card>
