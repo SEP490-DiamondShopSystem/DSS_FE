@@ -182,14 +182,14 @@ export const DiamondList = ({
 									{diamondNatural?.map((diamondItem) => (
 										<div
 											key={diamondItem.Id}
-											className="shadow-lg bg-white rounded-lg cursor-pointer"
+											className="shadow-lg bg-white rounded-lg cursor-pointer border-2 border-white hover:border-2 hover:border-black my-10"
 											onClick={() =>
 												diamondChoice.length > 0
 													? handleDiamondChoiceClick(diamondItem.Id)
 													: handleJewelryChoiceClick(diamondItem.Id)
 											}
 										>
-											<div className="flex w-full my-10">
+											<div className="flex w-full">
 												<div
 													className="flex justify-center w-1/5"
 													style={{background: '#b8b7b5'}}

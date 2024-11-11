@@ -2,36 +2,66 @@ import React from 'react';
 
 import {Modal, Button, Input, Form, message} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
-import {handleRegister} from '../../redux/slices/userLoginSlice';
+import {handleLogin, handleRegister, setUser} from '../../redux/slices/userLoginSlice';
 import {LoadingUserSelector} from '../../redux/selectors';
+import {jwtDecode} from 'jwt-decode';
+import {useNavigate} from 'react-router-dom';
 
 const SignUpModal = ({isOpen, onClose}) => {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const loading = useSelector(LoadingUserSelector);
 	const [form] = Form.useForm();
 
 	const onFinish = (values) => {
-		// Combine firstName and lastName into fullName object
 		const fullName = {
 			firstName: values.firstName,
 			lastName: values.lastName,
 		};
 
-		dispatch(handleRegister({...values, fullName, isExternalRegister: true})).then((res) => {
+		const registerData = {
+			...values,
+			fullName,
+			isExternalRegister: true,
+		};
+
+		const loginData = {
+			email: values.email,
+			password: values.password,
+			isExternalLogin: true,
+			isStaffLogin: false,
+		};
+
+		dispatch(handleRegister(registerData)).then((res) => {
 			if (res.payload) {
 				message.success('Đăng ký thành công!');
 				form.resetFields();
-				onClose();
 
-				navigate('/');
+				dispatch(handleLogin(loginData))
+					.then((response) => {
+						if (response.payload) {
+							const decodedData = jwtDecode(response.payload.accessToken);
+							localStorage.setItem('user', JSON.stringify(decodedData));
+							localStorage.setItem('userId', decodedData.UserId);
+							dispatch(setUser(decodedData));
+
+							onClose();
+							navigate('/');
+						} else {
+							console.error('Login failed:');
+							message.error('Đăng nhập không thành công. Vui lòng thử lại!');
+						}
+					})
+					.catch((error) => {
+						console.error('Login failed:', error);
+						message.error('Đăng nhập không thành công. Vui lòng thử lại!');
+					});
 			} else {
 				message.error(
 					'Đăng ký không thành công. Vui lòng kiểm tra thông tin đăng ký của bạn!'
 				);
 			}
 		});
-
-		form.resetFields();
 	};
 
 	return (

@@ -31,8 +31,8 @@ export const InformationRight = ({
 	handleAddToCart,
 	handleChangeWarranty,
 	warrantyDiamond,
+	diamondId,
 }) => {
-	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
 	const userId = getUserId();
@@ -64,18 +64,6 @@ export const InformationRight = ({
 	};
 
 	console.log('diamond', diamond);
-
-	const handleCompleted = (id) => {
-		const jewelryItem = JSON.parse(localStorage.getItem(`jewelryModel_${userId}`));
-		console.log('jewelryItem', jewelryItem);
-
-		localStorage.setItem(`diamond_${userId}`, JSON.stringify(diamond));
-		// Get the current diamond's ID for comparison
-
-		const jewelryDiamondId = jewelryItem?.jewelryModelId + id;
-
-		navigate(`/completed-jewelry/${jewelryDiamondId}`);
-	};
 
 	console.log('warrantyDiamond', warrantyDiamond);
 
@@ -138,24 +126,14 @@ export const InformationRight = ({
 			</div>
 
 			<div className="flex justify-between items-center mt-5">
-				{diamondChoice.length > 0 ? (
-					<Button
-						type="text"
-						className="border py-7 px-14 font-bold text-lg bg-primary rounded hover:bg-second w-full uppercase"
-						// onClick={toggleSidebar}
-						onClick={handleAddToCart}
-					>
-						Thêm Vào giỏ hàng
-					</Button>
-				) : (
-					<Button
-						type="text"
-						className="border py-7 px-14 font-bold text-lg bg-primary rounded hover:bg-second w-full"
-						onClick={() => handleCompleted(diamond.DiamondId)}
-					>
-						CHỌN VIÊN KIM CƯƠNG NÀY
-					</Button>
-				)}
+				<Button
+					type="text"
+					className="border py-7 px-14 font-bold text-lg bg-primary rounded hover:bg-second w-full uppercase"
+					// onClick={toggleSidebar}
+					onClick={handleAddToCart}
+				>
+					{diamondId ? 'Cập Nhật Đơn Hàng' : 'Thêm Vào giỏ hàng'}
+				</Button>
 			</div>
 
 			<div className="my-10">
