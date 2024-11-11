@@ -177,16 +177,29 @@ const DiamondDetailPage = () => {
 		const existingCart = JSON.parse(localStorage.getItem(`cart_${userId}`)) || [];
 
 		const existingIndex = existingCart.findIndex(
-			(item) => item.DiamondId === mappedDiamond.DiamondId
+			(item) =>
+				item.DiamondId === mappedDiamond.DiamondId &&
+				item.warrantyDiamond === warrantyDiamondSelected
 		);
 
 		if (existingIndex !== -1) {
 			// Nếu sản phẩm đã tồn tại, hiện thông báo
 			message.info('Sản phẩm này đã có trong giỏ hàng!');
 		} else {
-			// Nếu không tồn tại, thêm sản phẩm mới vào giỏ hàng thiết kế
-			existingCart.push(data);
-			message.success('Sản phẩm đã được thêm vào giỏ hàng!');
+			// Kiểm tra nếu có cùng DiamondId nhưng các thuộc tính khác nhau
+			const similarJewelryIndex = existingCart.findIndex(
+				(cartItem) => cartItem.DiamondId === mappedDiamond.DiamondId
+			);
+
+			if (similarJewelryIndex !== -1) {
+				// Thay thế sản phẩm cũ với các thuộc tính khác nhau
+				existingCart[similarJewelryIndex] = data;
+				message.success('Sản phẩm đã được cập nhật trong giỏ hàng!');
+			} else {
+				// Thêm sản phẩm mới vào giỏ hàng
+				existingCart.push(data);
+				message.success('Sản phẩm đã thêm vào giỏ hàng!');
+			}
 		}
 
 		// Lưu cart cập nhật lại vào localStorage

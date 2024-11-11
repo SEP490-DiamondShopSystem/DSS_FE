@@ -58,9 +58,7 @@
 .ant-steps-item-active::before {
 	background-color: #dec986 !important;
 }
-.anticon {
-	color: black !important;
-}
+
 .ant-steps-item-finish:not(:last-of-type) .ant-steps-item-icon {
 	background-color: #dec986 !important;
 	border-color: #dec986 !important;
@@ -71,4 +69,18 @@
 	.ant-radio-inner {
 	background-color: #dec986 !important;
 	border-color: black !important;
+}
+
+.ant-rate-star {
+	color: #fadb14 !important; /* Vàng */
+}
+
+/* Đổi màu ngôi sao khi đã chọn */
+.ant-rate-star.ant-rate-star-full {
+	color: #fadb14 !important; /* Vàng */
+}
+
+/* Đổi màu ngôi sao khi hover */
+.ant-rate-star:hover {
+	color: #ffbf00 !important; /* Vàng đậm */
 }

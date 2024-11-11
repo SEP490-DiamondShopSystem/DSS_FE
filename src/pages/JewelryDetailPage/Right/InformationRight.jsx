@@ -3,13 +3,15 @@ import React, {useEffect, useState} from 'react';
 import {MinusOutlined, PlusOutlined} from '@ant-design/icons';
 import {faRefresh, faTruck} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {Button, message, Select} from 'antd';
+import {Button, message, Rate, Select} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import {getUserId} from '../../../components/GetUserId';
-import {UserInfoSelector} from '../../../redux/selectors';
+import {GetAllReviewSelector, UserInfoSelector} from '../../../redux/selectors';
 import {convertToVietnamDate, formatPrice, Rating} from '../../../utils';
-import JewelryPopup from '../Popup/JewelryPopup';
+import JewelryPopup from '../Popup/ProductReviews';
+import {getAllJewelryModelReview} from '../../../redux/slices/reviewSlice';
+import ProductReviews from '../Popup/ProductReviews';
 
 const {Option} = Select;
 
@@ -30,21 +32,25 @@ export const InformationRight = ({
 
 	const userId = getUserId();
 	const userSelector = useSelector(UserInfoSelector);
+	const reviewList = useSelector(GetAllReviewSelector);
 
 	const [showDetail, setDetail] = useState(false);
 	const [showSecureShopping, setSecureShopping] = useState(false);
 	const [showProductWarranty, setProductWarranty] = useState(false);
-	const [jewelryType, setJewelryType] = useState(localStorage.getItem('jewelryType'));
-	const [sizeGroups, setSizeGroups] = useState();
 	const [isModalVisible, setIsModalVisible] = useState(false);
-	const [diamondDetail, setDiamondDetail] = useState(
-		JSON.parse(localStorage.getItem(`diamond_${userId}`)) || undefined
-	);
+	const [reviewLength, setReviewLength] = useState(null);
+	const [reviews, setReviews] = useState(null);
+
 	useEffect(() => {
-		if (filteredGroups) {
-			setSizeGroups(filteredGroups[0]?.SizeGroups);
+		dispatch(getAllJewelryModelReview({ModelId: id, MetalId: selectedMetal?.Id}));
+	}, [id, selectedMetal]);
+
+	useEffect(() => {
+		if (reviewList) {
+			setReviewLength(reviewList?.Values?.length);
+			setReviews(reviewList?.Values);
 		}
-	}, [filteredGroups]);
+	}, [reviewList]);
 
 	const toggleDetail = () => {
 		setDetail(!showDetail);
@@ -75,10 +81,6 @@ export const InformationRight = ({
 		console.log('value', value);
 	};
 
-	const showModal = () => {
-		setIsModalVisible(true);
-	};
-
 	const findSize = diamondJewelry?.MetalGroups?.find(
 		(metal) => metal?.Name === filteredGroups[0]?.Name
 	);
@@ -86,7 +88,6 @@ export const InformationRight = ({
 	const findSizePrice = findSize?.SizeGroups?.find(
 		(sizePrice) => sizePrice?.Size === Number(size)
 	);
-	console.log(diamondJewelry);
 
 	const handleDiamondNavigate = () => {
 		const jewelryModel = {
@@ -111,8 +112,16 @@ export const InformationRight = ({
 
 		navigate('/diamond-choose/search');
 	};
-	console.log('findSize', findSize);
+
+	// Tính điểm trung bình
+	const averageRating =
+		reviews?.reduce((total, review) => total + review.StarRating, 0) / reviewLength;
+
+	const someSize = filteredGroups[0]?.SizeGroups?.some((size) => size?.IsInStock);
+
 	console.log('filteredGroups', filteredGroups);
+	console.log('size', size);
+	console.log('someSize', someSize);
 
 	return (
 		<div>
@@ -120,22 +129,15 @@ export const InformationRight = ({
 				<h1 className="text-3xl">
 					{diamondJewelry?.Name} {selectedMetal?.Name || selectedMetal}
 				</h1>
-				<div className="my-5 flex">
-					<Rating rating={0} />
-					<p className="ml-5">477 Đánh Giá</p>
-				</div>
-				{/* <div className="font-semibold my-2">
-					Ngày Giao Hàng Dự Kiến: {convertToVietnamDate(diamondJewelry?.ShippingDate)}
-				</div> */}
-				{/* <div className="flex mb-2">
-					<div className="font-semibold  text-green cursor-pointer">
-						Giao Hàng Miễn Phí Ngay
-					</div>
 
-					<div className="font-semibold pl-2 text-green cursor-pointer">
-						Giao Hàng Miễn Phí Ngay
-					</div>
-				</div> */}
+				<div className="my-5 flex">
+					<Rate value={averageRating} disabled allowHalf />
+					<ProductReviews
+						reviewLength={reviewLength}
+						reviewList={reviews}
+						averageRating={averageRating}
+					/>
+				</div>
 			</div>
 			<div>
 				<div className="my-5 flex items-center">
@@ -161,7 +163,7 @@ export const InformationRight = ({
 						))}
 					</div>
 				</div>
-				{selectedSideDiamond !== undefined && (
+				{selectedSideDiamond !== null && (
 					<>
 						<div className="my-5 flex items-center">
 							<div className="font-semibold">Kim Cương Tấm</div>
@@ -196,7 +198,7 @@ export const InformationRight = ({
 				)}
 			</div>
 			<div className="border-y border-tintWhite my-5">
-				{diamondJewelry && diamondJewelry.Category === 'Ring' && (
+				{diamondJewelry && diamondJewelry.Category === 'Ring' && someSize && (
 					<div className="mt-5 flex items-center">
 						<div className="font-semibold">Chọn kích thước:</div>
 						<div className="font-semibold text-xl pl-4 text-primary">
@@ -231,20 +233,17 @@ export const InformationRight = ({
 				</div>
 			</div>
 
-			{size !== null &&
-				selectedMetal !== null &&
-				selectedSideDiamond !== null &&
-				diamondJewelry?.Category === 'Ring' && (
-					<div className="flex justify-between items-center mt-5">
-						<Button
-							type="text"
-							className="border py-7 px-14 font-bold text-lg bg-primary rounded hover:bg-second w-full uppercase"
-							onClick={handleDiamondNavigate}
-						>
-							Chọn Kim Cương
-						</Button>
-					</div>
-				)}
+			{size !== null && selectedMetal !== null && diamondJewelry?.Category === 'Ring' && (
+				<div className="flex justify-between items-center mt-5">
+					<Button
+						type="text"
+						className="border py-7 px-14 font-bold text-lg bg-primary rounded hover:bg-second w-full uppercase"
+						onClick={handleDiamondNavigate}
+					>
+						Chọn Kim Cương
+					</Button>
+				</div>
+			)}
 
 			<div className="my-10">
 				<h2 className="font-bold text-xl pb-3">Đơn Hàng Của Bạn Bao Gồm:</h2>
@@ -339,17 +338,6 @@ export const InformationRight = ({
 					</div>
 				</div>
 			</div>
-			<JewelryPopup
-				showModal={showModal}
-				isModalVisible={isModalVisible}
-				setIsModalVisible={setIsModalVisible}
-				userId={userId}
-				size={size}
-				selectedMetal={selectedMetal}
-				selectedSideDiamond={selectedSideDiamond}
-				setIsLoginModalVisible={setIsLoginModalVisible}
-				id={id}
-			/>
 		</div>
 	);
 };
