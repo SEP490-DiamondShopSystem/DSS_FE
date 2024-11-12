@@ -8,6 +8,9 @@ export const InformationLeft = ({diamond}) => {
 	const toggleShowMore = () => {
 		setShowMore(!showMore);
 	};
+
+	console.log('diamondLeft', diamond);
+
 	return (
 		<>
 			<div class="bg-gray-50 rounded-lg shadow-md w-full mt-10 pr-36">

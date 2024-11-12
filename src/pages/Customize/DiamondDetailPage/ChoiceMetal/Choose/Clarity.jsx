@@ -67,7 +67,7 @@ export const Clarity = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 		}));
 	};
 
-	const text = <span>Diamond Color</span>;
+	const text = <span>Độ Trong Kim Cương</span>;
 
 	const content = (
 		<div style={{width: 400, textAlign: 'justify'}}>
@@ -155,7 +155,7 @@ export const Clarity = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 			{/* <Image className="my-10" src={clarityChart} preview={false} alt="" /> */}
 			<div className="flex items-center justify-center mt-10">
 				<label className=" font-semibold text-xl my-5">
-					Chọn Clarity{' '}
+					Chọn Độ Trong (Clarity){' '}
 					<Popover placement="topLeft" title={text} content={content}>
 						<InfoCircleFilled />
 					</Popover>

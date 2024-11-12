@@ -49,9 +49,6 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 						dataIndex: 'jewelryId',
 						key: 'jewelryId',
 						render: (_, record) => {
-							console.log('Record Items:', record); // Debugging line
-
-							// Check if jewelryId is not null
 							if (record.jewelryId) {
 								return (
 									<div className="flex justify-center">
@@ -141,10 +138,6 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 		setRating(value);
 	};
 
-	console.log('order', order);
-	console.log('jewelryId', jewelryId);
-	console.log('fileList', fileList);
-
 	return (
 		<>
 			{openDetail && (
@@ -184,15 +177,16 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 					<OrderStatus orderStatus={orderStatus} orderDetail={orderDetail} />
 					<div className="flex justify-between">
 						<h1 className="text-xl font-semibold">Chi tiết đơn hàng</h1>
-						{orderStatus === 1 && (
-							<Button
-								type="text"
-								className="bg-red text-white"
-								onClick={handleCancelOrder}
-							>
-								Hủy Đơn
-							</Button>
-						)}
+						{orderStatus === 1 ||
+							(orderStatus === 2 && (
+								<Button
+									type="text"
+									className="bg-red text-white"
+									onClick={handleCancelOrder}
+								>
+									Hủy Đơn
+								</Button>
+							))}
 					</div>
 					<div className="mt-10">
 						<Table

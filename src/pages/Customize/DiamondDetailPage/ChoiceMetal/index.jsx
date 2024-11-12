@@ -74,11 +74,8 @@ export const ChoiceMetalDiamond = ({
 	setCustomizeDiamond,
 	customizeDiamond,
 	jewelry,
-	handleSelectDiamond,
-	diamondSelect,
 	selectedDiamonds,
 	setSelectedDiamonds,
-	setDiamondSelect,
 	setStepChoose,
 	id,
 	selectedMetal,
@@ -89,72 +86,31 @@ export const ChoiceMetalDiamond = ({
 	filteredGroups,
 }) => {
 	const dispatch = useDispatch();
-	const diamondList = useSelector(GetAllDiamondSelector);
-	const loading = useSelector(LoadingDiamondSelector);
 	const metals = useSelector(GetAllJewelryMetalSelector);
 
 	const [stepChooseDiamond, setStepChooseDiamond] = useState(0);
 	const [steps, setStep] = useState(0);
-	const [mappedDiamonds, setMappedDiamonds] = useState();
 	const [advanced, setAdvanced] = useState(false);
-	const [filters, setFilters] = useState({
-		shape: '',
-		// price: {minPrice: 0, maxPrice: 1000},
-		carat: {minCarat: 0.1, maxCarat: 3},
-		// color: {minColor: 1, maxColor: 8},
-		// clarity: {minClarity: 1, maxClarity: 8},
-		// cut: {minCut: 1, maxCut: 3},
-	});
 
 	const items = [
 		{
-			title: 'Chọn 4C',
-			disabled: steps < 0, // Disable if current step is less than this step
-		},
-		...(advanced ? [{title: 'Chọn Nâng Cao', disabled: steps < 1}] : []),
-		{
 			title: 'Shape',
-			disabled: steps < (advanced ? 2 : 1),
+			disabled: steps < 0,
+		},
+		{
+			title: 'Chọn 4C',
+			disabled: steps < 1,
+		},
+		{
+			title: 'Chọn Nâng Cao',
+			disabled: steps < 2,
 		},
 	];
 
 	const currentDiamond = jewelry?.MainDiamonds[stepChooseDiamond];
 	const currentJewelry = filteredGroups[stepChooseDiamond];
 
-	console.log('currentDiamond', currentDiamond);
 	console.log('currentJewelry', currentJewelry);
-
-	const fetchDiamondData = debounce(() => {
-		dispatch(
-			getAllDiamond({
-				// pageSize,
-				// start,
-				shapeId: filters?.shape,
-				// cutFrom: filters?.cut?.minCut,
-				// cutTo: filters?.cut?.maxCut,
-				// colorFrom: filters?.color?.minColor,
-				// colorTo: filters?.color?.maxColor,
-				// clarityFrom: filters?.clarity?.minClarity,
-				// clarityTo: filters?.clarity?.maxClarity,
-				caratFrom: filters?.carat?.minCarat,
-				caratTo: filters?.carat?.maxCarat,
-			})
-		);
-	}, 500);
-
-	useEffect(() => {
-		fetchDiamondData();
-
-		return () => fetchDiamondData.cancel();
-	}, [dispatch, filters]);
-
-	useEffect(() => {
-		if (diamondList && enums) {
-			// Map diamond attributes to more readable values
-			const mappedData = diamondList?.Values?.map((diamond) => mapAttributes(diamond, enums));
-			setMappedDiamonds(mappedData);
-		}
-	}, [diamondList, enums]);
 
 	useEffect(() => {
 		dispatch(getAllJewelryMetal());
@@ -162,7 +118,7 @@ export const ChoiceMetalDiamond = ({
 
 	const itemsDiamond =
 		jewelry?.MainDiamonds?.map((diamond, index) => ({
-			title: `Kim Cương Chính ${index + 1}`,
+			title: `Kim Cương ${index + 1}`,
 			disabled: index > stepChooseDiamond,
 		})) || [];
 
@@ -175,18 +131,6 @@ export const ChoiceMetalDiamond = ({
 	if (itemsDiamond.length === 0) {
 		return <Loading />;
 	}
-
-	const handleReset = () => {
-		localStorage.removeItem('selected');
-		setFilters({
-			shape: '',
-			// price: {minPrice: 0, maxPrice: 1000},
-			carat: {minCarat: 0.1, maxCarat: 3},
-			// color: {minColor: 1, maxColor: 8},
-			// clarity: {minClarity: 1, maxClarity: 8},
-			// cut: {minCut: 1, maxCut: 3},
-		});
-	};
 
 	const handleResetStep = () => {
 		setStep(0);
@@ -257,7 +201,22 @@ export const ChoiceMetalDiamond = ({
 			{stepChooseDiamond < itemsDiamond.length && (
 				<>
 					<Steps items={items} current={steps} type="navigation" onChange={onChange} />
+
 					{steps === 0 && (
+						<div className="mx-20">
+							<Shape
+								setStep={setStep}
+								customizeDiamond={customizeDiamond}
+								setCustomizeDiamond={setCustomizeDiamond}
+								setStepChooseDiamond={setStepChooseDiamond}
+								currentDiamond={currentDiamond}
+								selectedDiamonds={selectedDiamonds}
+								setSelectedDiamonds={setSelectedDiamonds}
+								currentJewelry={currentJewelry}
+							/>
+						</div>
+					)}
+					{steps === 1 && (
 						<div className="mx-20">
 							<Diamond
 								setStep={setStep}
@@ -267,36 +226,15 @@ export const ChoiceMetalDiamond = ({
 								setAdvanced={setAdvanced}
 								steps={steps}
 								advanced={advanced}
+								setStepChooseDiamond={setStepChooseDiamond}
+								setSelectedDiamonds={setSelectedDiamonds}
+								selectedDiamonds={selectedDiamonds}
 							/>
 						</div>
 					)}
-
-					{steps === 1 && (
+					{steps === 2 && (
 						<div className="mx-20">
-							{advanced ? (
-								<Specs
-									setStep={setStep}
-									customizeDiamond={customizeDiamond}
-									setCustomizeDiamond={setCustomizeDiamond}
-								/>
-							) : (
-								<Shape
-									setStep={setStep}
-									customizeDiamond={customizeDiamond}
-									setCustomizeDiamond={setCustomizeDiamond}
-									setStepChooseDiamond={setStepChooseDiamond}
-									currentDiamond={currentDiamond}
-									selectedDiamonds={selectedDiamonds}
-									setSelectedDiamonds={setSelectedDiamonds}
-									currentJewelry={currentJewelry}
-								/>
-							)}
-						</div>
-					)}
-
-					{steps === 2 && advanced && (
-						<div className="mx-20">
-							<Shape
+							<Specs
 								setStep={setStep}
 								customizeDiamond={customizeDiamond}
 								setCustomizeDiamond={setCustomizeDiamond}

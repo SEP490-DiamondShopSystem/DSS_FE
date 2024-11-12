@@ -14,10 +14,27 @@ export const getAllPromo = createAsyncThunk(
 	}
 );
 
+export const checkPromoCart = createAsyncThunk(
+	'promotionSlice/checkPromoCart',
+	async ({promotionId, transformedData}, {rejectWithValue}) => {
+		try {
+			const response = await api.post(`/Promotion/GetApplicable`, {
+				promotionId,
+				items: transformedData,
+			});
+			return response;
+		} catch (error) {
+			console.log('Error: ', JSON.stringify(error.response.data));
+			return rejectWithValue(error.response.data);
+		}
+	}
+);
+
 export const promotionSlice = createSlice({
 	name: 'promotion',
 	initialState: {
 		promotion: null,
+		promoAble: null,
 	},
 	reducers: {},
 	extraReducers: (builder) => {
@@ -30,6 +47,17 @@ export const promotionSlice = createSlice({
 				state.promotion = action.payload;
 			})
 			.addCase(getAllPromo.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload;
+			})
+			.addCase(checkPromoCart.pending, (state) => {
+				state.loading = true;
+			})
+			.addCase(checkPromoCart.fulfilled, (state, action) => {
+				state.loading = false;
+				state.promoAble = action.payload;
+			})
+			.addCase(checkPromoCart.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload;
 			});

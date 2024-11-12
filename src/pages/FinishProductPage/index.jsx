@@ -7,7 +7,7 @@ import {InformationLeft} from './Left/InformationLeft';
 import {InformationRight} from './Right/InformationRight';
 import LoginModal from '../../components/LogModal/LoginModal';
 import {getUserId} from '../../components/GetUserId';
-import {useParams} from 'react-router-dom';
+import {useLocation, useParams} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import {GetJewelryDetailPresetSelector} from '../../redux/selectors';
 import {getJewelryDetailPreset} from '../../redux/slices/jewelrySlice';
@@ -17,14 +17,14 @@ const FinishProductPage = () => {
 	const {id} = useParams();
 	const dispatch = useDispatch();
 	const jewelryDetailPreset = useSelector(GetJewelryDetailPresetSelector);
+	const location = useLocation();
+	const jewelryId = location.state?.jewelryId;
+	const jewelryDetail = location.state?.jewelryModel;
 
 	const [jewelry, setJewelry] = useState({});
 	const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
 	const [diamondDetail, setDiamondDetail] = useState(
 		JSON.parse(localStorage.getItem(`diamond_${userId}`)) || ''
-	);
-	const [jewelryDetail, setJewelryDetail] = useState(
-		JSON.parse(localStorage.getItem(`jewelryModel_${userId}`)) || ''
 	);
 
 	console.log('diamondDetail', diamondDetail);
@@ -82,6 +82,7 @@ const FinishProductPage = () => {
 						isLoginModalVisible={isLoginModalVisible}
 						userId={userId}
 						jewelry={jewelry}
+						jewelryId={jewelryId}
 					/>
 				</div>
 			</div>

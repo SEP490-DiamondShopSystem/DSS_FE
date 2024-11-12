@@ -1,7 +1,7 @@
 import {message, Steps} from 'antd';
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {useParams} from 'react-router-dom';
+import {useLocation, useNavigate, useParams} from 'react-router-dom';
 import {
 	GetDiamondDetailSelector,
 	GetOrderWarrantySelector,
@@ -80,33 +80,21 @@ const mapAttributes = (data, attributes) => {
 	};
 };
 
-const items = [
-	{
-		title: 'Chọn Vỏ',
-	},
-	{
-		title: 'Chọn Kim Cương',
-	},
-	{
-		title: 'Hoàn Thành',
-	},
-];
-
 const DiamondDetailPage = () => {
 	const {id} = useParams();
+	const location = useLocation();
+	const diamondId = location.state?.diamondId;
 	const userId = getUserId();
 	const dispatch = useDispatch();
-	// const diamondAttributes = useSelector(GetDiamondAttributesSelector);
+	const navigate = useNavigate();
 	const diamondDetail = useSelector(GetDiamondDetailSelector);
 	const userSelector = useSelector(UserInfoSelector);
 	const warrantyList = useSelector(GetOrderWarrantySelector);
 
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 	const [diamondChoice, setDiamondChoice] = useState(localStorage.getItem('diamondChoice') || '');
-	const [jewelryType, setJewelryType] = useState(localStorage.getItem('jewelryType') || '');
 	const [detail, setDetail] = useState({});
 	const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
-	const [selectedIndex, setSelectedIndex] = useState(0);
 	const [warrantyDiamond, setWarrantyDiamond] = useState([]);
 	const [warrantyDiamondSelected, setWarrantyDiamondSelected] = useState('');
 
@@ -195,10 +183,12 @@ const DiamondDetailPage = () => {
 				// Thay thế sản phẩm cũ với các thuộc tính khác nhau
 				existingCart[similarJewelryIndex] = data;
 				message.success('Sản phẩm đã được cập nhật trong giỏ hàng!');
+				navigate('/cart');
 			} else {
 				// Thêm sản phẩm mới vào giỏ hàng
 				existingCart.push(data);
 				message.success('Sản phẩm đã thêm vào giỏ hàng!');
+				navigate('/cart');
 			}
 		}
 
@@ -206,37 +196,9 @@ const DiamondDetailPage = () => {
 		localStorage.setItem(`cart_${userId}`, JSON.stringify(existingCart));
 	};
 
-	console.log('diamondDetail', diamondDetail);
-	console.log('detail', detail);
-	console.log('mappedDiamond', mappedDiamond);
-	console.log('diamondChoice', diamondChoice);
-	console.log('warrantyDiamond', warrantyDiamond);
-	console.log('warrantyDiamondSelected', warrantyDiamondSelected);
-
 	return (
 		<>
 			<div className="mx-6 md:mx-32">
-				{diamondChoice.length === 0 && (
-					<Steps
-						current={1}
-						percent={100}
-						labelPlacement="horizontal"
-						items={items}
-						className="bg-white p-4 rounded-full mt-10"
-					/>
-				)}
-
-				{diamondChoice.length > 0 && (
-					<Sidebar
-						isOpen={isSidebarOpen}
-						setIsSidebarOpen={setIsSidebarOpen}
-						toggleSidebar={toggleSidebar}
-						diamond={mappedDiamond}
-						isLoginModalVisible={isLoginModalVisible}
-						setIsLoginModalVisible={setIsLoginModalVisible}
-					/>
-				)}
-
 				<div className="flex flex-col md:flex-row bg-white my-10 md:my-20 rounded-lg shadow-lg">
 					<div className="w-full md:w-1/2 p-6">
 						<ImageGallery />
@@ -251,6 +213,7 @@ const DiamondDetailPage = () => {
 							handleAddToCart={handleAddToCart}
 							warrantyDiamond={warrantyDiamond}
 							handleChangeWarranty={handleChangeWarranty}
+							diamondId={diamondId}
 						/>
 					</div>
 				</div>

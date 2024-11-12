@@ -8,7 +8,6 @@ import {LoadingUserSelector} from '../../redux/selectors';
 import {GoogleRegister, handleLogin, setUser} from '../../redux/slices/userLoginSlice';
 import {GoogleLoginButton} from '../LoginGoogleButton';
 import {setLocalStorage} from '../../utils/localstorage';
-import {GoogleOutlined} from '@ant-design/icons';
 
 const LoginModal = ({isOpen, onClose}) => {
 	const dispatch = useDispatch();

@@ -16,7 +16,6 @@ import Loading from '../../../components/Loading';
 import {Clarity, Color, Cut} from '../../../utils/constant';
 
 export const DiamondLabList = ({
-	diamond,
 	filters,
 	setFilters,
 	handleReset,
@@ -31,14 +30,6 @@ export const DiamondLabList = ({
 	const loading = useSelector(LoadingDiamondSelector);
 
 	const [changeGrid, setChangeGrid] = useState(false);
-	const [diamondLab, setDiamondLab] = useState([]);
-
-	useEffect(() => {
-		if (diamond) {
-			const filteredDiamonds = diamond.filter((diamondItem) => diamondItem.IsLabDiamond);
-			setDiamondLab(filteredDiamonds);
-		}
-	}, [diamond]);
 
 	const handleGridClick = () => {
 		setChangeGrid(true);
@@ -48,15 +39,13 @@ export const DiamondLabList = ({
 	};
 
 	const handleClick = (id) => {
-		navigate(`/completed-jewelry/${id}`);
+		navigate(`/completed-jewelry/${id}`, {state: {jewelryModel}});
 	};
 
 	const getLabelFromCode = (code, mapping) => {
 		// Find the key in the mapping object that matches the code
 		return Object.keys(mapping).find((key) => mapping[key] === code) || '-';
 	};
-
-	console.log('diamondLab', diamondLab);
 
 	return (
 		<div>
@@ -99,12 +88,12 @@ export const DiamondLabList = ({
 								<div className="transition-all duration-300 grid grid-cols-4 gap-10 mb-20 mt-10">
 									{diamondList?.flatMap((jewelry) =>
 										jewelry?.Diamonds?.filter(
-											(diamonds) => !diamonds.IsLabDiamond
+											(diamonds) => diamonds.IsLabDiamond
 										)
 									).length > 0 ? (
 										diamondList?.map((jewelry) =>
 											jewelry?.Diamonds?.filter(
-												(diamonds) => !diamonds.IsLabDiamond
+												(diamonds) => diamonds.IsLabDiamond
 											).map((diamonds) => (
 												<div
 													key={diamonds.Id}
@@ -166,33 +155,19 @@ export const DiamondLabList = ({
 								</div>
 							) : (
 								<div className="transition-all duration-300 mb-20 mt-10">
-									{/* <div className="flex w-full my-10 ">
-										<div className="flex justify-center w-1/5">Image</div>
-										<div className="flex justify-between items-center w-4/5 ml-10">
-											<p className="text-xl w-1/5 text-center">Shape</p>
-											<p className="text-xl w-1/5 text-center">Carat</p>
-											<p className="text-xl w-1/5 text-center">Color</p>
-											<p className="text-xl w-1/5 text-center">Clarity</p>
-											<p className="text-xl w-1/5 text-center">Cut</p>
-											<p className="text-xl w-1/5 text-center">Giá</p>
-											<p className="text-xl w-1/5 text-center"></p>
-										</div>
-									</div> */}
 									{diamondList?.flatMap((jewelry) =>
-										jewelry?.Diamonds?.filter(
-											(diamond) => !diamond.IsLabDiamond
-										)
+										jewelry?.Diamonds?.filter((diamond) => diamond.IsLabDiamond)
 									).length > 0 ? (
 										diamondList?.map((jewelry) =>
 											jewelry?.Diamonds?.filter(
-												(diamonds) => !diamonds.IsLabDiamond
+												(diamonds) => diamonds.IsLabDiamond
 											).map((diamonds) => (
 												<div
 													key={diamonds.Id}
-													className="shadow-lg bg-white rounded-lg cursor-pointer"
+													className="shadow-lg bg-white rounded-lg cursor-pointer border-2 border-white hover:border-2 hover:border-black my-10"
 													onClick={() => handleClick(jewelry?.Id)}
 												>
-													<div className="flex w-full my-10">
+													<div className="flex w-full">
 														<div
 															className="flex justify-center w-1/5"
 															style={{background: '#b8b7b5'}}

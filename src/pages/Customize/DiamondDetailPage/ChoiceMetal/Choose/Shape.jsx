@@ -22,41 +22,7 @@ export const Shape = ({
 	};
 
 	const handleNextStep = () => {
-		if (!customizeDiamond) {
-			alert('Please select a diamond before continuing.'); // Alert if no diamond is selected
-			return;
-		}
-
-		// Check if the diamond is already in the selectedDiamonds for the currentDiamond Id
-		const isAlreadySelected = selectedDiamonds.some(
-			(selected) =>
-				selected.Id === customizeDiamond.Id &&
-				selected.currentDiamondId === currentDiamond.Id
-		);
-
-		if (!isAlreadySelected) {
-			// Add the diamond to selectedDiamonds with the currentDiamond Id
-			setSelectedDiamonds((prev) => [
-				...prev,
-				{...customizeDiamond, currentDiamondId: currentDiamond.Id}, // Store with currentDiamond ID
-			]);
-		}
-
-		setCustomizeDiamond({
-			caratFrom: '',
-			caratTo: '',
-			shape: '',
-			color: '',
-			cut: '',
-			clarity: '',
-			polish: '',
-			symmetry: '',
-			girdle: '',
-			culet: '',
-			isLabGrown: null,
-		});
-		setStep(0);
-		setStepChooseDiamond((prev) => prev + 1);
+		setStep((prev) => prev + 1);
 	};
 
 	const matchedShapeItems = shapeItems.filter((item) =>
@@ -91,18 +57,11 @@ export const Shape = ({
 					</div>
 				))}
 			</div>
-			<div className="flex justify-between items-center mt-10">
-				<Button
-					type="text"
-					className="bg-primary w-48 uppercase font-semibold"
-					onClick={() => setStep((prev) => prev - 1)}
-				>
-					Quay lại
-				</Button>
+			<div className="flex justify-center items-center mt-10">
 				<Button
 					type="text"
 					className="w-48 uppercase font-semibold bg-primary"
-					// disabled={!isCaratValid}
+					disabled={customizeDiamond?.shape === null}
 					onClick={handleNextStep}
 				>
 					{setStepChooseDiamond === 0 ? 'Tiếp tục' : 'Xác Nhận'}

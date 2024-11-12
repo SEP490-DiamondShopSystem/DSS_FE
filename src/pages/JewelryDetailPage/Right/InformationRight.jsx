@@ -107,17 +107,7 @@ export const InformationRight = ({
 			filteredGroups,
 		};
 
-		const existingJewelryModel = JSON.parse(localStorage.getItem(`jewelryModel_${userId}`));
-
-		if (existingJewelryModel && existingJewelryModel.jewelryModelId === id) {
-			localStorage.setItem(`jewelryModel_${userId}`, JSON.stringify(jewelryModel));
-		} else {
-			localStorage.setItem(`jewelryModel_${userId}`, JSON.stringify(jewelryModel));
-		}
-
-		localStorage.removeItem('diamondChoice');
-
-		navigate('/diamond-choose/search');
+		navigate(`/diamond-choose/search`, {state: {jewelryModel}});
 	};
 
 	// Tính điểm trung bình

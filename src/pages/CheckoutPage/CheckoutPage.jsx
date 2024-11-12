@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useMemo} from 'react';
 import {FaRegAddressBook, FaRegEnvelope, FaPhoneAlt} from 'react-icons/fa';
 import {Form, Input, Button, Radio, message, Select} from 'antd';
-import {useNavigate} from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import {
 	fetchDistances,
@@ -24,6 +24,8 @@ import {handleCheckoutOrder} from '../../redux/slices/orderSlice';
 import {enums} from '../../utils/constant';
 import {convertToVietnamDate, formatPrice} from '../../utils';
 import {getAllPayment} from '../../redux/slices/paymentSlice';
+
+const {Option} = Select;
 
 const getEnumKey = (enumObj, value) => {
 	return enumObj
@@ -99,6 +101,8 @@ const mapAttributes = (data, attributes) => {
 
 const CheckoutPage = () => {
 	const [form] = Form.useForm();
+	const locations = useLocation();
+	const promoId = locations.state?.promoId;
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const distances = useSelector(selectDistances);
@@ -133,8 +137,6 @@ const CheckoutPage = () => {
 		address: userDetail?.Addresses?.[0]?.Street || '',
 		note: '',
 	});
-
-	console.log('provinceI', userInfo?.province);
 
 	useEffect(() => {
 		form.setFieldsValue(userInfo);
@@ -203,18 +205,6 @@ const CheckoutPage = () => {
 		);
 	}, [userInfo]);
 
-	// // Update shipping fee when the selected city changes
-	// useEffect(() => {
-	// 	const selectedDistance =
-	// 		province && province?.find((distance) => distance.Name === selectedCity);
-	// 	if (selectedDistance) {
-	// 		const fee = Math.ceil(selectedDistance.distance_km) * 500; // 500 VND per km
-	// 		setShippingFee(fee);
-	// 	}
-	// 	console.log('selectedDistance', selectedDistance);
-	// }, [selectedCity, distances]);
-
-	// Lọc các sản phẩm có Jewelry hoặc Diamond
 	const jewelryOrDiamondProducts = cartList?.Products.filter(
 		(product) => product.Jewelry || product.Diamond
 	);
@@ -227,12 +217,8 @@ const CheckoutPage = () => {
 	const onFinish = async () => {
 		const orderItemRequestDtos = cartList?.Products?.map((product) => {
 			return {
-				// id: Math.floor(1000000 + Math.random() * 9000000).toString(),
 				jewelryId: product?.Jewelry?.Id || null,
 				diamondId: product?.Diamond?.Id || null,
-				// product?.Jewelry?.Diamonds?.map((diamond) => ({
-				// 	diamondId: diamond?.Id,
-				// })),
 				engravedText: product?.EngravedText || null,
 				engravedFont: product?.EngravedFont || null,
 				warrantyCode: product?.CurrentWarrantyApplied?.Code || null,
@@ -245,7 +231,7 @@ const CheckoutPage = () => {
 				paymentType: paymentForm,
 				paymentId: paymentMethod,
 				paymentName: 'zalopay',
-				promotionId: null,
+				promotionId: promoId || null,
 				isTransfer: true,
 			},
 
@@ -335,15 +321,7 @@ const CheckoutPage = () => {
 
 	const shippingDate = mappedProducts?.find((ship) => ship?.ShippingDate);
 
-	console.log('provinceId', provinceId);
-
-	console.log('userInfo', userInfo);
-	console.log('userDetail', userDetail);
-	console.log('cartList', cartList);
-	console.log('mappedProducts', mappedProducts);
-	console.log('payment', payment);
-	console.log('paymentMethod', paymentMethod);
-	console.log('shippingDate', shippingDate);
+	console.log('promoId', promoId);
 
 	return (
 		<div className="min-h-screen flex justify-center items-center bg-gray-100 my-10">
@@ -607,79 +585,11 @@ const CheckoutPage = () => {
 																value={method.Id}
 																className="border p-4 rounded-md hover:border-blue-500 transition duration-300 mb-4"
 															>
-																{method?.MethodName}
+																{method?.MappedName}
 															</Radio>
 														))}
 												</Radio.Group>
 											</div>
-											{/* Hiển thị thông tin thẻ nếu 'Chuyển Khoản Ngân Hàng' được chọn */}
-											{/* {paymentMethod === 'creditCard' && (
-												<div className="space-y-4">
-													<Form.Item
-														label="Số thẻ"
-														name="cardNumber"
-														rules={[
-															{
-																required: true,
-																message: 'Vui lòng nhập số thẻ',
-															},
-														]}
-													>
-														<Input placeholder="Số thẻ" />
-													</Form.Item>
-													<Form.Item
-														label="Ngân hàng"
-														name="bankName"
-														rules={[
-															{
-																required: true,
-																message:
-																	'Vui lòng nhập tên ngân hàng',
-															},
-														]}
-													>
-														<Input placeholder="Tên ngân hàng" />
-													</Form.Item>
-													<Form.Item
-														label="Ngày hết hạn"
-														name="expiryDate"
-														rules={[
-															{
-																required: true,
-																message:
-																	'Vui lòng nhập ngày hết hạn',
-															},
-														]}
-													>
-														<Input placeholder="MM/YY" />
-													</Form.Item>
-													<Form.Item
-														label="Mã bảo mật"
-														name="securityCode"
-														rules={[
-															{
-																required: true,
-																message: 'Vui lòng nhập mã bảo mật',
-															},
-														]}
-													>
-														<Input placeholder="CVV" />
-													</Form.Item>
-													<Form.Item
-														label="Tên chủ thẻ"
-														name="cardHolderName"
-														rules={[
-															{
-																required: true,
-																message:
-																	'Vui lòng nhập tên chủ thẻ',
-															},
-														]}
-													>
-														<Input placeholder="Tên chủ thẻ" />
-													</Form.Item>
-												</div>
-											)} */}
 										</div>
 									</div>
 								)}
@@ -701,34 +611,6 @@ const CheckoutPage = () => {
 						</div>
 					</div>
 					<div className="space-y-6">
-						{/* <div className="flex flex-col space-y-2 py-2 border-b border-gray-300">
-							<div className="flex justify-between items-center">
-								<h3 className="text-lg font-semibold text-gray-800">
-									Hàng Thiết Kế (Hoàn Thành)
-								</h3>
-							</div>
-							<div className="flex items-center space-x-4">
-								<img
-									src="/path/to/engagement-ring.jpg"
-									alt="Engagement Ring"
-									className="w-16 h-16 rounded-lg shadow-md"
-								/>
-								<div className="flex flex-col">
-									<span className="text-sm font-medium text-gray-600">
-										French Pavé Diamond Engagement Ring in 14k White Gold
-									</span>
-									<span className="text-sm text-gray-500">Ring Size: 6</span>
-								</div>
-							</div>
-							<div className="flex justify-between text-sm text-gray-700">
-								<span>Giá gốc:</span>
-								<span className="line-through">$1,470</span>
-							</div>
-							<div className="flex justify-between text-sm text-gray-700">
-								<span>Giá đã giảm:</span>
-								<span>$1,102</span>
-							</div>
-						</div> */}
 						{mappedProducts?.map((item, index) => (
 							<div className="flex mt-4 shadow-xl p-5 rounded-lg" key={item.Id}>
 								<div className="mr-4 flex-shrink-0">
@@ -791,26 +673,13 @@ const CheckoutPage = () => {
 									<span>{formatPrice(location?.DeliveryFee?.Cost || 0)}</span>
 								</div>
 
-								{/* <div className="text-sm text-gray-600 mb-4">
-									or interest-free installments from $1,544 / mo.
-								</div> */}
-								{/* <div className="flex items-center space-x-2 text-sm text-gray-600">
-									<span>🚚</span>
-									<span>Free Overnight Shipping, Hassle-Free Returns</span>
-								</div> */}
 								<div className="flex  text-sm text-gray-600">
 									<span className="mr-2">📅 Thời gian giao hàng</span>
 									<span>
 										{convertToVietnamDate(shippingDate?.ShippingDate) || null}
 									</span>
 								</div>
-								{/* <div className="text-green-600 font-semibold text-base mt-4">
-									Tiết kiệm:{' '}
-									{formatPrice(
-										cartList?.OrderPrices?.DiscountAmountSaved +
-											cartList?.OrderPrices?.PromotionAmountSaved
-									)}
-								</div> */}
+
 								<div className="flex justify-between items-center font-semibold mt-4 text-lg">
 									<p>Tổng:</p>
 									<p>

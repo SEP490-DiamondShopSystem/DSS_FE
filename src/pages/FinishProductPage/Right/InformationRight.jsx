@@ -63,6 +63,7 @@ export const InformationRight = ({
 	isLoginModalVisible,
 	userId,
 	jewelry,
+	jewelryId,
 }) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
@@ -176,10 +177,12 @@ export const InformationRight = ({
 				// Thay thế sản phẩm cũ với các thuộc tính khác nhau
 				existingCart[similarJewelryIndex] = data;
 				message.success('Sản phẩm đã được cập nhật trong giỏ hàng!');
+				navigate('/cart');
 			} else {
 				// Thêm sản phẩm mới vào giỏ hàng
 				existingCart.push(data);
 				message.success('Sản phẩm đã thêm vào giỏ hàng!');
+				navigate('/cart');
 			}
 		}
 
@@ -243,11 +246,11 @@ export const InformationRight = ({
 	return (
 		<div>
 			<div className="border-tintWhite">
-				<h1 className="text-3xl">{jewelry?.SerialCode}</h1>
-				<div className="my-5 flex">
+				<h1 className="text-3xl mb-5">{jewelry?.SerialCode}</h1>
+				{/* <div className="my-5 flex">
 					<Rating rating={0} />
 					<p className="ml-5">477 Đánh Giá</p>
-				</div>
+				</div> */}
 				<div></div>
 				{/* <div className="font-semibold my-2">Ngày Giao Hàng Dự Kiến: {metalType?.ship}</div> */}
 
@@ -281,16 +284,8 @@ export const InformationRight = ({
 
 						<div className="flex justify-between mb-2">
 							<div className="flex">
-								{/* <div className="">
-									<FontAwesomeIcon icon={faRing} color="#dec986" />
-								</div> */}
 								<div>
 									<div className="ml-5">
-										{/* <p style={{width: 400}}>{jewelry.SerialCode}</p> */}
-										{/* <p className="text-gray">{metalType.stock}</p> */}
-										{/* <p className="text-xl font-semibold">
-											{formatPrice(jewelry.findSizePrice?.ND_Price)}
-										</p> */}
 										{jewelry?.Category?.Name === 'Ring' && (
 											<div className="flex items-center">
 												<p className="mr-3">Kích Cỡ Hiện Tại:</p>
@@ -340,16 +335,6 @@ export const InformationRight = ({
 									</div>
 								</div>
 							</div>
-							{/* <p
-								className="text-primary cursor-pointer"
-								onClick={() =>
-									navigate(
-										`/jewelry-model/search/${jewelryDetail?.jewelryModelId}`
-									)
-								}
-							>
-								Thay Đổi Trang Sức
-							</p> */}
 						</div>
 					</div>
 					{engravedText ? (
@@ -419,7 +404,7 @@ export const InformationRight = ({
 					className="border py-7 px-14 font-bold text-lg bg-primary rounded hover:bg-second w-full uppercase"
 					onClick={handleAddToCart}
 				>
-					THÊM VÀO GIỎ Hàng
+					{jewelryId ? 'Cập Nhật Giỏ Hàng' : 'THÊM VÀO GIỎ Hàng'}
 				</Button>
 			</div>
 			<div className="my-10">

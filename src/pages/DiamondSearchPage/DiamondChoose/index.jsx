@@ -14,6 +14,7 @@ import {getAllJewelry} from '../../../redux/slices/jewelrySlice';
 import {enums} from '../../../utils/constant';
 import {DiamondLabList} from './DiamondLabList';
 import {DiamondList} from './DiamondList';
+import {useLocation} from 'react-router-dom';
 
 const items = [
 	{
@@ -27,74 +28,16 @@ const items = [
 	},
 ];
 
-const mapAttributes = (data, attributes) => {
-	return {
-		Id: data.Id,
-		Carat: data.Carat,
-		Clarity: attributes.Clarity
-			? Object.keys(attributes.Clarity).find(
-					(key) => attributes.Clarity[key] === data.Clarity
-			  )
-			: '',
-		Color: attributes.Color
-			? Object.keys(attributes.Color).find((key) => attributes.Color[key] === data.Color)
-			: '',
-		Culet: attributes.Culet
-			? Object.keys(attributes.Culet)
-					.find((key) => attributes.Culet[key] === data.Culet)
-					.replace('_', ' ')
-			: '',
-		Cut: attributes.Cut
-			? Object.keys(attributes.Cut)
-					.find((key) => attributes.Cut[key] === data.Cut)
-					.replace('_', ' ')
-			: '',
-		Fluorescence: attributes.Fluorescence
-			? Object.keys(attributes.Fluorescence).find(
-					(key) => attributes.Fluorescence[key] === data.Fluorescence
-			  )
-			: '',
-		Girdle: attributes.Girdle
-			? Object.keys(attributes.Girdle)
-					.find((key) => attributes.Girdle[key] === data.Girdle)
-					.replace('_', ' ')
-			: '',
-		Polish: attributes.Polish
-			? Object.keys(attributes.Polish)
-					.find((key) => attributes.Polish[key] === data.Polish)
-					.replace('_', ' ')
-			: '',
-		Symmetry: attributes.Symmetry
-			? Object.keys(attributes.Symmetry)
-					.find((key) => attributes.Symmetry[key] === data.Symmetry)
-					.replace('_', ' ')
-			: '',
-		Depth: data.Depth,
-		Table: data.Table,
-		Title: data.Title,
-		Measurement: data.Measurement,
-		DiamondShape: data?.DiamondShape?.ShapeName,
-		DiscountPrice: data?.DiscountReducedAmount,
-		TruePrice: data?.TruePrice,
-		IsLabDiamond: data.IsLabDiamond,
-	};
-};
-
 const DiamondChoosePage = () => {
 	const dispatch = useDispatch();
 	const diamondList = useSelector(GetAllDiamondSelector);
 	const filterLimits = useSelector(GetDiamondFilterSelector);
 	const jewelryList = useSelector(GetAllJewelrySelector);
 	const userId = getUserId();
+	const location = useLocation();
+	const jewelryModel = location.state.jewelryModel;
 
 	const [changeDiamond, setChangeDiamond] = useState(true);
-	const [mappedDiamonds, setMappedDiamonds] = useState([]);
-	const [jewelryModel, setJewelryModel] = useState(() => {
-		return JSON.parse(localStorage.getItem(`jewelryModel_${userId}`)) || '';
-	});
-	const [diamondChoice, setDiamondChoice] = useState(() => {
-		return localStorage.getItem(`diamondChoice`) || '';
-	});
 	const [pageSize, setPageSize] = useState(100);
 	const [start, setStart] = useState(0);
 	const [filters, setFilters] = useState({});
@@ -117,7 +60,15 @@ const DiamondChoosePage = () => {
 				SizeId: jewelryModel?.size,
 				// SideDiamondOptId: selectedSideDiamond?.Id,
 				// MinPrice: minPrice,
-				// MaxPrice: maxPrice,
+				// MaxPrice: maxPrice,shapeId: filters?.shape,
+				// cutFrom: filters?.cut?.minCut,
+				// cutTo: filters?.cut?.maxCut,
+				// colorFrom: filters?.color?.minColor,
+				// colorTo: filters?.color?.maxColor,
+				// clarityFrom: filters?.clarity?.minClarity,
+				// clarityTo: filters?.clarity?.maxClarity,
+				// caratFrom: filters?.carat?.minCarat,
+				// caratTo: filters?.carat?.maxCarat,
 			})
 		);
 	}, 500);
@@ -166,43 +117,11 @@ const DiamondChoosePage = () => {
 		}
 	}, [filterLimits]);
 
-	const fetchDiamondData = debounce(() => {
-		dispatch(
-			getAllDiamond({
-				pageSize,
-				start,
-				shapeId: filters?.shape,
-				cutFrom: filters?.cut?.minCut,
-				cutTo: filters?.cut?.maxCut,
-				colorFrom: filters?.color?.minColor,
-				colorTo: filters?.color?.maxColor,
-				clarityFrom: filters?.clarity?.minClarity,
-				clarityTo: filters?.clarity?.maxClarity,
-				caratFrom: filters?.carat?.minCarat,
-				caratTo: filters?.carat?.maxCarat,
-			})
-		);
-	}, 500);
-
-	useEffect(() => {
-		fetchDiamondData();
-
-		return () => fetchDiamondData.cancel();
-	}, [dispatch, filters]);
-
 	useEffect(() => {
 		if (jewelryList) {
 			setDiamond(jewelryList?.Values);
 		}
 	}, [jewelryList]);
-
-	useEffect(() => {
-		if (diamondList && enums) {
-			// Map diamond attributes to more readable values
-			const mappedData = diamondList?.Values?.map((diamond) => mapAttributes(diamond, enums));
-			setMappedDiamonds(mappedData);
-		}
-	}, [diamondList, enums]);
 
 	const handleReset = () => {
 		localStorage.removeItem('selected');
@@ -215,10 +134,6 @@ const DiamondChoosePage = () => {
 			cut: {minCut: 1, maxCut: 3},
 		});
 	};
-
-	console.log('jewelryList', jewelryList);
-	console.log('jewelryModel', jewelryModel);
-	console.log('diamond', diamond);
 
 	return (
 		<div className="mx-32">
@@ -254,26 +169,23 @@ const DiamondChoosePage = () => {
 			{/* Use the mapped diamond data */}
 			{changeDiamond ? (
 				<DiamondList
-					diamond={mappedDiamonds}
-					setDiamond={setMappedDiamonds}
 					filters={filters}
 					setFilters={setFilters}
 					handleReset={handleReset}
 					diamondForFilter={diamondForFilter}
 					findShape={findShape}
-					jewelryMode={jewelryModel}
+					jewelryModel={jewelryModel}
 					diamondList={diamond}
 				/>
 			) : (
 				<DiamondLabList
-					diamond={mappedDiamonds}
-					setDiamond={setMappedDiamonds}
 					filters={filters}
 					setFilters={setFilters}
 					handleReset={handleReset}
 					diamondForFilter={diamondForFilter}
 					findShape={findShape}
 					diamondList={diamond}
+					jewelryModel={jewelryModel}
 				/>
 			)}
 		</div>

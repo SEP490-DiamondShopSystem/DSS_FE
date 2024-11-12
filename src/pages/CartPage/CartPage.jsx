@@ -6,9 +6,14 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import {getUserId} from '../../components/GetUserId';
 import Loading from '../../components/Loading';
-import {GetCartSelector, GetPromotionSelector, LoadingCartSelector} from '../../redux/selectors';
+import {
+	GetCartSelector,
+	GetPromotionAbleSelector,
+	GetPromotionSelector,
+	LoadingCartSelector,
+} from '../../redux/selectors';
 import {handleCartValidate, removeFromCartFinish} from '../../redux/slices/cartSlice';
-import {getAllPromo} from '../../redux/slices/promotionSlice';
+import {checkPromoCart, getAllPromo} from '../../redux/slices/promotionSlice';
 import {formatPrice} from '../../utils';
 import {enums} from '../../utils/constant';
 import logo from '../../assets/logo-short-ex.png';
@@ -94,31 +99,25 @@ const CartPage = () => {
 
 	const promotionList = useSelector(GetPromotionSelector);
 	const cartList = useSelector(GetCartSelector);
+	const promoAble = useSelector(GetPromotionAbleSelector);
 	const loading = useSelector(LoadingCartSelector);
 
-	const cartFinish = useSelector((state) => {
-		const cartFinishByUserId = state.cartSlice?.cartFinishByUserId || {};
-		return cartFinishByUserId[userId] || [];
-	});
-
 	const [promo, setPromo] = useState('');
-	const [jewelryType, setJewelryType] = useState(localStorage.getItem('jewelryType') || '');
-	const [cartPreset, setCartPreset] = useState('');
-	const [cartDesign, setCartDesign] = useState('');
 	const [cart, setCart] = useState('');
 	const localCart = JSON.parse(localStorage.getItem(`cart_${userId}`));
 	const cartValidate = JSON.parse(localStorage.getItem(`cartValidate_${userId}`));
 	const [cartValidateProduct, setCartValidateProduct] = useState([]);
+	const [promoId, setPromoId] = useState(null);
 
 	useEffect(() => {
 		dispatch(getAllPromo());
 	}, []);
 
 	useEffect(() => {
-		if (promotionList) {
-			setPromo(promotionList);
+		if (promoAble) {
+			setPromo(promoAble?.Promotions);
 		}
-	}, [promotionList]);
+	}, [promoAble]);
 
 	useEffect(() => {
 		if (cartValidateProduct) {
@@ -147,6 +146,7 @@ const CartPage = () => {
 		}));
 
 		dispatch(handleCartValidate({promotionId: null, transformedData}));
+		dispatch(checkPromoCart({transformedData}));
 	}, []);
 
 	const handleViewCart = (jewelryId, diamondId) => {
@@ -154,9 +154,9 @@ const CartPage = () => {
 		console.log(diamondId);
 
 		if (jewelryId) {
-			navigate(`/completed-jewelry/${jewelryId}`);
+			navigate(`/completed-jewelry/${jewelryId}`, {state: {jewelryId}});
 		} else if (diamondId) {
-			navigate(`/diamond-detail/${diamondId}`);
+			navigate(`/diamond-detail/${diamondId}`, {state: {diamondId}});
 		} else {
 			console.error('No jewelry or diamond ID provided.');
 		}
@@ -178,17 +178,6 @@ const CartPage = () => {
 	const jewelryModelAndDiamondProducts = cartValidateProduct.filter(
 		(product) => (product.JewelryModel && product.Diamond) || product.JewelryModel
 	);
-
-	const mappedProductsFinish = useMemo(() => {
-		if (jewelryModelAndDiamondProducts && enums) {
-			return jewelryModelAndDiamondProducts.map((product) => mapAttributes(product, enums));
-		}
-		return [];
-	}, [jewelryModelAndDiamondProducts, enums]);
-
-	const handleChangeWarranty = (value) => {
-		console.log(value);
-	};
 
 	const handleRemoveCart = (index) => {
 		localCart.splice(index, 1);
@@ -217,18 +206,16 @@ const CartPage = () => {
 
 	const handleCheckoutNavigate = () => {
 		if (mappedProducts.length > 0) {
-			navigate(`/checkout`);
+			navigate(`/checkout`, {state: {promoId}});
 		} else {
 			message.warning('Giỏ hàng chưa có sản phẩm!');
 		}
 	};
 
-	// if (loading) {
-	// 	return <Loading />;
-	// }
-
-	console.log('cartList', cartList);
-	console.log('mappedProducts', mappedProducts);
+	const handlePromoChange = (value) => {
+		console.log('value', value);
+		setPromoId(value);
+	};
 
 	return (
 		<div className="flex justify-between p-8 bg-gray-50 min-h-screen mx-32 my-20">
@@ -387,11 +374,11 @@ const CartPage = () => {
 						Khuyến mãi có sẵn
 					</label>
 
-					<Select className="w-full">
+					<Select className="w-full" onChange={handlePromoChange} allowClear>
 						{promo &&
 							promo.map((promotion) => (
-								<Select.Option key={promotion.Id} value={promotion.Id}>
-									{promotion.Description}
+								<Select.Option key={promotion.PromoId} value={promotion.PromoId}>
+									{promotion.PromotionDto.Description}
 								</Select.Option>
 							))}
 					</Select>

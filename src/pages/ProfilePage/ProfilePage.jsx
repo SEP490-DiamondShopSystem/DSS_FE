@@ -49,7 +49,7 @@ const ProfilePage = () => {
 	const columns = [
 		{
 			title: 'ID',
-			dataIndex: 'orderId',
+			dataIndex: 'orderCode',
 			align: 'center',
 		},
 		{
@@ -186,6 +186,7 @@ const ProfilePage = () => {
 		if (orderList && orderList?.Values) {
 			const formattedOrders = orderList?.Values?.map((order) => ({
 				orderId: order.Id,
+				orderCode: order.OrderCode,
 				orderTime: convertToVietnamDate(order.CreatedDate),
 				price: formatPrice(order.TotalPrice),
 				status: getOrderStatus(order.Status),

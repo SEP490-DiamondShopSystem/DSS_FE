@@ -11,41 +11,68 @@ export const Diamond = ({
 	customizeDiamond,
 	setCustomizeDiamond,
 	currentDiamond,
-	setAdvanced,
-	steps,
-	advanced,
+	setStepChooseDiamond,
+	selectedDiamonds,
+	setSelectedDiamonds,
 }) => {
 	const [caratFromShape, setCaratFromShape] = useState();
 	const [caratToShape, setCaratToShape] = useState();
 
+	const matchedShape = currentDiamond.Shapes.find(
+		(shapeObj) => shapeObj.ShapeId === customizeDiamond.shape
+	);
+
 	useEffect(() => {
 		if (currentDiamond) {
-			setCaratFromShape(currentDiamond?.Shapes[0]?.CaratFrom);
-			setCaratToShape(currentDiamond?.Shapes[0]?.CaratTo);
+			setCaratFromShape(matchedShape.CaratFrom);
+			setCaratToShape(matchedShape.CaratTo);
+			setCustomizeDiamond((prev) => ({
+				...prev,
+				caratFrom: matchedShape.CaratFrom,
+				caratTo: matchedShape.CaratTo,
+			}));
 		}
 	}, [currentDiamond]);
 
 	const handleNextStep = () => {
-		const {caratFrom, caratTo} = customizeDiamond;
-		console.log(caratFrom);
-		console.log(caratTo);
-
-		if (
-			Number(caratFrom) >= Number(caratFromShape) &&
-			Number(caratTo) <= Number(caratToShape)
-		) {
-			setStep((prev) => prev + 1);
-		} else {
-			message.warning('Vui lòng chọn giới hạn carat hợp lệ!');
+		if (!customizeDiamond) {
+			alert('Please select a diamond before continuing.'); // Alert if no diamond is selected
+			return;
 		}
+
+		// Check if the diamond is already in the selectedDiamonds for the currentDiamond Id
+		const isAlreadySelected = selectedDiamonds.some(
+			(selected) =>
+				selected.Id === customizeDiamond.Id &&
+				selected.currentDiamondId === currentDiamond.Id
+		);
+
+		if (!isAlreadySelected) {
+			// Add the diamond to selectedDiamonds with the currentDiamond Id
+			setSelectedDiamonds((prev) => [
+				...prev,
+				{...customizeDiamond, currentDiamondId: currentDiamond.Id}, // Store with currentDiamond ID
+			]);
+		}
+		setCustomizeDiamond({
+			caratFrom: '',
+			caratTo: '',
+			shape: '',
+			color: '',
+			cut: '',
+			clarity: '',
+			polish: '',
+			symmetry: '',
+			girdle: '',
+			culet: '',
+			isLabGrown: null,
+		});
+		setStep(0);
+		setStepChooseDiamond((prev) => prev + 1);
 	};
 
 	const handleAdvanceClick = () => {
-		if (advanced) {
-			setAdvanced(false);
-		} else {
-			setAdvanced(true);
-		}
+		setStep((prev) => prev + 1);
 	};
 
 	console.log('customizeDiamond', customizeDiamond);
@@ -84,9 +111,9 @@ export const Diamond = ({
 						customizeDiamond?.clarity === '' ||
 						customizeDiamond?.cut === ''
 					}
-					onClick={handleNextStep}
+					onClick={handleAdvanceClick}
 				>
-					{steps === 0 ? 'Tiếp tục' : 'Xác Nhận'}
+					Chọn Nâng Cao
 				</Button>
 				<Button
 					type="text"
@@ -96,9 +123,9 @@ export const Diamond = ({
 						customizeDiamond?.clarity === '' ||
 						customizeDiamond?.cut === ''
 					}
-					onClick={handleAdvanceClick}
+					onClick={handleNextStep}
 				>
-					{advanced ? 'Hủy Chọn Nâng Cao' : 'Chọn Nâng Cao'}
+					Hoàn Thành
 				</Button>
 			</div>
 		</div>

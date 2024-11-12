@@ -35,8 +35,8 @@ const MyOrderPage = () => {
 
 	const columns = [
 		{
-			title: 'ID',
-			dataIndex: 'orderId',
+			title: 'Id',
+			dataIndex: 'orderCode',
 			align: 'center',
 		},
 		{
@@ -142,54 +142,23 @@ const MyOrderPage = () => {
 							<EyeFilled />
 						</Button>
 					</Tooltip>
-					{isPriceGreaterThan50Mil(record?.price) === false && (
-						<Tooltip title={'Thanh Toán'}>
-							<Button
-								type="text"
-								className="p-2 bg-primary border rounded-lg  transition-colors duration-300"
-								onClick={() => toggleTransactionModal(record.orderId)}
-							>
-								<TransactionOutlined />
-							</Button>
-						</Tooltip>
-					)}
+					{record.status === 'Pending' &&
+						isPriceGreaterThan50Mil(record?.price) === false && (
+							<Tooltip title={'Thanh Toán'}>
+								<Button
+									type="text"
+									className="p-2 bg-primary border rounded-lg  transition-colors duration-300"
+									onClick={() => toggleTransactionModal(record.orderId)}
+								>
+									<TransactionOutlined />
+								</Button>
+							</Tooltip>
+						)}
 				</>
 			),
 			align: 'center',
 		},
 	];
-
-	const expandedColumns = [
-		{
-			title: 'ID',
-			dataIndex: 'productId',
-			key: 'productId',
-			align: 'center',
-		},
-		{
-			title: 'Sản phẩm',
-			dataIndex: 'productName',
-			key: 'productName',
-			align: 'center',
-		},
-		{
-			title: 'Giá',
-			dataIndex: 'productPrice',
-			key: 'productPrice',
-			align: 'center',
-		},
-	];
-
-	const expandedRowRender = (record) => {
-		return (
-			<Table
-				columns={expandedColumns}
-				dataSource={record.products}
-				pagination={false}
-				rowKey="productId"
-			/>
-		);
-	};
 
 	const toggleDetailModal = (order) => {
 		setSelectedOrder(order);
@@ -202,7 +171,7 @@ const MyOrderPage = () => {
 
 	const toggleTransactionModal = (id) => {
 		dispatch(getUserOrderTransaction(id)).then((res) => {
-			if (res.payload) {
+			if (res.payload !== undefined) {
 				window.open(res.payload?.PaymentUrl, '_blank');
 			}
 		});
@@ -223,6 +192,7 @@ const MyOrderPage = () => {
 		if (orderList && orderList?.Values) {
 			const formattedOrders = orderList?.Values?.map((order) => ({
 				orderId: order.Id,
+				orderCode: order.OrderCode,
 				orderTime: convertToVietnamDate(order.CreatedDate),
 				price: formatPrice(order.TotalPrice),
 				status: getOrderStatus(order.Status),
@@ -245,9 +215,7 @@ const MyOrderPage = () => {
 		return numericPrice > 50000000;
 	};
 
-	// Ví dụ sử dụng
-
-	// Hàm chuyển đổi status sang chuỗi dễ đọc
+	console.log('dataSource', dataSource);
 
 	return (
 		<div>

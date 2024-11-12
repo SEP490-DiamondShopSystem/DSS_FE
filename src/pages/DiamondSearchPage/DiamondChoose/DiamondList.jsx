@@ -15,9 +15,9 @@ import {LoadingDiamondSelector} from '../../../redux/selectors';
 
 import {formatPrice} from '../../../utils';
 import Loading from '../../../components/Loading';
+import {Clarity, Color, Cut} from '../../../utils/constant';
 
 export const DiamondList = ({
-	diamond,
 	filters,
 	setFilters,
 	handleReset,
@@ -34,10 +34,6 @@ export const DiamondList = ({
 
 	const [changeGrid, setChangeGrid] = useState(false);
 
-	const [diamondNatural, setDiamondNatural] = useState();
-
-	console.log('diamondNatural', diamondNatural);
-
 	useEffect(() => {
 		const savedShape = localStorage.getItem('selected');
 		if (savedShape) {
@@ -47,14 +43,6 @@ export const DiamondList = ({
 			}));
 		}
 	}, []);
-
-	useEffect(() => {
-		// Filter diamonds where IsLabDiamond is false
-		if (diamond) {
-			const filteredDiamonds = diamond.filter((diamondItem) => !diamondItem.IsLabDiamond);
-			setDiamondNatural(filteredDiamonds);
-		}
-	}, [diamond]);
 
 	const handleGridClick = () => {
 		setChangeGrid(true);
@@ -69,7 +57,7 @@ export const DiamondList = ({
 	};
 
 	const handleClick = (id) => {
-		navigate(`/completed-jewelry/${id}`);
+		navigate(`/completed-jewelry/${id}`, {state: {jewelryModel}});
 	};
 
 	return (
@@ -113,18 +101,20 @@ export const DiamondList = ({
 								<div className="transition-all duration-300 grid grid-cols-4 gap-10 mb-20 mt-10">
 									{diamondList &&
 									diamondList?.flatMap((jewelry) =>
-										jewelry?.Diamonds?.filter((diamond) => diamond.IsLabDiamond)
+										jewelry?.Diamonds?.filter(
+											(diamond) => !diamond.IsLabDiamond
+										)
 									).length > 0 ? (
 										diamondList?.map((jewelry) =>
 											jewelry?.Diamonds?.filter(
-												(diamond) => diamond.IsLabDiamond
+												(diamond) => !diamond.IsLabDiamond
 											).map((diamond) => (
 												<div
 													key={diamond.Id}
 													className="shadow-lg bg-white border-2 border-white rounded-lg hover:border-2 hover:border-black cursor-pointer"
 													onClick={() => handleClick(jewelry?.JewelryId)}
 												>
-													<div className="w-80">
+													<div className="">
 														<div
 															className="flex justify-center mb-5"
 															style={{background: '#b8b7b5'}}
@@ -176,32 +166,22 @@ export const DiamondList = ({
 								</div>
 							) : (
 								<div className="transition-all duration-300 mt-10">
-									{/* <div className="flex w-full my-10 ">
-										<div className="flex justify-center w-1/5">Image</div>
-										<div className="flex justify-between items-center w-4/5 ml-5">
-											<p className="text-xl w-1/5 text-center">Shape</p>
-											<p className="text-xl w-1/5 text-center">Carat</p>
-											<p className="text-xl w-1/5 text-center">Color</p>
-											<p className="text-xl w-1/5 text-center">Clarity</p>
-											<p className="text-xl w-1/5 text-center">Cut</p>
-										</div>
-									</div> */}
 									<Divider />
 									{diamondList?.flatMap((jewelry) =>
 										jewelry?.Diamonds?.filter(
-											(diamonds) => diamonds.IsLabDiamond
+											(diamonds) => !diamonds.IsLabDiamond
 										)
 									).length > 0 ? (
 										diamondList?.map((jewelry) =>
 											jewelry?.Diamonds?.filter(
-												(diamonds) => diamonds.IsLabDiamond
+												(diamonds) => !diamonds.IsLabDiamond
 											).map((diamonds) => (
 												<div
 													key={diamonds.Id}
-													className="shadow-lg bg-white rounded-lg cursor-pointer"
+													className="shadow-lg bg-white rounded-lg cursor-pointer border-2 border-white hover:border-2 hover:border-black my-10"
 													onClick={() => handleClick(jewelry?.JewelryId)}
 												>
-													<div className="flex w-full my-10">
+													<div className="flex w-full">
 														<div
 															className="flex justify-center w-1/5"
 															style={{background: '#b8b7b5'}}
