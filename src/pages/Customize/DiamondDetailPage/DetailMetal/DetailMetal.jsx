@@ -123,19 +123,19 @@ export const DetailMetalDiamond = ({
 							</div>
 							<div className="flex items-center justify-between my-2 pr-5">
 								<p className="font-semibold">Polish:</p>
-								<p>{diamond?.polish}</p>
+								<p>{diamond?.polish || 'Không'}</p>
 							</div>
 							<div className="flex items-center justify-between my-2 pr-5">
 								<p className="font-semibold">Girdle:</p>
-								<p>{diamond?.girdle}</p>
+								<p>{diamond?.girdle || 'Không'}</p>
 							</div>
 							<div className="flex items-center justify-between my-2 pr-5">
 								<p className="font-semibold">Culet:</p>
-								<p>{diamond?.culet}</p>
+								<p>{diamond?.culet || 'Không'}</p>
 							</div>
 							<div className="flex items-center justify-between my-2 pr-5">
 								<p className="font-semibold">Symmetry:</p>
-								<p>{diamond?.symmetry}</p>
+								<p>{diamond?.symmetry || 'Không'}</p>
 							</div>
 						</div>
 				  ))

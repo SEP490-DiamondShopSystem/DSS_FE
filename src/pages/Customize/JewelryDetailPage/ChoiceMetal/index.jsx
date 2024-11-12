@@ -131,13 +131,6 @@ export const ChoiceMetal = ({
 								<Button danger onClick={() => setStep(0)}>
 									Chọn lại
 								</Button>
-								{/* <Button
-									type="text"
-									className="bg-tintWhite border ml-4"
-									onClick={() => setStep(2)}
-								>
-									Quay lại
-								</Button> */}
 							</div>
 							<Button
 								type="text"

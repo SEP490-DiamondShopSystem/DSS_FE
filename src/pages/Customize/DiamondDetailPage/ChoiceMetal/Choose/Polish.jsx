@@ -8,27 +8,27 @@ const polishItems = [
 	{
 		id: 1,
 		value: 1,
-		polish: 'Poor',
+		polish: 'Kém (Poor)',
 	},
 	{
 		id: 2,
 		value: 2,
-		polish: 'Fair',
+		polish: 'Trung bình (Fair)',
 	},
 	{
 		id: 3,
 		value: 3,
-		polish: 'Good',
+		polish: 'Tốt (Good)',
 	},
 	{
 		id: 4,
 		value: 4,
-		polish: 'Very Good',
+		polish: 'Rất tốt (Very good)',
 	},
 	{
 		id: 5,
 		value: 5,
-		polish: 'Excellent',
+		polish: 'Hoàn hảo (Excellent)',
 	},
 ];
 
@@ -44,7 +44,7 @@ export const Polish = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 		setStep(5);
 	};
 
-	const text = <span>Polish</span>;
+	const text = <span>Độ bóng</span>;
 
 	const content = (
 		<div style={{width: 300, textAlign: 'justify'}}>
@@ -60,17 +60,20 @@ export const Polish = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 
 	return (
 		<div>
-			<div className="flex items-center justify-center mt-10">
+			<div className="mt-10 mb-5">
 				<label className=" font-semibold text-xl">
-					Chọn Carat{' '}
+					Chọn Độ Bóng (Polish){' '}
 					<Popover placement="topLeft" title={text} content={content}>
 						<InfoCircleFilled />
 					</Popover>
 				</label>
 			</div>
-			<div className="grid gap-x-8 gap-y-4 grid-cols-2 items-center">
-				{polishItems?.map((item) => (
-					<div key={item.id} className="mx-auto">
+			<div className="grid gap-x-8 gap-y-4 grid-cols-2">
+				{polishItems?.map((item, index) => (
+					<div
+						key={item.id}
+						className={`${index % 2 === 0 ? 'justify-self-start' : 'justify-self-end'}`}
+					>
 						<Radio.Group onChange={onChange} value={customizeDiamond.polish}>
 							<Radio value={item.value}>
 								<div className="flex justify-between items-center">

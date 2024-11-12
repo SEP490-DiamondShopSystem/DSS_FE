@@ -11,17 +11,17 @@ export const Cut = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 		{
 			id: 1,
 			value: 1,
-			cut: 'Good',
+			cut: 'Tốt (Good)',
 		},
 		{
 			id: 2,
 			value: 2,
-			cut: 'Very Good',
+			cut: 'Rất tốt (Very good)',
 		},
 		{
 			id: 3,
 			value: 3,
-			cut: 'Excellent',
+			cut: 'Hoàn hảo (Excellent)',
 		},
 	];
 
@@ -37,7 +37,7 @@ export const Cut = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 	// 	setStep(2);
 	// };
 
-	const text = <span>Diamond Cut</span>;
+	const text = <span>Chế Tác Kim Cương</span>;
 
 	const content = (
 		<div style={{width: 300, textAlign: 'justify'}}>
@@ -91,43 +91,26 @@ export const Cut = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 		<div>
 			<div className="flex items-center justify-center mt-10">
 				<label className=" font-semibold text-xl my-5">
-					Chọn Cut{' '}
+					Chọn Chế Tác (Cut){' '}
 					<Popover placement="topLeft" title={text} content={content}>
 						<InfoCircleFilled />
 					</Popover>
 				</label>
 			</div>
-			<div className="grid gap-x-8 gap-y-4 grid-cols-2 items-center">
+			<div className="grid grid-cols-3 gap-x-8 gap-y-6">
 				{cutItems?.map((item) => (
-					<div key={item.id} className="mx-auto">
+					<div key={item.id} className="flex justify-center">
 						<Radio.Group onChange={onChange} value={customizeDiamond.cut}>
 							<Radio value={item.value}>
-								<div className="flex justify-between items-center">
+								<div className="text-center flex flex-col items-center">
 									<p className="font-semibold text-xl">{item.cut}</p>
-									{/* <p className="font-semibold ml-20">{item.price}</p> */}
+									{/* <p className="font-semibold">{item.price}</p> */}
 								</div>
 							</Radio>
 						</Radio.Group>
 					</div>
 				))}
 			</div>
-			{/* <div className="flex justify-between items-center mt-10">
-				<Button
-					type="text"
-					className="bg-primary w-48 uppercase font-semibold"
-					onClick={() => setStep(0)}
-				>
-					Quay lại
-				</Button>
-				<Button
-					type="text"
-					className="bg-primary w-48 uppercase font-semibold"
-					disabled={customizeDiamond.cut?.length === 0}
-					onClick={handleNextStep}
-				>
-					Tiếp tục
-				</Button>
-			</div> */}
 		</div>
 	);
 };

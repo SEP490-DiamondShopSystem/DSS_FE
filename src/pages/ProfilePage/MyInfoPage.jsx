@@ -135,7 +135,7 @@ const MyInfoPage = () => {
 	};
 
 	const handleAddAddress = (e) => {
-		e.preventDefault(); // Ngăn chặn hành động mặc định của form
+		e.preventDefault();
 
 		// Giả định newAddress là địa chỉ mới bạn đã thu thập được từ form
 		const newAddresses = {
@@ -161,6 +161,7 @@ const MyInfoPage = () => {
 			Ward: '',
 			Street: '',
 		});
+		setIsModalVisible(false);
 	};
 	const handleDeleteAddress = (street, id) => {
 		// Xóa địa chỉ dựa trên tên đường
@@ -235,10 +236,6 @@ const MyInfoPage = () => {
 		});
 	};
 
-	const handleAddressChange = (field, value) => {
-		setNewAddress((prev) => ({...prev, [field]: value}));
-	};
-
 	const addressColumns = [
 		{
 			title: 'Tỉnh/Thành phố',
@@ -272,11 +269,6 @@ const MyInfoPage = () => {
 			}),
 		},
 	];
-
-	console.log(province);
-	console.log('newAddress', newAddress);
-	console.log('addAddress', addAddress);
-	console.log('deletedAddressIds', deletedAddressIds);
 
 	return (
 		<div>

@@ -24,8 +24,8 @@ const JewelryCustomDetail = () => {
 	const [jewelry, setJewelry] = useState();
 	const [selectedMetal, setSelectedMetal] = useState(null);
 	const [selectedSideDiamond, setSelectedSideDiamond] = useState();
-	const [textValue, setTextValue] = useState('Your Text Here');
-	const [fontFamily, setFontFamily] = useState('Arial');
+	const [textValue, setTextValue] = useState(null);
+	const [fontFamily, setFontFamily] = useState(null);
 	const [diamondSelect, setDiamondSelect] = useState(null);
 	const [selectedDiamonds, setSelectedDiamonds] = useState([]);
 	const [customizeJewelry, setCustomizeJewelry] = useState({
@@ -46,6 +46,9 @@ const JewelryCustomDetail = () => {
 		culet: '',
 		isLabGrown: null,
 	});
+
+	console.log('textValue', textValue);
+	console.log('fontFamily', fontFamily);
 
 	useEffect(() => {
 		dispatch(getJewelryModelDetail({id}));

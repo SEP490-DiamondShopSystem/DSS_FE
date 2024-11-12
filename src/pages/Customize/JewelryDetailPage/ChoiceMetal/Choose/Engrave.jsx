@@ -1,18 +1,15 @@
 import React, {useEffect, useState, useRef} from 'react';
-
 import {Button, Input, Modal, Select} from 'antd';
-import {SketchPicker} from 'react-color'; // Import color picker component
-import ring from '../../../../../assets/emerald-ring.png'; // Path to the image
+import {SketchPicker} from 'react-color';
+import ring from '../../../../../assets/vien nhan.png';
 import * as fabric from 'fabric';
 
-const {Option} = Select; // Correctly import Option
+const {Option} = Select;
 
 export const Engrave = ({
 	setStep,
 	setImageData,
 	imageData,
-	customizeJewelry,
-	setCustomizeJewelry,
 	setFontFamily,
 	fontFamily,
 	setTextValue,
@@ -21,10 +18,12 @@ export const Engrave = ({
 	const canvasRef = useRef(null);
 	const [canvas, setCanvas] = useState(null);
 	const [fontSize, setFontSize] = useState(30);
-	const [textColor, setTextColor] = useState('#000'); // New state for text color
+	const [textColor, setTextColor] = useState('#000');
 	const [textObject, setTextObject] = useState(null);
 	const [isUploading, setIsUploading] = useState(false);
 	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [textFont, setTextFont] = useState(fontFamily || 'Lucida Sans');
+	const [textContent, setTextContent] = useState(textValue || null);
 
 	useEffect(() => {
 		const fabricCanvas = new fabric.Canvas(canvasRef.current, {
@@ -33,80 +32,73 @@ export const Engrave = ({
 		});
 		setCanvas(fabricCanvas);
 
-		// Create image element from assets
 		const imgElement = new Image();
-		imgElement.src = ring; // Path to the image in assets
+		imgElement.src = ring;
 		imgElement.onload = () => {
 			const fabricImg = new fabric.Image(imgElement);
 			fabricImg.scaleToWidth(500);
-			fabricImg.set({left: 0, top: 0, selectable: false}); // Image cannot be selected
-			fabricCanvas.add(fabricImg); // Add image to canvas
-			fabricCanvas.renderAll(); // Render the canvas
+			fabricImg.set({left: 0, top: 100, selectable: false});
+			fabricCanvas.add(fabricImg);
 
-			// Add initial text after the image has been added
-			const initialText = new fabric.Text(textValue, {
+			const initialText = new fabric.Text(textContent, {
 				left: 150,
 				top: 250,
-				fontSize: fontSize,
-				fontFamily: fontFamily,
+				fontSize,
+				fontFamily: textFont,
 				fill: textColor,
-				editable: true, // Allow editing
 			});
 
-			fabricCanvas.add(initialText); // Add text to canvas
+			fabricCanvas.add(initialText);
 			setTextObject(initialText);
-			fabricCanvas.renderAll(); // Render the canvas again after adding text
+			fabricCanvas.renderAll();
 		};
 
 		return () => {
-			fabricCanvas.dispose(); // Clean up when component unmounts
+			fabricCanvas.dispose();
 		};
-	}, []); // Run only once when the component mounts
+	}, []);
 
 	useEffect(() => {
 		if (textObject && canvas) {
 			textObject.set({
-				text: textValue,
-				fontSize: fontSize,
-				fontFamily: fontFamily,
-				fill: textColor, // Update text color
+				text: textContent,
+				fontSize,
+				fontFamily: textFont,
+				fill: textColor,
 			});
-			canvas.renderAll(); // Render the canvas again after text changes
+			canvas.renderAll();
 		}
-	}, [textValue, fontSize, fontFamily, textColor, textObject, canvas]);
+	}, [textContent, fontSize, textFont, textColor, textObject, canvas]);
 
-	// Function to export image from canvas and save to state
 	const handleExportImage = () => {
 		if (canvas) {
-			// Wait for canvas to finish rendering before exporting
 			setTimeout(() => {
 				const dataURL = canvas.toDataURL({
 					format: 'png',
 					multiplier: 1,
 				});
-
-				setImageData(dataURL); // Set the image data to state
-			}, 100); // Wait 100ms to ensure rendering is complete
+				setImageData(dataURL);
+			}, 100);
 		}
+		setFontFamily(textFont);
+		setTextValue(textContent);
 	};
 
 	const uploadImage = async () => {
-		if (!imageData) return; // Ensure there's image data to upload
-
-		setIsUploading(true); // Start the upload process
+		if (!imageData) return;
+		setIsUploading(true);
 		try {
 			const response = await fetch('YOUR_AZURE_UPLOAD_URL', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
 				},
-				body: JSON.stringify({image: imageData}), // Sending the image data
+				body: JSON.stringify({image: imageData}),
 			});
 
 			if (response.ok) {
-				const result = await response.json();
-				console.log('Image uploaded successfully:', result);
-				setIsModalOpen(false); // Đóng modal sau khi upload thành công
+				console.log('Image uploaded successfully');
+				setIsModalOpen(false);
 			} else {
 				console.error('Error uploading image:', response.statusText);
 			}
@@ -114,85 +106,56 @@ export const Engrave = ({
 			console.error('Error uploading image:', error);
 		} finally {
 			setIsUploading(false);
-			setIsModalOpen(false); // Đảm bảo modal được đóng dù thành công hay thất bại
+			setIsModalOpen(false);
 		}
 	};
 
-	// Handler for font selection
-	const handleFontChange = (value) => {
-		setFontFamily(value);
-	};
+	const handleFontChange = (value) => setTextFont(value);
+	const handleColorChange = (color) => setTextColor(color.hex);
+	const handleTextChange = (e) => setTextContent(e.target.value);
 
-	// Handler for text color change
-	const handleColorChange = (color) => {
-		setTextColor(color.hex);
-	};
-
-	// Handler for curved text toggle
-
-	const handleTextChange = (e) => {
-		setTextValue(e.target.value);
-	};
-
-	const showModal = () => {
-		setIsModalOpen(true);
-	};
-
-	const handleCancel = () => {
-		setIsModalOpen(false);
-	};
-
-	console.log('image', imageData);
+	console.log('textValue', textValue);
+	console.log('textContent', textContent);
 
 	return (
 		<div className="mt-10">
-			<div>
-				<h1 className="text-2xl font-semibold text-center my-2">Thiết kế chữ khắc</h1>
-				<div className="flex items-center justify-between">
-					<label>Nội Dung:</label>
-					<Input
-						type="text"
-						style={{width: 500}}
-						value={textValue}
-						onChange={handleTextChange}
-						className="ml-5"
-					/>
-				</div>
-
-				<div className="mb-10 flex items-center justify-between">
-					<label>Kiểu Chữ:</label>
-					<Select
-						value={fontFamily}
-						onChange={handleFontChange}
-						style={{width: 500}}
-						className="ml-5 my-5"
-					>
-						<Option value="Arial">Arial</Option>
-						<Option value="Courier">Courier</Option>
-						<Option value="Times New Roman">Times New Roman</Option>
-						<Option value="Verdana">Verdana</Option>
-						<Option value="Georgia">Georgia</Option>
-						<Option value="Impact">Impact</Option>
-						<Option value="Lora">Lora</Option>
-					</Select>
-				</div>
-
-				{/* <div className="flex items-center mb-5">
-					<label>Curved Text:</label>
-					<Button onClick={handleCurvedTextToggle} className="ml-5">
-						{isCurved ? 'Remove Curve' : 'Apply Curve'}
-					</Button>
-				</div> */}
-				<canvas ref={canvasRef} className="border" />
+			<h1 className="text-2xl font-semibold text-center my-2">Thiết kế chữ khắc</h1>
+			<div className="flex items-center justify-between">
+				<label>Nội Dung:</label>
+				<Input
+					type="text"
+					style={{width: 500}}
+					value={textContent}
+					onChange={handleTextChange}
+					className="ml-5"
+				/>
 			</div>
-			{/* <div className="text-red my-10">
-				*Cần phải upload hình mới có thể thiết kế chữ khắc thành công
-			</div> */}
+
+			<div className="mb-10 flex items-center justify-between">
+				<label>Kiểu Chữ:</label>
+				<Select
+					value={textFont}
+					onChange={handleFontChange}
+					style={{width: 500}}
+					className="ml-5 my-5"
+				>
+					<Option value="Lucida Sans">Lucida Sans</Option>
+					<Option value="Pinyon Script">Pinyon Script</Option>
+				</Select>
+			</div>
+
+			<canvas ref={canvasRef} className="border" />
+
+			<div className="flex flex-col">
+				<span className="my-5">Nhấn nút "Hoàn Thành" để khắc chữ</span>
+				<span>Có thể bỏ qua khắc chữ!</span>
+			</div>
+
 			<div className="flex justify-between items-center my-10">
 				<Button
 					type="text"
 					className="bg-primary w-32 uppercase font-semibold"
-					onClick={() => setStep(0)}
+					onClick={() => setStep((prev) => prev - 1)}
 				>
 					Quay lại
 				</Button>
@@ -200,35 +163,26 @@ export const Engrave = ({
 					type="text"
 					className="bg-primary w-32 uppercase font-semibold"
 					onClick={handleExportImage}
+					disabled={textContent === null || textContent === ''}
 				>
 					Hoàn Thành
 				</Button>
-				{/* <Button
-					type="text"
-					className="bg-primary w-32 uppercase font-semibold"
-					onClick={showModal}
-					disabled={!imageData || isUploading}
-				>
-					Tải Hình
-				</Button> */}
 				<Button
 					type="text"
 					className="bg-primary w-32 uppercase font-semibold"
 					onClick={() => setStep(3)}
-					disabled={imageData === null}
 				>
 					Tiếp Tục
 				</Button>
 			</div>
+
 			<Modal
 				title="Xác nhận upload hình"
 				open={isModalOpen}
-				onCancel={handleCancel}
-				onOk={async () => {
-					await uploadImage();
-				}}
+				onCancel={() => setIsModalOpen(false)}
+				onOk={uploadImage}
 			>
-				<div className="text-red">
+				<div>
 					<h3>
 						Hình này sẽ được upload lên hệ thống, bạn có chắc chắn là hình ảnh đã thiết
 						kế xong?

@@ -70,7 +70,7 @@ export const Color = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 		setStep(3);
 	};
 
-	const text = <span>Diamond Color</span>;
+	const text = <span>Màu Sắc Kim Cương</span>;
 
 	const content = (
 		<div style={{width: 300, textAlign: 'justify'}}>
@@ -181,7 +181,7 @@ export const Color = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 			{/* <Image className="mt-5" src={colorChart} preview={false} alt="" /> */}
 			<div className="flex items-center justify-center mt-10">
 				<label className=" font-semibold text-xl my-5">
-					Chọn Color{' '}
+					Chọn Màu Sắc (Color){' '}
 					<Popover placement="topLeft" title={text} content={content}>
 						<InfoCircleFilled />
 					</Popover>

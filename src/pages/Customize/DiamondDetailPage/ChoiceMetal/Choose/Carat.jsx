@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {InfoCircleFilled} from '@ant-design/icons';
-import {Input, Popover, Space} from 'antd';
+import {Input, Popover, Slider, Space} from 'antd';
 
 export const Carat = ({
 	setStep,
@@ -11,11 +11,11 @@ export const Carat = ({
 	caratFromShape,
 	caratToShape,
 }) => {
-	const onChange = (e) => {
-		const {name, value} = e.target;
+	const handleCaratChange = (value) => {
 		setCustomizeDiamond((prev) => ({
 			...prev,
-			[name]: value,
+			caratFrom: value[0],
+			caratTo: value[1],
 		}));
 	};
 
@@ -38,34 +38,24 @@ export const Carat = ({
 
 			<div className="flex items-center justify-center mt-10">
 				<label className=" font-semibold text-xl">
-					Chọn Carat{' '}
+					Chọn Ly (Carat){' '}
 					<Popover placement="topLeft" title={text} content={content}>
 						<InfoCircleFilled />
 					</Popover>
 				</label>
 			</div>
-			<div className="my-10 text-red text-lg font-semibold">
-				Kim Cương Được Chọn Carat: {caratFromShape} - {caratToShape}
+			<div className="my-10 text-primary text-lg font-semibold flex justify-center items-center">
+				Kim Cương Được Chọn Ly (Carat): {caratFromShape} - {caratToShape}
 			</div>
-			<div className="flex items-center justify-center">
-				<Space>
-					<Input
-						addonBefore="Carat From"
-						name="caratFrom"
-						value={customizeDiamond.caratFrom}
-						className="w-32 ml-10"
-						style={{width: 150}}
-						onChange={onChange}
-					/>
-					<Input
-						addonBefore="Carat To"
-						name="caratTo"
-						value={customizeDiamond.caratTo}
-						className="w-32 ml-10"
-						style={{width: 150}}
-						onChange={onChange}
-					/>
-				</Space>
+			<div className="mx-40 my-10">
+				<Slider
+					range
+					value={[customizeDiamond?.caratFrom, customizeDiamond?.caratTo]}
+					step={0.1}
+					min={caratFromShape}
+					max={caratToShape}
+					onChange={handleCaratChange}
+				/>
 			</div>
 			{/* <div className="flex justify-center items-center mt-10">
 				<Button
