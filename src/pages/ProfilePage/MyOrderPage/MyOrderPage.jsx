@@ -222,22 +222,16 @@ const MyOrderPage = () => {
 			<Helmet>
 				<title>Đơn Hàng Của Tôi</title>
 			</Helmet>
-			<div className="my-20 min-h-96 flex z-50">
-				<div className="mr-20">
-					<NavbarProfile />
-				</div>
-				<div className="font-semibold w-full px-20 py-10 bg-white rounded-lg">
-					<Table
-						dataSource={dataSource}
-						columns={columns}
-						pagination={{pageSize: 5}}
-						className="custom-table-header"
-						rowKey="orderId"
-						// expandedRowRender={expandedRowRender}
-						loading={loading}
-					/>
-				</div>
-			</div>
+
+			<Table
+				dataSource={dataSource}
+				columns={columns}
+				pagination={{pageSize: 5}}
+				className="custom-table-header"
+				rowKey="orderId"
+				// expandedRowRender={expandedRowRender}
+				loading={loading}
+			/>
 
 			<OrderDetailModal
 				toggleDetailModal={toggleDetailModal}

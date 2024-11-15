@@ -175,9 +175,6 @@ const CartPage = () => {
 	}, [jewelryOrDiamondProducts, enums]);
 
 	// Lọc các sản phẩm có JewelryModel và Diamond hoặc chỉ có JewelryModel
-	const jewelryModelAndDiamondProducts = cartValidateProduct.filter(
-		(product) => (product.JewelryModel && product.Diamond) || product.JewelryModel
-	);
 
 	const handleRemoveCart = (index) => {
 		localCart.splice(index, 1);

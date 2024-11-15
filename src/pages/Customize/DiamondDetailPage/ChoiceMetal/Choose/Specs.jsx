@@ -77,22 +77,35 @@ export const Specs = ({
 
 	const handleNextStep = () => {
 		if (!customizeDiamond) {
-			alert('Please select a diamond before continuing.');
+			alert('Please select a diamond before continuing.'); // Alert if no diamond is selected
 			return;
 		}
 
-		const isAlreadySelected = selectedDiamonds.some(
-			(selected) =>
-				selected.Id === customizeDiamond.Id &&
-				selected.currentDiamondId === currentDiamond.Id
-		);
+		// Update or add the diamond to selectedDiamonds based on currentDiamond Id
+		setSelectedDiamonds((prev) => {
+			// Check if a diamond with the same currentDiamondId already exists
+			const existingIndex = prev.findIndex(
+				(selected) =>
+					selected.Id === customizeDiamond.Id &&
+					selected.currentDiamondId === currentDiamond.Id
+			);
 
-		if (!isAlreadySelected) {
-			setSelectedDiamonds((prev) => [
-				...prev,
-				{...customizeDiamond, currentDiamondId: currentDiamond.Id},
-			]);
-		}
+			// If found, replace it; otherwise, add a new entry
+			if (existingIndex !== -1) {
+				// Create a new array with the updated diamond
+				const updatedDiamonds = [...prev];
+				updatedDiamonds[existingIndex] = {
+					...customizeDiamond,
+					currentDiamondId: currentDiamond.Id,
+				};
+				return updatedDiamonds;
+			} else {
+				// Add as a new entry
+				return [...prev, {...customizeDiamond, currentDiamondId: currentDiamond.Id}];
+			}
+		});
+
+		// Reset customizeDiamond and proceed to the next step
 		setCustomizeDiamond({
 			caratFrom: '',
 			caratTo: '',
@@ -120,7 +133,7 @@ export const Specs = ({
 		</div>
 	);
 
-	const textGirdle = <span>Girdle</span>;
+	const textGirdle = <span>Viền cạnh kim cương</span>;
 	const contentGirdle = (
 		<div style={{width: 300, textAlign: 'justify'}}>
 			<div className="flex items-center justify-center">
@@ -180,7 +193,7 @@ export const Specs = ({
 
 			<div className="mt-10 mb-5">
 				<label className="my-5 font-semibold text-xl">
-					Chọn Đường Viền (Girdle){' '}
+					Chọn Viền Cạnh (Girdle){' '}
 					<Popover placement="topLeft" title={textGirdle} content={contentGirdle}>
 						<InfoCircleFilled />
 					</Popover>

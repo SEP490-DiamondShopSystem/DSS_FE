@@ -32,6 +32,8 @@ import PromotionPage from '../pages/PromotionPage/PromotionPage';
 import PaymentPage from '../pages/PaymentPage';
 import ScrollToTop from '../components/ScrollToTop';
 import DiamondChoosePage from '../pages/DiamondSearchPage/DiamondChoose';
+import RequestCustomize from '../pages/RequestCustomize';
+import OrderPage from '../pages/ProfilePage/MyOrderPage';
 
 export const AppRouters = () => {
 	return (
@@ -153,7 +155,7 @@ export const AppRouters = () => {
 					path="/my-orders"
 					element={
 						<PrivateRoute roles={'customer'}>
-							<MyOrderPage />
+							<OrderPage />
 						</PrivateRoute>
 					}
 				/>
@@ -170,6 +172,14 @@ export const AppRouters = () => {
 					element={
 						<PrivateRoute roles={'customer'}>
 							<ChangePassword />
+						</PrivateRoute>
+					}
+				/>
+				<Route
+					path="/request-customize"
+					element={
+						<PrivateRoute roles={'customer'}>
+							<RequestCustomize />
 						</PrivateRoute>
 					}
 				/>

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 
-import {HeartOutlined} from '@ant-design/icons';
-import {faShoppingBag} from '@fortawesome/free-solid-svg-icons';
+import {HeartOutlined, OrderedListOutlined} from '@ant-design/icons';
+import {faListAlt, faPencilRuler, faShoppingBag} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {useDispatch, useSelector} from 'react-redux';
 import {Link, useNavigate} from 'react-router-dom';
@@ -17,27 +17,6 @@ export const Header = () => {
 	const navigate = useNavigate();
 
 	const handleValidate = () => {
-		// const local = JSON.parse(localStorage.getItem(`cart_${userId}`));
-		// const transformedData = local?.map((productId, index) => ({
-		// 	id: Math.floor(1000000 + Math.random() * 9000000).toString(),
-		// 	jewelryId: productId.JewelryId || null,
-		// 	diamondId: productId.DiamondId || null,
-		// 	jewelryModelId: productId.ModelId || null,
-		// 	sizeId: productId?.SizeId || null,
-		// 	metalId: productId?.MetalId,
-		// 	sideDiamondChoices: [],
-		// 	engravedText: productId?.engravedText || null,
-		// 	engravedFont: productId?.engravedFont || null,
-		// 	warrantyCode:
-		// 		productId?.warrantyJewelry?.warrantyCode ||
-		// 		productId?.warrantyDiamond?.warrantyCode,
-		// 	warrantyType:
-		// 		productId?.warrantyJewelry?.warrantyType ||
-		// 		productId?.warrantyDiamond?.warrantyType,
-		// }));
-
-		// dispatch(handleCartValidate({promotionId: null, transformedData}));
-
 		navigate('/cart');
 	};
 
@@ -70,41 +49,29 @@ export const Header = () => {
 							Bảng giá
 						</a>
 					</li>
-					<li>
+					{/* <li>
 						<a
 							href="/promotion"
 							className={`py-7 px-3 inline-block no-underline text-black`}
 						>
 							Khuyến mãi
 						</a>
-					</li>
+					</li> */}
 				</ul>
-				{/* <div>
-					<Search
-						placeholder="Tìm kiếm sản phẩm..."
-						onSearch={(value) => console.log(value)}
-						style={{width: 400}}
-					/>
-				</div> */}
+
 				<ul className="flex uppercase items-center gap-8">
 					<li>
-						<Link
-							to="/favorite"
+						<button
 							className="my-7 mx-3 inline-block no-underline text-black"
+							onClick={() => navigate('/request-customize')}
 						>
-							<HeartOutlined />
-						</Link>
+							<OrderedListOutlined />
+						</button>
 					</li>
 					<li>
-						{/* <Badge
-							count={cartTotal}
-							color="#dec986"
-							className="my-7 mx-3 py-2 px-2 inline-block no-underline text-black"
-						> */}
 						<button onClick={handleValidate}>
 							<FontAwesomeIcon icon={faShoppingBag} />
 						</button>
-						{/* </Badge> */}
 					</li>
 					<ActionLinks />
 				</ul>

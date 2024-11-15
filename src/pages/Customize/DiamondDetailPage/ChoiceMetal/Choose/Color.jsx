@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 
-import {Button, Image, Popover, Radio, Segmented} from 'antd';
+import {Button, Image, Popover, Radio, Segmented, Slider} from 'antd';
 import {InfoCircleFilled} from '@ant-design/icons';
 import {
 	colorD,
@@ -12,6 +12,7 @@ import {
 	colorJ,
 	colorK,
 } from '../../../../../utils/image';
+import {marks} from '../../../../../utils/constant';
 
 export const Color = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 	const [colorSelected, setColorSelected] = useState('K');
@@ -66,8 +67,12 @@ export const Color = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 		}));
 	};
 
-	const handleNextStep = () => {
-		setStep(3);
+	const handleColorChange = (value) => {
+		setCustomizeDiamond((prev) => ({
+			...prev,
+			colorFrom: value[0],
+			colorTo: value[1],
+		}));
 	};
 
 	const text = <span>Màu Sắc Kim Cương</span>;
@@ -187,19 +192,15 @@ export const Color = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 					</Popover>
 				</label>
 			</div>
-			<div className="grid gap-x-8 gap-y-4 grid-cols-2 items-center">
-				{colorItems?.map((item) => (
-					<div key={item.id} className="mx-auto">
-						<Radio.Group onChange={onChange} value={customizeDiamond.color}>
-							<Radio value={item.value}>
-								<div className="flex justify-between items-center">
-									<p className="font-semibold text-xl">{item.color}</p>
-									{/* <p className="font-semibold ml-20">{item.price}</p> */}
-								</div>
-							</Radio>
-						</Radio.Group>
-					</div>
-				))}
+			<div className="mx-40 my-10">
+				<Slider
+					range
+					marks={marks}
+					min={1}
+					max={8}
+					value={[customizeDiamond.colorFrom || 1, customizeDiamond.colorTo || 8]}
+					onChange={handleColorChange}
+				/>
 			</div>
 			{/* <div className="flex justify-between items-center mt-10">
 				<Button

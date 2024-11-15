@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 
-import {Button, message} from 'antd';
+import {Button} from 'antd';
 import {Carat} from './Carat';
 import {Clarity} from './Clarity';
 import {Color} from './Color';
@@ -16,6 +16,7 @@ export const Diamond = ({
 	setSelectedDiamonds,
 }) => {
 	const [caratFromShape, setCaratFromShape] = useState();
+	const [filter, setFilter] = useState({});
 	const [caratToShape, setCaratToShape] = useState();
 
 	const matchedShape = currentDiamond.Shapes.find(
@@ -40,32 +41,46 @@ export const Diamond = ({
 			return;
 		}
 
-		// Check if the diamond is already in the selectedDiamonds for the currentDiamond Id
-		const isAlreadySelected = selectedDiamonds.some(
-			(selected) =>
-				selected.Id === customizeDiamond.Id &&
-				selected.currentDiamondId === currentDiamond.Id
-		);
+		// Update or add the diamond to selectedDiamonds based on currentDiamond Id
+		setSelectedDiamonds((prev) => {
+			// Check if a diamond with the same currentDiamondId already exists
+			const existingIndex = prev.findIndex(
+				(selected) =>
+					selected.Id === customizeDiamond.Id &&
+					selected.currentDiamondId === currentDiamond.Id
+			);
 
-		if (!isAlreadySelected) {
-			// Add the diamond to selectedDiamonds with the currentDiamond Id
-			setSelectedDiamonds((prev) => [
-				...prev,
-				{...customizeDiamond, currentDiamondId: currentDiamond.Id}, // Store with currentDiamond ID
-			]);
-		}
+			// If found, replace it; otherwise, add a new entry
+			if (existingIndex !== -1) {
+				// Create a new array with the updated diamond
+				const updatedDiamonds = [...prev];
+				updatedDiamonds[existingIndex] = {
+					...customizeDiamond,
+					currentDiamondId: currentDiamond.Id,
+				};
+				return updatedDiamonds;
+			} else {
+				// Add as a new entry
+				return [...prev, {...customizeDiamond, currentDiamondId: currentDiamond.Id}];
+			}
+		});
+
+		// Reset customizeDiamond and proceed to the next step
 		setCustomizeDiamond({
 			caratFrom: '',
 			caratTo: '',
 			shape: '',
-			color: '',
-			cut: '',
-			clarity: '',
+			colorFrom: '',
+			colorTo: '',
+			cutFrom: '',
+			cutTo: '',
+			clarityFrom: '',
+			clarityTo: '',
 			polish: '',
 			symmetry: '',
 			girdle: '',
 			culet: '',
-			isLabGrown: null,
+			isLabGrown: false,
 		});
 		setStep(0);
 		setStepChooseDiamond((prev) => prev + 1);
@@ -74,8 +89,6 @@ export const Diamond = ({
 	const handleAdvanceClick = () => {
 		setStep((prev) => prev + 1);
 	};
-
-	console.log('customizeDiamond', customizeDiamond);
 
 	return (
 		<div>

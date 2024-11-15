@@ -14,6 +14,7 @@ export const Engrave = ({
 	fontFamily,
 	setTextValue,
 	textValue,
+	diamondJewelry,
 }) => {
 	const canvasRef = useRef(null);
 	const [canvas, setCanvas] = useState(null);
@@ -23,7 +24,7 @@ export const Engrave = ({
 	const [isUploading, setIsUploading] = useState(false);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [textFont, setTextFont] = useState(fontFamily || 'Lucida Sans');
-	const [textContent, setTextContent] = useState(textValue || null);
+	const [textContent, setTextContent] = useState(null);
 
 	useEffect(() => {
 		const fabricCanvas = new fabric.Canvas(canvasRef.current, {
@@ -56,19 +57,20 @@ export const Engrave = ({
 		return () => {
 			fabricCanvas.dispose();
 		};
-	}, []);
+	}, [textContent]); // Chỉ chạy một lần khi component mount
 
 	useEffect(() => {
 		if (textObject && canvas) {
+			// Cập nhật textObject khi textContent thay đổi
 			textObject.set({
-				text: textContent,
+				text: textContent, // Thay đổi nội dung chữ
 				fontSize,
 				fontFamily: textFont,
 				fill: textColor,
 			});
-			canvas.renderAll();
+			canvas.renderAll(); // Render lại canvas để hiển thị thay đổi
 		}
-	}, [textContent, fontSize, textFont, textColor, textObject, canvas]);
+	}, [textContent, fontSize, textFont, textColor, textObject, canvas]); // Theo dõi các giá trị thay đổi
 
 	const handleExportImage = () => {
 		if (canvas) {
@@ -112,7 +114,9 @@ export const Engrave = ({
 
 	const handleFontChange = (value) => setTextFont(value);
 	const handleColorChange = (color) => setTextColor(color.hex);
-	const handleTextChange = (e) => setTextContent(e.target.value);
+	const handleTextChange = (e) => {
+		setTextContent(e.target.value); // Cập nhật textContent
+	};
 
 	console.log('textValue', textValue);
 	console.log('textContent', textContent);

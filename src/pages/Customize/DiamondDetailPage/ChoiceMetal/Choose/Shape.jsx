@@ -29,10 +29,6 @@ export const Shape = ({
 		currentDiamond.Shapes.some((shape) => shape.ShapeId === item.value)
 	);
 
-	console.log(matchedShapeItems);
-
-	console.log('currentDiamond', currentDiamond);
-
 	return (
 		<div>
 			<div className="grid gap-x-8 gap-y-4 grid-cols-2 items-center">

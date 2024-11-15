@@ -98,6 +98,9 @@ const DiamondChoosePage = () => {
 		}
 	};
 
+	console.log('jewelryModel', jewelryModel);
+	console.log('diamondForFilter', diamondForFilter);
+
 	useEffect(() => {
 		if (filterLimits) {
 			setFilters({

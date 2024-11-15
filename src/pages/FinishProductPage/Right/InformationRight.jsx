@@ -207,9 +207,6 @@ export const InformationRight = ({
 	const handleEngravedFontChange = (value) => setEngravedFont(value);
 
 	const handleSubmit = () => {
-		console.log('engravedText', engravedText);
-		console.log('engravedFont', engravedFont);
-
 		setVisible(false);
 	};
 

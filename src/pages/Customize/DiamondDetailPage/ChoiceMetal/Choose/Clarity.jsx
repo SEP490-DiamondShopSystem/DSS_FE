@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 
-import {Button, Image, Popover, Radio, Segmented} from 'antd';
+import {Button, Image, Popover, Radio, Segmented, Slider} from 'antd';
 import clarityChart from '../../../../../assets/Diamond-Clarity-Chart.png';
 
 import {InfoCircleFilled} from '@ant-design/icons';
@@ -12,8 +12,9 @@ import {
 	clarityVS1VS2,
 	clarityVSS1VSS2,
 } from '../../../../../utils/image';
+import {marksClarity} from '../../../../../utils/constant';
 
-export const Clarity = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
+export const Clarity = ({setStep, customizeDiamond, setCustomizeDiamond, filter}) => {
 	const [claritySelected, setClaritySelected] = useState('I3');
 
 	const clarityItems = [
@@ -64,6 +65,14 @@ export const Clarity = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 		setCustomizeDiamond((prev) => ({
 			...prev,
 			clarity: e.target.value,
+		}));
+	};
+
+	const handleClarityChange = (value) => {
+		setCustomizeDiamond((prev) => ({
+			...prev,
+			clarityFrom: value[0],
+			clarityTo: value[1],
 		}));
 	};
 
@@ -161,19 +170,15 @@ export const Clarity = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 					</Popover>
 				</label>
 			</div>
-			<div className="grid gap-x-8 gap-y-4 grid-cols-2 items-center ">
-				{clarityItems?.map((item) => (
-					<div key={item.id} className="mx-auto">
-						<Radio.Group onChange={onChange} value={customizeDiamond.clarity}>
-							<Radio value={item.value}>
-								<div className="flex justify-center items-center">
-									<p className="font-semibold text-xl">{item.clarity}</p>
-									{/* <p className="font-semibold ml-20">{item.price}</p> */}
-								</div>
-							</Radio>
-						</Radio.Group>
-					</div>
-				))}
+			<div className="mx-40 my-10">
+				<Slider
+					range
+					marks={marksClarity}
+					min={1}
+					max={8}
+					value={[customizeDiamond?.clarityFrom || 1, customizeDiamond?.clarityTo || 8]}
+					onChange={handleClarityChange}
+				/>
 			</div>
 			{/* <div className="flex justify-between items-center mt-10">
 				<Button

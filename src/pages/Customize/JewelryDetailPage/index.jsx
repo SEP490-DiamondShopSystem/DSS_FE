@@ -5,24 +5,29 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {Button, Space, Steps} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate, useParams} from 'react-router-dom';
-import {GetAllJewelryModelDetailCustomizeSelector} from '../../../redux/selectors';
+import {
+	GetAllJewelryMetalSelector,
+	GetAllJewelryModelDetailCustomizeSelector,
+} from '../../../redux/selectors';
 import {getJewelryModelDetail} from '../../../redux/slices/customizeSlice';
 import {ChoiceMetalDiamond} from '../DiamondDetailPage/ChoiceMetal';
 import {DetailMetalDiamond} from '../DiamondDetailPage/DetailMetal/DetailMetal';
 import {ChoiceMetal} from './ChoiceMetal';
 import {DetailMetal} from './DetailMetal/DetailMetal';
+import {getAllJewelryMetal} from '../../../redux/slices/jewelrySlice';
 
 const JewelryCustomDetail = () => {
 	const {id} = useParams();
 	const dispatch = useDispatch();
 	const jewelryDetail = useSelector(GetAllJewelryModelDetailCustomizeSelector);
+	const metals = useSelector(GetAllJewelryMetalSelector);
 	const navigate = useNavigate();
 
 	const [stepChoose, setStepChoose] = useState(0);
 	const [imageData, setImageData] = useState(null);
 	const [size, setSize] = useState(null);
 	const [jewelry, setJewelry] = useState();
-	const [selectedMetal, setSelectedMetal] = useState(null);
+	const [selectedMetal, setSelectedMetal] = useState('');
 	const [selectedSideDiamond, setSelectedSideDiamond] = useState();
 	const [textValue, setTextValue] = useState(null);
 	const [fontFamily, setFontFamily] = useState(null);
@@ -37,18 +42,26 @@ const JewelryCustomDetail = () => {
 		caratFrom: '',
 		caratTo: '',
 		shape: '',
-		color: '',
-		cut: '',
-		clarity: '',
+		colorFrom: '',
+		colorTo: '',
+		cutFrom: '',
+		cutTo: '',
+		clarityFrom: '',
+		clarityTo: '',
 		polish: '',
 		symmetry: '',
 		girdle: '',
 		culet: '',
-		isLabGrown: null,
+		isLabGrown: false,
 	});
 
-	console.log('textValue', textValue);
-	console.log('fontFamily', fontFamily);
+	const findMetals = metals?.filter((metal) => jewelry?.MetalSupported.includes(metal.Name));
+
+	useEffect(() => {
+		dispatch(getAllJewelryMetal());
+	}, []);
+
+	console.log('findMetals', findMetals);
 
 	useEffect(() => {
 		dispatch(getJewelryModelDetail({id}));
@@ -57,43 +70,35 @@ const JewelryCustomDetail = () => {
 	useEffect(() => {
 		if (jewelryDetail) {
 			setJewelry(jewelryDetail);
-			setSelectedMetal(jewelryDetail?.MetalSupported[0]);
-			setSelectedSideDiamond(jewelryDetail?.SideDiamonds[0]);
+			setSelectedSideDiamond(jewelryDetail?.SideDiamonds[0]?.Id);
 			// setSize(jewelryDetail?.MetalGroups[0]?.SizeGroups[0].Size);
 		}
-	}, [jewelryDetail]);
+		if (metals) {
+			setSelectedMetal(findMetals[0]);
+		}
+	}, [jewelryDetail, metals]);
 
 	const items = [
 		{
-			title: `Chọn Thông Số Vỏ`,
+			title: 'Chọn Thông Số Vỏ',
 			disabled: stepChoose < 0,
 		},
-		{
-			title: 'Chọn Thông Số Kim Cương',
-			disabled: stepChoose < 1,
-		},
+		...(jewelry?.MainDiamonds?.length > 0
+			? [
+					{
+						title: 'Chọn Thông Số Kim Cương',
+						disabled: stepChoose < 1,
+					},
+			  ]
+			: []),
 		{
 			title: 'Hoàn Thành',
 			disabled: stepChoose < 2,
 		},
 	];
 
-	// const handleSizeChange = (e) => {
-	// 	setCustomizeJewelry((prev) => ({
-	// 		...prev,
-	// 		size: e.target.value,
-	// 	}));
-	// };
-
 	const handleSizeChange = (e) => {
 		setSize(e.target.value);
-	};
-
-	const handleSelectSideDiamond = (diamond) => {
-		setSelectedSideDiamond(diamond);
-		console.log(diamond);
-
-		localStorage.setItem('selectedSideDiamond', JSON.stringify(diamond));
 	};
 
 	const handleSelectMetal = (metal) => {
@@ -108,16 +113,15 @@ const JewelryCustomDetail = () => {
 	};
 
 	const filterMetalGroups = (metalGroups, selectedMetal, selectedSideDiamond) => {
-		// Check if metalGroups is defined and is an array
 		if (!Array.isArray(metalGroups)) {
 			console.warn('metalGroups is undefined or not an array');
-			return []; // Return an empty array if metalGroups is undefined or not an array
+			return [];
 		}
 
 		return metalGroups
 			.map((group) => {
 				// Check if group matches the selected MetalId
-				const isMatchingMetal = group.Metal.Name === selectedMetal;
+				const isMatchingMetal = group.Metal.Name === selectedMetal?.Name;
 
 				// Check if group matches the selected SideDiamondId (if provided)
 				// const isMatchingSideDiamond = selectedSideDiamond
@@ -128,7 +132,7 @@ const JewelryCustomDetail = () => {
 				if (isMatchingMetal) {
 					return {
 						...group,
-						MetalDetails: selectedMetal,
+						MetalDetails: selectedMetal?.Name,
 						SideDiamondDetails: selectedSideDiamond || null, // Set SideDiamondDetails to null if not provided
 					};
 				}
@@ -182,6 +186,11 @@ const JewelryCustomDetail = () => {
 								size={size}
 								setSize={setSize}
 								handleSizeChange={handleSizeChange}
+								selectedDiamonds={selectedDiamonds}
+								selectedSideDiamond={selectedSideDiamond}
+								findMetals={findMetals}
+								id={id}
+								setSelectedSideDiamond={setSelectedSideDiamond}
 							/>
 						</div>
 
@@ -250,9 +259,7 @@ const JewelryCustomDetail = () => {
 							<h2 className="text-2xl font-semibold text-primary">
 								Đơn hàng của bạn đã đặt hàng thành công!
 							</h2>
-							<h2 className="text-2xl font-semibold text-primary">
-								Xin vui lòng kiểm tra giỏ hàng!
-							</h2>
+
 							<Space className="my-5">
 								<Button
 									type="text"
@@ -261,12 +268,13 @@ const JewelryCustomDetail = () => {
 								>
 									Tiếp Tục Thiết Kế
 								</Button>
-								<Button
+								{/* <Button
 									type="text"
 									className="bg-primary w-48 uppercase font-semibold"
+								
 								>
-									Vào Giỏ Hàng
-								</Button>
+									Vào Kiểm Tra
+								</Button> */}
 							</Space>
 						</div>
 					</div>

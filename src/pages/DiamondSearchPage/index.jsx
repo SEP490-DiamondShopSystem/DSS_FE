@@ -4,13 +4,8 @@ import {Steps} from 'antd';
 import debounce from 'lodash/debounce';
 import {useDispatch, useSelector} from 'react-redux';
 import {getUserId} from '../../components/GetUserId';
-import {
-	GetAllDiamondSelector,
-	GetAllJewelrySelector,
-	GetDiamondFilterSelector,
-} from '../../redux/selectors';
+import {GetAllDiamondSelector, GetDiamondFilterSelector} from '../../redux/selectors';
 import {getAllDiamond, getDiamondFilter} from '../../redux/slices/diamondSlice';
-import {getAllJewelry} from '../../redux/slices/jewelrySlice';
 import {enums} from '../../utils/constant';
 import {DiamondLabList} from './DiamondLabList';
 import {DiamondList} from './DiamondList';
@@ -156,6 +151,7 @@ const DiamondSearchPage = () => {
 				clarityTo: filters?.clarity?.maxClarity,
 				caratFrom: filters?.carat?.minCarat,
 				caratTo: filters?.carat?.maxCarat,
+				isLab: !changeDiamond,
 			})
 		);
 	}, 500);
@@ -245,7 +241,7 @@ const DiamondSearchPage = () => {
 					handleReset={handleReset}
 					diamondForFilter={diamondForFilter}
 					findShape={findShape}
-					jewelryMode={jewelryModel}
+					jewelryModel={jewelryModel}
 				/>
 			) : (
 				<DiamondLabList
