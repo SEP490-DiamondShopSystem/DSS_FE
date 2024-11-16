@@ -133,7 +133,7 @@ export const DiamondList = ({
 													: handleJewelryChoiceClick(diamondItem.Id)
 											}
 										>
-											<div className="w-80">
+											<div className="">
 												<div
 													className="flex justify-center mb-5"
 													style={{background: '#b8b7b5'}}
@@ -146,7 +146,8 @@ export const DiamondList = ({
 												<div className="mx-10 my-5">
 													<p>{diamondItem?.Title}</p>
 													<div className="flex">
-														{diamondItem?.DiscountPrice !== null ? (
+														{diamondItem?.SalePrice !==
+														diamondItem?.TruePrice ? (
 															<div className="flex">
 																<p
 																	style={{color: '#707070'}}
@@ -220,22 +221,14 @@ export const DiamondList = ({
 													{diamondItem.SalePrice ===
 														diamondItem.TruePrice && (
 														<div>
-															<p>{formatPrice(jewelry.D_Price)}</p>
+															<p>
+																{formatPrice(
+																	diamondItem?.TruePrice
+																)}
+															</p>
 														</div>
 													)}
-													<p
-														className="text-xl w-1/5 text-center cursor-pointer"
-														onClick={(e) => {
-															e.stopPropagation(); // Prevent onClick propagation
-															handleHeartClick(diamondItem.Id);
-														}}
-													>
-														{like[diamondItem.Id] ? (
-															<HeartFilled color="#F65252" />
-														) : (
-															<HeartOutlined />
-														)}
-													</p>
+													<p className="text-xl w-1/5 text-center cursor-pointer"></p>
 												</div>
 											</div>
 										</div>

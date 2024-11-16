@@ -68,27 +68,27 @@ export const OrderStatus = ({orderStatus, orderDetail}) => {
 		},
 		// Step 1: Chuẩn Bị Hàng
 		{
-			title: currentStep === 4 ? 'Đang Chuẩn Bị Đơn Hàng' : 'Đã Chuẩn Bị Đơn Hàng',
+			title: currentStep === 1 ? 'Đang Chuẩn Bị Đơn Hàng' : 'Đã Chuẩn Bị Đơn Hàng',
 			description:
-				currentStep === 4
+				currentStep === 1
 					? 'Shop đang chuẩn bị hàng cho đơn hàng.'
 					: 'Shop đã chuẩn bị hàng cho đơn hàng.',
 		},
 		// Step 2: Đang Vận Chuyển
 		{
-			title: currentStep === 5 ? 'Đang Vận Chuyển' : 'Đã Vận Chuyển',
+			title: currentStep === 2 ? 'Đang Vận Chuyển' : 'Đã Vận Chuyển',
 			description: 'Đơn hàng đang được vận chuyển.',
 		},
 		// Step 3: Giao Hàng
 		{
 			title:
-				currentStep === 6
+				currentStep === 3
 					? 'Giao hàng Thất Bại'
 					: currentStep === 7
 					? 'Đang Giao Hàng'
 					: 'Đã Nhận Hàng',
 			description:
-				currentStep === 6
+				currentStep === 3
 					? 'Giao đơn hàng thất bại.'
 					: currentStep === 7
 					? 'Đơn hàng đang được giao.'

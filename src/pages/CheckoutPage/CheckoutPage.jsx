@@ -19,11 +19,15 @@ import {
 	GetAllWardSelector,
 	CalculateLocationSelector,
 	GetAllPaymentSelector,
+	GetOrderWarrantySelector,
+	GetPromotionAbleSelector,
 } from '../../redux/selectors';
 import {handleCheckoutOrder} from '../../redux/slices/orderSlice';
 import {enums} from '../../utils/constant';
 import {convertToVietnamDate, formatPrice} from '../../utils';
 import {getAllPayment} from '../../redux/slices/paymentSlice';
+import {handleOrderCustomizeCheckout} from '../../redux/slices/customizeSlice';
+import {getAllPromo} from '../../redux/slices/promotionSlice';
 
 const {Option} = Select;
 
@@ -103,6 +107,7 @@ const CheckoutPage = () => {
 	const [form] = Form.useForm();
 	const locations = useLocation();
 	const promoId = locations.state?.promoId;
+	const idCustomize = locations.state?.id;
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const distances = useSelector(selectDistances);
@@ -114,17 +119,22 @@ const CheckoutPage = () => {
 	const cartList = useSelector(GetCartSelector);
 	const location = useSelector(CalculateLocationSelector);
 	const paymentList = useSelector(GetAllPaymentSelector);
+	const warrantyList = useSelector(GetOrderWarrantySelector);
+	const promoAble = useSelector(GetPromotionAbleSelector);
 
+	const [warrantiesJewelry, setWarrantiesJewelry] = useState('');
 	const [paymentMethod, setPaymentMethod] = useState(null);
 	const [paymentForm, setPaymentForm] = useState(null);
-	// const [selectedCity, setSelectedCity] = useState('');
 	const [shippingFee, setShippingFee] = useState(0);
+	const [promoCustomizeId, setPromoCustomizeId] = useState(null);
 	const [province, setProvince] = useState('');
 	const [district, setDistrict] = useState('');
 	const [ward, setWard] = useState('');
 	const [provinceId, setProvinceId] = useState('');
 	const [wardId, setWardId] = useState('');
+	const [promo, setPromo] = useState('');
 	const [districtId, setDistrictId] = useState('');
+	const [warrantiesJewelrySelected, setWarrantiesJewelrySelected] = useState();
 	const [payment, setPayment] = useState();
 	const [userInfo, setUserInfo] = useState({
 		firstName: userDetail.FirstName || '',
@@ -138,9 +148,13 @@ const CheckoutPage = () => {
 		note: '',
 	});
 
+	console.log('idCustomize', idCustomize);
+
 	useEffect(() => {
 		form.setFieldsValue(userInfo);
 	}, [form, userInfo]);
+
+	console.log('promo', promo);
 
 	useEffect(() => {
 		if (userDetail && userDetail.Addresses && userDetail.Addresses.length > 0) {
@@ -205,9 +219,49 @@ const CheckoutPage = () => {
 		);
 	}, [userInfo]);
 
+	useEffect(() => {
+		if (warrantyList) {
+			setWarrantiesJewelry(warrantyList?.Values?.filter((warranty) => warranty?.Type === 2));
+		}
+	}, [warrantyList]);
+
+	useEffect(() => {
+		if (promoAble) {
+			setPromo(promoAble?.Promotions);
+		}
+	}, [promoAble]);
+
+	useEffect(() => {
+		dispatch(getAllPromo());
+	}, []);
+
+	// useEffect(() => {
+	// 	const transformedData = local?.map((productId, index) => ({
+	// 		id: Math.floor(1000000 + Math.random() * 9000000).toString(),
+	// 		jewelryId: productId.JewelryId || null,
+	// 		diamondId: productId.DiamondId || null,
+	// 		jewelryModelId: productId.ModelId || null,
+	// 		sizeId: productId?.SizeId || null,
+	// 		metalId: productId?.MetalId,
+	// 		sideDiamondChoices: [],
+	// 		engravedText: productId?.engravedText || null,
+	// 		engravedFont: productId?.engravedFont || null,
+	// 		warrantyCode:
+	// 			productId?.warrantyJewelry?.warrantyCode ||
+	// 			productId?.warrantyDiamond?.warrantyCode,
+	// 		warrantyType:
+	// 			productId?.warrantyJewelry?.warrantyType ||
+	// 			productId?.warrantyDiamond?.warrantyType,
+	// 	}));
+
+	// 	dispatch(checkPromoCart({transformedData}));
+	// }, []);
+
 	const jewelryOrDiamondProducts = cartList?.Products.filter(
 		(product) => product.Jewelry || product.Diamond
 	);
+
+	console.log('warrantiesJewelrySelected', warrantiesJewelrySelected);
 
 	const mappedProducts = useMemo(() => {
 		return jewelryOrDiamondProducts.map((product) => mapAttributes(product, enums));
@@ -226,14 +280,16 @@ const CheckoutPage = () => {
 			};
 		});
 
+		const orderRequestDto = {
+			paymentType: paymentForm,
+			paymentId: paymentMethod,
+			paymentName: 'zalopay',
+			promotionId: promoId || promoCustomizeId,
+			isTransfer: true,
+		};
+
 		const createOrderInfo = {
-			orderRequestDto: {
-				paymentType: paymentForm,
-				paymentId: paymentMethod,
-				paymentName: 'zalopay',
-				promotionId: promoId || null,
-				isTransfer: true,
-			},
+			orderRequestDto,
 
 			orderItemRequestDtos,
 		};
@@ -249,16 +305,54 @@ const CheckoutPage = () => {
 			note: userInfo?.note || null,
 		};
 
-		const res = await dispatch(handleCheckoutOrder({createOrderInfo, billingDetail}));
-		console.log(res);
+		if (idCustomize) {
+			if (
+				warrantiesJewelrySelected === undefined ||
+				warrantiesJewelrySelected === '' ||
+				warrantiesJewelrySelected === null
+			) {
+				message.warning('Bạn cần phải chọn phiếu bảo hành!');
+				return;
+			}
+			const res = await dispatch(
+				handleOrderCustomizeCheckout({
+					customizeRequestId: idCustomize,
+					orderRequestDto: orderRequestDto,
+					billingDetail,
+					warrantyCode: warrantiesJewelrySelected.warrantyCode,
+					warrantyType: 2,
+				})
+			);
+			console.log(res);
 
-		if (res.payload !== undefined) {
-			message.success('Đặt hàng thành công!');
-			// window.open(res.payload?.PaymentUrl, '_blank');
-			localStorage.removeItem(`cart_${userDetail.Id}`);
-			navigate('/my-orders');
+			if (res.payload !== undefined) {
+				message.success('Đặt hàng thành công!');
+				navigate('/request-customize');
+			} else {
+				message.error('Đặt hàng không thành công. Vui lòng kiểm tra thông tin của bạn!');
+			}
 		} else {
-			message.error('Đặt hàng không thành công. Vui lòng kiểm tra thông tin của bạn!');
+			const res = await dispatch(handleCheckoutOrder({createOrderInfo, billingDetail}));
+			console.log(res);
+
+			if (res.payload !== undefined) {
+				message.success('Đặt hàng thành công!');
+				// window.open(res.payload?.PaymentUrl, '_blank');
+				localStorage.removeItem(`cart_${userDetail.Id}`);
+				navigate('/my-orders');
+			} else {
+				message.error('Đặt hàng không thành công. Vui lòng kiểm tra thông tin của bạn!');
+			}
+		}
+	};
+
+	const onChangeWarrantyJewelry = (value) => {
+		if (value !== undefined) {
+			const parseValue = JSON.parse(value);
+			console.log('parseValue', parseValue);
+			setWarrantiesJewelrySelected(parseValue);
+		} else {
+			console.warn('Giá trị "value" là undefined, không có hành động nào được thực hiện');
 		}
 	};
 
@@ -320,6 +414,11 @@ const CheckoutPage = () => {
 	};
 
 	const shippingDate = mappedProducts?.find((ship) => ship?.ShippingDate);
+
+	const handlePromoChange = (value) => {
+		console.log('value', value);
+		setPromoCustomizeId(value);
+	};
 
 	console.log('promoId', promoId);
 
@@ -611,55 +710,64 @@ const CheckoutPage = () => {
 						</div>
 					</div>
 					<div className="space-y-6">
-						{mappedProducts?.map((item, index) => (
-							<div className="flex mt-4 shadow-xl p-5 rounded-lg" key={item.Id}>
-								<div className="mr-4 flex-shrink-0">
-									<img
-										src="path-to-image"
-										alt={item?.SerialCode || item?.Title}
-										className="w-32 h-32 object-cover rounded-lg border"
-									/>
-								</div>
-								<div className="flex-1 mx-5">
-									{/* Kiểm tra và hiển thị thông tin sản phẩm */}
-									{item.JewelryId ? (
-										<div>
-											<p className="mb-1 text-gray-800 font-semibold">
-												{item.SerialCode}
-											</p>
-											<p className="text-gray-700 text-sm py-3">
-												Giá:
-												<span className="text-gray-900 font-semibold">
-													{formatPrice(item.JewelryPrice)}
-												</span>
-											</p>
-											{item.CategoryName === 'Ring' && (
-												<div className="flex items-center mt-2">
-													<label className="mr-2 text-gray-700">
-														Kích thước nhẫn:
-													</label>
-													<p>{item?.SizeId}</p>
+						{idCustomize ? (
+							<></>
+						) : (
+							<>
+								{mappedProducts?.map((item, index) => (
+									<div
+										className="flex mt-4 shadow-xl p-5 rounded-lg"
+										key={item.Id}
+									>
+										<div className="mr-4 flex-shrink-0">
+											<img
+												src="path-to-image"
+												alt={item?.SerialCode || item?.Title}
+												className="w-32 h-32 object-cover rounded-lg border"
+											/>
+										</div>
+										<div className="flex-1 mx-5">
+											{/* Kiểm tra và hiển thị thông tin sản phẩm */}
+											{item.JewelryId ? (
+												<div>
+													<p className="mb-1 text-gray-800 font-semibold">
+														{item.SerialCode}
+													</p>
+													<p className="text-gray-700 text-sm py-3">
+														Giá:
+														<span className="text-gray-900 font-semibold">
+															{formatPrice(item.JewelryPrice)}
+														</span>
+													</p>
+													{item.CategoryName === 'Ring' && (
+														<div className="flex items-center mt-2">
+															<label className="mr-2 text-gray-700">
+																Kích thước nhẫn:
+															</label>
+															<p>{item?.SizeId}</p>
+														</div>
+													)}
 												</div>
+											) : item.Carat ? (
+												<div>
+													<p className="mb-1 text-gray-800 font-semibold">
+														{item?.Title}
+													</p>
+													<p className="text-gray-700 text-sm">
+														Giá:
+														<span className="text-gray-900 font-semibold py-3">
+															{formatPrice(item.DiamondTruePrice)}
+														</span>
+													</p>
+												</div>
+											) : (
+												<p className="text-gray-800">Không có thông tin</p>
 											)}
 										</div>
-									) : item.Carat ? (
-										<div>
-											<p className="mb-1 text-gray-800 font-semibold">
-												{item?.Title}
-											</p>
-											<p className="text-gray-700 text-sm">
-												Giá:
-												<span className="text-gray-900 font-semibold py-3">
-													{formatPrice(item.DiamondTruePrice)}
-												</span>
-											</p>
-										</div>
-									) : (
-										<p className="text-gray-800">Không có thông tin</p>
-									)}
-								</div>
-							</div>
-						))}
+									</div>
+								))}
+							</>
+						)}
 
 						<div className="bg-white p-6 rounded-lg shadow-lg space-y-4">
 							{/* Total and Savings Section */}
@@ -672,6 +780,55 @@ const CheckoutPage = () => {
 									<span>Phí vận chuyển:</span>
 									<span>{formatPrice(location?.DeliveryFee?.Cost || 0)}</span>
 								</div>
+								{idCustomize && (
+									<>
+										<Select
+											allowClear
+											className="w-64 mt-2 mb-5"
+											placeholder="Chọn bảo hành trang sức"
+											onChange={onChangeWarrantyJewelry}
+										>
+											{warrantiesJewelry &&
+												warrantiesJewelry?.map((warranty, i) => (
+													<Select.Option
+														key={i}
+														value={JSON.stringify({
+															warrantyCode: warranty.Code,
+															warrantyType: warranty?.Type,
+														})}
+													>
+														{warranty.Name.replace(/_/g, ' ')}
+													</Select.Option>
+												))}
+										</Select>
+										<label
+											htmlFor="promotions"
+											className="block mb-2 text-gray-700 font-medium"
+										>
+											Khuyến mãi có sẵn
+										</label>
+
+										<Select
+											className="w-full"
+											onChange={handlePromoChange}
+											allowClear
+										>
+											{promo &&
+												promo.map((promotion) => (
+													<Select.Option
+														key={promotion.PromoId}
+														value={promotion.PromoId}
+													>
+														{promotion.PromotionDto.IsActive && (
+															<>
+																{promotion.PromotionDto.Description}
+															</>
+														)}
+													</Select.Option>
+												))}
+										</Select>
+									</>
+								)}
 
 								<div className="flex  text-sm text-gray-600">
 									<span className="mr-2">📅 Thời gian giao hàng</span>

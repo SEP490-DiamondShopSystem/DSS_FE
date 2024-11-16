@@ -1,74 +1,14 @@
 import React, {useEffect, useState} from 'react';
 
-import {Button, message, Steps} from 'antd';
-import debounce from 'lodash/debounce';
+import {Button, Input, message, Steps} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
 import Loading from '../../../../components/Loading';
-import {
-	GetAllDiamondSelector,
-	GetAllJewelryMetalSelector,
-	LoadingDiamondSelector,
-} from '../../../../redux/selectors';
+import {GetAllJewelryMetalSelector} from '../../../../redux/selectors';
 import {handleSendRequest} from '../../../../redux/slices/customizeSlice';
-import {getAllDiamond} from '../../../../redux/slices/diamondSlice';
 import {getAllJewelryMetal} from '../../../../redux/slices/jewelrySlice';
-import {enums} from '../../../../utils/constant';
 import {Diamond} from './Choose/Diamond';
 import {Shape} from './Choose/Shape';
 import {Specs} from './Choose/Specs';
-
-const mapAttributes = (data, attributes) => {
-	return {
-		Id: data.Id,
-		Carat: data.Carat,
-		Clarity: attributes.Clarity
-			? Object.keys(attributes.Clarity).find(
-					(key) => attributes.Clarity[key] === data.Clarity
-			  )
-			: '',
-		Color: attributes.Color
-			? Object.keys(attributes.Color).find((key) => attributes.Color[key] === data.Color)
-			: '',
-		Culet: attributes.Culet
-			? Object.keys(attributes.Culet)
-					.find((key) => attributes.Culet[key] === data.Culet)
-					.replace('_', ' ')
-			: '',
-		Cut: attributes.Cut
-			? Object.keys(attributes.Cut)
-					.find((key) => attributes.Cut[key] === data.Cut)
-					.replace('_', ' ')
-			: '',
-		Fluorescence: attributes.Fluorescence
-			? Object.keys(attributes.Fluorescence).find(
-					(key) => attributes.Fluorescence[key] === data.Fluorescence
-			  )
-			: '',
-		Girdle: attributes.Girdle
-			? Object.keys(attributes.Girdle)
-					.find((key) => attributes.Girdle[key] === data.Girdle)
-					.replace('_', ' ')
-			: '',
-		Polish: attributes.Polish
-			? Object.keys(attributes.Polish)
-					.find((key) => attributes.Polish[key] === data.Polish)
-					.replace('_', ' ')
-			: '',
-		Symmetry: attributes.Symmetry
-			? Object.keys(attributes.Symmetry)
-					.find((key) => attributes.Symmetry[key] === data.Symmetry)
-					.replace('_', ' ')
-			: '',
-		Depth: data.Depth,
-		Table: data.Table,
-		Title: data.Title,
-		Measurement: data.Measurement,
-		DiamondShape: data?.DiamondShape?.ShapeName,
-		DiscountPrice: data?.DiscountPrice,
-		TruePrice: data?.TruePrice,
-		IsLabDiamond: data.IsLabDiamond,
-	};
-};
 
 export const ChoiceMetalDiamond = ({
 	setCustomizeDiamond,
@@ -91,6 +31,7 @@ export const ChoiceMetalDiamond = ({
 	const [stepChooseDiamond, setStepChooseDiamond] = useState(0);
 	const [steps, setStep] = useState(0);
 	const [advanced, setAdvanced] = useState(false);
+	const [note, setNote] = useState('');
 
 	const items = [
 		{
@@ -110,11 +51,34 @@ export const ChoiceMetalDiamond = ({
 	const currentDiamond = jewelry?.MainDiamonds[stepChooseDiamond];
 	const currentJewelry = filteredGroups[stepChooseDiamond];
 
-	console.log('currentJewelry', currentJewelry);
-
 	useEffect(() => {
 		dispatch(getAllJewelryMetal());
 	}, []);
+
+	useEffect(() => {
+		const findSelectedDiamond = selectedDiamonds?.find(
+			(diamond) => diamond?.currentDiamondId === currentDiamond?.Id
+		);
+		setCustomizeDiamond({
+			caratFrom: findSelectedDiamond?.caratFrom,
+			caratTo: findSelectedDiamond?.caratTo,
+			shape: findSelectedDiamond?.shape,
+			colorFrom: findSelectedDiamond?.colorFrom,
+			colorTo: findSelectedDiamond?.colorTo,
+			cutFrom: findSelectedDiamond?.cutFrom,
+			cutTo: findSelectedDiamond?.cutTo,
+			clarityFrom: findSelectedDiamond?.clarityFrom,
+			clarityTo: findSelectedDiamond?.clarityTo,
+			polish: findSelectedDiamond?.polish,
+			symmetry: findSelectedDiamond?.symmetry,
+			girdle: findSelectedDiamond?.girdle,
+			culet: findSelectedDiamond?.culet,
+			isLabGrown: findSelectedDiamond?.isLabGrown,
+		});
+	}, [selectedDiamonds, currentDiamond]);
+
+	console.log('jewelry', jewelry);
+	console.log('metals', metals);
 
 	const itemsDiamond =
 		jewelry?.MainDiamonds?.map((diamond, index) => ({
@@ -148,14 +112,19 @@ export const ChoiceMetalDiamond = ({
 		setStepChooseDiamond(value);
 	};
 
-	const filterShape = metals?.find((metal) => metal.Name === selectedMetal);
+	const handleNoteChange = (e) => {
+		setNote(e.target.value);
+	};
 
 	const handleSendReqCustomize = () => {
 		const customizeDiamondRequests = selectedDiamonds?.map((diamond) => ({
 			diamondShapeId: diamond?.shape,
-			clarity: diamond?.clarity,
-			color: diamond?.color,
-			cut: diamond?.cut,
+			colorFrom: diamond?.colorFrom,
+			colorTo: diamond?.colorTo,
+			cutFrom: diamond?.cutFrom,
+			cutTo: diamond?.cutTo,
+			clarityFrom: diamond?.clarityFrom,
+			clarityTo: diamond?.clarityTo,
 			caratFrom: diamond?.caratFrom,
 			caratTo: diamond?.caratTo,
 			isLabGrown: diamond?.isLabGrown,
@@ -168,14 +137,12 @@ export const ChoiceMetalDiamond = ({
 		dispatch(
 			handleSendRequest({
 				jewelryModelId: id,
-				metalId: filterShape?.Id,
+				metalId: selectedMetal?.Id,
 				sizeId: size,
-				sideDiamondOptId: selectedSideDiamond?.Id,
-				// engravedText: null,
-				// engravedFont: null,
+				sideDiamondOptId: selectedSideDiamond,
 				engravedText: textValue,
 				engravedFont: fontFamily,
-				note: null,
+				note: note,
 				customizeDiamondRequests,
 			})
 		).then((res) => {
@@ -255,6 +222,10 @@ export const ChoiceMetalDiamond = ({
 						<div className="text-center">
 							Chọn kim cương thành công. Vui lòng kiểm tra lại lựa chọn của bạn để
 							hoàn tất!
+						</div>
+						<div className="mx-32 my-5">
+							<p>Ghi Chú</p>
+							<Input.TextArea onChange={handleNoteChange} />
 						</div>
 						<div className="flex items-center justify-between mt-10">
 							<div className="flex items-center ">

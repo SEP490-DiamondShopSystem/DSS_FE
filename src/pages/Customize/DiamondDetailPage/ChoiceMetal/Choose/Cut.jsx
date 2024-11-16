@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
 
-import {Button, Image, Popover, Radio, Segmented} from 'antd';
+import {Button, Image, Popover, Radio, Segmented, Slider} from 'antd';
 import cutChart from '../../../../../assets/diamond-chart-cut.png';
 import {InfoCircleFilled} from '@ant-design/icons';
 import {cutExcellent, cutGood, cutVeryGood} from '../../../../../utils/image';
+import {marksCut} from '../../../../../utils/constant';
 
 export const Cut = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 	const [cutSelected, setCutSelected] = useState('Good');
@@ -33,9 +34,13 @@ export const Cut = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 		}));
 	};
 
-	// const handleNextStep = () => {
-	// 	setStep(2);
-	// };
+	const handleCutChange = (value) => {
+		setCustomizeDiamond((prev) => ({
+			...prev,
+			cutFrom: value[0],
+			cutTo: value[1],
+		}));
+	};
 
 	const text = <span>Chế Tác Kim Cương</span>;
 
@@ -97,19 +102,15 @@ export const Cut = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 					</Popover>
 				</label>
 			</div>
-			<div className="grid grid-cols-3 gap-x-8 gap-y-6">
-				{cutItems?.map((item) => (
-					<div key={item.id} className="flex justify-center">
-						<Radio.Group onChange={onChange} value={customizeDiamond.cut}>
-							<Radio value={item.value}>
-								<div className="text-center flex flex-col items-center">
-									<p className="font-semibold text-xl">{item.cut}</p>
-									{/* <p className="font-semibold">{item.price}</p> */}
-								</div>
-							</Radio>
-						</Radio.Group>
-					</div>
-				))}
+			<div className="mx-40 my-10">
+				<Slider
+					range
+					marks={marksCut}
+					min={1}
+					max={3}
+					value={[customizeDiamond?.cutFrom || 1, customizeDiamond?.cutTo || 3]}
+					onChange={handleCutChange}
+				/>
 			</div>
 		</div>
 	);

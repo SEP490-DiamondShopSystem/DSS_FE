@@ -208,15 +208,15 @@ export const enums = {
 		Removed: 2,
 	},
 	OrderStatus: {
-		Pending: 0,
-		Processing: 1,
-		Rejected: 2,
-		Cancelled: 3,
-		Prepared: 4,
-		Delivering: 5,
-		Delivery_Failed: 6,
-		Success: 7,
-		Refused: 8,
+		Pending: 1,
+		Processing: 2,
+		Rejected: 3,
+		Cancelled: 4,
+		Prepared: 5,
+		Delivering: 6,
+		Delivery_Failed: 7,
+		Success: 8,
+		Refused: 9,
 	},
 	PaymentStatus: {
 		PaidAll: 1,
@@ -338,16 +338,30 @@ export const enums = {
 		Car: 1,
 		Plane: 2,
 	},
-	CustomizeDiamondRequestStatus: {
-		Accepted: 1,
-		Rejected: 2,
-		Invalid: 3,
-		Finish: 4,
+	CustomizeRequestStatus: {
+		Pending: 1,
+		Priced: 2,
+		Requesting: 3,
+		Accepted: 4,
+		Shop_Rejected: 5,
+		Customer_Rejected: 6,
 	},
 	AccountRoleType: {
 		Customer: 0,
 		Staff: 1,
 		None: -1,
+	},
+	Shapes: {
+		Round: 1,
+		Cushion: 3,
+		Emerald: 4,
+		Oval: 5,
+		Radiant: 6,
+		Asscher: 7,
+		Marquise: 8,
+		Heart: 9,
+		Princess: 2,
+		Pear: 10,
 	},
 };
 
@@ -457,8 +471,7 @@ export const Culet = {
 export const Cut = {
 	Good: 1,
 	Very_Good: 2,
-	Ideal: 3,
-	Astor_Ideal: 4,
+	Excellent: 3,
 };
 
 export const Fluorescence = {
@@ -498,12 +511,12 @@ export const Symmetry = {
 export const ShapeName = {
 	Round: '1',
 	Princess: '2',
-	Emerald: '3',
-	Asscher: '4',
-	Marquise: '5',
-	Oval: '6',
-	Radiant: '7',
-	Pear: '8',
+	Emerald: '4',
+	Asscher: '7',
+	Marquise: '8',
+	Oval: '5',
+	Radiant: '6',
+	Pear: '10',
 	Heart: '9',
-	Cushion: '10',
+	Cushion: '3',
 };

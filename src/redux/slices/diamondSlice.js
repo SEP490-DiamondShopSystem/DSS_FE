@@ -17,6 +17,7 @@ export const getAllDiamond = createAsyncThunk(
 				clarityTo,
 				caratFrom,
 				caratTo,
+				isLab,
 			} = params;
 			let url = '/Diamond/Page';
 			const queryParams = new URLSearchParams();
@@ -32,6 +33,7 @@ export const getAllDiamond = createAsyncThunk(
 			if (clarityTo) queryParams.append('diamond_4C.clarityTo', clarityTo);
 			if (caratFrom) queryParams.append('diamond_4C.caratFrom', caratFrom);
 			if (caratTo) queryParams.append('diamond_4C.caratTo', caratTo);
+			if (isLab !== null || isLab !== undefined) queryParams.append('isLab', isLab);
 
 			if (queryParams.toString()) {
 				url += `?${queryParams.toString()}`;

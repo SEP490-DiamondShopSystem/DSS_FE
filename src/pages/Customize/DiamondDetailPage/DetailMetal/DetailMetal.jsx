@@ -34,18 +34,28 @@ export const DetailMetalDiamond = ({
 			return str.replace(/_/g, ' '); // Thay thế tất cả dấu gạch dưới bằng dấu cách
 		};
 
+		console.log('diamond', diamond);
+
 		return {
 			...diamond,
-			clarity: convertToSpace(findKeyByValue(Clarity, diamond.clarity) || diamond.clarity),
-			color: convertToSpace(findKeyByValue(Color, diamond.color) || diamond.color),
-			culet: convertToSpace(findKeyByValue(Culet, diamond.culet) || diamond.culet),
-			cut: convertToSpace(findKeyByValue(Cut, diamond.cut) || diamond.cut),
+			clarityFrom: convertToSpace(
+				findKeyByValue(Clarity, diamond.clarityFrom) || diamond.clarity
+			),
+			clarityTo: convertToSpace(
+				findKeyByValue(Clarity, diamond.clarityTo) || diamond.clarity
+			),
+			colorFrom: convertToSpace(findKeyByValue(Color, diamond.colorFrom)),
+			colorTo: convertToSpace(findKeyByValue(Color, diamond.colorTo)),
+			culet: convertToSpace(findKeyByValue(Culet, diamond.culet)),
+			cutFrom: convertToSpace(findKeyByValue(Cut, diamond.cutFrom)),
+			cutTo: convertToSpace(findKeyByValue(Cut, diamond.cutTo)),
 			girdle: convertToSpace(findKeyByValue(Girdle, diamond.girdle) || diamond.girdle),
 			polish: convertToSpace(findKeyByValue(Polish, diamond.polish) || diamond.polish),
 			symmetry: convertToSpace(
 				findKeyByValue(Symmetry, diamond.symmetry) || diamond.symmetry
 			),
-			shape: convertToSpace(findKeyByValue(ShapeName, diamond.shape) || diamond.shape), // thêm dòng này
+			shape: convertToSpace(findKeyByValue(ShapeName, diamond.shape) || diamond.shape),
+			isLabGrown: diamond.isLabGrown,
 		};
 	};
 
@@ -53,6 +63,7 @@ export const DetailMetalDiamond = ({
 	const convertedDiamonds = selectedDiamonds.map(convertFields);
 
 	console.log('convertedDiamonds', convertedDiamonds);
+
 	return (
 		<div className="my-10 w-full">
 			<div>
@@ -75,7 +86,7 @@ export const DetailMetalDiamond = ({
 			<Divider />
 			<div className="flex items-center justify-between pr-5">
 				<p className="font-semibold text-primary">Vật liệu đã chọn:</p>
-				<p>{selectedMetal}</p>
+				<p>{selectedMetal && selectedMetal?.Name}</p>
 			</div>
 			<Divider />
 			{/* <div className="flex items-center justify-between">
@@ -83,93 +94,93 @@ export const DetailMetalDiamond = ({
 				<p>{customizeJewelry.shape}</p>
 			</div>
 			<Divider /> */}
-			<div className="flex items-center justify-between">
-				<p className="font-semibold text-primary">Hình:</p>
-				<p className="h-16 w-16">
-					<Image src={imageData} alt={imageData} />
-				</p>
-			</div>
-			<Divider />
+			{imageData && (
+				<>
+					<div className="flex items-center justify-between">
+						<p className="font-semibold text-primary">Hình:</p>
+						<p className="h-16 w-16">
+							<Image src={imageData} alt={imageData} />
+						</p>
+					</div>
+					<Divider />
+				</>
+			)}
+
 			<div>
 				<h1 className="text-center text-2xl font-semibold mb-5">Thông số kim cương</h1>
 			</div>
 			{convertedDiamonds.length > 0
 				? convertedDiamonds.map((diamond, i) => (
 						<div key={diamond?.Id} className="flex flex-col items-start my-4">
-							<p className="font-semibold text-primary">Kim Cương {i + 1}:</p>
+							<p className="font-semibold mt-10 text-lg text-primary">
+								Kim Cương {i + 1}:
+							</p>
+							<Divider />
 							<div className="flex items-center justify-between my-2 pr-5">
-								<p className="font-semibold ">Carat From:</p>
-								<p>{diamond?.caratFrom}</p>
+								<p className="font-semibold ">Ly (Carat):</p>
+								<p>
+									{diamond?.caratFrom} - {diamond?.caratTo}
+								</p>
 							</div>
+							<Divider />
 							<div className="flex items-center justify-between my-2 pr-5">
-								<p className="font-semibold">Carat To:</p>
-								<p>{diamond?.caratTo}</p>
+								<p className="font-semibold">Độ Trong (Clarity):</p>
+								<p>
+									{diamond?.clarityFrom} - {diamond?.clarityTo}
+								</p>
 							</div>
+							<Divider />
 							<div className="flex items-center justify-between my-2 pr-5">
-								<p className="font-semibold">Clarity:</p>
-								<p>{diamond?.clarity}</p>
+								<p className="font-semibold">Màu Sắc (Color):</p>
+								<p>
+									{diamond?.colorFrom} - {diamond?.colorTo}
+								</p>
 							</div>
+							<Divider />
 							<div className="flex items-center justify-between my-2 pr-5">
-								<p className="font-semibold">Color:</p>
-								<p>{diamond?.color}</p>
+								<p className="font-semibold">Chế Tác (Cut):</p>
+								<p>
+									{diamond?.cutFrom} - {diamond?.cutTo}
+								</p>
 							</div>
+							<Divider />
 							<div className="flex items-center justify-between my-2 pr-5">
-								<p className="font-semibold">Cut:</p>
-								<p>{diamond?.cut}</p>
-							</div>
-							<div className="flex items-center justify-between my-2 pr-5">
-								<p className="font-semibold">Shape:</p>
+								<p className="font-semibold">Hình Dạng:</p>
 								<p>{diamond?.shape}</p>
 							</div>
+							<Divider />
 							<div className="flex items-center justify-between my-2 pr-5">
-								<p className="font-semibold">Polish:</p>
+								<p className="font-semibold">Độ Bóng (Polish):</p>
 								<p>{diamond?.polish || 'Không'}</p>
 							</div>
+							<Divider />
 							<div className="flex items-center justify-between my-2 pr-5">
-								<p className="font-semibold">Girdle:</p>
+								<p className="font-semibold">Viền Cạnh (Girdle):</p>
 								<p>{diamond?.girdle || 'Không'}</p>
 							</div>
+							<Divider />
 							<div className="flex items-center justify-between my-2 pr-5">
-								<p className="font-semibold">Culet:</p>
+								<p className="font-semibold">Chóp Đáy (Culet):</p>
 								<p>{diamond?.culet || 'Không'}</p>
 							</div>
+							<Divider />
 							<div className="flex items-center justify-between my-2 pr-5">
-								<p className="font-semibold">Symmetry:</p>
+								<p className="font-semibold">Đối Xứng (Symmetry):</p>
 								<p>{diamond?.symmetry || 'Không'}</p>
+							</div>
+							<Divider />
+							<div className="flex items-center justify-between my-2 pr-5">
+								<p className="font-semibold">Nguồn Gốc:</p>
+								<p>{diamond?.isLabGrown === true ? 'Nhân Tạo' : 'Tự Nhiên'}</p>
 							</div>
 						</div>
 				  ))
 				: jewelry?.MainDiamonds?.map((diamond, i) => (
 						<div key={diamond?.Id} className="flex flex-col items-start my-4">
 							<p className="font-semibold text-primary">Kim Cương {i + 1}:</p>
+							<Divider />
 						</div>
 				  ))}
-
-			{/* <Divider /> */}
-			{/* <div className="flex items-center justify-between">
-				<p className="font-semibold text-primary">Cut:</p>
-				<p>{customizeDiamond.cut}</p>
-			</div>
-			<Divider /> */}
-			{/* <div className="flex items-center justify-between">
-				<p className="font-semibold text-primary">Color:</p>
-				<p>{customizeDiamond.color}</p>
-			</div>
-			<Divider />
-			<div className="flex items-center justify-between">
-				<p className="font-semibold text-primary">Clarity:</p>
-				<p>{customizeDiamond.clarity}</p>
-			</div>
-			<Divider /> */}
-			{/* <div className="flex items-center justify-between">
-				<p className="font-semibold">Tổng cộng:</p>
-				<p className="font-semibold">$2,040</p>
-			</div> */}
-			{/* <Divider /> */}
-			{/* <div className="flex items-center justify-between">
-				<p className="font-semibold">Ngày vận chuyển dự kiến:</p>
-				<p style={{color: '#c0c0c0'}}>7 ngày 2 giờ sau khi thanh toán thành công</p>
-			</div> */}
 		</div>
 	);
 };

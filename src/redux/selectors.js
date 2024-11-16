@@ -50,6 +50,9 @@ export const GetLoadingCustomizeSelector = (state) => state.customizeSlice.loadi
 export const GetAllJewelryModelCustomizeSelector = (state) => state.customizeSlice.jewelriesModel;
 export const GetAllJewelryModelDetailCustomizeSelector = (state) =>
 	state.customizeSlice.jewelryDetail;
+export const GetAllRequestCustomizeSelector = (state) => state.customizeSlice.requestByUser;
+export const GetRequestCustomizeDetailSelector = (state) =>
+	state.customizeSlice.requestByUserDetail;
 
 //WARRANTY
 export const LoadingWarrantySelector = (state) => state.warrantySlice.loading;

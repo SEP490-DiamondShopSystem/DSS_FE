@@ -40,6 +40,7 @@ export const handleCheckoutOrder = createAsyncThunk(
 		}
 	}
 );
+
 export const handleOrderCancel = createAsyncThunk(
 	'orderSlice/handleOrderCancel',
 	async ({orderId, reason}, {rejectWithValue}) => {
