@@ -1,26 +1,38 @@
-import React, {useEffect, useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
-import {Button, DatePicker, message, Modal, Space, Table, Tag, Tooltip, Typography} from 'antd';
-import {GetAllRequestCustomizeSelector} from '../../redux/selectors';
-import {
-	getAllRequestUser,
-	handleOrderCustomizeCheckout,
-	handleOrderCustomizeProceed,
-} from '../../redux/slices/customizeSlice';
-import {enums} from '../../utils/constant';
 import {
 	CalendarOutlined,
-	CheckCircleFilled,
+	CheckCircleOutlined,
+	ClockCircleFilled,
+	CloseCircleFilled,
+	CloseCircleOutlined,
 	DeliveredProcedureOutlined,
 	EyeOutlined,
-	TransactionOutlined,
+	HourglassOutlined,
+	OrderedListOutlined,
 } from '@ant-design/icons';
+import {Button, DatePicker, Space, Table, Tag, Tooltip, Typography} from 'antd';
+import React, {useEffect, useState} from 'react';
+import {Helmet} from 'react-helmet';
+import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
-import {OrderDetailModal} from './OrderDetailModal';
+import NavbarProfile from '../../components/NavbarProfile';
+import {GetAllRequestCustomizeSelector} from '../../redux/selectors';
+import {getAllRequestUser} from '../../redux/slices/customizeSlice';
 import {convertToVietnamDate} from '../../utils';
+import {enums} from '../../utils/constant';
+import {OrderDetailModal} from './OrderDetailModal';
 
 const {Text} = Typography;
 const {RangePicker} = DatePicker;
+
+const orderStatus = [
+	{icon: <OrderedListOutlined />, name: 'Tổng đơn thiết kế', status: '', order: 1},
+	{icon: <HourglassOutlined />, name: 'Đơn chờ xử lí', status: '1', order: 2},
+	{icon: <HourglassOutlined />, name: 'Đã có giá', status: '2', order: 2},
+	// {icon: <CheckCircleOutlined />, name: 'Đã đồng ý', status: '3', order: 3},
+	{icon: <DeliveredProcedureOutlined />, name: 'Tạo Đơn Đặt Hàng', status: '4', order: 4},
+	// {icon: <CloseCircleFilled />, name: 'Shop Từ Chối', status: '5', order: 5},
+	// {icon: <CloseCircleOutlined />, name: 'Hủy Đơn', status: '6', order: 6},
+];
 
 const RequestCustomize = () => {
 	const dispatch = useDispatch();
@@ -32,62 +44,27 @@ const RequestCustomize = () => {
 	const [openDetail, setOpenDetail] = useState(false);
 	const [startDate, setStartDate] = useState(null);
 	const [endDate, setEndDate] = useState(null);
-	const [pagination, setPagination] = useState({
-		current: 1,
-		pageSize: 10,
-	});
+	const [status, setStatus] = useState('');
+	const [currentPage, setCurrentPage] = useState(0);
+	const [pageSize, setPageSize] = useState(10);
 
 	useEffect(() => {
 		dispatch(
 			getAllRequestUser({
-				CurrentPage: pagination.current,
-				PageSize: pagination.pageSize,
+				CurrentPage: currentPage,
+				PageSize: pageSize,
 				CreatedDate: startDate,
 				ExpiredDate: endDate,
+				Status: status,
 			})
 		);
-	}, [startDate, endDate, pagination]);
+	}, [startDate, endDate, currentPage, pageSize, status]);
 
 	useEffect(() => {
 		if (requestList) {
 			setDataSource(requestList?.Values || []);
 		}
 	}, [requestList]);
-
-	const handleDateChange = (dates, dateStrings) => {
-		setStartDate(dates[0]);
-		setEndDate(dates[1]);
-	};
-
-	const toggleDetailModal = (order) => {
-		setSelectedOrder(order);
-		setOpenDetail(!openDetail);
-	};
-
-	const handleProceedConfirmation = (id) => {
-		Modal.confirm({
-			title: 'Xác nhận đơn thiết kế này',
-			content: 'Bạn có chắc chắn muốn tiếp tục?',
-			okText: 'Xác nhận',
-			cancelText: 'Hủy',
-			onOk: () => handleProceed(id),
-		});
-	};
-
-	const handleCheckout = (id) => {
-		navigate(`/checkout`, {state: {id}});
-	};
-
-	const handleProceed = (id) => {
-		dispatch(handleOrderCustomizeProceed(id)).then((res) => {
-			console.log('res', res);
-			if (res.payload) {
-				message.success(`Bạn đã xác nhận đơn thiết kế ${id}!`);
-			} else {
-				message.error('Có lỗi khi xác nhận');
-			}
-		});
-	};
 
 	const reverseEnum = (enumObj) => {
 		return Object.fromEntries(
@@ -113,6 +90,21 @@ const RequestCustomize = () => {
 		4: 'green', // Accepted
 		5: 'red', // Shop_Rejected
 		6: 'volcano', // Customer_Rejected
+	};
+
+	const handleDateChange = (dates, dateStrings) => {
+		setStartDate(dates[0]);
+		setEndDate(dates[1]);
+	};
+
+	const toggleDetailModal = (order) => {
+		setSelectedOrder(order);
+		setOpenDetail(!openDetail);
+	};
+
+	const handleStatusClick = (newStatus) => {
+		setStatus(newStatus);
+		// setCurrentPage(1);
 	};
 
 	const mainColumns = [
@@ -149,21 +141,6 @@ const RequestCustomize = () => {
 			key: 'actions',
 			render: (record) => (
 				<Space className="">
-					{record?.Status === 2 && (
-						<Button onClick={() => handleProceedConfirmation(record.Id)}>
-							<CheckCircleFilled />
-						</Button>
-					)}
-					{record?.Status === 4 && (
-						<Tooltip title={'Tạo Đơn Đặt Hàng'}>
-							<Button
-								className="bg-primary"
-								onClick={() => handleCheckout(record.Id)}
-							>
-								<DeliveredProcedureOutlined />
-							</Button>
-						</Tooltip>
-					)}
 					<Tooltip title={'Xem Chi Tiết'}>
 						<Button onClick={() => toggleDetailModal(record)}>
 							<EyeOutlined />
@@ -174,36 +151,61 @@ const RequestCustomize = () => {
 		},
 	];
 
-	console.log('dataSource', dataSource);
-
 	return (
-		<div className="mx-40 my-20 flex flex-col">
-			<span className="text-2xl font-semibold ">Danh Sách Đơn Thiết Kế Đã Gửi</span>
-			<div>
-				<span className="mr-2">Tìm theo ngày:</span>
-				<RangePicker
-					format="DD/MM/YYYY"
-					suffixIcon={<CalendarOutlined />}
-					style={{width: '30%'}}
-					className="my-5"
-					onChange={handleDateChange}
-				/>
+		<>
+			<Helmet>
+				<title>Danh Sách Đơn Thiết Kế</title>
+			</Helmet>
+			<div className="my-20 min-h-96 flex">
+				<div className="mr-20">
+					<NavbarProfile />
+				</div>
+
+				<div className="font-semibold w-full px-20 py-10 bg-white rounded-lg shadow-lg">
+					<span className="text-2xl font-semibold ">Danh Sách Đơn Thiết Kế Đã Gửi</span>
+					<div className="flex items-center font-medium justify-between mt-10">
+						{orderStatus.map((statusItem) => (
+							<div
+								key={statusItem.status}
+								className={`flex items-center justify-around shadow-xl py-3 px-12 ${
+									status === statusItem.status ? 'bg-primary' : 'bg-white'
+								} rounded-lg cursor-pointer border ${
+									status === statusItem.status ? 'border-black' : 'border-white'
+								} hover:border-black`}
+								onClick={() => handleStatusClick(statusItem.status)}
+							>
+								<div className="p-3 w-20">{statusItem.icon}</div>
+								<div className="ml-5">{statusItem.name}</div>
+							</div>
+						))}
+					</div>
+					<div>
+						<span className="mr-2">Tìm theo ngày:</span>
+						<RangePicker
+							format="DD/MM/YYYY"
+							suffixIcon={<CalendarOutlined />}
+							style={{width: '30%'}}
+							className="my-5"
+							onChange={handleDateChange}
+						/>
+					</div>
+					<Table
+						columns={mainColumns}
+						dataSource={dataSource}
+						pagination={{
+							current: currentPage,
+							pageSize: currentPage,
+							total: requestList?.TotalPage,
+						}}
+					/>
+					<OrderDetailModal
+						toggleDetailModal={toggleDetailModal}
+						openDetail={openDetail}
+						selectedOrder={selectedOrder}
+					/>
+				</div>
 			</div>
-			<Table
-				columns={mainColumns}
-				dataSource={dataSource}
-				pagination={{
-					current: pagination.current,
-					pageSize: pagination.pageSize,
-					total: requestList?.TotalPage,
-				}}
-			/>
-			<OrderDetailModal
-				toggleDetailModal={toggleDetailModal}
-				openDetail={openDetail}
-				selectedOrder={selectedOrder}
-			/>
-		</div>
+		</>
 	);
 };
 

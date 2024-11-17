@@ -54,6 +54,7 @@ const ActionLinks = () => {
 								{name: 'Hồ sơ', link: '/profile'},
 								{name: 'Thông tin', link: '/my-info'},
 								{name: 'Đơn hàng của tôi', link: '/my-orders'},
+								{name: 'Đơn thiết kế', link: '/request-customize'},
 								{name: 'Đăng xuất', action: showLogoutModal},
 						  ]
 						: [

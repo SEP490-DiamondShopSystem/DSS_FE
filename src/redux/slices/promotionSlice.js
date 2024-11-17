@@ -16,11 +16,11 @@ export const getAllPromo = createAsyncThunk(
 
 export const checkPromoCart = createAsyncThunk(
 	'promotionSlice/checkPromoCart',
-	async ({promotionId, transformedData}, {rejectWithValue}) => {
+	async ({promotionId, items}, {rejectWithValue}) => {
 		try {
 			const response = await api.post(`/Promotion/GetApplicable`, {
 				promotionId,
-				items: transformedData,
+				items,
 			});
 			return response;
 		} catch (error) {

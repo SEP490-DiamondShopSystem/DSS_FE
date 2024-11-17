@@ -74,7 +74,7 @@ export const getAllRequestUser = createAsyncThunk(
 	'customizeSlice/getAllRequestUser',
 	async (params, {rejectWithValue}) => {
 		try {
-			const {CurrentPage, PageSize, CreatedDate, ExpiredDate} = params;
+			const {CurrentPage, PageSize, CreatedDate, ExpiredDate, Status} = params;
 			let url = '/CustomizeRequest/Customer/All';
 			const queryParams = new URLSearchParams();
 
@@ -82,6 +82,7 @@ export const getAllRequestUser = createAsyncThunk(
 			if (PageSize) queryParams.append('PageSize', PageSize);
 			if (CreatedDate) queryParams.append('CreatedDate', CreatedDate);
 			if (ExpiredDate) queryParams.append('ExpiredDate', ExpiredDate);
+			if (Status) queryParams.append('Status', Status);
 
 			if (queryParams.toString()) {
 				url += `?${queryParams.toString()}`;
@@ -103,21 +104,6 @@ export const getRequestCustomizeDetail = createAsyncThunk(
 	async (id, {rejectWithValue}) => {
 		try {
 			const response = await api.get(`/CustomizeRequest/Customer/Detail?requestId=${id}`);
-			console.log(response);
-
-			return response;
-		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.response.data));
-			return rejectWithValue(error.response.data);
-		}
-	}
-);
-
-export const handleOrderCustomizeCancel = createAsyncThunk(
-	'orderSlice/handleOrderCustomizeCancel',
-	async (id, {rejectWithValue}) => {
-		try {
-			const response = await api.put(`/CustomizeRequest/Reject?CustomizeRequestId=${id}`);
 			console.log(response);
 
 			return response;
@@ -241,22 +227,12 @@ export const customizeSlice = createSlice({
 				state.loading = false;
 				state.error = action.payload;
 			})
-			.addCase(handleOrderCustomizeCancel.pending, (state) => {
-				state.loading = true;
-			})
-			.addCase(handleOrderCustomizeCancel.fulfilled, (state, action) => {
-				state.loading = false;
-				state.requestByUserDetail = action.payload;
-			})
-			.addCase(handleOrderCustomizeCancel.rejected, (state, action) => {
-				state.loading = false;
-				state.error = action.payload;
-			})
 			.addCase(handleOrderCustomizeProceed.pending, (state) => {
 				state.loading = true;
 			})
 			.addCase(handleOrderCustomizeProceed.fulfilled, (state, action) => {
 				state.loading = false;
+				state.requestByUserDetail = action.payload;
 			})
 			.addCase(handleOrderCustomizeProceed.rejected, (state, action) => {
 				state.loading = false;
@@ -277,6 +253,7 @@ export const customizeSlice = createSlice({
 			})
 			.addCase(handleOrderCustomizeReject.fulfilled, (state, action) => {
 				state.loading = false;
+				state.requestByUserDetail = action.payload;
 			})
 			.addCase(handleOrderCustomizeReject.rejected, (state, action) => {
 				state.loading = false;

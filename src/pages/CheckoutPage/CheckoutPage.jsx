@@ -1,33 +1,33 @@
-import React, {useState, useEffect, useMemo} from 'react';
-import {FaRegAddressBook, FaRegEnvelope, FaPhoneAlt} from 'react-icons/fa';
-import {Form, Input, Button, Radio, message, Select} from 'antd';
-import {useLocation, useNavigate} from 'react-router-dom';
+import {Form, Input, message, Radio, Select} from 'antd';
+import React, {useEffect, useMemo, useState} from 'react';
+import {FaPhoneAlt, FaRegAddressBook, FaRegEnvelope} from 'react-icons/fa';
 import {useDispatch, useSelector} from 'react-redux';
+import {useLocation, useNavigate} from 'react-router-dom';
+import {
+	CalculateLocationSelector,
+	GetAllDistrictSelector,
+	GetAllPaymentSelector,
+	GetAllWardSelector,
+	GetCartSelector,
+	GetOrderWarrantySelector,
+	GetPromotionAbleSelector,
+	GetUserDetailSelector,
+	selectDistances,
+	selectError,
+	selectLoading,
+} from '../../redux/selectors';
+import {handleOrderCustomizeCheckout} from '../../redux/slices/customizeSlice';
 import {
 	fetchDistances,
 	fetchDistrict,
 	fetchWard,
 	handleCalculateLocation,
 } from '../../redux/slices/distanceSlice';
-import {
-	selectDistances,
-	selectLoading,
-	selectError,
-	GetUserDetailSelector,
-	GetCartSelector,
-	GetAllDistrictSelector,
-	GetAllWardSelector,
-	CalculateLocationSelector,
-	GetAllPaymentSelector,
-	GetOrderWarrantySelector,
-	GetPromotionAbleSelector,
-} from '../../redux/selectors';
 import {handleCheckoutOrder} from '../../redux/slices/orderSlice';
-import {enums} from '../../utils/constant';
-import {convertToVietnamDate, formatPrice} from '../../utils';
 import {getAllPayment} from '../../redux/slices/paymentSlice';
-import {handleOrderCustomizeCheckout} from '../../redux/slices/customizeSlice';
-import {getAllPromo} from '../../redux/slices/promotionSlice';
+import {checkPromoCart, getAllPromo} from '../../redux/slices/promotionSlice';
+import {convertToVietnamDate, formatPrice} from '../../utils';
+import {enums} from '../../utils/constant';
 
 const {Option} = Select;
 
@@ -107,7 +107,7 @@ const CheckoutPage = () => {
 	const [form] = Form.useForm();
 	const locations = useLocation();
 	const promoId = locations.state?.promoId;
-	const idCustomize = locations.state?.id;
+	const order = locations.state?.order;
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const distances = useSelector(selectDistances);
@@ -148,13 +148,13 @@ const CheckoutPage = () => {
 		note: '',
 	});
 
-	console.log('idCustomize', idCustomize);
+	const idCustomize = order?.Id;
+	console.log('order', order);
+	console.log('payment', payment);
 
 	useEffect(() => {
 		form.setFieldsValue(userInfo);
 	}, [form, userInfo]);
-
-	console.log('promo', promo);
 
 	useEffect(() => {
 		if (userDetail && userDetail.Addresses && userDetail.Addresses.length > 0) {
@@ -235,36 +235,30 @@ const CheckoutPage = () => {
 		dispatch(getAllPromo());
 	}, []);
 
-	// useEffect(() => {
-	// 	const transformedData = local?.map((productId, index) => ({
-	// 		id: Math.floor(1000000 + Math.random() * 9000000).toString(),
-	// 		jewelryId: productId.JewelryId || null,
-	// 		diamondId: productId.DiamondId || null,
-	// 		jewelryModelId: productId.ModelId || null,
-	// 		sizeId: productId?.SizeId || null,
-	// 		metalId: productId?.MetalId,
-	// 		sideDiamondChoices: [],
-	// 		engravedText: productId?.engravedText || null,
-	// 		engravedFont: productId?.engravedFont || null,
-	// 		warrantyCode:
-	// 			productId?.warrantyJewelry?.warrantyCode ||
-	// 			productId?.warrantyDiamond?.warrantyCode,
-	// 		warrantyType:
-	// 			productId?.warrantyJewelry?.warrantyType ||
-	// 			productId?.warrantyDiamond?.warrantyType,
-	// 	}));
+	useEffect(() => {
+		const transformedData = {
+			id: Math.floor(1000000 + Math.random() * 9000000).toString(),
+			jewelryId: order?.JewelryId || null,
+			diamondId: order?.DiamondId || null,
+			jewelryModelId: order?.JewelryModelId || null,
+			sizeId: order?.SizeId || null,
+			metalId: order?.MetalId.Value,
+			sideDiamondChoices: [order?.SideDiamondId],
+			engravedText: order?.EngravedText || null,
+			engravedFont: order?.EngravedFont || null,
+			warrantyCode: warrantiesJewelrySelected?.warrantyCode || null,
+			warrantyType: 2,
+		};
 
-	// 	dispatch(checkPromoCart({transformedData}));
-	// }, []);
+		dispatch(checkPromoCart({items: [transformedData]}));
+	}, []);
 
 	const jewelryOrDiamondProducts = cartList?.Products.filter(
 		(product) => product.Jewelry || product.Diamond
 	);
 
-	console.log('warrantiesJewelrySelected', warrantiesJewelrySelected);
-
 	const mappedProducts = useMemo(() => {
-		return jewelryOrDiamondProducts.map((product) => mapAttributes(product, enums));
+		return jewelryOrDiamondProducts?.map((product) => mapAttributes(product, enums));
 	}, [jewelryOrDiamondProducts, enums]);
 
 	// Hàm xử lý gửi form
@@ -319,7 +313,7 @@ const CheckoutPage = () => {
 					customizeRequestId: idCustomize,
 					orderRequestDto: orderRequestDto,
 					billingDetail,
-					warrantyCode: warrantiesJewelrySelected.warrantyCode,
+					warrantyCode: warrantiesJewelrySelected?.warrantyCode,
 					warrantyType: 2,
 				})
 			);
@@ -413,22 +407,17 @@ const CheckoutPage = () => {
 		return Promise.reject(new Error('Số điện thoại không hợp lệ!'));
 	};
 
-	const shippingDate = mappedProducts?.find((ship) => ship?.ShippingDate);
-
 	const handlePromoChange = (value) => {
 		console.log('value', value);
 		setPromoCustomizeId(value);
 	};
 
-	console.log('promoId', promoId);
-
 	return (
-		<div className="min-h-screen flex justify-center items-center bg-gray-100 my-10">
-			<div className=" mx-auto p-4 flex flex-col md:flex-row md:space-x-6 gap-4 justify-around">
-				{/* Thông tin thanh toán và giao hàng */}
-				<div className="" style={{width: '80%'}}>
+		<div className="min-h-screen flex justify-center items-center bg-gray-100 mx-40 my-20">
+			<div className="w-full flex">
+				<div className="md:w-2/3">
 					<div className="mb-6">
-						<div className="md:w-2/3 bg-white p-6 rounded-lg shadow-lg transition-shadow duration-300 hover:shadow-2xl">
+						<div className=" bg-white p-6 rounded-lg shadow-lg transition-shadow duration-300 hover:shadow-2xl">
 							<h2 className="text-2xl font-semibold text-gray-800">
 								Thông tin thanh toán và giao hàng
 							</h2>
@@ -638,7 +627,7 @@ const CheckoutPage = () => {
 								</Form.Item>
 
 								<div className="my-6">
-									<div className="md:w-1/3 bg-white p-6 rounded-lg shadow-lg space-y-6 mt-6 md:mt-0 transition-shadow duration-300 hover:shadow-2xl">
+									<div className=" bg-white p-6 rounded-lg shadow-lg space-y-6 mt-6 md:mt-0 transition-shadow duration-300 hover:shadow-2xl">
 										<h2 className="text-2xl font-semibold text-gray-800 mb-6">
 											Hình thức thanh toán
 										</h2>
@@ -667,7 +656,7 @@ const CheckoutPage = () => {
 								</div>
 								{paymentForm && (
 									<div className="my-6">
-										<div className="md:w-1/3 bg-white p-6 rounded-lg shadow-lg space-y-6 mt-6 md:mt-0 transition-shadow duration-300 hover:shadow-2xl">
+										<div className="bg-white p-6 rounded-lg shadow-lg space-y-6 mt-6 md:mt-0 transition-shadow duration-300 hover:shadow-2xl">
 											<h2 className="text-2xl font-semibold text-gray-800 mb-6">
 												Phương thức thanh toán
 											</h2>
@@ -679,14 +668,24 @@ const CheckoutPage = () => {
 													value={paymentMethod}
 												>
 													{payment &&
-														payment?.map((method) => (
-															<Radio
-																value={method.Id}
-																className="border p-4 rounded-md hover:border-blue-500 transition duration-300 mb-4"
-															>
-																{method?.MappedName}
-															</Radio>
-														))}
+														payment.map((method) => {
+															const isDisabled =
+																(order?.Jewelry?.SoldPrice >
+																	50000000 ||
+																	cartList?.OrderPrices
+																		?.FinalPrice > 50000000) &&
+																method.MethodName === 'ZALOPAY';
+
+															return (
+																<Radio
+																	value={method.Id}
+																	className="border p-4 rounded-md hover:border-blue-500 transition duration-300 mb-4"
+																	disabled={isDisabled}
+																>
+																	{method?.MappedName}
+																</Radio>
+															);
+														})}
 												</Radio.Group>
 											</div>
 										</div>
@@ -697,21 +696,72 @@ const CheckoutPage = () => {
 					</div>
 				</div>
 
-				{/* Order Summary */}
 				<div className="md:w-1/3 bg-white p-6 rounded-lg shadow-lg md:mt-0 transition-shadow duration-300 hover:shadow-2xl">
 					<div className="flex justify-between">
 						<h2 className="text-2xl font-semibold text-gray-800 mb-6">
 							Tóm tắt đơn hàng
 						</h2>
 						<div className="flex justify-center items-center">
-							<a href="/cart" className="text-sm text-yellow-500 hover:underline">
-								Sửa giỏ hàng
-							</a>
+							{idCustomize ? (
+								<a
+									href="/request-customize"
+									className="text-sm text-yellow-500 hover:underline"
+								>
+									Quay về danh sách đơn thiết kế
+								</a>
+							) : (
+								<a href="/cart" className="text-sm text-yellow-500 hover:underline">
+									Sửa giỏ hàng
+								</a>
+							)}
 						</div>
 					</div>
 					<div className="space-y-6">
 						{idCustomize ? (
-							<></>
+							<>
+								<div className="flex mt-4 shadow-xl p-5 rounded-lg" key={order.Id}>
+									<div className="mr-4 flex-shrink-0">
+										<img
+											src="path-to-image"
+											alt={order?.Jewelry?.SerialCode || order?.Title}
+											className="w-32 h-32 object-cover rounded-lg border"
+										/>
+									</div>
+									<div className="flex-1 mx-5">
+										<div>
+											<p className="mb-1 text-gray-800 font-semibold">
+												{order?.Jewelry?.SerialCode}
+											</p>
+											<p className="text-gray-700 text-sm py-2">
+												Giá:
+												<span className="text-gray-900 font-semibold ml-1">
+													{formatPrice(order.Jewelry?.SoldPrice)}
+												</span>
+											</p>
+										</div>
+										<label>Chọn bảo hành trang sức</label>
+										<Select
+											allowClear
+											className="w-64 mt-1 mb-5"
+											placeholder="Bảo hành"
+											onChange={onChangeWarrantyJewelry}
+										>
+											{warrantiesJewelry &&
+												warrantiesJewelry?.map((warranty, i) => (
+													<Select.Option
+														key={i}
+														value={JSON.stringify({
+															warrantyCode: warranty.Code,
+															warrantyType: warranty?.Type,
+														})}
+													>
+														{warranty.Name.replace(/_/g, ' ')}
+													</Select.Option>
+												))}
+										</Select>
+									</div>
+								</div>
+							</>
 						) : (
 							<>
 								{mappedProducts?.map((item, index) => (
@@ -735,7 +785,7 @@ const CheckoutPage = () => {
 													</p>
 													<p className="text-gray-700 text-sm py-3">
 														Giá:
-														<span className="text-gray-900 font-semibold">
+														<span className="text-gray-900 font-semibold ml-1">
 															{formatPrice(item.JewelryPrice)}
 														</span>
 													</p>
@@ -774,7 +824,12 @@ const CheckoutPage = () => {
 							<div className="p-4 border rounded-lg bg-gray-50">
 								<div className="flex justify-between font-semibold text-gray-800 mb-2">
 									<span>Giá tạm tính:</span>
-									<span>{formatPrice(cartList?.OrderPrices?.FinalPrice)}</span>
+									<span>
+										{formatPrice(
+											order.Jewelry?.SoldPrice ||
+												cartList?.OrderPrices?.FinalPrice
+										)}
+									</span>
 								</div>
 								<div className="flex justify-between text-gray-800 mb-2">
 									<span>Phí vận chuyển:</span>
@@ -782,25 +837,6 @@ const CheckoutPage = () => {
 								</div>
 								{idCustomize && (
 									<>
-										<Select
-											allowClear
-											className="w-64 mt-2 mb-5"
-											placeholder="Chọn bảo hành trang sức"
-											onChange={onChangeWarrantyJewelry}
-										>
-											{warrantiesJewelry &&
-												warrantiesJewelry?.map((warranty, i) => (
-													<Select.Option
-														key={i}
-														value={JSON.stringify({
-															warrantyCode: warranty.Code,
-															warrantyType: warranty?.Type,
-														})}
-													>
-														{warranty.Name.replace(/_/g, ' ')}
-													</Select.Option>
-												))}
-										</Select>
 										<label
 											htmlFor="promotions"
 											className="block mb-2 text-gray-700 font-medium"
@@ -830,19 +866,19 @@ const CheckoutPage = () => {
 									</>
 								)}
 
-								<div className="flex  text-sm text-gray-600">
+								<div className="flex text-sm text-gray-600 my-2">
 									<span className="mr-2">📅 Thời gian giao hàng</span>
-									<span>
-										{convertToVietnamDate(shippingDate?.ShippingDate) || null}
-									</span>
+									<span>Giao hàng sau 7 ngày</span>
 								</div>
 
 								<div className="flex justify-between items-center font-semibold mt-4 text-lg">
 									<p>Tổng:</p>
 									<p>
 										{formatPrice(
-											cartList?.OrderPrices?.FinalPrice +
+											order.Jewelry?.SoldPrice +
 												location?.DeliveryFee?.Cost ||
+												cartList?.OrderPrices?.FinalPrice +
+													location?.DeliveryFee?.Cost ||
 												cartList?.OrderPrices?.FinalPrice
 										)}
 									</p>

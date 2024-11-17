@@ -189,7 +189,6 @@ const MyInfoPage = () => {
 			Street: address?.Street,
 			District: address?.District?.Name,
 		}));
-		console.log(addedAddress);
 
 		dispatch(
 			handleUpdateAccount({
