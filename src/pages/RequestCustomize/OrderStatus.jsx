@@ -6,18 +6,32 @@ export const OrderStatus = ({orderStatus, orderDetail}) => {
 	const [currentStep, setCurrentStep] = useState(0);
 
 	useEffect(() => {
-		const haveDiamond = orderDetail?.DiamondRequests?.map((diamond) => ({
+		// Kiểm tra nếu dữ liệu chưa sẵn sàng
+		if (!orderDetail || !orderStatus) return;
+
+		// Lấy danh sách diamond từ orderDetail
+		const haveDiamond = orderDetail.DiamondRequests?.map((diamond) => ({
 			diamondId: diamond.DiamondId,
 		}));
 
-		if (haveDiamond?.some((diamond) => diamond.diamondId === null)) {
-			setCurrentStep(5); // Nếu có diamondId === null, chuyển currentStep thành 5
-		} else if (haveDiamond?.every((diamond) => diamond.diamondId !== null)) {
-			setCurrentStep(7); // Nếu tất cả diamondId !== null, chuyển currentStep thành 7
+		console.log('haveDiamond', haveDiamond);
+
+		if (orderStatus === 5) {
+			if (!haveDiamond || haveDiamond.length === 0) {
+				setCurrentStep(5);
+			} else if (haveDiamond.every((diamond) => diamond.diamondId !== null)) {
+				// Tất cả diamondId đều không null -> currentStep = 7
+				setCurrentStep(7);
+			} else {
+				// Một số diamondId là null -> currentStep = 5
+				setCurrentStep(5);
+			}
+		} else {
+			console.log('Unhandled orderStatus:', orderStatus);
 		}
 
-		console.log('haveDiamond', haveDiamond);
-	}, [orderDetail]);
+		console.log('Current step updated based on orderStatus:', orderStatus);
+	}, [orderStatus, orderDetail]);
 
 	useEffect(() => {
 		const getOrderStatus = (status) => {
@@ -33,10 +47,6 @@ export const OrderStatus = ({orderStatus, orderDetail}) => {
 				case 5:
 					return 'Shop Từ Chối';
 				case 6:
-					return 'Khách Từ Chối';
-				case 7:
-					return 'Shop Từ Chối';
-				case 8:
 					return 'Khách Từ Chối';
 
 				default:
@@ -96,7 +106,7 @@ export const OrderStatus = ({orderStatus, orderDetail}) => {
 		// Step 4: Hoàn Thành
 		{
 			title: 'Tạo Đơn Đặt Hàng',
-			description: 'Yêu cầu thiết kế đã được shop chấp nhận. Tiến hàng tạo đơn!',
+			description: 'Yêu cầu thiết kế đã được shop chấp nhận. Tiến hành tạo đơn!',
 		},
 	];
 	console.log('orderStatus', orderStatus);

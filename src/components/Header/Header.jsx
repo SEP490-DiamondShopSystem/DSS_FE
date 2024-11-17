@@ -60,14 +60,14 @@ export const Header = () => {
 				</ul>
 
 				<ul className="flex uppercase items-center gap-8">
-					<li>
+					{/* <li>
 						<button
 							className="my-7 mx-3 inline-block no-underline text-black"
 							onClick={() => navigate('/request-customize')}
 						>
 							<OrderedListOutlined />
 						</button>
-					</li>
+					</li> */}
 					<li>
 						<button onClick={handleValidate}>
 							<FontAwesomeIcon icon={faShoppingBag} />

@@ -1,4 +1,10 @@
-import {faKey, faReceipt, faShoppingBag, faUser} from '@fortawesome/free-solid-svg-icons';
+import {
+	faKey,
+	faListCheck,
+	faReceipt,
+	faShoppingBag,
+	faUser,
+} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import React, {useState} from 'react';
 import {Link} from 'react-router-dom';
@@ -25,9 +31,9 @@ const NavbarProfile = () => {
 			icon: <FontAwesomeIcon icon={faShoppingBag} color="black" />,
 		},
 		{
-			name: 'Thay đổi mật khẩu',
-			link: '/change-password',
-			icon: <FontAwesomeIcon icon={faKey} color="black" />,
+			name: 'Đơn thiết kế',
+			link: '/request-customize',
+			icon: <FontAwesomeIcon icon={faListCheck} color="black" />,
 		},
 	];
 

@@ -146,7 +146,7 @@ const CartPage = () => {
 		}));
 
 		dispatch(handleCartValidate({promotionId: null, transformedData}));
-		dispatch(checkPromoCart({transformedData}));
+		dispatch(checkPromoCart({items: transformedData}));
 	}, []);
 
 	const handleViewCart = (jewelryId, diamondId) => {

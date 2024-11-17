@@ -1,22 +1,24 @@
+import {Button, Form, Image, message, Modal, Space, Table, Tag, Typography} from 'antd';
 import React, {useEffect, useState} from 'react';
-import {EyeOutlined, StarOutlined} from '@ant-design/icons';
-import {Button, Form, Image, Input, message, Modal, Rate, Table, Tag, Upload} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
 import logo from '../../assets/logo-short-ex.png';
 import '../../css/antd.css';
-import {GetAllOrderDetailSelector, GetRequestCustomizeDetailSelector} from '../../redux/selectors';
-import {getUserOrderDetail, handleOrderCancel} from '../../redux/slices/orderSlice';
-import {handleReviewOrder} from '../../redux/slices/reviewSlice';
-import {convertToVietnamDate, formatPrice} from '../../utils';
-import {OrderStatus} from './OrderStatus';
+import {GetRequestCustomizeDetailSelector} from '../../redux/selectors';
 import {
 	getRequestCustomizeDetail,
-	handleOrderCustomizeCancel,
+	handleOrderCustomizeProceed,
+	handleOrderCustomizeReject,
 } from '../../redux/slices/customizeSlice';
+import {convertToVietnamDate} from '../../utils';
 import {enums} from '../../utils/constant';
+import {OrderStatus} from './OrderStatus';
+import {useNavigate} from 'react-router-dom';
+
+const {Title, Text} = Typography;
 
 export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder}) => {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const orderDetail = useSelector(GetRequestCustomizeDetailSelector);
 
 	const [isCancelModalVisible, setIsCancelModalVisible] = useState(false);
@@ -24,7 +26,17 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 	const [order, setOrder] = useState(null);
 	const orderStatus = order?.Status;
 
-	console.log('orderStatus', orderStatus);
+	useEffect(() => {
+		if (selectedOrder) {
+			dispatch(getRequestCustomizeDetail(selectedOrder.Id));
+		}
+	}, [selectedOrder, dispatch]);
+
+	useEffect(() => {
+		if (orderDetail) {
+			setOrder(orderDetail);
+		}
+	}, [orderDetail]);
 
 	const reverseEnum = (enumObj) => {
 		return Object.fromEntries(
@@ -101,33 +113,105 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 
 	const subColumns = [
 		{
-			title: 'Từ Ly (Carat)',
+			title: 'Ly (Carat)',
 			dataIndex: 'CaratFrom',
-			key: 'caratFrom',
+			key: 'caratRange',
+			render: (CaratFrom, record) => `${CaratFrom} - ${record.CaratTo}`,
+		},
+
+		{
+			title: 'Độ Trong (Clarity)',
+			key: 'clarityRange',
+			render: (record) => {
+				const clarityFrom = reversedEnums.Clarity[record.ClarityFrom] || 'Không';
+				const clarityTo = reversedEnums.Clarity[record.ClarityTo] || 'Không';
+				return `${clarityFrom} - ${clarityTo}`;
+			},
 		},
 		{
-			title: 'Đến Ly (Carat)',
-			dataIndex: 'CaratTo',
-			key: 'caratTo',
+			title: 'Màu Sắc (Color)',
+			key: 'colorRange',
+			render: (record) => {
+				const colorFrom = reversedEnums.Color[record.ColorFrom] || 'Không';
+				const colorTo = reversedEnums.Color[record.ColorTo] || 'Không';
+				return `${colorFrom} - ${colorTo}`;
+			},
 		},
+		{
+			title: 'Chế Tác (Cut)',
+			key: 'cutRange',
+			render: (record) => {
+				const cutFrom = reversedEnums.Cut[record.CutFrom] || 'Không';
+				const cutTo = reversedEnums.Cut[record.CutTo] || 'Không';
+				return `${cutFrom} - ${cutTo}`;
+			},
+		},
+		{
+			title: 'Chóp Đáy (Culet)',
+			dataIndex: 'Culet',
+			key: 'culet',
+			render: (culet) => reversedEnums.Culet[culet] || 'Không',
+		},
+		{
+			title: 'Viền Cạnh (Girdle)',
+			dataIndex: 'Girdle',
+			key: 'girdle',
+			render: (girdle) => reversedEnums.Girdle[girdle] || 'Không',
+		},
+		{
+			title: 'Độ Bóng (Polish)',
+			dataIndex: 'Polish',
+			key: 'polish',
+			render: (polish) => reversedEnums.Polish[polish] || 'Không',
+		},
+		{
+			title: 'Độ đối xứng (Symmetry)',
+			dataIndex: 'Symmetry',
+			key: 'symmetry',
+			render: (symmetry) => reversedEnums.Symmetry[symmetry] || 'Không',
+		},
+		{
+			title: 'Hình Dạng',
+			dataIndex: 'DiamondShapeId',
+			key: 'shape',
+			render: (shape) => reversedEnums.Shapes[shape] || 'Không',
+		},
+		{
+			title: 'Nguồn Gốc',
+			dataIndex: 'IsLabGrown',
+			key: 'IsLabGrown',
+			render: (shape) => (shape ? 'Nhân Tạo' : 'Tự Nhiên'),
+		},
+	];
+
+	const sub2Columns = [
+		{
+			title: 'Ly (Carat)',
+			dataIndex: 'Carat',
+			key: 'carat',
+		},
+
 		{
 			title: 'Độ Trong (Clarity)',
 			dataIndex: 'Clarity',
 			key: 'clarity',
 			render: (clarity) => reversedEnums.Clarity[clarity] || 'Không',
 		},
+
 		{
 			title: 'Màu Sắc (Color)',
 			dataIndex: 'Color',
 			key: 'color',
 			render: (color) => reversedEnums.Color[color] || 'Không',
 		},
+
 		{
 			title: 'Chế Tác (Cut)',
 			dataIndex: 'Cut',
 			key: 'cut',
 			render: (cut) => reversedEnums.Cut[cut] || 'Không',
 		},
+
 		{
 			title: 'Chóp Đáy (Culet)',
 			dataIndex: 'Culet',
@@ -176,33 +260,77 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 			dataSource={record.DiamondRequests}
 			pagination={false}
 			rowKey={(item) => item.DiamondRequestId}
+			expandedRowRender={expandedRow2Render}
+			summary={() => (
+				<Table.Summary.Row>
+					<Table.Summary.Cell colSpan={subColumns.length}>
+						<Text strong>Thông tin đơn yêu cầu của khách</Text>
+					</Table.Summary.Cell>
+				</Table.Summary.Row>
+			)}
 		/>
 	);
 
-	useEffect(() => {
-		if (selectedOrder) {
-			dispatch(getRequestCustomizeDetail(selectedOrder.Id));
-		}
-	}, [selectedOrder, dispatch]);
+	const expandedRow2Render = (record) => (
+		<Table
+			columns={sub2Columns}
+			// Wrap the single object `record.Diamond` in an array
+			dataSource={record.Diamond ? [record.Diamond] : []}
+			pagination={false}
+			rowKey={(item) => item.Id}
+			summary={() => (
+				<Table.Summary.Row>
+					<Table.Summary.Cell colSpan={subColumns.length}>
+						<Text strong>Thông tin kim cương đã thêm cho đơn</Text>
+					</Table.Summary.Cell>
+				</Table.Summary.Row>
+			)}
+		/>
+	);
 
-	useEffect(() => {
-		if (orderDetail) {
-			setOrder(orderDetail);
-		}
-	}, [orderDetail]);
-
-	const handleCancelOrder = () => {
-		setIsCancelModalVisible(true);
+	const handleProceedConfirmation = () => {
+		Modal.confirm({
+			title: 'Đồng ý đơn thiết kế này',
+			content: 'Bạn có chắc chắn muốn tiếp tục?',
+			okText: 'Đồng Ý',
+			cancelText: 'Hủy Bỏ',
+			onOk: handleProceed,
+		});
 	};
 
-	const submitCancelOrder = async (values) => {
-		const res = await dispatch(handleOrderCustomizeCancel(selectedOrder.Id));
+	const handleProceed = () => {
+		dispatch(handleOrderCustomizeProceed(selectedOrder.Id)).then((res) => {
+			console.log('res', res);
+			if (res.payload) {
+				message.success(`Bạn đã xác nhận đơn thiết kế ${id}!`);
+			} else {
+				message.error('Có lỗi khi xác nhận');
+			}
+		});
+	};
+
+	const handleCancelOrder = () => {
+		Modal.confirm({
+			title: 'Hủy đơn thiết kế này',
+			content: 'Bạn có chắc chắn muốn tiếp tục?',
+			okText: 'Xác nhận Hủy',
+			cancelText: 'Hủy Bỏ',
+			onOk: submitCancelOrder,
+		});
+	};
+
+	const submitCancelOrder = async () => {
+		const res = await dispatch(handleOrderCustomizeReject(selectedOrder.Id));
 		if (res.payload !== undefined) {
 			message.success('Hủy đơn thành công!');
 		} else {
 			message.error('Lỗi hệ thống!');
 		}
 		setIsCancelModalVisible(false);
+	};
+
+	const handleCheckout = () => {
+		navigate(`/checkout`, {state: {order}});
 	};
 
 	return (
@@ -230,7 +358,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 						</div>
 						<div className="text-end">
 							<h2 className="uppercase text-2xl font-semibold">
-								Trạng thái đơn hàng
+								Trạng thái đơn thiết kế
 							</h2>
 							{/* <p>Hóa đơn: #{order?.OrderCode}</p> */}
 							<p>Ngày: {convertToVietnamDate(order?.CreatedDate)}</p>
@@ -248,15 +376,34 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 					/>
 
 					<div className="flex justify-between">
-						<h1 className="text-xl font-semibold">Chi tiết đơn hàng</h1>
+						<h1 className="text-xl font-semibold">Chi tiết đơn thiết kế</h1>
 						{orderStatus === 2 && (
-							<Button
-								type="text"
-								className="bg-red text-white"
-								onClick={handleCancelOrder}
-							>
-								Hủy Đơn
-							</Button>
+							<Space>
+								<Button
+									type="text"
+									className="bg-primary text-white"
+									onClick={handleProceedConfirmation}
+								>
+									Đồng Ý Đơn
+								</Button>
+								<Button danger className="text-white" onClick={handleCancelOrder}>
+									Hủy Đơn
+								</Button>
+							</Space>
+						)}
+						{orderStatus === 4 && (
+							<Space>
+								<Button
+									type="text"
+									className="bg-primary text-white"
+									onClick={handleCheckout}
+								>
+									Thanh Toán
+								</Button>
+								<Button danger className="text-white" onClick={handleCancelOrder}>
+									Hủy Đơn
+								</Button>
+							</Space>
 						)}
 					</div>
 					<div className="mt-10">
@@ -274,7 +421,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 			)}
 
 			<Modal
-				title="Hủy đơn hàng"
+				title="Hủy đơn thiết kế"
 				visible={isCancelModalVisible}
 				onCancel={() => setIsCancelModalVisible(false)}
 				footer={null}
@@ -287,7 +434,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 						<Input.TextArea placeholder="Lý Do Hủy" rows={3} />
 					</Form.Item> */}
 					<Button type="primary" htmlType="submit" block>
-						Submit
+						Xác Nhận Hủy
 					</Button>
 				</Form>
 			</Modal>
