@@ -151,6 +151,8 @@ const RequestCustomize = () => {
 		},
 	];
 
+	console.log('dataSource', dataSource);
+
 	return (
 		<>
 			<Helmet>
@@ -193,8 +195,8 @@ const RequestCustomize = () => {
 						columns={mainColumns}
 						dataSource={dataSource}
 						pagination={{
-							current: currentPage,
-							pageSize: currentPage,
+							current: requestList?.CurrentPage,
+							pageSize: pageSize,
 							total: requestList?.TotalPage,
 						}}
 					/>

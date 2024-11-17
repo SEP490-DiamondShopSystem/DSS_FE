@@ -138,6 +138,9 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 		setRating(value);
 	};
 
+	console.log('orderDetail', order);
+	console.log('orderStatus', orderStatus);
+
 	return (
 		<>
 			{openDetail && (
@@ -178,7 +181,8 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 					<div className="flex justify-between">
 						<h1 className="text-xl font-semibold">Chi tiết đơn hàng</h1>
 						{orderStatus === 1 ||
-							(orderStatus === 2 && (
+							orderStatus === 2 ||
+							(orderStatus === 5 && (
 								<Button
 									type="text"
 									className="bg-red text-white"

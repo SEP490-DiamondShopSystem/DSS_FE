@@ -54,8 +54,6 @@ export const ProductList = () => {
 
 	const handleNavigate = () => {};
 
-	console.log(jewelryList);
-
 	return (
 		<>
 			<div className="mt-10">

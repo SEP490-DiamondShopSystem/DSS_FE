@@ -28,6 +28,7 @@ import {getAllPayment} from '../../redux/slices/paymentSlice';
 import {checkPromoCart, getAllPromo} from '../../redux/slices/promotionSlice';
 import {convertToVietnamDate, formatPrice} from '../../utils';
 import {enums} from '../../utils/constant';
+import {handleCartValidate} from '../../redux/slices/cartSlice';
 
 const {Option} = Select;
 
@@ -249,9 +250,15 @@ const CheckoutPage = () => {
 			warrantyCode: warrantiesJewelrySelected?.warrantyCode || null,
 			warrantyType: 2,
 		};
-
+		dispatch(
+			handleCartValidate({
+				promotionId: promoCustomizeId || null,
+				items: [transformedData],
+				accountId: userDetail?.Id,
+			})
+		);
 		dispatch(checkPromoCart({items: [transformedData]}));
-	}, []);
+	}, [dispatch, order, userDetail, warrantiesJewelrySelected, promoCustomizeId]);
 
 	const jewelryOrDiamondProducts = cartList?.Products.filter(
 		(product) => product.Jewelry || product.Diamond
@@ -321,7 +328,7 @@ const CheckoutPage = () => {
 
 			if (res.payload !== undefined) {
 				message.success('Đặt hàng thành công!');
-				navigate('/request-customize');
+				navigate('/my-orders');
 			} else {
 				message.error('Đặt hàng không thành công. Vui lòng kiểm tra thông tin của bạn!');
 			}
@@ -707,11 +714,11 @@ const CheckoutPage = () => {
 									href="/request-customize"
 									className="text-sm text-yellow-500 hover:underline"
 								>
-									Quay về danh sách đơn thiết kế
+									Về danh sách đơn thiết kế
 								</a>
 							) : (
 								<a href="/cart" className="text-sm text-yellow-500 hover:underline">
-									Sửa giỏ hàng
+									Về giỏ hàng
 								</a>
 							)}
 						</div>
@@ -735,13 +742,17 @@ const CheckoutPage = () => {
 											<p className="text-gray-700 text-sm py-2">
 												Giá:
 												<span className="text-gray-900 font-semibold ml-1">
-													{formatPrice(order.Jewelry?.SoldPrice)}
+													{formatPrice(
+														order?.Jewelry?.SoldPrice ||
+															order?.Jewelry?.TotalPrice
+													)}
 												</span>
 											</p>
 										</div>
 										<label>Chọn bảo hành trang sức</label>
 										<Select
-											allowClear
+											// allowClear
+											// value={}
 											className="w-64 mt-1 mb-5"
 											placeholder="Bảo hành"
 											onChange={onChangeWarrantyJewelry}
@@ -824,12 +835,7 @@ const CheckoutPage = () => {
 							<div className="p-4 border rounded-lg bg-gray-50">
 								<div className="flex justify-between font-semibold text-gray-800 mb-2">
 									<span>Giá tạm tính:</span>
-									<span>
-										{formatPrice(
-											order.Jewelry?.SoldPrice ||
-												cartList?.OrderPrices?.FinalPrice
-										)}
-									</span>
+									<span>{formatPrice(cartList?.OrderPrices?.DefaultPrice)}</span>
 								</div>
 								<div className="flex justify-between text-gray-800 mb-2">
 									<span>Phí vận chuyển:</span>
@@ -866,6 +872,59 @@ const CheckoutPage = () => {
 									</>
 								)}
 
+								<p className="flex justify-between mb-2">
+									{cartList?.OrderPrices?.DiscountAmountSaved !== 0 ? (
+										<>
+											<span>Giảm Giá</span>{' '}
+											<span>
+												-
+												{formatPrice(
+													cartList?.OrderPrices?.DiscountAmountSaved
+												)}
+											</span>
+										</>
+									) : (
+										<></>
+									)}
+								</p>
+								<p className="flex justify-between">
+									{cartList?.OrderPrices?.PromotionAmountSaved !== 0 ? (
+										<>
+											<span>Khuyến Mãi</span>{' '}
+											<span>
+												-
+												{formatPrice(
+													cartList?.OrderPrices?.PromotionAmountSaved
+												)}
+											</span>
+										</>
+									) : (
+										<></>
+									)}
+								</p>
+								<p className="flex justify-between mb-2">
+									<span>Bảo Hành</span>{' '}
+									<span>
+										{formatPrice(cartList?.OrderPrices?.TotalWarrantyPrice)}
+									</span>
+								</p>
+								<p className="flex justify-between mb-2">
+									{cartList?.OrderPrices?.UserRankDiscountAmount !== 0 ? (
+										<>
+											<span>Khách Hàng Thân Thiết</span>
+
+											<span>
+												-
+												{formatPrice(
+													cartList?.OrderPrices?.UserRankDiscountAmount
+												)}
+											</span>
+										</>
+									) : (
+										<></>
+									)}
+								</p>
+
 								<div className="flex text-sm text-gray-600 my-2">
 									<span className="mr-2">📅 Thời gian giao hàng</span>
 									<span>Giao hàng sau 7 ngày</span>
@@ -875,10 +934,8 @@ const CheckoutPage = () => {
 									<p>Tổng:</p>
 									<p>
 										{formatPrice(
-											order.Jewelry?.SoldPrice +
+											cartList?.OrderPrices?.FinalPrice +
 												location?.DeliveryFee?.Cost ||
-												cartList?.OrderPrices?.FinalPrice +
-													location?.DeliveryFee?.Cost ||
 												cartList?.OrderPrices?.FinalPrice
 										)}
 									</p>

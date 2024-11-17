@@ -64,10 +64,6 @@ const JewelryDetailPage = () => {
 			return []; // Return an empty array if metalGroups is undefined or not an array
 		}
 
-		console.log('MetalGroups:', metalGroups);
-		console.log('Selected Metal:', selectedMetal);
-		console.log('Selected SideDiamond:', selectedSideDiamond);
-
 		return metalGroups
 			.map((group) => {
 				// Check if group matches the selected MetalId
