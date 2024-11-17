@@ -197,38 +197,41 @@ export const InformationRight = ({
 			</div>
 			<div className="border-y border-tintWhite my-5">
 				{diamondJewelry && diamondJewelry.Category === 'Ring' && someSize && (
-					<div className="mt-5 flex items-center">
-						<div className="font-semibold">Chọn kích thước:</div>
-						<div className="font-semibold text-xl pl-4 text-primary">
-							<Select value={size} style={{width: 120}} onChange={handleChange}>
-								{filteredGroups[0]?.SizeGroups.map(
-									(size, i) =>
-										size?.IsInStock === true && (
-											<Option key={size?.Size} value={size?.Size}>
-												<p className="font-semibold mr-2">{size?.Size}</p>
-											</Option>
-										)
-								)}
-							</Select>
+					<>
+						<div className="mt-5 flex items-center">
+							<div className="font-semibold">Chọn kích thước:</div>
+							<div className="font-semibold text-xl pl-4 text-primary">
+								<Select value={size} style={{width: 120}} onChange={handleChange}>
+									{filteredGroups[0]?.SizeGroups.map(
+										(size, i) =>
+											size?.IsInStock === true && (
+												<Option key={size?.Size} value={size?.Size}>
+													<p className="font-semibold mr-2">
+														{size?.Size}
+													</p>
+												</Option>
+											)
+									)}
+								</Select>
+							</div>
+							<div>
+								<p className="text-red ml-5">* Vui lòng chọn kích thước!</p>
+							</div>
+						</div>
+						<div className="flex items-center mt-2">
+							<p className="text-2xl mr-2 font-semibold">Giá Sàn:</p>
+							<p className="font-semibold text-2xl my-2">
+								{formatPrice(findSizePrice?.Price || 0)}
+							</p>
+							{/* <div className="text-sm pl-2">(Giá Sàn)</div> */}
 						</div>
 						<div>
-							<p className="text-red ml-5">* Vui lòng chọn kích thước!</p>
+							<div className="text-xl pt-2 font-semibold">
+								*Mã giảm giá được áp dụng tự động
+							</div>
 						</div>
-					</div>
+					</>
 				)}
-
-				<div className="flex items-center mt-2">
-					<p className="text-2xl mr-2 font-semibold">Giá Sàn:</p>
-					<p className="font-semibold text-2xl my-2">
-						{formatPrice(findSizePrice?.Price || 0)}
-					</p>
-					{/* <div className="text-sm pl-2">(Giá Sàn)</div> */}
-				</div>
-				<div>
-					<div className="text-xl pt-2 font-semibold">
-						*Mã giảm giá được áp dụng tự động
-					</div>
-				</div>
 			</div>
 
 			{size !== null && selectedMetal !== null && diamondJewelry?.Category === 'Ring' && (

@@ -58,7 +58,7 @@ const DiamondChoosePage = () => {
 				ModelId: jewelryModel?.jewelryModelId,
 				MetalId: jewelryModel?.selectedMetal?.Id,
 				SizeId: jewelryModel?.size,
-				// SideDiamondOptId: selectedSideDiamond?.Id,
+				SideDiamondOptId: jewelryModel?.selectedSideDiamond.Id,
 				// MinPrice: minPrice,
 				// MaxPrice: maxPrice,shapeId: filters?.shape,
 				// cutFrom: filters?.cut?.minCut,

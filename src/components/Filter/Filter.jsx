@@ -201,6 +201,81 @@ export const FilterDiamond = ({filters, setFilters, handleReset, diamondForFilte
 		</div>
 	);
 };
+export const FilterJewelryDiamond = ({
+	filters,
+	setFilters,
+	handleReset,
+	diamondForFilter,
+	findShape,
+}) => {
+	const dispatch = useDispatch();
+	const filterLimits = useSelector(GetDiamondFilterSelector);
+
+	const [filter, setFilter] = useState({});
+	const [diamondChoice, setDiamondChoice] = useState(localStorage.getItem('diamondChoice'));
+
+	const filteredShapes = diamondForFilter?.Shapes?.map((shape) => shape?.ShapeId);
+
+	const filteredShapeItems =
+		filteredShapes?.length > 0
+			? shapeItems.filter((item) => filteredShapes.includes(item.value))
+			: [];
+
+	useEffect(() => {
+		dispatch(getDiamondFilter());
+	}, []);
+
+	useEffect(() => {
+		if (filterLimits) {
+			setFilter(filterLimits);
+		}
+	}, [filterLimits]);
+
+	const handleChange = (type, value) => {
+		setFilters((prev) => ({
+			...prev,
+			[type]: value,
+		}));
+		console.log('value', value);
+
+		localStorage.setItem('selected', value);
+	};
+
+	const handlePriceChange = (value) => {
+		handleChange('price', {minPrice: value[0], maxPrice: value[1]});
+	};
+
+	// const handleCaratChange = (value) => {
+	// 	handleChange('carat', {minCarat: value[0], maxCarat: value[1]});
+	// };
+
+	// const handleShapeChange = (value) => {
+	// 	if (filters?.shape === value) {
+	// 		setFilters((prev) => ({
+	// 			...prev,
+	// 			shape: '',
+	// 		}));
+	// 	} else {
+	// 		handleChange('shape', value);
+	// 	}
+	// };
+
+	return (
+		<div className="grid grid-cols-3">
+			{/* Price Range Slider */}
+			<div className="ml-10 min-w-44">
+				<p className="mb-4">Giá:</p>
+				<Slider
+					range
+					value={[filters?.price?.minPrice, filters?.price?.maxPrice]}
+					min={filter?.Price?.Min}
+					max={filter?.Price?.Max}
+					onChange={handlePriceChange}
+				/>
+			</div>
+		</div>
+	);
+};
 export const FilterDiamondCustomize = ({
 	filters,
 	setFilters,

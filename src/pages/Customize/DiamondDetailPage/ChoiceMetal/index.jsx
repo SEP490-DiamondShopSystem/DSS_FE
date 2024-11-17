@@ -3,7 +3,7 @@ import React, {useEffect, useState} from 'react';
 import {Button, Input, message, Steps} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
 import Loading from '../../../../components/Loading';
-import {GetAllJewelryMetalSelector} from '../../../../redux/selectors';
+import {GetAllJewelryMetalSelector, GetLoadingCustomizeSelector} from '../../../../redux/selectors';
 import {handleSendRequest} from '../../../../redux/slices/customizeSlice';
 import {getAllJewelryMetal} from '../../../../redux/slices/jewelrySlice';
 import {Diamond} from './Choose/Diamond';
@@ -27,6 +27,7 @@ export const ChoiceMetalDiamond = ({
 }) => {
 	const dispatch = useDispatch();
 	const metals = useSelector(GetAllJewelryMetalSelector);
+	const loading = useSelector(GetLoadingCustomizeSelector);
 
 	const [stepChooseDiamond, setStepChooseDiamond] = useState(0);
 	const [steps, setStep] = useState(0);
@@ -237,6 +238,7 @@ export const ChoiceMetalDiamond = ({
 								type="text"
 								className="bg-primary border"
 								onClick={handleSendReqCustomize}
+								loading={loading}
 							>
 								Đặt Hàng
 							</Button>

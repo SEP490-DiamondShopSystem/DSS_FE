@@ -1,7 +1,7 @@
 import React, {useEffect, useMemo, useState} from 'react';
 
 import {DeleteOutlined, EyeOutlined} from '@ant-design/icons';
-import {Button, Image, message, Select} from 'antd';
+import {Button, Image, message, Select, Space} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import {getUserId} from '../../components/GetUserId';
@@ -10,6 +10,7 @@ import {
 	GetCartSelector,
 	GetPromotionAbleSelector,
 	GetPromotionSelector,
+	GetUserDetailSelector,
 	LoadingCartSelector,
 } from '../../redux/selectors';
 import {handleCartValidate, removeFromCartFinish} from '../../redux/slices/cartSlice';
@@ -101,6 +102,7 @@ const CartPage = () => {
 	const cartList = useSelector(GetCartSelector);
 	const promoAble = useSelector(GetPromotionAbleSelector);
 	const loading = useSelector(LoadingCartSelector);
+	const userDetail = useSelector(GetUserDetailSelector);
 
 	const [promo, setPromo] = useState('');
 	const [cart, setCart] = useState('');
@@ -108,6 +110,8 @@ const CartPage = () => {
 	const cartValidate = JSON.parse(localStorage.getItem(`cartValidate_${userId}`));
 	const [cartValidateProduct, setCartValidateProduct] = useState([]);
 	const [promoId, setPromoId] = useState(null);
+
+	console.log('userDetail', userDetail);
 
 	useEffect(() => {
 		dispatch(getAllPromo());
@@ -145,7 +149,13 @@ const CartPage = () => {
 				productId?.warrantyDiamond?.warrantyType,
 		}));
 
-		dispatch(handleCartValidate({promotionId: null, transformedData}));
+		dispatch(
+			handleCartValidate({
+				promotionId: null,
+				items: transformedData,
+				accountId: userDetail?.Id,
+			})
+		);
 		dispatch(checkPromoCart({items: transformedData}));
 	}, []);
 
@@ -218,10 +228,7 @@ const CartPage = () => {
 		<div className="flex justify-between p-8 bg-gray-50 min-h-screen mx-32 my-20">
 			{/* Left Segment: Engagement Ring, Loose Diamond, Promotions */}
 
-			<div
-				className="flex-1 lg:mr-8 space-y-8 shadow-lg bg-white rounded-lg"
-				style={{width: '70%'}}
-			>
+			<div className="md:w-2/3 flex-1 lg:mr-8 space-y-8 shadow-lg bg-white rounded-lg">
 				{mappedProducts?.length > 0 ? (
 					<div className="bg-white p-6 mx-5 my-5 border rounded-lg shadow-md">
 						<h2 className="text-xl font-semibold mb-2 border-b pb-2">Giỏ Hàng</h2>
@@ -283,7 +290,7 @@ const CartPage = () => {
 
 													{/* {item.CategoryName === 'Ring' && (
 												<div className="flex items-center mt-2">
-													<label className="mr-2 text-gray-700">
+													<label className="mr-2">
 														Kích thước nhẫn:
 													</label>
 													<p>{item.SizeId}</p>
@@ -367,7 +374,7 @@ const CartPage = () => {
 				)}
 
 				<div className="bg-white p-6 mx-5 my-5 border rounded-lg shadow-md">
-					<label htmlFor="promotions" className="block mb-2 text-gray-700 font-medium">
+					<label htmlFor="promotions" className="block mb-2 font-medium">
 						Khuyến mãi có sẵn
 					</label>
 
@@ -382,23 +389,54 @@ const CartPage = () => {
 				</div>
 			</div>
 
-			<div
-				className=" lg:mt-0 flex-shrink-0 w-full lg:w-1/3 bg-gray-50 p-6 mx-5 shadow-lg bg-white rounded-lg lg:sticky lg:top-8"
-				style={{width: '30%'}}
-			>
-				<div className="bg-white p-4 mx-5 my-5 rounded-lg shadow-md space-y-6">
+			<div className="md:w-1/3 lg:mt-0 flex-shrink-0 w-full lg:w-1/3 p-6 mx-5 shadow-lg bg-white rounded-lg lg:sticky lg:top-8">
+				<div className="bg-white p-4 mx-5 my-5 rounded-lg shadow-lg space-y-6">
 					<div className="space-y-4">
-						<p className="flex justify-between text-gray-700">
+						<p className="flex justify-between">
 							<span>Giá Gốc</span>{' '}
 							<span>{formatPrice(cartList?.OrderPrices?.DefaultPrice)}</span>
 						</p>
-						<p className="flex justify-between text-gray-700">
-							<span>Giảm Giá</span>{' '}
-							<span>-{formatPrice(cartList?.OrderPrices?.DiscountAmountSaved)}</span>
+						<p className="flex justify-between">
+							{cartList?.OrderPrices?.DiscountAmountSaved !== 0 ? (
+								<>
+									<span>Giảm Giá</span>{' '}
+									<span>
+										-{formatPrice(cartList?.OrderPrices?.DiscountAmountSaved)}
+									</span>
+								</>
+							) : (
+								<></>
+							)}
 						</p>
-						<p className="flex justify-between text-gray-700">
-							<span>Khuyến Mãi</span>{' '}
-							<span>-{formatPrice(cartList?.OrderPrices?.PromotionAmountSaved)}</span>
+						<p className="flex justify-between">
+							{cartList?.OrderPrices?.PromotionAmountSaved !== 0 ? (
+								<>
+									<span>Khuyến Mãi</span>{' '}
+									<span>
+										-{formatPrice(cartList?.OrderPrices?.PromotionAmountSaved)}
+									</span>
+								</>
+							) : (
+								<></>
+							)}
+						</p>
+						<p className="flex justify-between">
+							<span>Bảo Hành</span>{' '}
+							<span>{formatPrice(cartList?.OrderPrices?.TotalWarrantyPrice)}</span>
+						</p>
+						<p className="flex justify-between">
+							{cartList?.OrderPrices?.UserRankDiscountAmount !== 0 ? (
+								<>
+									<span>Khách Hàng Thân Thiết</span>
+
+									<span>
+										-
+										{formatPrice(cartList?.OrderPrices?.UserRankDiscountAmount)}
+									</span>
+								</>
+							) : (
+								<></>
+							)}
 						</p>
 						<hr className="border-t" />
 						<p className="flex justify-between text-gray-900 font-semibold">
