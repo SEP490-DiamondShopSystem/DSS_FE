@@ -72,9 +72,6 @@ export const DiamondJewelryList = () => {
 		});
 	};
 
-	console.log('jewelryList', jewelryList);
-	console.log('filters', filters);
-
 	return (
 		<>
 			<div className="mt-10">
