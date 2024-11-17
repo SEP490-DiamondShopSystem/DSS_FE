@@ -9,7 +9,7 @@ import {Divider, Image} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import diamondImg from '../../../assets/img-diamond.png';
-import {FilterDiamond} from '../../../components/Filter/Filter';
+import {FilterDiamond, FilterJewelryDiamond} from '../../../components/Filter/Filter';
 import {LoadingDiamondSelector} from '../../../redux/selectors';
 import {formatPrice} from '../../../utils';
 import Loading from '../../../components/Loading';
@@ -49,7 +49,7 @@ export const DiamondLabList = ({
 
 	return (
 		<div>
-			<FilterDiamond
+			<FilterJewelryDiamond
 				setFilters={setFilters}
 				filters={filters}
 				handleReset={handleReset}

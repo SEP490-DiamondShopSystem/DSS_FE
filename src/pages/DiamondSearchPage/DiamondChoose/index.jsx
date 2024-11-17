@@ -45,6 +45,31 @@ const DiamondChoosePage = () => {
 	const [diamond, setDiamond] = useState();
 
 	useEffect(() => {
+		if (filterLimits) {
+			setFilters({
+				// shape: getShapeFromLocalStorage(),
+				price: {minPrice: filterLimits?.Price?.Min, maxPrice: filterLimits?.Price?.Max},
+				// carat: {
+				// 	minCarat: findShape?.CaratFrom || filterLimits?.Carat?.Min,
+				// 	maxCarat: findShape?.CaratTo || filterLimits?.Carat?.Max,
+				// },
+				// color: {minColor: filterLimits?.Color?.Min, maxColor: filterLimits?.Color?.Max},
+				// clarity: {
+				// 	minClarity: filterLimits?.Clarity?.Min,
+				// 	maxClarity: filterLimits?.Clarity?.Max,
+				// },
+				// cut: {minCut: filterLimits?.Cut?.Min, maxCut: filterLimits?.Cut?.Max},
+			});
+		}
+	}, [filterLimits]);
+
+	useEffect(() => {
+		if (jewelryList) {
+			setDiamond(jewelryList?.Values);
+		}
+	}, [jewelryList]);
+
+	useEffect(() => {
 		dispatch(getDiamondFilter());
 	}, []);
 
@@ -58,9 +83,10 @@ const DiamondChoosePage = () => {
 				ModelId: jewelryModel?.jewelryModelId,
 				MetalId: jewelryModel?.selectedMetal?.Id,
 				SizeId: jewelryModel?.size,
-				SideDiamondOptId: jewelryModel?.selectedSideDiamond.Id,
-				// MinPrice: minPrice,
-				// MaxPrice: maxPrice,shapeId: filters?.shape,
+				SideDiamondOptId: jewelryModel?.selectedSideDiamond.Id || null,
+				MinPrice: filters?.price?.minPrice,
+				MaxPrice: filters?.price?.maxPrice,
+				// shapeId: filters?.shape,
 				// cutFrom: filters?.cut?.minCut,
 				// cutTo: filters?.cut?.maxCut,
 				// colorFrom: filters?.color?.minColor,
@@ -77,7 +103,7 @@ const DiamondChoosePage = () => {
 		fetchJewelryData();
 
 		return () => fetchJewelryData.cancel();
-	}, []);
+	}, [jewelryModel, filters]);
 
 	const getDiamondForFilter = (index) => {
 		if (index >= 0 && index < jewelryModel?.MainDiamonds?.length) {
@@ -100,31 +126,6 @@ const DiamondChoosePage = () => {
 
 	console.log('jewelryModel', jewelryModel);
 	console.log('diamondForFilter', diamondForFilter);
-
-	useEffect(() => {
-		if (filterLimits) {
-			setFilters({
-				shape: getShapeFromLocalStorage(),
-				price: {minPrice: filterLimits?.Price?.Min, maxPrice: filterLimits?.Price?.Max},
-				carat: {
-					minCarat: findShape?.CaratFrom || filterLimits?.Carat?.Min,
-					maxCarat: findShape?.CaratTo || filterLimits?.Carat?.Max,
-				},
-				color: {minColor: filterLimits?.Color?.Min, maxColor: filterLimits?.Color?.Max},
-				clarity: {
-					minClarity: filterLimits?.Clarity?.Min,
-					maxClarity: filterLimits?.Clarity?.Max,
-				},
-				cut: {minCut: filterLimits?.Cut?.Min, maxCut: filterLimits?.Cut?.Max},
-			});
-		}
-	}, [filterLimits]);
-
-	useEffect(() => {
-		if (jewelryList) {
-			setDiamond(jewelryList?.Values);
-		}
-	}, [jewelryList]);
 
 	const handleReset = () => {
 		localStorage.removeItem('selected');

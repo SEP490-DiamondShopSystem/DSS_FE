@@ -132,6 +132,22 @@ export const getJewelryDetailPreset = createAsyncThunk(
 	}
 );
 
+export const getJewelryDetailFile = createAsyncThunk(
+	'jewelrySlice/getJewelryDetailFile',
+	async (id, {rejectWithValue}) => {
+		try {
+			const response = await api.get(`/JewelryModelFiles/${id}/Files`);
+			// const response = await api.get(`/all_jewelry`);
+			console.log(response);
+
+			return response;
+		} catch (error) {
+			console.log('Error: ', JSON.stringify(error.response.data));
+			return rejectWithValue(error.response.data);
+		}
+	}
+);
+
 export const jewelrySlice = createSlice({
 	name: 'jewelrySlice',
 	initialState: {
@@ -139,6 +155,7 @@ export const jewelrySlice = createSlice({
 		jewelriesModel: null,
 		jewelryDetail: null,
 		jewelryDetailPreset: null,
+		jewelryDetailThumbnail: null,
 		metals: null,
 		categories: null,
 		cartItems: [],
@@ -211,6 +228,17 @@ export const jewelrySlice = createSlice({
 				state.jewelryDetailPreset = action.payload;
 			})
 			.addCase(getJewelryDetailPreset.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload;
+			})
+			.addCase(getJewelryDetailFile.pending, (state) => {
+				state.loading = true;
+			})
+			.addCase(getJewelryDetailFile.fulfilled, (state, action) => {
+				state.loading = false;
+				state.jewelryDetailThumbnail = action.payload;
+			})
+			.addCase(getJewelryDetailFile.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload;
 			});
