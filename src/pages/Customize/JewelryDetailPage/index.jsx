@@ -81,13 +81,13 @@ const JewelryCustomDetail = () => {
 	const items = [
 		{
 			title: 'Chọn Thông Số Vỏ',
-			disabled: stepChoose < 0,
+			disabled: stepChoose !== 0 && stepChoose !== 1,
 		},
 		...(jewelry?.MainDiamonds?.length > 0
 			? [
 					{
 						title: 'Chọn Thông Số Kim Cương',
-						disabled: stepChoose < 1,
+						disabled: stepChoose === 0 || stepChoose !== 2,
 					},
 			  ]
 			: []),
@@ -96,6 +96,8 @@ const JewelryCustomDetail = () => {
 			disabled: stepChoose < 2,
 		},
 	];
+
+	console.log('stepChoose', stepChoose);
 
 	const handleSizeChange = (e) => {
 		setSize(e.target.value);

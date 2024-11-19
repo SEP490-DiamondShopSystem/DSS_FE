@@ -237,27 +237,29 @@ const CheckoutPage = () => {
 	}, []);
 
 	useEffect(() => {
-		const transformedData = {
-			id: Math.floor(1000000 + Math.random() * 9000000).toString(),
-			jewelryId: order?.JewelryId || null,
-			diamondId: order?.DiamondId || null,
-			jewelryModelId: order?.JewelryModelId || null,
-			sizeId: order?.SizeId || null,
-			metalId: order?.MetalId.Value,
-			sideDiamondChoices: [order?.SideDiamondId],
-			engravedText: order?.EngravedText || null,
-			engravedFont: order?.EngravedFont || null,
-			warrantyCode: warrantiesJewelrySelected?.warrantyCode || null,
-			warrantyType: 2,
-		};
-		dispatch(
-			handleCartValidate({
-				promotionId: promoCustomizeId || null,
-				items: [transformedData],
-				accountId: userDetail?.Id,
-			})
-		);
-		dispatch(checkPromoCart({items: [transformedData]}));
+		if (idCustomize) {
+			const transformedData = {
+				id: Math.floor(1000000 + Math.random() * 9000000).toString(),
+				jewelryId: order?.JewelryId || null,
+				diamondId: order?.DiamondId || null,
+				jewelryModelId: order?.JewelryModelId || null,
+				sizeId: order?.SizeId || null,
+				metalId: order?.MetalId.Value,
+				sideDiamondChoices: [order?.SideDiamondId],
+				engravedText: order?.EngravedText || null,
+				engravedFont: order?.EngravedFont || null,
+				warrantyCode: warrantiesJewelrySelected?.warrantyCode || null,
+				warrantyType: 2,
+			};
+			dispatch(
+				handleCartValidate({
+					promotionId: promoCustomizeId || null,
+					items: [transformedData],
+					accountId: userDetail?.Id,
+				})
+			);
+			dispatch(checkPromoCart({items: [transformedData]}));
+		}
 	}, [dispatch, order, userDetail, warrantiesJewelrySelected, promoCustomizeId]);
 
 	const jewelryOrDiamondProducts = cartList?.Products.filter(
@@ -927,7 +929,11 @@ const CheckoutPage = () => {
 
 								<div className="flex text-sm text-gray-600 my-2">
 									<span className="mr-2">📅 Thời gian giao hàng</span>
-									<span>Giao hàng sau 7 ngày</span>
+									{idCustomize ? (
+										<span>Giao hàng sau 7 ngày</span>
+									) : (
+										<span>Giao hàng sau 3 ngày</span>
+									)}
 								</div>
 
 								<div className="flex justify-between items-center font-semibold mt-4 text-lg">

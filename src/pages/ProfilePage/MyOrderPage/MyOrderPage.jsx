@@ -1,11 +1,9 @@
+import {EyeFilled, TransactionOutlined} from '@ant-design/icons';
+import {Button, Table, Tag, Tooltip} from 'antd';
 import React, {useEffect, useState} from 'react';
-import {Button, message, Table, Tag, Tooltip} from 'antd';
 import {Helmet} from 'react-helmet';
-import NavbarProfile from '../../../components/NavbarProfile';
-import {OrderDetailModal} from './OrderDetailModal';
-import {OrderInvoiceModal} from './OrderInvoiceModal';
-import {useNavigate} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
+import {useNavigate} from 'react-router-dom';
 import {GetAllOrderSelector, LoadingOrderSelector} from '../../../redux/selectors';
 import {getUserOrder, getUserOrderTransaction} from '../../../redux/slices/orderSlice';
 import {
@@ -14,7 +12,8 @@ import {
 	getOrderPaymentStatus,
 	getOrderStatus,
 } from '../../../utils/index';
-import {ContainerOutlined, EyeFilled, TransactionOutlined} from '@ant-design/icons';
+import {OrderDetailModal} from './OrderDetailModal';
+import {OrderInvoiceModal} from './OrderInvoiceModal';
 
 const MyOrderPage = () => {
 	const navigate = useNavigate();
@@ -30,12 +29,12 @@ const MyOrderPage = () => {
 	const [currentPage, setCurrentPage] = useState(1);
 	const [pageSize, setPageSize] = useState(100);
 
-	console.log(orderList);
-	console.log('dataSource', dataSource);
+	console.log('orderList', orderList);
+	// console.log('dataSource', dataSource);
 
 	const columns = [
 		{
-			title: 'Id',
+			title: 'Mã đặt hàng',
 			dataIndex: 'orderCode',
 			align: 'center',
 		},
@@ -142,21 +141,20 @@ const MyOrderPage = () => {
 							<EyeFilled />
 						</Button>
 					</Tooltip>
-					{record.status === 'Pending' &&
-						isPriceGreaterThan50Mil(record?.price) === false && (
-							<Tooltip title={'Thanh Toán'}>
-								<Button
-									type="text"
-									className="p-2 bg-primary border rounded-lg  transition-colors duration-300"
-									onClick={() => toggleTransactionModal(record.orderId)}
-								>
-									<TransactionOutlined />
-								</Button>
-							</Tooltip>
-						)}
+					{record.status === 'Pending' && record.paymentMethodId === '2' && (
+						<Tooltip title={'Thanh Toán'}>
+							<Button
+								type="text"
+								className="p-2 bg-primary border rounded-lg  transition-colors duration-300"
+								onClick={() => toggleTransactionModal(record.orderId)}
+							>
+								<TransactionOutlined />
+							</Button>
+						</Tooltip>
+					)}
 				</>
 			),
-			align: 'center',
+			// align: 'center',
 		},
 	];
 
@@ -193,6 +191,7 @@ const MyOrderPage = () => {
 			const formattedOrders = orderList?.Values?.map((order) => ({
 				orderId: order.Id,
 				orderCode: order.OrderCode,
+				paymentMethodId: order.PaymentMethod?.Id,
 				orderTime: convertToVietnamDate(order.CreatedDate),
 				price: formatPrice(order.TotalPrice),
 				status: getOrderStatus(order.Status),

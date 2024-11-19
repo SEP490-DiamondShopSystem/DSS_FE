@@ -240,6 +240,8 @@ export const InformationRight = ({
 		</div>
 	);
 
+	console.log('jewelryDetail?.filteredGroups', jewelryDetail?.filteredGroups);
+
 	return (
 		<div>
 			<div className="border-tintWhite">
@@ -288,7 +290,7 @@ export const InformationRight = ({
 												<p className="mr-3">Kích Cỡ Hiện Tại:</p>
 
 												<Select
-													value={jewelry?.SizeId}
+													value={sizeChange || jewelry?.SizeId}
 													style={{width: 120}}
 													onChange={handleChange}
 												>

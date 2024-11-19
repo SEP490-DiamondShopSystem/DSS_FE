@@ -24,7 +24,7 @@ export const Engrave = ({
 	const [isUploading, setIsUploading] = useState(false);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [textFont, setTextFont] = useState(fontFamily || 'Lucida Sans');
-	const [textContent, setTextContent] = useState(null);
+	const [textContent, setTextContent] = useState('');
 
 	useEffect(() => {
 		const fabricCanvas = new fabric.Canvas(canvasRef.current, {
@@ -38,17 +38,28 @@ export const Engrave = ({
 		imgElement.onload = () => {
 			const fabricImg = new fabric.Image(imgElement);
 			fabricImg.scaleToWidth(500);
-			fabricImg.set({left: 0, top: 100, selectable: false});
+			fabricImg.set({left: 0, top: 80, selectable: false});
 			fabricCanvas.add(fabricImg);
 
+			const path = new fabric.Path('M153,242 C172,348 387,366 427,248', {
+				fill: '',
+				stroke: 'transparent',
+			});
+
 			const initialText = new fabric.Text(textContent, {
-				left: 150,
-				top: 250,
 				fontSize,
 				fontFamily: textFont,
 				fill: textColor,
+				path,
+				left: 0,
+				top: 0,
+				textAlign: 'center',
+				originX: 'center',
+				originY: 'center',
+				selectable: false,
 			});
 
+			fabricCanvas.add(path);
 			fabricCanvas.add(initialText);
 			setTextObject(initialText);
 			fabricCanvas.renderAll();
@@ -57,20 +68,26 @@ export const Engrave = ({
 		return () => {
 			fabricCanvas.dispose();
 		};
-	}, [textContent]); // Chỉ chạy một lần khi component mount
+	}, [textContent]);
 
 	useEffect(() => {
 		if (textObject && canvas) {
-			// Cập nhật textObject khi textContent thay đổi
 			textObject.set({
-				text: textContent, // Thay đổi nội dung chữ
+				text: textContent,
 				fontSize,
 				fontFamily: textFont,
 				fill: textColor,
+				selectable: false,
 			});
-			canvas.renderAll(); // Render lại canvas để hiển thị thay đổi
+			textObject.set({
+				left: canvas.width / 2,
+				top: canvas.height / 2,
+				originX: 'center',
+				originY: 'center',
+			});
+			canvas.renderAll();
 		}
-	}, [textContent, fontSize, textFont, textColor, textObject, canvas]); // Theo dõi các giá trị thay đổi
+	}, [textContent, fontSize, textFont, textColor, textObject, canvas]);
 
 	const handleExportImage = () => {
 		if (canvas) {
@@ -115,7 +132,7 @@ export const Engrave = ({
 	const handleFontChange = (value) => setTextFont(value);
 	const handleColorChange = (color) => setTextColor(color.hex);
 	const handleTextChange = (e) => {
-		setTextContent(e.target.value); // Cập nhật textContent
+		setTextContent(e.target.value);
 	};
 
 	console.log('textValue', textValue);
@@ -167,7 +184,7 @@ export const Engrave = ({
 					type="text"
 					className="bg-primary w-32 uppercase font-semibold"
 					onClick={handleExportImage}
-					disabled={textContent === null || textContent === ''}
+					disabled={textContent === ''}
 				>
 					Hoàn Thành
 				</Button>
