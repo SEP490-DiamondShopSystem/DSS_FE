@@ -26,7 +26,7 @@ export const Shape = ({
 	};
 
 	const matchedShapeItems = shapeItems.filter((item) =>
-		currentDiamond.Shapes.some((shape) => shape.ShapeId === item.value)
+		currentDiamond?.Shapes?.some((shape) => shape?.ShapeId === item?.value)
 	);
 
 	return (

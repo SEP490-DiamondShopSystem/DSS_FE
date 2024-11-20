@@ -49,8 +49,22 @@ export const ChoiceMetalDiamond = ({
 		},
 	];
 
-	const currentDiamond = jewelry?.MainDiamonds[stepChooseDiamond];
+	const expandedDiamonds =
+		jewelry?.MainDiamonds?.flatMap((diamond) => Array(diamond.Quantity).fill(diamond)) || [];
+
+	const currentDiamond = expandedDiamonds[stepChooseDiamond];
+
+	console.log('expandedDiamonds', expandedDiamonds);
+	console.log('currentDiamond', currentDiamond);
+
 	const currentJewelry = filteredGroups[stepChooseDiamond];
+
+	const quantities = jewelry?.MainDiamonds?.map((diamond) => diamond.Quantity) || [];
+	console.log('quantities', quantities);
+
+	const totalQuantity =
+		jewelry?.MainDiamonds?.reduce((sum, diamond) => sum + diamond.Quantity, 0) || 0;
+	console.log('totalQuantity', totalQuantity);
 
 	useEffect(() => {
 		dispatch(getAllJewelryMetal());
@@ -80,12 +94,13 @@ export const ChoiceMetalDiamond = ({
 
 	console.log('jewelry', jewelry);
 	console.log('metals', metals);
+	console.log('currentDiamond', currentDiamond);
+	console.log('selectedDiamonds', selectedDiamonds);
 
-	const itemsDiamond =
-		jewelry?.MainDiamonds?.map((diamond, index) => ({
-			title: `Kim Cương ${index + 1}`,
-			disabled: index > stepChooseDiamond,
-		})) || [];
+	const itemsDiamond = Array.from({length: jewelry?.MainDiamondCount || 0}, (_, index) => ({
+		title: `Kim Cương ${index + 1}`,
+		disabled: index > stepChooseDiamond,
+	}));
 
 	useEffect(() => {
 		if (itemsDiamond.length === 0) {
