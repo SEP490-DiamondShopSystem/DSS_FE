@@ -4,6 +4,8 @@ import {Steps} from 'antd';
 export const OrderStatus = ({orderStatus, orderDetail, orderLogs}) => {
 	const [currentStep, setCurrentStep] = useState(0);
 
+	console.log('currentStep', currentStep);
+
 	const indexCancelled = orderLogs?.findIndex((log) => log?.Status === 4);
 
 	useEffect(() => {
@@ -101,13 +103,13 @@ export const OrderStatus = ({orderStatus, orderDetail, orderLogs}) => {
 		// Step 3: Giao Hàng
 		{
 			title:
-				currentStep === 3
+				currentStep === 6 && orderStatus === 7
 					? 'Giao hàng Thất Bại'
 					: currentStep === 7
 					? 'Đang Giao Hàng'
 					: 'Đã Nhận Hàng',
 			description:
-				currentStep === 3
+				currentStep === 6 && orderStatus === 7
 					? 'Giao đơn hàng thất bại.'
 					: currentStep === 7
 					? 'Đơn hàng đang được giao.'
@@ -169,7 +171,7 @@ export const OrderStatus = ({orderStatus, orderDetail, orderLogs}) => {
 		steps[2].status = 'finish'; // Đang Vận Chuyển
 		steps[3].status = 'process'; // Giao Hàng
 		steps[4].status = 'wait'; // Hoàn Thành
-	} else if (currentStep === 6) {
+	} else if (currentStep === 6 && orderStatus === 7) {
 		steps[0].status = 'finish'; // Đã Xác Nhận
 		steps[1].status = 'finish'; // Đã Xử Lí
 		steps[2].status = 'finish'; // Đã Vận Chuyển

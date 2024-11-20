@@ -51,7 +51,7 @@ export const Carat = ({
 				<Slider
 					range
 					value={[customizeDiamond?.caratFrom, customizeDiamond?.caratTo]}
-					step={0.1}
+					step={0.01}
 					min={caratFromShape}
 					max={caratToShape}
 					onChange={handleCaratChange}

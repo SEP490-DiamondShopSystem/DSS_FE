@@ -193,7 +193,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 										Trạng thái đơn hàng
 									</h2>
 									<p>Hóa đơn: #{order?.OrderCode}</p>
-									<p>Ngày: {convertToVietnamDate(order?.CreatedDate)}</p>
+									<p>Ngày: {order?.CreatedDate}</p>
 								</div>
 							</div>
 

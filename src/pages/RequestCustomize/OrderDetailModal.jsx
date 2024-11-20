@@ -1,6 +1,7 @@
 import {Button, Form, Image, message, Modal, Space, Table, Tag, Typography} from 'antd';
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
+import {useNavigate} from 'react-router-dom';
 import logo from '../../assets/logo-short-ex.png';
 import '../../css/antd.css';
 import {GetRequestCustomizeDetailSelector} from '../../redux/selectors';
@@ -9,10 +10,8 @@ import {
 	handleOrderCustomizeProceed,
 	handleOrderCustomizeReject,
 } from '../../redux/slices/customizeSlice';
-import {convertToVietnamDate} from '../../utils';
 import {enums} from '../../utils/constant';
 import {OrderStatus} from './OrderStatus';
-import {useNavigate} from 'react-router-dom';
 
 const {Title, Text} = Typography;
 
@@ -70,7 +69,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 			dataIndex: 'JewelryModel',
 			key: 'jewelryName',
 			render: (text) => {
-				return text?.Name || 'No name available';
+				return text?.Name;
 			},
 		},
 		{
@@ -78,26 +77,26 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 			dataIndex: 'Metal',
 			key: 'metalName',
 			render: (text) => {
-				return text?.Name || 'No name available';
+				return text?.Name;
 			},
 		},
 		{
 			title: 'Chữ Khắc',
 			dataIndex: 'EngravedText',
 			key: 'engravedText',
-			render: (text) => text || 'No text',
+			render: (text) => text,
 		},
 		{
 			title: 'Ngày Tạo Đơn',
 			dataIndex: 'CreatedDate',
 			key: 'createdAt',
-			render: (text) => convertToVietnamDate(text),
+			render: (text) => text,
 		},
 		{
 			title: 'Ngày Hết Hạn',
 			dataIndex: 'ExpiredDate',
 			key: 'expiredDate',
-			render: (text) => convertToVietnamDate(text),
+			render: (text) => text,
 		},
 		{
 			title: 'Trạng Thái',
@@ -302,7 +301,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 		dispatch(handleOrderCustomizeProceed(selectedOrder.Id)).then((res) => {
 			console.log('res', res);
 			if (res.payload) {
-				message.success(`Bạn đã xác nhận đơn thiết kế ${id}!`);
+				message.success(`Bạn đã xác nhận đơn thiết kế ${selectedOrder.Id}!`);
 			} else {
 				message.error('Có lỗi khi xác nhận');
 			}
@@ -361,7 +360,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 								Trạng thái đơn thiết kế
 							</h2>
 							{/* <p>Hóa đơn: #{order?.OrderCode}</p> */}
-							<p>Ngày: {convertToVietnamDate(order?.CreatedDate)}</p>
+							<p>Ngày: {order?.CreatedDate}</p>
 						</div>
 					</div>
 

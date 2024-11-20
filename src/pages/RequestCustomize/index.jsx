@@ -112,13 +112,13 @@ const RequestCustomize = () => {
 			title: 'Ngày Tạo Đơn',
 			dataIndex: 'CreatedDate',
 			key: 'createdAt',
-			render: (text) => convertToVietnamDate(text),
+			render: (text) => text,
 		},
 		{
 			title: 'Ngày Hết Hạn',
 			dataIndex: 'ExpiredDate',
 			key: 'expiredDate',
-			render: (text) => convertToVietnamDate(text),
+			render: (text) => text,
 		},
 		{
 			title: 'Ghi Chú',

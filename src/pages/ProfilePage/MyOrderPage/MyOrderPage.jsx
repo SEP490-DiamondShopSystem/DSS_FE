@@ -192,7 +192,7 @@ const MyOrderPage = () => {
 				orderId: order.Id,
 				orderCode: order.OrderCode,
 				paymentMethodId: order.PaymentMethod?.Id,
-				orderTime: convertToVietnamDate(order.CreatedDate),
+				orderTime: order.CreatedDate,
 				price: formatPrice(order.TotalPrice),
 				status: getOrderStatus(order.Status),
 				paymentStatus: getOrderPaymentStatus(order.PaymentStatus),
