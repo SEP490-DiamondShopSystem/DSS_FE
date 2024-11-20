@@ -20,6 +20,7 @@ import {
 	shapeItems,
 	typeChoice,
 } from '../../utils/constant';
+import {formatPrice} from '../../utils';
 
 export const FilterDiamond = ({filters, setFilters, handleReset, diamondForFilter, findShape}) => {
 	const dispatch = useDispatch();
@@ -143,13 +144,18 @@ export const FilterDiamond = ({filters, setFilters, handleReset, diamondForFilte
 			{/* Price Range Slider */}
 			<div className="ml-10 min-w-44">
 				<p className="mb-4">Giá:</p>
-				<Slider
-					range
-					value={[filters?.price?.minPrice, filters?.price?.maxPrice]}
-					min={filter?.Price?.Min}
-					max={filter?.Price?.Max}
-					onChange={handlePriceChange}
-				/>
+				<div className="flex">
+					<span>{formatPrice(filters?.price?.minPrice)}</span>
+					<Slider
+						range
+						min={filter?.Price?.Min}
+						max={filter?.Price?.Max}
+						value={[filters?.price?.minPrice, filters?.price?.maxPrice]}
+						onChange={handlePriceChange}
+						className="md:w-64 mx-4"
+					/>
+					<span>{formatPrice(filters?.price?.maxPrice)}</span>
+				</div>
 			</div>
 
 			{/* Carat Range Slider */}
@@ -265,13 +271,18 @@ export const FilterJewelryDiamond = ({
 			{/* Price Range Slider */}
 			<div className="ml-10 min-w-44">
 				<p className="mb-4">Giá:</p>
-				<Slider
-					range
-					value={[filters?.price?.minPrice, filters?.price?.maxPrice]}
-					min={filter?.Price?.Min}
-					max={filter?.Price?.Max}
-					onChange={handlePriceChange}
-				/>
+				<div className="flex">
+					<span>{formatPrice(filters?.price?.minPrice)}</span>
+					<Slider
+						range
+						min={filter?.Price?.Min}
+						max={filter?.Price?.Max}
+						value={[filters?.price?.minPrice, filters?.price?.maxPrice]}
+						onChange={handlePriceChange}
+						className="md:w-64 mx-4"
+					/>
+					<span>{formatPrice(filters?.price?.maxPrice)}</span>
+				</div>
 			</div>
 		</div>
 	);
@@ -424,6 +435,7 @@ export const FilterDiamondCustomize = ({
 // Component for filtering jewelry items
 export const FilterAllJewelry = ({handleFilter, setFilters, filters, handleReset}) => {
 	const filterTypes = ['type', 'metal'];
+	const [range, setRange] = useState([0, 40000000]);
 
 	const handleFilterChange = (filterType, selectedValues) => {
 		setFilters((prevFilters) => ({
@@ -471,14 +483,19 @@ export const FilterAllJewelry = ({handleFilter, setFilters, filters, handleReset
 
 			{/* Price Range Slider */}
 			<div className="ml-10 min-w-44">
-				<p className="mb-4">Price:</p>
-				<Slider
-					range
-					min={0}
-					max={1000}
-					defaultValue={[0, 1000]} // Default price range
-					onChange={handlePriceChange} // Handle price change
-				/>
+				<p className="mb-4">Giá:</p>
+				<div className="flex">
+					<span>{formatPrice(filters?.price?.minPrice)}</span>
+					<Slider
+						range
+						min={0}
+						max={40000000}
+						defaultValue={range}
+						onChange={handlePriceChange}
+						className="md:w-64 mx-4"
+					/>
+					<span>{formatPrice(filters?.price?.maxPrice)}</span>
+				</div>
 			</div>
 			<div className="ml-8 mt-6">
 				<Button onClick={handleReset} danger>
@@ -491,6 +508,7 @@ export const FilterAllJewelry = ({handleFilter, setFilters, filters, handleReset
 
 export const FilterJewelry = ({handleFilter, setFilters, filters, handleReset}) => {
 	const filterTypes = ['gender', 'metal'];
+	const [range, setRange] = useState([0, 40000000]);
 
 	const handleFilterChange = (filterType, selectedValues) => {
 		setFilters((prevFilters) => ({
@@ -535,16 +553,20 @@ export const FilterJewelry = ({handleFilter, setFilters, filters, handleReset}) 
 				</Select>
 			))}
 
-			{/* Price Range Slider */}
 			<div className="ml-10 min-w-44">
-				<p className="mb-4">Price:</p>
-				<Slider
-					range
-					min={0}
-					max={1000}
-					defaultValue={[0, 1000]} // Default price range
-					onChange={handlePriceChange} // Handle price change
-				/>
+				<p className="mb-4">Giá:</p>
+				<div className="flex">
+					<span>{formatPrice(filters?.price?.minPrice)}</span>
+					<Slider
+						range
+						min={0}
+						max={40000000}
+						defaultValue={range}
+						onChange={handlePriceChange}
+						className="md:w-64 mx-4"
+					/>
+					<span>{formatPrice(filters?.price?.maxPrice)}</span>
+				</div>
 			</div>
 			<div className="ml-8 mt-6">
 				<Button onClick={handleReset} danger>
@@ -562,10 +584,12 @@ export const FilterDiamondJewelry = ({handleFilter, setFilters, filters, handleR
 
 	const [metals, setMetals] = useState();
 	const [categories, setCategories] = useState();
+	const [range, setRange] = useState([0, 40000000]);
 
 	useEffect(() => {
 		dispatch(getAllJewelryMetal());
 	}, []);
+
 	useEffect(() => {
 		dispatch(getAllJewelryModelCategory());
 	}, []);
@@ -580,9 +604,6 @@ export const FilterDiamondJewelry = ({handleFilter, setFilters, filters, handleR
 			setCategories(categoryList);
 		}
 	}, [categoryList]);
-
-	console.log('metalList', metals);
-	console.log('categoryList', categories);
 
 	const filterTypes = ['Loại trang sức', 'Kim loại', 'Hoàn Thiện Rhodium', 'Được Khắc Chữ'];
 
@@ -620,8 +641,6 @@ export const FilterDiamondJewelry = ({handleFilter, setFilters, filters, handleR
 		'Được Khắc Chữ': 'IsEngravable',
 	};
 
-	console.log('filterOptions', filterOptions[1]);
-
 	// Render the filter UI
 	return (
 		<div wrap className="p-4 flex items-center">
@@ -654,13 +673,18 @@ export const FilterDiamondJewelry = ({handleFilter, setFilters, filters, handleR
 			{/* Price Range Slider */}
 			<div className="ml-10 min-w-44">
 				<p className="mb-4">Giá:</p>
-				<Slider
-					range
-					min={0}
-					max={40000000}
-					defaultValue={[0, 40000000]} // Default price range
-					onChange={handlePriceChange} // Handle price change
-				/>
+				<div className="flex">
+					<span>{formatPrice(filters?.price?.minPrice)}</span>
+					<Slider
+						range
+						min={0}
+						max={40000000}
+						defaultValue={range}
+						onChange={handlePriceChange}
+						className="md:w-64 mx-4"
+					/>
+					<span>{formatPrice(filters?.price?.maxPrice)}</span>
+				</div>
 			</div>
 		</div>
 	);

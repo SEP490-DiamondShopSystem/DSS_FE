@@ -3,26 +3,6 @@ import {message} from 'antd';
 import {api} from '../../services/api';
 import {getUserId} from '../../components/GetUserId';
 
-// export const getAllOrderByUser = createAsyncThunk(
-// 	'orderSlice/getAllOrderByUser',
-// 	async ({promotionId, transformedData}, {rejectWithValue}) => {
-// 		console.log('transformedData', transformedData);
-
-// 		try {
-// 			const response = await api.post(`/Cart/Validate`, {
-// 				promotionId,
-// 				items: transformedData,
-// 			});
-// 			console.log(response);
-
-// 			return response;
-// 		} catch (error) {
-// 			console.log('Error: ', JSON.stringify(error.response.data));
-// 			return rejectWithValue(error.response.data);
-// 		}
-// 	}
-// );
-
 export const handleCheckoutOrder = createAsyncThunk(
 	'orderSlice/handleCheckoutOrder',
 	async ({createOrderInfo, billingDetail}, {rejectWithValue}) => {
@@ -74,7 +54,6 @@ export const getUserOrder = createAsyncThunk(
 				url += `?${queryParams.toString()}`;
 			}
 
-			// Thực hiện request với URL đã hoàn chỉnh
 			const data = await api.get(url);
 			return data;
 		} catch (error) {
@@ -114,11 +93,27 @@ export const getUserOrderTransaction = createAsyncThunk(
 	}
 );
 
+export const getOrderLog = createAsyncThunk(
+	'orderSlice/getOrderLog',
+	async (orderId, {rejectWithValue}) => {
+		try {
+			const response = await api.get(`/Order/Log/${orderId}`);
+			console.log(response);
+
+			return response;
+		} catch (error) {
+			console.log('Error: ', JSON.stringify(error.response.data));
+			return rejectWithValue(error.response.data);
+		}
+	}
+);
+
 export const orderSlice = createSlice({
 	name: 'cart',
 	initialState: {
 		orderList: null,
 		orderDetail: null,
+		orderLogs: null,
 		transaction: null,
 	},
 	reducers: {},
@@ -175,6 +170,17 @@ export const orderSlice = createSlice({
 				state.transaction = action.payload;
 			})
 			.addCase(getUserOrderTransaction.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload;
+			})
+			.addCase(getOrderLog.pending, (state) => {
+				state.loading = true;
+			})
+			.addCase(getOrderLog.fulfilled, (state, action) => {
+				state.loading = false;
+				state.orderLogs = action.payload;
+			})
+			.addCase(getOrderLog.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload;
 			});

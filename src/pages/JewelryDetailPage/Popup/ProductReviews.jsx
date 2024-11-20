@@ -85,9 +85,7 @@ const ProductReviews = ({reviewLength, reviewList, averageRating, setOrderBy, or
 										/>
 									))}
 								</div>
-								<p className="font-semibold">
-									Đã Đánh Giá: {convertToVietnamDate(review?.CreatedDate)}
-								</p>
+								<p className="font-semibold">Đã Đánh Giá: {review?.CreatedDate}</p>
 
 								<p>{review.Content}</p>
 							</Card>

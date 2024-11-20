@@ -204,7 +204,13 @@ const CartPage = () => {
 		}));
 
 		// Gọi dispatch sau khi xóa
-		dispatch(handleCartValidate({promotionId: null, transformedData})).then((res) => {
+		dispatch(
+			handleCartValidate({
+				promotionId: null,
+				items: transformedData,
+				accountId: userDetail?.Id,
+			})
+		).then((res) => {
 			if (res.payload) {
 				message.success('Xóa sản phẩm thành công!');
 			}
@@ -421,8 +427,16 @@ const CartPage = () => {
 							)}
 						</p>
 						<p className="flex justify-between">
-							<span>Bảo Hành</span>{' '}
-							<span>{formatPrice(cartList?.OrderPrices?.TotalWarrantyPrice)}</span>
+							{cartList?.OrderPrices?.TotalWarrantyPrice !== 0 ? (
+								<>
+									<span>Bảo Hành</span>{' '}
+									<span>
+										-{formatPrice(cartList?.OrderPrices?.TotalWarrantyPrice)}
+									</span>
+								</>
+							) : (
+								<></>
+							)}
 						</p>
 						<p className="flex justify-between">
 							{cartList?.OrderPrices?.UserRankDiscountAmount !== 0 ? (

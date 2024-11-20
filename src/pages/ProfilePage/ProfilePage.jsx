@@ -187,7 +187,7 @@ const ProfilePage = () => {
 			const formattedOrders = orderList?.Values?.map((order) => ({
 				orderId: order.Id,
 				orderCode: order.OrderCode,
-				orderTime: convertToVietnamDate(order.CreatedDate),
+				orderTime: order.CreatedDate,
 				price: formatPrice(order.TotalPrice),
 				status: getOrderStatus(order.Status),
 				paymentStatus: getOrderPaymentStatus(order.PaymentStatus),

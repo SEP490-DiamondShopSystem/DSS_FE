@@ -62,24 +62,32 @@ export const Metal = ({
 					))}
 				</div>
 			</div>
-			<div className="flex items-center justify-center mt-10">
-				<label className=" font-semibold text-xl">Chọn Kim Cương Tấm</label>
-			</div>
-			<div className="grid grid-cols-3 gap-5">
-				{diamondJewelry?.SideDiamonds?.map((diamond, i) => (
-					<div key={i}>
-						<Radio.Group onChange={handleSideDiamondChange} value={selectedSideDiamond}>
-							<Radio value={diamond?.Id}>
-								<div className="">
-									<div className="m-5">
-										<p className="">{diamond?.CaratWeight} ct</p>
-									</div>
-								</div>
-							</Radio>
-						</Radio.Group>
+			{diamondJewelry?.SideDiamonds?.length > 0 && (
+				<>
+					<div className="flex items-center justify-center mt-10">
+						<label className=" font-semibold text-xl">Chọn Kim Cương Tấm</label>
 					</div>
-				))}
-			</div>
+					<div className="grid grid-cols-3 gap-5">
+						{diamondJewelry?.SideDiamonds?.map((diamond, i) => (
+							<div key={i}>
+								<Radio.Group
+									onChange={handleSideDiamondChange}
+									value={selectedSideDiamond}
+								>
+									<Radio value={diamond?.Id}>
+										<div className="">
+											<div className="m-5">
+												<p className="">{diamond?.CaratWeight} ct</p>
+											</div>
+										</div>
+									</Radio>
+								</Radio.Group>
+							</div>
+						))}
+					</div>
+				</>
+			)}
+
 			<div className="flex items-center justify-center mt-10">
 				<label className=" font-semibold text-xl">Chọn Kích Thước</label>
 			</div>

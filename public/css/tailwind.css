@@ -2460,3 +2460,15 @@ video {
 		top: 2rem /* 32px */;
 	}
 }
+
+@media (min-width: 768px) {
+	.md\:w-96 {
+		width: 24rem /* 384px */;
+	}
+}
+
+@media (min-width: 768px) {
+	.md\:w-64 {
+		width: 16rem /* 256px */;
+	}
+}
