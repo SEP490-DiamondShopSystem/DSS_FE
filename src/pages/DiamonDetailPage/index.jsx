@@ -201,8 +201,8 @@ const DiamondDetailPage = () => {
 			<div className="mx-6 md:mx-32">
 				<div className="flex flex-col md:flex-row bg-white my-10 md:my-20 rounded-lg shadow-lg">
 					<div className="w-full md:w-1/2 p-6">
-						<ImageGallery />
-						<InformationLeft diamond={mappedDiamond} />
+						<ImageGallery diamondId={mappedDiamond.DiamondId} />
+						<InformationLeft diamond={mappedDiamond} diamondId={mappedDiamond.DiamondId} />
 					</div>
 
 					<div className="w-full md:w-1/2 p-6 md:pr-32">

@@ -12,7 +12,6 @@ import {useNavigate} from 'react-router-dom';
 import diamondImg from '../../assets/img-diamond.png';
 import {FilterDiamond} from '../../components/Filter/Filter';
 import {LoadingDiamondSelector} from '../../redux/selectors';
-
 import {formatPrice} from '../../utils';
 import Loading from '../../components/Loading';
 
@@ -139,8 +138,16 @@ export const DiamondList = ({
 													style={{background: '#b8b7b5'}}
 												>
 													<Image
-														src={diamondImg}
-														alt={diamondItem.Name}
+														src={
+															diamondItem.Thumbnail?.MediaPath ||
+															diamondImg
+														}
+														alt={
+															diamondItem.Thumbnail?.MediaName ||
+															'Default Image'
+														}
+														className="w-full"
+														preview={false}
 													/>
 												</div>
 												<div className="mx-10 my-5">
@@ -196,8 +203,8 @@ export const DiamondList = ({
 													style={{background: '#b8b7b5'}}
 												>
 													<Image
-														src={diamondImg}
-														alt={diamondItem.title}
+														src={diamondItem.Thumbnail?.MediaPath}
+														alt={diamondItem.Thumbnail?.MediaName}
 														className="w-full"
 														preview={false}
 													/>

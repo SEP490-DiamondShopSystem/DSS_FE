@@ -72,6 +72,7 @@ const mapAttributes = (data, attributes) => {
 		DiscountPrice: data?.DiscountReducedAmount,
 		TruePrice: data?.TruePrice,
 		SalePrice: data?.SalePrice,
+		Thumbnail: data?.Thumbnail,
 		IsLabDiamond: data.IsLabDiamond,
 	};
 };
