@@ -35,6 +35,9 @@ import DiamondChoosePage from '../pages/DiamondSearchPage/DiamondChoose';
 import RequestCustomize from '../pages/RequestCustomize';
 import OrderPage from '../pages/ProfilePage/MyOrderPage';
 import VerifyPage from '../pages/ProfilePage/VerifyPage/VerifyPage';
+import VerifyFailPage from '../pages/ProfilePage/VerifyPage/VerifyFailPage';
+import OrderSuccessPage from '../pages/OrderInfo/OrderSuccess';
+import OrderErrorPage from '../pages/OrderInfo/OrderErrorPage';
 
 export const AppRouters = () => {
 	return (
@@ -186,7 +189,9 @@ export const AppRouters = () => {
 				/>
 
 				<Route path="/verify" element={<VerifyPage />} />
-				<Route path="*" element={<NotFoundPage />} />
+				<Route path="/verify-fail" element={<VerifyFailPage />} />
+				<Route path="/payment-success" element={<OrderSuccessPage />} />
+				<Route path="/payment-error" element={<OrderErrorPage />} />
 				<Route path="*" element={<NotFoundPage />} />
 			</Routes>
 		</>
