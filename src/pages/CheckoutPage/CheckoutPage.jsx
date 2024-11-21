@@ -29,6 +29,7 @@ import {checkPromoCart, getAllPromo} from '../../redux/slices/promotionSlice';
 import {convertToVietnamDate, formatPrice} from '../../utils';
 import {enums} from '../../utils/constant';
 import {handleCartValidate} from '../../redux/slices/cartSlice';
+import {getAllWarranty} from '../../redux/slices/warrantySlice';
 
 const {Option} = Select;
 
@@ -151,7 +152,9 @@ const CheckoutPage = () => {
 
 	const idCustomize = order?.Id;
 	console.log('order', order);
+	console.log('promo', promo);
 	console.log('payment', payment);
+	console.log('warrantyList', warrantyList);
 
 	useEffect(() => {
 		form.setFieldsValue(userInfo);
@@ -170,6 +173,10 @@ const CheckoutPage = () => {
 			}));
 		}
 	}, [userDetail]);
+
+	useEffect(() => {
+		dispatch(getAllWarranty());
+	}, []);
 
 	// Fetch distances on component mount
 	useEffect(() => {

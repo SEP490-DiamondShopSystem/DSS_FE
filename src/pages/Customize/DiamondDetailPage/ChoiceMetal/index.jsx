@@ -70,27 +70,27 @@ export const ChoiceMetalDiamond = ({
 		dispatch(getAllJewelryMetal());
 	}, []);
 
-	useEffect(() => {
-		const findSelectedDiamond = selectedDiamonds?.find(
-			(diamond) => diamond?.currentDiamondId === currentDiamond?.Id
-		);
-		setCustomizeDiamond({
-			caratFrom: findSelectedDiamond?.caratFrom,
-			caratTo: findSelectedDiamond?.caratTo,
-			shape: findSelectedDiamond?.shape,
-			colorFrom: findSelectedDiamond?.colorFrom,
-			colorTo: findSelectedDiamond?.colorTo,
-			cutFrom: findSelectedDiamond?.cutFrom,
-			cutTo: findSelectedDiamond?.cutTo,
-			clarityFrom: findSelectedDiamond?.clarityFrom,
-			clarityTo: findSelectedDiamond?.clarityTo,
-			polish: findSelectedDiamond?.polish,
-			symmetry: findSelectedDiamond?.symmetry,
-			girdle: findSelectedDiamond?.girdle,
-			culet: findSelectedDiamond?.culet,
-			isLabGrown: findSelectedDiamond?.isLabGrown,
-		});
-	}, [selectedDiamonds, currentDiamond]);
+	// useEffect(() => {
+	// 	const findSelectedDiamond = selectedDiamonds?.find(
+	// 		(diamond) => diamond?.currentDiamondId === currentDiamond?.Id
+	// 	);
+	// 	setCustomizeDiamond({
+	// 		caratFrom: findSelectedDiamond?.caratFrom,
+	// 		caratTo: findSelectedDiamond?.caratTo,
+	// 		shape: findSelectedDiamond?.shape,
+	// 		colorFrom: findSelectedDiamond?.colorFrom,
+	// 		colorTo: findSelectedDiamond?.colorTo,
+	// 		cutFrom: findSelectedDiamond?.cutFrom,
+	// 		cutTo: findSelectedDiamond?.cutTo,
+	// 		clarityFrom: findSelectedDiamond?.clarityFrom,
+	// 		clarityTo: findSelectedDiamond?.clarityTo,
+	// 		polish: findSelectedDiamond?.polish,
+	// 		symmetry: findSelectedDiamond?.symmetry,
+	// 		girdle: findSelectedDiamond?.girdle,
+	// 		culet: findSelectedDiamond?.culet,
+	// 		isLabGrown: findSelectedDiamond?.isLabGrown,
+	// 	});
+	// }, [selectedDiamonds, currentDiamond]);
 
 	console.log('jewelry', jewelry);
 	console.log('metals', metals);

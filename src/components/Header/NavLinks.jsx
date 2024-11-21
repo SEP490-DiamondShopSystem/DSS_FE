@@ -106,8 +106,8 @@ const NavLinks = () => {
 																className="text-sm text-gray-600 my-2.5 md:cursor-pointer"
 																key={k}
 															>
-																<a
-																	href={sl.link}
+																<Link
+																	to={sl.link}
 																	className="hover:text-primary font-normal normal-case"
 																	onClick={() => {
 																		if (
@@ -154,7 +154,7 @@ const NavLinks = () => {
 																	}}
 																>
 																	{sl.name}
-																</a>
+																</Link>
 															</li>
 														))}
 													</ul>

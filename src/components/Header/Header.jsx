@@ -23,31 +23,31 @@ export const Header = () => {
 	return (
 		<nav className="bg-white">
 			<div className="flex items-center font-semibold justify-around">
-				<a href={'/'}>
+				<Link to={'/'}>
 					<img src={Logo} alt="logo" className="md:cursor-pointer max-h-12" />
-				</a>
+				</Link>
 				<ul className="flex uppercase items-center gap-8">
 					<li>
-						<a href="/" className={`py-7 px-3 inline-block no-underline text-black`}>
+						<Link to="/" className={`py-7 px-3 inline-block no-underline text-black`}>
 							Trang chủ
-						</a>
+						</Link>
 					</li>
 					<NavLinks />
 					<li>
-						<a
-							href="/customize/diamond-jewelry"
+						<Link
+							to="/customize/diamond-jewelry"
 							className={`py-7 px-3 inline-block no-underline text-black`}
 						>
 							Thiết Kế Trang Sức
-						</a>
+						</Link>
 					</li>
 					<li>
-						<a
-							href="/price-list"
+						<Link
+							to="/price-list"
 							className={`py-7 px-3 inline-block no-underline text-black`}
 						>
 							Bảng giá
-						</a>
+						</Link>
 					</li>
 					{/* <li>
 						<a

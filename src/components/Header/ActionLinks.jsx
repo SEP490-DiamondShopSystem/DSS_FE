@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 import {UserOutlined} from '@ant-design/icons';
 import {message} from 'antd';
 import {useDispatch} from 'react-redux';
-import {useNavigate} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import {logout} from '../../redux/slices/userLoginSlice';
 import {setLocalStorage} from '../../utils/localstorage';
 import LoginModal from '../LogModal/LoginModal';
@@ -87,15 +87,15 @@ const ActionLinks = () => {
 														className="text-base text-gray-600 my-2.5 whitespace-nowrap"
 													>
 														{sl.link ? (
-															<a
-																href={sl.link}
+															<Link
+																to={sl.link}
 																onClick={() =>
 																	handleLinkClick(sl.name)
 																}
 																className="hover:text-primary font-normal normal-case"
 															>
 																{sl.name}
-															</a>
+															</Link>
 														) : (
 															<button
 																onClick={sl.action}

@@ -3,7 +3,6 @@ import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import logo from '../../assets/logo-short-ex.png';
-import '../../css/antd.css';
 import {GetRequestCustomizeDetailSelector} from '../../redux/selectors';
 import {
 	getRequestCustomizeDetail,

@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
-import '../../css/BannerDiamond.css'; // Import custom CSS for transition
 
 // Importing images
 import img1 from '../../assets/leftBackgroundSlide/1.jpg';
