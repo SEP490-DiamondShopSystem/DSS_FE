@@ -4,7 +4,7 @@ import {StarOutlined} from '@ant-design/icons';
 import {Button, Form, Image, Input, message, Modal, Rate, Table, Upload} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
 import logo from '../../../assets/logo-short-ex.png';
-import '../../../css/antd.css';
+import Loading from '../../../components/Loading';
 import {
 	GetAllOrderDetailSelector,
 	GetOrderLogsSelector,
@@ -12,9 +12,8 @@ import {
 } from '../../../redux/selectors';
 import {getOrderLog, getUserOrderDetail, handleOrderCancel} from '../../../redux/slices/orderSlice';
 import {handleReviewOrder} from '../../../redux/slices/reviewSlice';
-import {convertToVietnamDate, formatPrice} from '../../../utils';
+import {formatPrice} from '../../../utils';
 import {OrderStatus} from './OrderStatus';
-import Loading from '../../../components/Loading';
 
 export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder}) => {
 	const dispatch = useDispatch();

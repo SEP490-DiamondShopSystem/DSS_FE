@@ -5,9 +5,9 @@ import {jwtDecode} from 'jwt-decode';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import {LoadingUserSelector} from '../../redux/selectors';
-import {GoogleRegister, handleLogin, setUser} from '../../redux/slices/userLoginSlice';
-import {GoogleLoginButton} from '../LoginGoogleButton';
+import {handleGoogleLogin, handleLogin, setUser} from '../../redux/slices/userLoginSlice';
 import {setLocalStorage} from '../../utils/localstorage';
+import {GoogleLoginButton} from '../LoginGoogleButton';
 
 const LoginModal = ({isOpen, onClose}) => {
 	const dispatch = useDispatch();
@@ -52,18 +52,22 @@ const LoginModal = ({isOpen, onClose}) => {
 			});
 	};
 
-	const handleGoogleLogin = (response) => {
+	const handleGoogleLoginBtn = (response) => {
 		console.log('Google login response:', response);
-		// const data = {
-		// 	email: '',
-		// 	password: '',
-		// };
-		dispatch(GoogleRegister({externalProviderName: 'Google'}));
-		const decode = jwtDecode(response.credential);
-		console.log(decode);
 
-		message.success('Đăng nhập Google thành công!');
-		onClose();
+		dispatch(handleGoogleLogin(response?.credential)).then((res) => {
+			if (res.payload) {
+				const decodedData = jwtDecode(res.payload.accessToken);
+				console.log(decodedData);
+				setLocalStorage('user', JSON.stringify(decodedData));
+				setLocalStorage('userId', decodedData.UserId);
+				dispatch(setUser(decodedData));
+				message.success('Đăng nhập Google thành công!');
+				onClose();
+			} else {
+				message.error('Có lỗi khi đăng nhập Google!');
+			}
+		});
 	};
 
 	const handleGoogleLoginFailure = (error) => {
@@ -107,16 +111,15 @@ const LoginModal = ({isOpen, onClose}) => {
 						</Button>
 					</div>
 				</Form.Item>
-				{/* <div className="text-center">
+				<div className="text-center">
 					<p className="my-5">hoặc đăng nhập bằng</p>
 					<div className="w-full flex justify-center items-center">
 						<GoogleLoginButton
-							onSuccess={handleGoogleLogin}
+							onSuccess={handleGoogleLoginBtn}
 							onError={handleGoogleLoginFailure}
 						/>
 					</div>
-				
-				</div> */}
+				</div>
 			</Form>
 		</Modal>
 	);

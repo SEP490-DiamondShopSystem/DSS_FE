@@ -22,13 +22,13 @@ export const handleLogin = createAsyncThunk(
 	}
 );
 
-export const GoogleRegister = createAsyncThunk(
-	'userLoginSlice/GoogleRegister',
-	async ({externalProviderName}, {rejectWithValue}) => {
+export const handleGoogleLogin = createAsyncThunk(
+	'userLoginSlice/handleGoogleLogin',
+	async (credential, {rejectWithValue}) => {
+		console.log('credential', typeof credential);
+
 		try {
-			const data = await api.get(
-				`/Account/Register/External?externalProviderName=${externalProviderName}`
-			);
+			const data = await api.post(`/Account/Google/Credential`, credential);
 			console.log(data);
 
 			return data;
@@ -99,6 +99,34 @@ export const handleUpdateAccount = createAsyncThunk(
 	}
 );
 
+export const handleDefaultAccount = createAsyncThunk(
+	'userLoginSlice/handleDefaultAccount',
+	async ({accountId, id}, {rejectWithValue}) => {
+		try {
+			const data = await api.put(`/Account/${accountId}/Profile/SetAddressDefault`, id);
+			return data;
+		} catch (error) {
+			console.error(error);
+			return rejectWithValue(error);
+		}
+	}
+);
+
+export const handleVerifyAccount = createAsyncThunk(
+	'userLoginSlice/handleVerifyAccount',
+	async (id, {rejectWithValue}) => {
+		try {
+			const data = await api.get(`/Account/${id}/Email/SendConfirm`);
+			console.log(data);
+
+			return data;
+		} catch (error) {
+			console.error(error);
+			return rejectWithValue(error);
+		}
+	}
+);
+
 export const userLoginSlice = createSlice({
 	name: 'userLoginSlice',
 	initialState: {
@@ -138,21 +166,20 @@ export const userLoginSlice = createSlice({
 				state.loading = false;
 				state.error = action.payload;
 			})
-			.addCase(GoogleRegister.pending, (state) => {
+			.addCase(handleGoogleLogin.pending, (state) => {
 				state.loading = true;
 				state.error = null;
 			})
-			.addCase(GoogleRegister.fulfilled, (state, action) => {
+			.addCase(handleGoogleLogin.fulfilled, (state, action) => {
 				state.loading = false;
 				state.userInfo = action.payload;
 				setLocalStorage('accessToken', action.payload.accessToken);
 				setLocalStorage('refreshToken', action.payload.refreshToken);
 			})
-			.addCase(GoogleRegister.rejected, (state, action) => {
+			.addCase(handleGoogleLogin.rejected, (state, action) => {
 				state.loading = false;
-				state.error = action.payload; // Lưu lỗi nếu có
+				state.error = action.payload;
 			})
-
 			.addCase(handleRegister.pending, (state) => {
 				state.loading = true;
 				state.error = null;
@@ -199,6 +226,27 @@ export const userLoginSlice = createSlice({
 				localStorage.setItem('userDetail', JSON.stringify(action.payload));
 			})
 			.addCase(handleUpdateAccount.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload;
+			})
+			.addCase(handleDefaultAccount.pending, (state) => {
+				state.loading = true;
+			})
+			.addCase(handleDefaultAccount.fulfilled, (state, action) => {
+				state.loading = false;
+				state.userDetail = action.payload;
+			})
+			.addCase(handleDefaultAccount.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload;
+			})
+			.addCase(handleVerifyAccount.pending, (state) => {
+				state.loading = true;
+			})
+			.addCase(handleVerifyAccount.fulfilled, (state, action) => {
+				state.loading = false;
+			})
+			.addCase(handleVerifyAccount.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload;
 			});

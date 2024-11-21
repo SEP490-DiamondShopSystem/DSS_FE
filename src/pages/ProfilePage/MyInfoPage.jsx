@@ -1,9 +1,9 @@
+import {CheckCircleOutlined, ExclamationCircleOutlined, PlusOutlined} from '@ant-design/icons';
+import {Button, Input, message, Modal, Select, Space, Table, Tooltip} from 'antd';
 import React, {useEffect, useState} from 'react';
 import {Helmet} from 'react-helmet';
-import NavbarProfile from '../../components/NavbarProfile';
-import {Input, Button, message, Modal, Select, Table, Form} from 'antd';
-import {ExclamationCircleOutlined, PlusOutlined} from '@ant-design/icons';
 import {useDispatch, useSelector} from 'react-redux';
+import NavbarProfile from '../../components/NavbarProfile';
 import {
 	GetAllDistrictSelector,
 	GetAllWardSelector,
@@ -12,8 +12,13 @@ import {
 	selectLoading,
 	UserInfoSelector,
 } from '../../redux/selectors';
-import {getUserDetail, handleUpdateAccount} from '../../redux/slices/userLoginSlice';
 import {fetchDistances, fetchDistrict, fetchWard} from '../../redux/slices/distanceSlice';
+import {
+	getUserDetail,
+	handleDefaultAccount,
+	handleUpdateAccount,
+	handleVerifyAccount,
+} from '../../redux/slices/userLoginSlice';
 
 const {Option} = Select;
 
@@ -46,6 +51,18 @@ const MyInfoPage = () => {
 	});
 	const [addAddress, setAddAddress] = useState([]);
 	const [deletedAddressIds, setDeletedAddressIds] = useState([]);
+
+	useEffect(() => {
+		if (userDetail) {
+			setUserInfo({
+				firstName: userDetail.FirstName || '',
+				lastName: userDetail.LastName || '',
+				email: userDetail.Email || '',
+				phone: userDetail.Phone || '',
+				addresses: userDetail.Addresses || [],
+			});
+		}
+	}, [userDetail]);
 
 	useEffect(() => {
 		if (userSelector && userSelector.UserId) {
@@ -93,7 +110,6 @@ const MyInfoPage = () => {
 			District: '',
 			Ward: '',
 		}));
-		console.log(value);
 	};
 
 	const handleDistrictChange = (value) => {
@@ -103,7 +119,6 @@ const MyInfoPage = () => {
 			District: selected,
 			Ward: '',
 		}));
-		console.log(value);
 	};
 
 	const handleWardChange = (value) => {
@@ -112,7 +127,6 @@ const MyInfoPage = () => {
 			...prev,
 			Ward: selected,
 		}));
-		console.log(value);
 	};
 
 	const handleChange = (e) => {
@@ -137,32 +151,76 @@ const MyInfoPage = () => {
 	const handleAddAddress = (e) => {
 		e.preventDefault();
 
-		// Giả định newAddress là địa chỉ mới bạn đã thu thập được từ form
 		const newAddresses = {
-			// Thêm các thuộc tính cần thiết cho địa chỉ mới
-			Street: newAddress?.Street, // thay thế bằng giá trị thực tế
-			District: newAddress?.District?.Name, // giá trị từ Select cho quận/huyện
-			Ward: newAddress?.Ward?.Name, // giá trị từ Select cho phường/xã
-			Province: newAddress?.Province?.Name, // giá trị từ Select cho phường/xã
-			// Bạn có thể thêm các thuộc tính khác nếu cần
+			Street: newAddress?.Street,
+			District: newAddress?.District?.Name,
+			Ward: newAddress?.Ward?.Name,
+			Province: newAddress?.Province?.Name,
 		};
 
-		// Cập nhật userInfo với địa chỉ mới
-		setUserInfo((prevInfo) => ({
-			...prevInfo,
-			addresses: [...prevInfo.addresses, newAddresses], // Thêm địa chỉ mới vào mảng addresses
-		}));
+		dispatch(
+			handleUpdateAccount({
+				id: userSelector.UserId,
+				changedFullName: {
+					firstName: userInfo.firstName,
+					lastName: userInfo.lastName,
+				},
+				changedAddress: {
+					removedAddressId: deletedAddressIds,
+					updatedAddress: null,
+					addedAddress: [newAddresses],
+				},
+			})
+		).then((res) => {
+			console.log('res', res);
 
-		setAddAddress((prevAddresses) => [...prevAddresses, newAddress]);
-
-		setNewAddress({
-			Province: '',
-			District: '',
-			Ward: '',
-			Street: '',
+			if (res.payload) {
+				message.success('Thêm địa chỉ thành công!');
+				setIsModalVisible(false);
+				setNewAddress({
+					Province: '',
+					District: '',
+					Ward: '',
+					Street: '',
+				});
+			} else {
+				message.error('Vui lòng kiểm tra lại thông tin!');
+			}
 		});
-		setIsModalVisible(false);
+
+		// // Cập nhật userInfo với địa chỉ mới
+		// setUserInfo((prevInfo) => ({
+		// 	...prevInfo,
+		// 	addresses: [...prevInfo.addresses, newAddresses], // Thêm địa chỉ mới vào mảng addresses
+		// }));
+
+		// setAddAddress((prevAddresses) => [...prevAddresses, newAddress]);
 	};
+
+	console.log('useDetail', userDetail);
+
+	const handleDefaultAddress = (id) => {
+		console.log('id address', id);
+
+		dispatch(handleDefaultAccount({accountId: userDetail?.Id, id})).then((res) => {
+			if (res.payload) {
+				message.success('Đã địa chỉ này đặt làm mặc định');
+			} else {
+				message.error('Có lỗi!');
+			}
+		});
+	};
+
+	const handleVerifyClick = () => {
+		dispatch(handleVerifyAccount(userDetail?.Id)).then((res) => {
+			if (res.payload) {
+				message.warning('Đã gửi mã xác thực về email, xin hãy xác nhận!');
+			} else {
+				message.error('Có lỗi!');
+			}
+		});
+	};
+
 	const handleDeleteAddress = (street, id) => {
 		// Xóa địa chỉ dựa trên tên đường
 		setUserInfo((prevInfo) => ({
@@ -204,6 +262,8 @@ const MyInfoPage = () => {
 				},
 			})
 		).then((res) => {
+			console.log('res', res);
+
 			if (res.payload) {
 				message.success('Cập nhật thành công!');
 				setIsModalVisible(false);
@@ -258,12 +318,24 @@ const MyInfoPage = () => {
 		},
 		{
 			...(editing && {
-				title: 'Hành động',
+				title: '',
 				key: 'action',
+				align: 'center',
 				render: (text, record) => (
-					<Button danger onClick={() => handleDeleteAddress(record.Street, record.Id)}>
-						Xóa
-					</Button>
+					<Space>
+						<Button
+							className="bg-primary"
+							onClick={() => handleDefaultAddress(record.Id)}
+						>
+							Mặc Định
+						</Button>
+						<Button
+							danger
+							onClick={() => handleDeleteAddress(record.Street, record.Id)}
+						>
+							Xóa
+						</Button>
+					</Space>
 				),
 			}),
 		},
@@ -307,7 +379,38 @@ const MyInfoPage = () => {
 							</div>
 							<div className="w-full">
 								<label>Email</label>
-								<Input value={userInfo.email} disabled />
+								<div className="flex items-center">
+									<Input
+										value={userInfo.email}
+										disabled
+										className="flex-grow" // Để input chiếm tối đa không gian
+									/>
+									{userDetail?.UserIdentity?.IsEmailConfirmed ? (
+										<Tooltip title="Đã Xác Thực">
+											<CheckCircleOutlined
+												className="ml-2"
+												style={{
+													color: 'green',
+													fontSize: '18px',
+													cursor: 'not-allowed',
+												}}
+											/>
+										</Tooltip>
+									) : (
+										<Tooltip title="Nhấn Để Xác Thực">
+											<Button className="ml-2 " loading={loading}>
+												<ExclamationCircleOutlined
+													style={{
+														color: 'orange',
+														fontSize: '18px',
+														cursor: 'pointer',
+													}}
+													onClick={handleVerifyClick} // Gọi hàm khi người dùng nhấn vào icon
+												/>
+											</Button>
+										</Tooltip>
+									)}
+								</div>
 							</div>
 							<div className="w-full">
 								<label>Số Điện Thoại</label>
@@ -321,17 +424,17 @@ const MyInfoPage = () => {
 							{/* Show Save and Cancel buttons when editing */}
 
 							{/* Show Add Address button only in editing mode */}
-							{editing && (
-								<Button icon={<PlusOutlined />} onClick={showModal}>
-									Thêm Địa Chỉ
-								</Button>
-							)}
+
+							<Button icon={<PlusOutlined />} onClick={showModal}>
+								Thêm Địa Chỉ
+							</Button>
 						</div>
 						<Table
 							columns={addressColumns}
-							dataSource={userInfo.addresses}
+							dataSource={userInfo?.addresses}
 							rowKey="Street"
 							pagination={false}
+							loading={loading}
 						/>
 					</div>
 					{editing ? (

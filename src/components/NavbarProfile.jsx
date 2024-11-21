@@ -12,7 +12,6 @@ import {Link} from 'react-router-dom';
 const NavbarProfile = () => {
 	const [active, setActive] = useState(localStorage.getItem('lastVisitedPage') || 'Profile');
 
-	// Hàm để xử lý khi nhấn vào một liên kết
 	const handleLinkClick = (name) => {
 		setActive(name);
 		localStorage.setItem('lastVisitedPage', name);
@@ -34,6 +33,11 @@ const NavbarProfile = () => {
 			name: 'Đơn thiết kế',
 			link: '/request-customize',
 			icon: <FontAwesomeIcon icon={faListCheck} color="black" />,
+		},
+		{
+			name: 'Thay đổi mật khẩu',
+			link: '/change-password',
+			icon: <FontAwesomeIcon icon={faKey} color="black" />,
 		},
 	];
 

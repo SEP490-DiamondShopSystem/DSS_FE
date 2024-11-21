@@ -2,16 +2,36 @@ import React, {useState} from 'react';
 
 import NavbarProfile from '../../components/NavbarProfile';
 import {Helmet} from 'react-helmet';
-import {Button, Form, Input} from 'antd';
+import {Button, Form, Input, message} from 'antd';
+import {useDispatch, useSelector} from 'react-redux';
+import {GetUserDetailSelector, LoadingUserDetailSelector} from '../../redux/selectors';
+import {handleChangePassword} from '../../redux/slices/userSlice';
 
 const ChangePassword = () => {
 	const [form] = Form.useForm();
-	const [loading, setLoading] = useState(false);
+	const dispatch = useDispatch();
+	const userDetail = useSelector(GetUserDetailSelector);
+	const loading = useSelector(LoadingUserDetailSelector);
 
 	const handleSubmit = (values) => {
 		console.log('Password changed:', values);
+		dispatch(
+			handleChangePassword({
+				identityId: userDetail?.IdentityId,
+				oldPassword: values?.oldPassword,
+				newPassword: values?.newPassword,
+			})
+		).then((res) => {
+			console.log('res', res);
+			if (res.payload) {
+				message.success('Thay đổi mật khẩu thành công!');
+			} else {
+				message.error('Thay đổi mật khẩu thất bại!');
+			}
+		});
 		form.resetFields();
 	};
+
 	return (
 		<div>
 			<Helmet>
