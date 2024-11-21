@@ -1,3 +1,5 @@
+import React, {useEffect, useRef, useState} from 'react';
+
 import {
 	CheckCircleOutlined,
 	DeliveredProcedureOutlined,
@@ -5,19 +7,13 @@ import {
 	OrderedListOutlined,
 } from '@ant-design/icons';
 import {Table, Tag} from 'antd';
-import React, {useEffect, useRef, useState} from 'react';
 import {Helmet} from 'react-helmet';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import NavbarProfile from '../../components/NavbarProfile';
 import {GetAllOrderSelector, LoadingOrderSelector, UserInfoSelector} from '../../redux/selectors';
 import {getUserOrder} from '../../redux/slices/orderSlice';
-import {
-	convertToVietnamDate,
-	formatPrice,
-	getOrderPaymentStatus,
-	getOrderStatus,
-} from '../../utils';
+import {formatPrice, getOrderPaymentStatus, getOrderStatus} from '../../utils';
 
 const ProfilePage = () => {
 	const navigate = useNavigate();

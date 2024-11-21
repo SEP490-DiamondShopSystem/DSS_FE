@@ -188,8 +188,8 @@ export const AppRouters = () => {
 					}
 				/>
 
-				<Route path="/verify" element={<VerifyPage />} />
-				<Route path="/verify-fail" element={<VerifyFailPage />} />
+				<Route path="/verified" element={<VerifyPage />} />
+				<Route path="/verify-failed" element={<VerifyFailPage />} />
 				<Route path="/payment-success" element={<OrderSuccessPage />} />
 				<Route path="/payment-error" element={<OrderErrorPage />} />
 				<Route path="*" element={<NotFoundPage />} />
