@@ -54,11 +54,12 @@ export const BannerDiamond = () => {
 	};
 
 	return (
-		<div className="relative bg-gray-800 text-white" style={{height: 700}}>
+		<div className="relative bg-gray-800 text-white">
 			{/* Background image slideshow with fade transition */}
 			<div className={`slideshow-image ${fadeState}`}>
 				<img
-					className="w-full h-full object-fit"
+					className="w-full object-fit"
+					style={{maxHeight: 700}}
 					src={images[currentImageIndex]}
 					alt="Banner Slide"
 				/>

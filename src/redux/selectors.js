@@ -52,6 +52,7 @@ export const ErrorPromotionSelector = (state) => state.promotionSlice.error;
 //ORDER
 export const LoadingOrderSelector = (state) => state.orderSlice.loading;
 export const GetAllOrderSelector = (state) => state.orderSlice.orderList;
+export const GetStatusOrderSelector = (state) => state.orderSlice.orderStatus;
 export const GetAllOrderDetailSelector = (state) => state.orderSlice.orderDetail;
 export const GetOrderTransactionSelector = (state) => state.orderSlice.transaction;
 export const GetOrderLogsSelector = (state) => state.orderSlice.orderLogs;

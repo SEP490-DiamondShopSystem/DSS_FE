@@ -272,7 +272,6 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 	const expandedRow2Render = (record) => (
 		<Table
 			columns={sub2Columns}
-			// Wrap the single object `record.Diamond` in an array
 			dataSource={record.Diamond ? [record.Diamond] : []}
 			pagination={false}
 			rowKey={(item) => item.Id}
@@ -297,14 +296,14 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 	};
 
 	const handleProceed = () => {
-		dispatch(handleOrderCustomizeProceed(selectedOrder.Id)).then((res) => {
-			console.log('res', res);
-			if (res.payload) {
+		dispatch(handleOrderCustomizeProceed(selectedOrder.Id))
+			.unwrap()
+			.then((res) => {
 				message.success(`Bạn đã xác nhận đơn thiết kế ${selectedOrder.Id}!`);
-			} else {
-				message.error('Có lỗi khi xác nhận');
-			}
-		});
+			})
+			.catch((error) => {
+				message.error(error?.data?.title || error?.detail);
+			});
 	};
 
 	const handleCancelOrder = () => {
@@ -317,14 +316,16 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 		});
 	};
 
-	const submitCancelOrder = async () => {
-		const res = await dispatch(handleOrderCustomizeReject(selectedOrder.Id));
-		if (res.payload !== undefined) {
-			message.success('Hủy đơn thành công!');
-		} else {
-			message.error('Lỗi hệ thống!');
-		}
-		setIsCancelModalVisible(false);
+	const submitCancelOrder = () => {
+		dispatch(handleOrderCustomizeReject(selectedOrder.Id))
+			.unwrap()
+			.then(() => {
+				message.success('Hủy đơn thành công!');
+				setIsCancelModalVisible(false);
+			})
+			.catch((error) => {
+				message.error(error?.data?.title || error?.detail);
+			});
 	};
 
 	const handleCheckout = () => {
@@ -342,7 +343,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 			{openDetail && (
 				<div
 					className="fixed top-1/2 right-1/2 bg-white transform transition-transform duration-300 ease-in-out z-50 translate-x-1/2 -translate-y-1/2 p-10"
-					style={{width: 1200, maxHeight: '80vh', overflowY: 'auto'}}
+					style={{width: 1500, maxHeight: '80vh', overflowY: 'auto'}}
 				>
 					<div className="flex justify-between items-center">
 						<div>
@@ -358,15 +359,11 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 							<h2 className="uppercase text-2xl font-semibold">
 								Trạng thái đơn thiết kế
 							</h2>
-							{/* <p>Hóa đơn: #{order?.OrderCode}</p> */}
+
 							<p>Ngày: {order?.CreatedDate}</p>
 						</div>
 					</div>
 
-					{/* <div className="mt-5">
-						<h2 className="text-2xl font-semibold">Địa chỉ giao hàng</h2>
-						<p>{order?.ShippingAddress}</p>
-					</div> */}
 					<OrderStatus
 						order={orderDetail}
 						orderStatus={orderStatus}
@@ -391,6 +388,13 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 								>
 									Đồng Ý Đơn
 								</Button>
+								<Button danger className="text-white" onClick={handleCancelOrder}>
+									Hủy Đơn
+								</Button>
+							</Space>
+						)}
+						{orderStatus === 3 && (
+							<Space>
 								<Button danger className="text-white" onClick={handleCancelOrder}>
 									Hủy Đơn
 								</Button>
@@ -432,12 +436,6 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 				footer={null}
 			>
 				<Form onFinish={submitCancelOrder}>
-					{/* <Form.Item
-						name="reason"
-						rules={[{required: true, message: 'Vui lòng cung cấp lý do hủy!'}]}
-					>
-						<Input.TextArea placeholder="Lý Do Hủy" rows={3} />
-					</Form.Item> */}
 					<Button type="primary" htmlType="submit" block>
 						Xác Nhận Hủy
 					</Button>

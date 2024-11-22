@@ -1,4 +1,9 @@
-import {CheckCircleOutlined, ExclamationCircleOutlined, PlusOutlined} from '@ant-design/icons';
+import {
+	CheckCircleOutlined,
+	DeleteFilled,
+	ExclamationCircleOutlined,
+	PlusOutlined,
+} from '@ant-design/icons';
 import {Button, Input, message, Modal, Select, Space, Table, Tooltip} from 'antd';
 import React, {useEffect, useState} from 'react';
 import {Helmet} from 'react-helmet';
@@ -171,10 +176,9 @@ const MyInfoPage = () => {
 					addedAddress: [newAddresses],
 				},
 			})
-		).then((res) => {
-			console.log('res', res);
-
-			if (res.payload) {
+		)
+			.unwrap()
+			.then(() => {
 				message.success('Thêm địa chỉ thành công!');
 				setIsModalVisible(false);
 				setNewAddress({
@@ -183,10 +187,10 @@ const MyInfoPage = () => {
 					Ward: '',
 					Street: '',
 				});
-			} else {
-				message.error('Vui lòng kiểm tra lại thông tin!');
-			}
-		});
+			})
+			.catch((error) => {
+				message.error(error?.data?.title || error?.detail);
+			});
 	};
 
 	console.log('useDetail', userDetail);
@@ -194,23 +198,25 @@ const MyInfoPage = () => {
 	const handleDefaultAddress = (id) => {
 		console.log('id address', id);
 
-		dispatch(handleDefaultAccount({accountId: userDetail?.Id, id})).then((res) => {
-			if (res.payload) {
+		dispatch(handleDefaultAccount({accountId: userDetail?.Id, id}))
+			.unwrap()
+			.then((res) => {
 				message.success('Địa chỉ đã được đặt làm mặc định');
-			} else {
-				message.error('Có lỗi!');
-			}
-		});
+			})
+			.catch((error) => {
+				message.error(error?.data?.title || error?.detail);
+			});
 	};
 
 	const handleVerifyClick = () => {
-		dispatch(handleVerifyAccount(userDetail?.Id)).then((res) => {
-			if (res.payload) {
+		dispatch(handleVerifyAccount(userDetail?.Id))
+			.unwrap()
+			.then((res) => {
 				message.warning('Đã gửi mã xác thực về email, xin hãy xác nhận!');
-			} else {
-				message.error('Có lỗi!');
-			}
-		});
+			})
+			.catch((error) => {
+				message.error(error?.data?.title || error?.detail);
+			});
 	};
 
 	const handleDeleteAddress = (street, id) => {
@@ -224,7 +230,6 @@ const MyInfoPage = () => {
 			prevAddresses.filter((address) => address.Street !== street)
 		);
 
-		// Check if the id is defined before adding to deletedAddressIds
 		if (id) {
 			setDeletedAddressIds((prevDeletedIds) => [...prevDeletedIds, id]);
 		}
@@ -253,10 +258,9 @@ const MyInfoPage = () => {
 					addedAddress: addedAddress,
 				},
 			})
-		).then((res) => {
-			console.log('res', res);
-
-			if (res.payload) {
+		)
+			.unwrap()
+			.then(() => {
 				message.success('Cập nhật thông tin thành công!');
 				setIsModalVisible(false);
 				setNewAddress({
@@ -265,10 +269,11 @@ const MyInfoPage = () => {
 					Ward: '',
 					Street: '',
 				});
-			} else {
-				message.error('Vui lòng kiểm tra lại thông tin!');
-			}
-		});
+			})
+			.catch((error) => {
+				message.error(error?.data?.title || error?.detail);
+			});
+
 		setEditing(false);
 	};
 
@@ -309,34 +314,54 @@ const MyInfoPage = () => {
 			key: 'Street',
 		},
 		{
-			...(editing && {
-				title: '',
-				key: 'action',
-				align: 'center',
-				render: (text, record) => (
-					<Space>
-						{record?.IsDefault === true ? (
-							<Tooltip title="Mặc Định">
-								<CheckCircleOutlined style={{color: 'green'}} />
-							</Tooltip>
-						) : (
-							<Button
-								className="bg-primary"
-								onClick={() => handleDefaultAddress(record.Id)}
-							>
-								Mặc Định
-							</Button>
-						)}
-
-						<Button
-							danger
-							onClick={() => handleDeleteAddress(record.Street, record.Id)}
-						>
-							Xóa
-						</Button>
-					</Space>
-				),
-			}),
+			...(editing
+				? {
+						title: '',
+						key: 'action',
+						align: 'center',
+						render: (text, record) => (
+							<Space>
+								{record?.IsDefault === true ? (
+									<Tooltip title="Mặc Định">
+										<CheckCircleOutlined
+											style={{color: 'green'}}
+											className="mr-5"
+										/>
+									</Tooltip>
+								) : (
+									<Button
+										className="bg-primary"
+										onClick={() => handleDefaultAddress(record.Id)}
+									>
+										Mặc Định
+									</Button>
+								)}
+								<Button
+									danger
+									onClick={() => handleDeleteAddress(record.Street, record.Id)}
+								>
+									<DeleteFilled />
+								</Button>
+							</Space>
+						),
+				  }
+				: {
+						title: '',
+						key: 'action',
+						align: 'center',
+						render: (text, record) => (
+							<Space>
+								{record?.IsDefault === true && (
+									<Tooltip title="Mặc Định">
+										<CheckCircleOutlined
+											style={{color: 'green'}}
+											className="mr-5"
+										/>
+									</Tooltip>
+								)}
+							</Space>
+						),
+				  }),
 		},
 	];
 
@@ -468,6 +493,7 @@ const MyInfoPage = () => {
 					style={{width: '100%', marginBottom: '1rem'}}
 					disabled={loading}
 					loading={loading}
+					notFoundContent="Đang tải"
 				>
 					{province && province.length > 0 ? (
 						province.map((distance) => (
@@ -485,6 +511,7 @@ const MyInfoPage = () => {
 					style={{width: '100%', marginBottom: '1rem'}}
 					disabled={loading}
 					loading={loading}
+					notFoundContent="Đang tải"
 				>
 					{district && district.length > 0 ? (
 						district.map((district) => (
@@ -503,6 +530,7 @@ const MyInfoPage = () => {
 					style={{width: '100%', marginBottom: '1rem'}}
 					disabled={loading}
 					loading={loading}
+					notFoundContent="Đang tải"
 				>
 					{ward && ward.length > 0 ? (
 						ward.map((ward) => (

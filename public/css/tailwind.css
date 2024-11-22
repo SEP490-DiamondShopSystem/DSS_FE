@@ -2472,3 +2472,12 @@ video {
 		width: 16rem /* 256px */;
 	}
 }
+
+.mb-1 {
+	margin-bottom: 0.25rem /* 4px */;
+}
+
+.text-darkGreen {
+	--tw-text-opacity: 1;
+	color: rgb(62 204 44 / var(--tw-text-opacity)) /* #3ecc2c */;
+}

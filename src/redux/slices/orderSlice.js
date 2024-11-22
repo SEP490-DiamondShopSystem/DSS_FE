@@ -15,8 +15,8 @@ export const handleCheckoutOrder = createAsyncThunk(
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.data));
-			return rejectWithValue(error.data);
+			console.log('Error: ', JSON.stringify(error));
+			return rejectWithValue(error);
 		}
 	}
 );
@@ -30,8 +30,8 @@ export const handleOrderCancel = createAsyncThunk(
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.data));
-			return rejectWithValue(error.data);
+			console.log('Error: ', JSON.stringify(error));
+			return rejectWithValue(error);
 		}
 	}
 );
@@ -57,8 +57,8 @@ export const getUserOrder = createAsyncThunk(
 			const data = await api.get(url);
 			return data;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.data));
-			return rejectWithValue(error.data);
+			console.log('Error: ', JSON.stringify(error));
+			return rejectWithValue(error);
 		}
 	}
 );
@@ -72,8 +72,8 @@ export const getUserOrderDetail = createAsyncThunk(
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.data));
-			return rejectWithValue(error.data);
+			console.log('Error: ', JSON.stringify(error));
+			return rejectWithValue(error);
 		}
 	}
 );
@@ -87,8 +87,8 @@ export const getUserOrderTransaction = createAsyncThunk(
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.data));
-			return rejectWithValue(error.data);
+			console.log('Error: ', JSON.stringify(error));
+			return rejectWithValue(error);
 		}
 	}
 );
@@ -102,8 +102,8 @@ export const getOrderLog = createAsyncThunk(
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.data));
-			return rejectWithValue(error.data);
+			console.log('Error: ', JSON.stringify(error));
+			return rejectWithValue(error);
 		}
 	}
 );
@@ -113,6 +113,7 @@ export const orderSlice = createSlice({
 	initialState: {
 		orderList: null,
 		orderDetail: null,
+		orderStatus: null,
 		orderLogs: null,
 		transaction: null,
 	},
@@ -131,11 +132,12 @@ export const orderSlice = createSlice({
 			})
 			.addCase(handleOrderCancel.pending, (state) => {
 				state.loading = true;
-				state.orderDetail = null;
 			})
 			.addCase(handleOrderCancel.fulfilled, (state, action) => {
 				state.loading = false;
 				state.orderDetail = action.payload;
+				state.orderStatus = action.payload.Status;
+				state.orderLogs = action.payload.Logs;
 			})
 			.addCase(handleOrderCancel.rejected, (state, action) => {
 				state.loading = false;
@@ -155,11 +157,11 @@ export const orderSlice = createSlice({
 			})
 			.addCase(getUserOrderDetail.pending, (state) => {
 				state.loading = true;
-				state.orderDetail = null;
 			})
 			.addCase(getUserOrderDetail.fulfilled, (state, action) => {
 				state.loading = false;
 				state.orderDetail = action.payload;
+				state.orderStatus = action.payload.Status;
 			})
 			.addCase(getUserOrderDetail.rejected, (state, action) => {
 				state.loading = false;

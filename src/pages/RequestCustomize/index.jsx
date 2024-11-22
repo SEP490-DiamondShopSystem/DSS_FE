@@ -46,7 +46,7 @@ const RequestCustomize = () => {
 	const [endDate, setEndDate] = useState(null);
 	const [status, setStatus] = useState('');
 	const [currentPage, setCurrentPage] = useState(0);
-	const [pageSize, setPageSize] = useState(10);
+	const [pageSize, setPageSize] = useState(5);
 
 	useEffect(() => {
 		dispatch(
@@ -150,8 +150,6 @@ const RequestCustomize = () => {
 			),
 		},
 	];
-
-	console.log('dataSource', dataSource);
 
 	return (
 		<>

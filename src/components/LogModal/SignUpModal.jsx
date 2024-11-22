@@ -32,36 +32,35 @@ const SignUpModal = ({isOpen, onClose}) => {
 			isStaffLogin: false,
 		};
 
-		dispatch(handleRegister(registerData)).then((res) => {
-			if (res.payload) {
-				message.success('Đăng ký thành công!');
+		dispatch(handleRegister(registerData))
+			.unwrap()
+			.then(() => {
+				message.success('Đăng ký tài khoản thành công!');
 				form.resetFields();
 
-				dispatch(handleLogin(loginData))
-					.then((response) => {
-						if (response.payload) {
-							const decodedData = jwtDecode(response.payload.accessToken);
-							localStorage.setItem('user', JSON.stringify(decodedData));
-							localStorage.setItem('userId', decodedData.UserId);
-							dispatch(setUser(decodedData));
+				return dispatch(handleLogin(loginData)).unwrap();
+			})
+			.then((loginResponse) => {
+				message.success('Đăng nhập thành công!');
+				const decodedData = jwtDecode(loginResponse.accessToken);
 
-							onClose();
-							navigate('/');
-						} else {
-							console.error('Login failed:');
-							message.error('Đăng nhập không thành công. Vui lòng thử lại!');
-						}
-					})
-					.catch((error) => {
-						console.error('Login failed:', error);
-						message.error('Đăng nhập không thành công. Vui lòng thử lại!');
-					});
-			} else {
-				message.error(
-					'Đăng ký không thành công. Vui lòng kiểm tra thông tin đăng ký của bạn!'
-				);
-			}
-		});
+				localStorage.setItem('user', JSON.stringify(decodedData));
+				localStorage.setItem('userId', decodedData.UserId);
+
+				dispatch(setUser(decodedData));
+
+				onClose();
+				navigate('/');
+			})
+			.catch((error) => {
+				console.error('error', error);
+
+				if (error?.data?.title || error?.detail) {
+					message.error(error?.data?.title || error?.detail);
+				} else {
+					message.error('Đã xảy ra lỗi!');
+				}
+			});
 	};
 
 	return (
@@ -107,7 +106,10 @@ const SignUpModal = ({isOpen, onClose}) => {
 				<Form.Item
 					label="Mật khẩu"
 					name="password"
-					rules={[{required: true, message: 'Vui lòng nhập mật khẩu của bạn!'}]}
+					rules={[
+						{required: true, message: 'Vui lòng nhập mật khẩu của bạn!'},
+						{min: 6, message: 'Mật khẩu phải dài ít nhất 6 ký tự!'},
+					]}
 				>
 					<Input.Password placeholder="Mật khẩu" />
 				</Form.Item>

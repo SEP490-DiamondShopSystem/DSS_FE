@@ -1,4 +1,4 @@
-import {Form, Input, message, Radio, Select} from 'antd';
+import {Button, Form, Input, message, Modal, Radio, Select} from 'antd';
 import React, {useEffect, useMemo, useState} from 'react';
 import {FaPhoneAlt, FaRegAddressBook, FaRegEnvelope} from 'react-icons/fa';
 import {useDispatch, useSelector} from 'react-redux';
@@ -12,6 +12,7 @@ import {
 	GetOrderWarrantySelector,
 	GetPromotionAbleSelector,
 	GetUserDetailSelector,
+	LoadingOrderSelector,
 	selectDistances,
 	selectError,
 	selectLoading,
@@ -30,6 +31,7 @@ import {convertToVietnamDate, formatPrice} from '../../utils';
 import {enums} from '../../utils/constant';
 import {handleCartValidate} from '../../redux/slices/cartSlice';
 import {getAllWarranty} from '../../redux/slices/warrantySlice';
+import {CheckCircleOutlined} from '@ant-design/icons';
 
 const {Option} = Select;
 
@@ -116,6 +118,7 @@ const CheckoutPage = () => {
 	const districts = useSelector(GetAllDistrictSelector);
 	const wards = useSelector(GetAllWardSelector);
 	const loading = useSelector(selectLoading);
+	const loadingCheckout = useSelector(LoadingOrderSelector);
 	const error = useSelector(selectError);
 	const userDetail = useSelector(GetUserDetailSelector);
 	const cartList = useSelector(GetCartSelector);
@@ -156,8 +159,6 @@ const CheckoutPage = () => {
 	const defaultAddress =
 		userDetail.Addresses.length > 0 &&
 		userDetail?.Addresses?.find((address) => address?.IsDefault === true);
-
-	console.log('defaultAddress', defaultAddress);
 
 	useEffect(() => {
 		form.setFieldsValue(userInfo);
@@ -261,16 +262,36 @@ const CheckoutPage = () => {
 				warrantyCode: warrantiesJewelrySelected?.warrantyCode || null,
 				warrantyType: 2,
 			};
-			dispatch(
-				handleCartValidate({
-					promotionId: promoCustomizeId || null,
-					items: [transformedData],
-					accountId: userDetail?.Id,
-				})
-			);
+
+			const userAddress = {
+				province: defaultAddress?.Province,
+				district: defaultAddress?.District,
+				ward: defaultAddress?.Ward,
+				street: defaultAddress?.Street,
+			};
+
+			// Kiểm tra nếu userAddress có dữ liệu, nếu không thì không truyền userAddress
+			const actionPayload = {
+				promotionId: promoCustomizeId || null,
+				items: [transformedData],
+				accountId: userDetail?.Id,
+			};
+
+			// Nếu userAddress có dữ liệu, thêm vào payload
+			if (
+				userAddress.province ||
+				userAddress.district ||
+				userAddress.ward ||
+				userAddress.street
+			) {
+				actionPayload.userAddress = userAddress;
+			}
+
+			dispatch(handleCartValidate(actionPayload));
+
 			dispatch(checkPromoCart({items: [transformedData]}));
 		}
-	}, [dispatch, order, userDetail, warrantiesJewelrySelected, promoCustomizeId]);
+	}, [dispatch, order, userDetail, warrantiesJewelrySelected, promoCustomizeId, defaultAddress]);
 
 	const jewelryOrDiamondProducts = cartList?.Products.filter(
 		(product) => product.Jewelry || product.Diamond
@@ -280,8 +301,23 @@ const CheckoutPage = () => {
 		return jewelryOrDiamondProducts?.map((product) => mapAttributes(product, enums));
 	}, [jewelryOrDiamondProducts, enums]);
 
-	// Hàm xử lý gửi form
-	const onFinish = async () => {
+	const showOrderSuccessModal = () => {
+		Modal.confirm({
+			title: 'Đặt Hàng Thành Công!',
+			icon: <CheckCircleOutlined style={{color: '#52c41a'}} />,
+			content:
+				'Đơn hàng của bạn đã được đặt thành công. Cảm ơn bạn đã mua sắm với chúng tôi!',
+			okText: 'Kiểm Tra Đơn Hàng',
+			cancelText: 'Về Trang Chủ',
+			onCancel() {
+				navigate('/');
+			},
+			onOk() {
+				navigate('/my-orders');
+			},
+		});
+	};
+	const onFinish = () => {
 		const orderItemRequestDtos = cartList?.Products?.map((product) => {
 			return {
 				jewelryId: product?.Jewelry?.Id || null,
@@ -327,7 +363,7 @@ const CheckoutPage = () => {
 				message.warning('Bạn cần phải chọn phiếu bảo hành!');
 				return;
 			}
-			const res = await dispatch(
+			dispatch(
 				handleOrderCustomizeCheckout({
 					customizeRequestId: idCustomize,
 					orderRequestDto: orderRequestDto,
@@ -335,27 +371,28 @@ const CheckoutPage = () => {
 					warrantyCode: warrantiesJewelrySelected?.warrantyCode,
 					warrantyType: 2,
 				})
-			);
-			console.log(res);
+			)
+				.unwrap()
+				.then(() => {
+					showOrderSuccessModal();
+				})
+				.catch((error) => {
+					console.log('error', error);
 
-			if (res.payload !== undefined) {
-				message.success('Đặt hàng thành công!');
-				navigate('/my-orders');
-			} else {
-				message.error('Đặt hàng không thành công. Vui lòng kiểm tra thông tin của bạn!');
-			}
+					message.error(error?.data?.title || error?.detail);
+				});
 		} else {
-			const res = await dispatch(handleCheckoutOrder({createOrderInfo, billingDetail}));
-			console.log(res);
+			dispatch(handleCheckoutOrder({createOrderInfo, billingDetail}))
+				.unwrap()
+				.then(() => {
+					localStorage.removeItem(`cart_${userDetail.Id}`);
+					showOrderSuccessModal();
+				})
+				.catch((error) => {
+					console.log('error', error);
 
-			if (res.payload !== undefined) {
-				message.success('Đặt hàng thành công!');
-				// window.open(res.payload?.PaymentUrl, '_blank');
-				localStorage.removeItem(`cart_${userDetail.Id}`);
-				navigate('/my-orders');
-			} else {
-				message.error('Đặt hàng không thành công. Vui lòng kiểm tra thông tin của bạn!');
-			}
+					message.error(error?.data?.title || error?.detail);
+				});
 		}
 	};
 
@@ -953,25 +990,20 @@ const CheckoutPage = () => {
 
 								<div className="flex justify-between items-center font-semibold mt-4 text-lg">
 									<p>Tổng:</p>
-									<p>
-										{formatPrice(
-											cartList?.OrderPrices?.FinalPrice +
-												location?.DeliveryFee?.Cost ||
-												cartList?.OrderPrices?.FinalPrice
-										)}
-									</p>
+									<p>{formatPrice(cartList?.OrderPrices?.FinalPrice)}</p>
 								</div>
 							</div>
 
 							{/* Order Button Section */}
 							<div className="flex justify-center mt-6 w-full ">
-								<button
+								<Button
 									className="mx-10 px-6 py-2 bg-primary rounded-lg uppercase font-semibold hover:bg-second w-full h-12"
 									onClick={onFinish}
-									loading={loading}
+									loading={loadingCheckout}
+									type="text"
 								>
 									Đặt hàng
-								</button>
+								</Button>
 							</div>
 
 							{/* Customer Service Section */}

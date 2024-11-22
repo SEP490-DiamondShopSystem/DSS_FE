@@ -161,14 +161,15 @@ export const ChoiceMetalDiamond = ({
 				note: note,
 				customizeDiamondRequests,
 			})
-		).then((res) => {
-			if (res.payload !== undefined) {
+		)
+			.unwrap()
+			.then((res) => {
 				message.success('Thiết kế trang sức thành công!');
 				setStepChoose(3);
-			} else {
-				message.error('Có lỗi khi thiết kế.');
-			}
-		});
+			})
+			.catch((error) => {
+				message.error(error?.data?.title || error?.detail);
+			});
 	};
 
 	return (
@@ -255,7 +256,7 @@ export const ChoiceMetalDiamond = ({
 								onClick={handleSendReqCustomize}
 								loading={loading}
 							>
-								Đặt Hàng
+								Gửi Yêu Cầu
 							</Button>
 						</div>
 					</div>

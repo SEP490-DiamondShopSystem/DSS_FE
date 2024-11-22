@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {Button, Image, Radio} from 'antd';
-import {shapeItems} from '../../../../../utils/constant';
+import {shapeItems, shapeItemsCustomize} from '../../../../../utils/constant';
 
 export const Shape = ({
 	setStepChooseDiamond,
@@ -25,9 +25,12 @@ export const Shape = ({
 		setStep((prev) => prev + 1);
 	};
 
-	const matchedShapeItems = shapeItems.filter((item) =>
+	const matchedShapeItems = shapeItemsCustomize?.filter((item) =>
 		currentDiamond?.Shapes?.some((shape) => shape?.ShapeId === item?.value)
 	);
+
+	console.log('shapeItems', shapeItems);
+	console.log('currentDiamond', currentDiamond?.Shapes);
 
 	return (
 		<div>
