@@ -187,14 +187,6 @@ const MyInfoPage = () => {
 				message.error('Vui lòng kiểm tra lại thông tin!');
 			}
 		});
-
-		// // Cập nhật userInfo với địa chỉ mới
-		// setUserInfo((prevInfo) => ({
-		// 	...prevInfo,
-		// 	addresses: [...prevInfo.addresses, newAddresses], // Thêm địa chỉ mới vào mảng addresses
-		// }));
-
-		// setAddAddress((prevAddresses) => [...prevAddresses, newAddress]);
 	};
 
 	console.log('useDetail', userDetail);
@@ -204,7 +196,7 @@ const MyInfoPage = () => {
 
 		dispatch(handleDefaultAccount({accountId: userDetail?.Id, id})).then((res) => {
 			if (res.payload) {
-				message.success('Đã địa chỉ này đặt làm mặc định');
+				message.success('Địa chỉ đã được đặt làm mặc định');
 			} else {
 				message.error('Có lỗi!');
 			}
@@ -323,12 +315,19 @@ const MyInfoPage = () => {
 				align: 'center',
 				render: (text, record) => (
 					<Space>
-						<Button
-							className="bg-primary"
-							onClick={() => handleDefaultAddress(record.Id)}
-						>
-							Mặc Định
-						</Button>
+						{record?.IsDefault === true ? (
+							<Tooltip title="Mặc Định">
+								<CheckCircleOutlined style={{color: 'green'}} />
+							</Tooltip>
+						) : (
+							<Button
+								className="bg-primary"
+								onClick={() => handleDefaultAddress(record.Id)}
+							>
+								Mặc Định
+							</Button>
+						)}
+
 						<Button
 							danger
 							onClick={() => handleDeleteAddress(record.Street, record.Id)}

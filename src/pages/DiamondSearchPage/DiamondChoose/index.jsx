@@ -76,25 +76,12 @@ const DiamondChoosePage = () => {
 	const fetchJewelryData = debounce(() => {
 		dispatch(
 			getAllJewelry({
-				// ModelId: 'c0530ffb-f954-41c9-8793-650478e43546',
-				// MetalId: '3',
-				// SizeId: '8',
-				// SideDiamondOptId: selectedSideDiamond?.Id,
 				ModelId: jewelryModel?.jewelryModelId,
 				MetalId: jewelryModel?.selectedMetal?.Id,
 				SizeId: jewelryModel?.size,
 				SideDiamondOptId: jewelryModel?.selectedSideDiamond?.Id || null,
 				MinPrice: filters?.price?.minPrice,
 				MaxPrice: filters?.price?.maxPrice,
-				// shapeId: filters?.shape,
-				// cutFrom: filters?.cut?.minCut,
-				// cutTo: filters?.cut?.maxCut,
-				// colorFrom: filters?.color?.minColor,
-				// colorTo: filters?.color?.maxColor,
-				// clarityFrom: filters?.clarity?.minClarity,
-				// clarityTo: filters?.clarity?.maxClarity,
-				// caratFrom: filters?.carat?.minCarat,
-				// caratTo: filters?.carat?.maxCarat,
 			})
 		);
 	}, 500);

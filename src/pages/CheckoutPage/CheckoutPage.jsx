@@ -151,10 +151,13 @@ const CheckoutPage = () => {
 	});
 
 	const idCustomize = order?.Id;
-	console.log('order', order);
-	console.log('promo', promo);
-	console.log('payment', payment);
-	console.log('warrantyList', warrantyList);
+	console.log('userDetail', userDetail);
+
+	const defaultAddress =
+		userDetail.Addresses.length > 0 &&
+		userDetail?.Addresses?.find((address) => address?.IsDefault === true);
+
+	console.log('defaultAddress', defaultAddress);
 
 	useEffect(() => {
 		form.setFieldsValue(userInfo);
@@ -166,10 +169,10 @@ const CheckoutPage = () => {
 			console.log('firstAddress', firstAddress);
 			setUserInfo((prev) => ({
 				...prev,
-				district: firstAddress?.District || '',
-				province: firstAddress?.Province || '',
-				ward: firstAddress?.Ward || '',
-				address: firstAddress?.Street || '',
+				district: defaultAddress?.District || firstAddress?.District || '',
+				province: defaultAddress?.Province || firstAddress?.Province || '',
+				ward: defaultAddress?.Ward || firstAddress?.Ward || '',
+				address: defaultAddress?.Street || firstAddress?.Street || '',
 			}));
 		}
 	}, [userDetail]);
@@ -508,7 +511,11 @@ const CheckoutPage = () => {
 										onChange={handleCityChange}
 										disabled={loading}
 										loading={loading}
-										defaultValue={userInfo.province || undefined}
+										defaultValue={
+											defaultAddress?.Province ||
+											userInfo.province ||
+											undefined
+										}
 										value={userInfo.province || undefined}
 									>
 										{province &&
@@ -960,6 +967,7 @@ const CheckoutPage = () => {
 								<button
 									className="mx-10 px-6 py-2 bg-primary rounded-lg uppercase font-semibold hover:bg-second w-full h-12"
 									onClick={onFinish}
+									loading={loading}
 								>
 									Đặt hàng
 								</button>

@@ -1,10 +1,14 @@
-import React, {useState} from 'react';
+import React from 'react';
 
-import NavbarProfile from '../../components/NavbarProfile';
-import {Helmet} from 'react-helmet';
 import {Button, Form, Input, message} from 'antd';
+import {Helmet} from 'react-helmet';
 import {useDispatch, useSelector} from 'react-redux';
-import {GetUserDetailSelector, LoadingUserDetailSelector} from '../../redux/selectors';
+import NavbarProfile from '../../components/NavbarProfile';
+import {
+	ErrorPasswordSelector,
+	GetUserDetailSelector,
+	LoadingUserDetailSelector,
+} from '../../redux/selectors';
 import {handleChangePassword} from '../../redux/slices/userSlice';
 
 const ChangePassword = () => {
@@ -12,6 +16,7 @@ const ChangePassword = () => {
 	const dispatch = useDispatch();
 	const userDetail = useSelector(GetUserDetailSelector);
 	const loading = useSelector(LoadingUserDetailSelector);
+	const error = useSelector(ErrorPasswordSelector);
 
 	const handleSubmit = (values) => {
 		console.log('Password changed:', values);
@@ -21,16 +26,19 @@ const ChangePassword = () => {
 				oldPassword: values?.oldPassword,
 				newPassword: values?.newPassword,
 			})
-		).then((res) => {
-			console.log('res', res);
-			if (res.payload) {
+		);
+		if (!loading) {
+			if (error === null || error === undefined) {
 				message.success('Thay đổi mật khẩu thành công!');
 			} else {
-				message.error('Thay đổi mật khẩu thất bại!');
+				message.error(error?.detail);
 			}
-		});
+		}
+
 		form.resetFields();
 	};
+
+	console.log('error', error);
 
 	return (
 		<div>

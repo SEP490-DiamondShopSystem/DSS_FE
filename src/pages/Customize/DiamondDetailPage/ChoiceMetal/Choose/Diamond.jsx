@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 
-import {Button} from 'antd';
+import {Button, Modal, Space} from 'antd';
 import {Carat} from './Carat';
 import {Clarity} from './Clarity';
 import {Color} from './Color';
@@ -34,6 +34,16 @@ export const Diamond = ({
 			}));
 		}
 	}, [currentDiamond]);
+
+	const handleCompleted = () => {
+		Modal.confirm({
+			title: 'Vui lòng kiểm tra lại thông số kim cương trước khi tiếp tục!',
+			content: 'Bạn có chắc chắn muốn tiếp tục?',
+			okText: 'Đồng Ý',
+			cancelText: 'Hủy Bỏ',
+			onOk: handleNextStep,
+		});
+	};
 
 	const handleNextStep = () => {
 		if (!customizeDiamond) {
@@ -72,6 +82,10 @@ export const Diamond = ({
 		setStep((prev) => prev + 1);
 	};
 
+	const handleBackStep = () => {
+		setStep((prev) => prev - 1);
+	};
+
 	return (
 		<div>
 			<Carat
@@ -97,31 +111,44 @@ export const Diamond = ({
 				customizeDiamond={customizeDiamond}
 				setCustomizeDiamond={setCustomizeDiamond}
 			/>
-			<div className="flex justify-around items-center mt-10">
+			<div className="flex justify-between items-center mt-10">
 				<Button
 					type="text"
 					className="w-48 uppercase font-semibold bg-primary"
-					disabled={
-						customizeDiamond?.color === '' ||
-						customizeDiamond?.clarity === '' ||
-						customizeDiamond?.cut === ''
-					}
-					onClick={handleAdvanceClick}
+					onClick={handleBackStep}
+					size="large"
 				>
-					Chọn Nâng Cao
+					Quay Lại
 				</Button>
-				<Button
-					type="text"
-					className="w-48 uppercase font-semibold bg-primary"
-					disabled={
-						customizeDiamond?.color === '' ||
-						customizeDiamond?.clarity === '' ||
-						customizeDiamond?.cut === ''
-					}
-					onClick={handleNextStep}
-				>
-					Hoàn Thành
-				</Button>
+
+				<div className="flex justify-around items-center">
+					<Button
+						type="text"
+						className="w-48 uppercase font-semibold bg-primary mr-5"
+						size="large"
+						disabled={
+							customizeDiamond?.color === '' ||
+							customizeDiamond?.clarity === '' ||
+							customizeDiamond?.cut === ''
+						}
+						onClick={handleAdvanceClick}
+					>
+						Chọn Nâng Cao
+					</Button>
+					<Button
+						type="text"
+						className="w-48 uppercase font-semibold bg-primary"
+						size="large"
+						disabled={
+							customizeDiamond?.color === '' ||
+							customizeDiamond?.clarity === '' ||
+							customizeDiamond?.cut === ''
+						}
+						onClick={handleCompleted}
+					>
+						Hoàn Thành
+					</Button>
+				</div>
 			</div>
 		</div>
 	);
