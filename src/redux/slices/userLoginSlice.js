@@ -141,7 +141,6 @@ export const userLoginSlice = createSlice({
 		},
 		logout: (state) => {
 			state.userInfo = null;
-			state.userDetail = null;
 			localStorage.removeItem('accessToken');
 			localStorage.removeItem('refreshToken');
 			localStorage.removeItem('userId');
@@ -155,7 +154,6 @@ export const userLoginSlice = createSlice({
 			.addCase(handleLogin.pending, (state) => {
 				state.loading = true;
 				state.error = null;
-				state.userInfo = null;
 			})
 			.addCase(handleLogin.fulfilled, (state, action) => {
 				state.loading = false;
@@ -170,7 +168,6 @@ export const userLoginSlice = createSlice({
 			.addCase(handleGoogleLogin.pending, (state) => {
 				state.loading = true;
 				state.error = null;
-				state.userInfo = null;
 			})
 			.addCase(handleGoogleLogin.fulfilled, (state, action) => {
 				state.loading = false;
@@ -185,7 +182,6 @@ export const userLoginSlice = createSlice({
 			.addCase(handleRegister.pending, (state) => {
 				state.loading = true;
 				state.error = null;
-				state.userInfo = null;
 			})
 			.addCase(handleRegister.fulfilled, (state, action) => {
 				state.loading = false;
@@ -210,7 +206,6 @@ export const userLoginSlice = createSlice({
 			})
 			.addCase(getUserDetail.pending, (state) => {
 				state.loading = true;
-				state.userDetail = null;
 				state.error = null;
 			})
 			.addCase(getUserDetail.fulfilled, (state, action) => {
@@ -224,7 +219,6 @@ export const userLoginSlice = createSlice({
 			})
 			.addCase(handleUpdateAccount.pending, (state) => {
 				state.loading = true;
-				state.userDetail = null;
 				state.error = null;
 			})
 			.addCase(handleUpdateAccount.fulfilled, (state, action) => {
@@ -238,7 +232,6 @@ export const userLoginSlice = createSlice({
 			})
 			.addCase(handleDefaultAccount.pending, (state) => {
 				state.loading = true;
-				state.userDetail = null;
 				state.error = null;
 			})
 			.addCase(handleDefaultAccount.fulfilled, (state, action) => {

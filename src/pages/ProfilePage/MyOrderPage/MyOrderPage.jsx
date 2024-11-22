@@ -51,38 +51,8 @@ const MyOrderPage = () => {
 		},
 		{
 			title: 'PT Thanh Toán',
-			dataIndex: 'paymentStatus',
-			render: (status) => {
-				// Sửa '=' thành ':'
-				let color = 'red';
-				switch (status) {
-					case 'Pending':
-						color = 'orange';
-						break;
-					case 'Deposited':
-						color = 'blue';
-						break;
-					case 'Paid All':
-						color = 'cyan';
-						break;
+			dataIndex: 'paymentMethodName',
 
-					case 'Refunding':
-					case 'Refunded':
-						color = 'red';
-						break;
-
-					default:
-						color = 'grey';
-						break;
-				}
-				return (
-					<div className="text-center">
-						<Tag className="text-center" color={color}>
-							{status.toUpperCase()}
-						</Tag>
-					</div>
-				);
-			},
 			align: 'center',
 		},
 		{
@@ -189,9 +159,10 @@ const MyOrderPage = () => {
 	useEffect(() => {
 		if (orderList && orderList?.Values) {
 			const formattedOrders = orderList?.Values?.map((order) => ({
-				orderId: order.Id,
-				orderCode: order.OrderCode,
-				paymentMethodId: order.PaymentMethod?.Id,
+				orderId: order?.Id,
+				orderCode: order?.OrderCode,
+				paymentMethodId: order?.PaymentMethod?.Id,
+				paymentMethodName: order?.PaymentMethod?.MappedName,
 				orderTime: order.CreatedDate,
 				price: formatPrice(order.TotalPrice),
 				status: getOrderStatus(order.Status),

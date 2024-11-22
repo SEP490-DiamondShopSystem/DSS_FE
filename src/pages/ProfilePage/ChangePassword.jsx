@@ -26,16 +26,15 @@ const ChangePassword = () => {
 				oldPassword: values?.oldPassword,
 				newPassword: values?.newPassword,
 			})
-		);
-		if (!loading) {
-			if (error === null || error === undefined) {
+		)
+			.unwrap()
+			.then((data) => {
 				message.success('Thay đổi mật khẩu thành công!');
-			} else {
-				message.error(error?.detail);
-			}
-		}
-
-		form.resetFields();
+				form.resetFields();
+			})
+			.catch((error) => {
+				message.error(error?.detail || 'Có lỗi xảy ra!');
+			});
 	};
 
 	console.log('error', error);
