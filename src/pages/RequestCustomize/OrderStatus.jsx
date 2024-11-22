@@ -5,6 +5,12 @@ import {Steps} from 'antd';
 export const OrderStatus = ({orderStatus, orderDetail}) => {
 	const [currentStep, setCurrentStep] = useState(0);
 
+	const stage = orderDetail?.Stage;
+
+	console.log('currentStep', currentStep);
+	console.log('orderDetail', orderDetail);
+	console.log('stage', stage);
+
 	useEffect(() => {
 		// Kiểm tra nếu dữ liệu chưa sẵn sàng
 		if (!orderDetail || !orderStatus) return;
@@ -15,20 +21,6 @@ export const OrderStatus = ({orderStatus, orderDetail}) => {
 		}));
 
 		console.log('haveDiamond', haveDiamond);
-
-		if (orderStatus === 5) {
-			if (!haveDiamond || haveDiamond.length === 0) {
-				setCurrentStep(5);
-			} else if (haveDiamond.every((diamond) => diamond.diamondId !== null)) {
-				// Tất cả diamondId đều không null -> currentStep = 7
-				setCurrentStep(7);
-			} else {
-				// Một số diamondId là null -> currentStep = 5
-				setCurrentStep(5);
-			}
-		} else {
-			console.log('Unhandled orderStatus:', orderStatus);
-		}
 
 		console.log('Current step updated based on orderStatus:', orderStatus);
 	}, [orderStatus, orderDetail]);
@@ -70,43 +62,60 @@ export const OrderStatus = ({orderStatus, orderDetail}) => {
 	}, [orderStatus]);
 
 	const steps = [
-		// Step 0: Chờ Shop Xác Nhận
+		// Step 0: Pending
 		{
 			title:
-				currentStep === 0
+				currentStep === 0 && orderStatus === 1
 					? 'Chờ Xác Nhận'
-					: orderStatus === 5
+					: stage === 2
 					? 'Đã Bị Từ Chối'
-					: orderStatus === 6
+					: stage === 1
 					? 'Đã Hủy'
 					: 'Đã Xác Nhận',
 			description:
 				currentStep === 0 && orderStatus === 1
 					? 'Yêu cầu thiết kế đang chờ xác nhận từ shop.'
-					: orderStatus === 5
+					: stage === 2
 					? `Yêu cầu thiết kế đã bị từ chối. `
-					: orderStatus === 6
+					: stage === 1
 					? `Yêu cầu thiết kế đã bị hủy.`
 					: 'Yêu cầu thiết kế đã xác nhận.',
 		},
-		// Step 1: Chuẩn Bị Hàng
+		// Step 1: Priced
 		{
-			title: [2, 3, 4].includes(currentStep) ? 'Chưa Có Giá' : 'Đã Có Giá ',
+			title: [2, 3, 4].includes(currentStep)
+				? 'Chưa Có Giá'
+				: stage === 4
+				? 'Đã Hủy'
+				: stage === 5
+				? 'Đã Từ Chối'
+				: 'Đã Có Giá ',
 			description: [2, 3, 4].includes(currentStep)
 				? 'Yêu cầu thiết kế chưa được thiết lập giá.'
+				: stage === 4
+				? 'Đơn thiết kế đã bị hủy.'
+				: stage === 5
+				? `Yêu cầu thiết kế đã bị từ chối. `
 				: 'Yêu cầu thiết kế đã có thiết lập giá.',
 		},
-		// Step 2: Đang Vận Chuyển
+		// Step 2:Requesting
 		{
 			title: [2, 3, 4].includes(currentStep) ? 'Đã Chấp Nhận Giá' : 'Chưa Xác Nhận',
 			description: [2, 3, 4].includes(currentStep)
 				? 'Khách hàng đã chấp nhận giá yêu cầu thiết kế.'
+				: stage === 8
+				? 'Đã Hủy'
+				: stage === 9
+				? 'Đã Từ Chối'
 				: 'Đang chờ khách chấp nhận giá yêu cầu thiết kế.',
 		},
-		// Step 4: Hoàn Thành
+		// Step 4: Accepted
 		{
-			title: 'Tạo Đơn Đặt Hàng',
-			description: 'Yêu cầu thiết kế đã được shop chấp nhận. Tiến hành tạo đơn!',
+			title: stage === 8 ? 'Đã Hủy' : 'Tạo Đơn Đặt Hàng',
+			description:
+				stage === 8
+					? 'Đơn thiết kế đã bị hủy.'
+					: 'Yêu cầu thiết kế đã được shop chấp nhận. Tiến hành tạo đơn!',
 		},
 	];
 	console.log('orderStatus', orderStatus);
@@ -115,46 +124,65 @@ export const OrderStatus = ({orderStatus, orderDetail}) => {
 
 	// Cập nhật trạng thái dựa trên currentStep
 	if (currentStep === 0) {
-		steps[0].status = orderStatus === 5 ? 'error' : 'process';
-
-		steps[1].status = 'wait'; // Chờ Xử Lí
-		steps[2].status = 'wait'; // Đang Vận Chuyển
-		steps[3].status = 'wait'; // Giao Hàng
+		steps[0].status = 'process';
+		steps[1].status = 'wait';
+		steps[2].status = 'wait';
+		steps[3].status = 'wait';
 	} else if (currentStep === 1) {
-		steps[0].status = 'finish'; //Đã Từ Chối
-		steps[1].status = 'process'; // Chờ Xử Lí
-		steps[2].status = 'wait'; // Đang Vận Chuyển
-		steps[3].status = 'wait'; // Giao Hàng
+		steps[0].status = 'finish';
+		steps[1].status = 'process';
+		steps[2].status = 'wait';
+		steps[3].status = 'wait';
 	} else if (currentStep === 2) {
-		steps[0].status = 'finish'; // Đã Xác Nhận
-		steps[1].status = 'finish'; // Đã Xử Lí
-		steps[2].status = 'process'; // Đang Vận Chuyển
-		steps[3].status = 'wait'; // Giao Hàng
+		steps[0].status = 'finish';
+		steps[1].status = 'finish';
+		steps[2].status = 'process';
+		steps[3].status = 'wait';
 	} else if (currentStep === 3) {
-		steps[0].status = 'finish'; //Đã Hủy
-		steps[1].status = 'finish'; // Chờ Xử Lí
-		steps[2].status = 'finish'; // Đang Vận Chuyển
-		steps[3].status = 'finish'; // Giao Hàng
+		steps[0].status = 'finish';
+		steps[1].status = 'finish';
+		steps[2].status = 'finish';
+		steps[3].status = 'finish';
 	} else if (currentStep === 4) {
-		steps[0].status = 'finish'; // Đã Hủy hoặc Đã Xác Nhận
-		steps[1].status = 'finish'; // Đã Hủy hoặc Đã Xử Lí
-		steps[2].status = 'process'; // Đang Vận Chuyển
-		steps[3].status = 'wait'; // Giao Hàng
-	} else if (currentStep === 5) {
-		steps[0].status = 'error'; // Đã Xác Nhận
-		steps[1].status = 'wait'; // Đã Xử Lí
-		steps[2].status = 'wait'; // Đang Vận Chuyển
-		steps[3].status = 'wait'; // Giao Hàng
-	} else if (currentStep === 6) {
-		steps[0].status = 'finish'; // Đã Xác Nhận
-		steps[1].status = 'finish'; // Đã Xử Lí
-		steps[2].status = 'finish'; // Đã Vận Chuyển
-		steps[3].status = 'error'; // Giao Hàng Thất Bại
-	} else if (currentStep === 7) {
-		steps[0].status = 'finish'; // Đã Xác Nhận
-		steps[1].status = 'finish'; // Đã Xử Lí
-		steps[2].status = 'error'; // Đã Vận Chuyển
-		steps[3].status = 'wait'; // Giao Hàng Thất Bại
+		steps[0].status = 'finish';
+		steps[1].status = 'finish';
+		steps[2].status = 'process';
+		steps[3].status = 'wait';
+	} else if (currentStep === 5 && stage === 2) {
+		steps[0].status = 'error';
+		steps[1].status = 'wait';
+		steps[2].status = 'wait';
+		steps[3].status = 'wait';
+	} else if (currentStep === 5 && stage === 5) {
+		steps[0].status = 'finish';
+		steps[1].status = 'error';
+		steps[2].status = 'wait';
+		steps[3].status = 'wait';
+	} else if (currentStep === 5 && stage === 9) {
+		steps[0].status = 'finish';
+		steps[1].status = 'finish';
+		steps[2].status = 'error';
+		steps[3].status = 'wait';
+	} else if (currentStep === 6 && stage === 1) {
+		steps[0].status = 'error';
+		steps[1].status = 'finish';
+		steps[2].status = 'wait';
+		steps[3].status = 'wait';
+	} else if (currentStep === 6 && stage === 4) {
+		steps[0].status = 'finish';
+		steps[1].status = 'error';
+		steps[2].status = 'wait';
+		steps[3].status = 'wait';
+	} else if (currentStep === 6 && stage === 8) {
+		steps[0].status = 'finish';
+		steps[1].status = 'finish';
+		steps[2].status = 'error';
+		steps[3].status = 'wait';
+	} else if (currentStep === 6 && stage === 11) {
+		steps[0].status = 'finish';
+		steps[1].status = 'finish';
+		steps[2].status = 'wait';
+		steps[3].status = 'error';
 	}
 
 	return (

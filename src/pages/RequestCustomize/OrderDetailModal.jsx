@@ -375,6 +375,13 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 
 					<div className="flex justify-between">
 						<h1 className="text-xl font-semibold">Chi tiết đơn thiết kế</h1>
+						{orderStatus === 1 && (
+							<Space>
+								<Button danger className="text-white" onClick={handleCancelOrder}>
+									Hủy Đơn
+								</Button>
+							</Space>
+						)}
 						{orderStatus === 2 && (
 							<Space>
 								<Button

@@ -159,6 +159,7 @@ export const userLoginSlice = createSlice({
 			.addCase(handleLogin.fulfilled, (state, action) => {
 				state.loading = false;
 				state.userInfo = action.payload;
+				state.error = action.error;
 				setLocalStorage('accessToken', action.payload.accessToken);
 				setLocalStorage('refreshToken', action.payload.refreshToken);
 			})

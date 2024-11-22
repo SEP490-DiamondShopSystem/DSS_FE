@@ -99,7 +99,7 @@ export const ChoiceMetalDiamond = ({
 
 	const itemsDiamond = Array.from({length: jewelry?.MainDiamondCount || 0}, (_, index) => ({
 		title: `Kim Cương ${index + 1}`,
-		disabled: index > stepChooseDiamond,
+		disabled: true,
 	}));
 
 	useEffect(() => {

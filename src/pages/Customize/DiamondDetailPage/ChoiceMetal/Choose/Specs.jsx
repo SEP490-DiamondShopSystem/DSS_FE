@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {InfoCircleFilled} from '@ant-design/icons';
-import {Button, Image, Popover, Radio} from 'antd';
+import {Button, Image, Modal, Popover, Radio} from 'antd';
 import {Polish} from './Polish';
 import girdle from '../../../../../assets/advanceDiamond/Girdle .jpeg';
 import culet from '../../../../../assets/advanceDiamond/Culet.jpg';
@@ -123,6 +123,16 @@ export const Specs = ({
 	// 	setStepChooseDiamond((prev) => prev + 1);
 	// };
 
+	const handleCompleted = () => {
+		Modal.confirm({
+			title: 'Vui lòng kiểm tra lại thông số kim cương trước khi tiếp tục!',
+			content: 'Bạn có chắc chắn muốn tiếp tục?',
+			okText: 'Đồng Ý',
+			cancelText: 'Hủy Bỏ',
+			onOk: handleNextStep,
+		});
+	};
+
 	const handleNextStep = () => {
 		if (!customizeDiamond) {
 			alert('Please select a diamond before continuing.'); // Alert if no diamond is selected
@@ -154,6 +164,10 @@ export const Specs = ({
 		});
 		setStep(0);
 		setStepChooseDiamond((prev) => prev + 1);
+	};
+
+	const handleBackStep = () => {
+		setStep((prev) => prev - 1);
 	};
 
 	const textSymmetry = <span>Độ đối xứng</span>;
@@ -291,12 +305,21 @@ export const Specs = ({
 					</div>
 				))}
 			</div>
-			<div className="flex justify-around items-center mt-10">
+			<div className="flex justify-between items-center mt-10">
+				<Button
+					type="text"
+					size="large"
+					className="w-48 uppercase font-semibold bg-primary"
+					onClick={handleBackStep}
+				>
+					Quay Lại
+				</Button>
+
 				<Button
 					className="bg-primary w-48 uppercase font-semibold"
 					type="text"
 					size="large"
-					onClick={handleNextStep}
+					onClick={handleCompleted}
 				>
 					Xác Nhận
 				</Button>
