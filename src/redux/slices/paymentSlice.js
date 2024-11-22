@@ -9,7 +9,7 @@ export const getAllPayment = createAsyncThunk(
 			return data;
 		} catch (error) {
 			console.error(error);
-			return rejectWithValue(error);
+			return rejectWithValue(error.data);
 		}
 	}
 );
@@ -26,6 +26,8 @@ export const paymentSlice = createSlice({
 		builder
 			.addCase(getAllPayment.pending, (state) => {
 				state.loading = true;
+				state.payment = null;
+				state.error = null;
 			})
 			.addCase(getAllPayment.fulfilled, (state, action) => {
 				state.loading = false;

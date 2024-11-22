@@ -68,7 +68,7 @@ const mapAttributes = (data, attributes) => {
 		Table: data.Table,
 		Title: data.Title,
 		Measurement: data.Measurement,
-		DiamondShape: data?.DiamondPrice?.Shape?.ShapeName,
+		DiamondShape: data?.DiamondShape?.ShapeName,
 		DiscountPrice: data?.DiscountReducedAmount,
 		TruePrice: data?.TruePrice,
 		SalePrice: data?.SalePrice,
@@ -96,6 +96,8 @@ const DiamondSearchPage = () => {
 	const [filters, setFilters] = useState({});
 	const [selectedIndex, setSelectedIndex] = useState(0);
 
+	console.log('filters', filters);
+
 	useEffect(() => {
 		dispatch(getDiamondFilter());
 	}, []);
@@ -122,7 +124,7 @@ const DiamondSearchPage = () => {
 	useEffect(() => {
 		if (filterLimits) {
 			setFilters({
-				shape: getShapeFromLocalStorage(),
+				shape: getShapeFromLocalStorage() || filters?.shape || 1,
 				price: {minPrice: filterLimits?.Price?.Min, maxPrice: filterLimits?.Price?.Max},
 				carat: {
 					minCarat: findShape?.CaratFrom || filterLimits?.Carat?.Min,

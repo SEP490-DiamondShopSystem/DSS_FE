@@ -98,7 +98,6 @@ const CartPage = () => {
 	const dispatch = useDispatch();
 	const userId = getUserId();
 
-	const promotionList = useSelector(GetPromotionSelector);
 	const cartList = useSelector(GetCartSelector);
 	const promoAble = useSelector(GetPromotionAbleSelector);
 	const loading = useSelector(LoadingCartSelector);
@@ -110,8 +109,6 @@ const CartPage = () => {
 	const cartValidate = JSON.parse(localStorage.getItem(`cartValidate_${userId}`));
 	const [cartValidateProduct, setCartValidateProduct] = useState([]);
 	const [promoId, setPromoId] = useState(null);
-
-	console.log('userDetail', userDetail);
 
 	useEffect(() => {
 		dispatch(getAllPromo());
@@ -131,6 +128,8 @@ const CartPage = () => {
 
 	useEffect(() => {
 		const local = JSON.parse(localStorage.getItem(`cart_${userId}`));
+		console.log('local', local);
+
 		const transformedData = local?.map((productId, index) => ({
 			id: Math.floor(1000000 + Math.random() * 9000000).toString(),
 			jewelryId: productId.JewelryId || null,
@@ -143,10 +142,10 @@ const CartPage = () => {
 			engravedFont: productId?.engravedFont || null,
 			warrantyCode:
 				productId?.warrantyJewelry?.warrantyCode ||
-				productId?.warrantyDiamond?.warrantyCode,
+				productId?.warrantyDiamond?.warranty?.Code,
 			warrantyType:
 				productId?.warrantyJewelry?.warrantyType ||
-				productId?.warrantyDiamond?.warrantyType,
+				productId?.warrantyDiamond?.warranty?.Type,
 		}));
 
 		dispatch(
@@ -387,8 +386,18 @@ const CartPage = () => {
 					<Select className="w-full" onChange={handlePromoChange} allowClear>
 						{promo &&
 							promo.map((promotion) => (
-								<Select.Option key={promotion.PromoId} value={promotion.PromoId}>
-									{promotion.PromotionDto.Description}
+								<Select.Option
+									key={promotion.PromoId}
+									value={promotion.PromoId}
+									disabled={!promotion?.IsApplicable}
+								>
+									<div
+										className={`${
+											promotion?.IsApplicable ? 'text-green' : 'text-red'
+										}`}
+									>
+										{promotion.PromotionDto.Description}
+									</div>
 								</Select.Option>
 							))}
 					</Select>
@@ -400,14 +409,17 @@ const CartPage = () => {
 					<div className="space-y-4">
 						<p className="flex justify-between">
 							<span>Giá Gốc</span>{' '}
-							<span>{formatPrice(cartList?.OrderPrices?.DefaultPrice)}</span>
+							<span>{formatPrice(cartList?.OrderPrices?.DefaultPrice || 0)}</span>
 						</p>
 						<p className="flex justify-between">
 							{cartList?.OrderPrices?.DiscountAmountSaved !== 0 ? (
 								<>
 									<span>Giảm Giá</span>{' '}
 									<span>
-										-{formatPrice(cartList?.OrderPrices?.DiscountAmountSaved)}
+										-
+										{formatPrice(
+											cartList?.OrderPrices?.DiscountAmountSaved || 0
+										)}
 									</span>
 								</>
 							) : (
@@ -419,7 +431,10 @@ const CartPage = () => {
 								<>
 									<span>Khuyến Mãi</span>{' '}
 									<span>
-										-{formatPrice(cartList?.OrderPrices?.PromotionAmountSaved)}
+										-
+										{formatPrice(
+											cartList?.OrderPrices?.PromotionAmountSaved || 0
+										)}
 									</span>
 								</>
 							) : (
@@ -431,7 +446,9 @@ const CartPage = () => {
 								<>
 									<span>Bảo Hành</span>{' '}
 									<span>
-										-{formatPrice(cartList?.OrderPrices?.TotalWarrantyPrice)}
+										{formatPrice(
+											cartList?.OrderPrices?.TotalWarrantyPrice || 0
+										)}
 									</span>
 								</>
 							) : (
@@ -445,7 +462,9 @@ const CartPage = () => {
 
 									<span>
 										-
-										{formatPrice(cartList?.OrderPrices?.UserRankDiscountAmount)}
+										{formatPrice(
+											cartList?.OrderPrices?.UserRankDiscountAmount || 0
+										)}
 									</span>
 								</>
 							) : (

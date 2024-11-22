@@ -16,8 +16,8 @@ export const handleCartValidate = createAsyncThunk(
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.response.data));
-			return rejectWithValue(error.response.data);
+			console.log('Error: ', JSON.stringify(error.data));
+			return rejectWithValue(error.data);
 		}
 	}
 );
@@ -184,6 +184,8 @@ export const cartSlice = createSlice({
 		builder
 			.addCase(handleCartValidate.pending, (state) => {
 				state.loading = true;
+				state.cart = null;
+				state.error = null;
 			})
 			.addCase(handleCartValidate.fulfilled, (state, action) => {
 				state.loading = false;

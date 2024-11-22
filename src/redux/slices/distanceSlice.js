@@ -9,8 +9,8 @@ export const fetchDistances = createAsyncThunk(
 			const response = await api.get('/Location/Province');
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.response.data));
-			return rejectWithValue(error.response.data);
+			console.log('Error: ', JSON.stringify(error.data));
+			return rejectWithValue(error.data);
 		}
 	}
 );
@@ -22,8 +22,8 @@ export const fetchWard = createAsyncThunk(
 			const response = await api.get(`/Location/Ward/${districtId}`);
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.response.data));
-			return rejectWithValue(error.response.data);
+			console.log('Error: ', JSON.stringify(error.data));
+			return rejectWithValue(error.data);
 		}
 	}
 );
@@ -37,8 +37,8 @@ export const fetchDistrict = createAsyncThunk(
 			const response = await api.get(`/Location/District/${provinceId}`);
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.response.data));
-			return rejectWithValue(error.response.data);
+			console.log('Error: ', JSON.stringify(error.data));
+			return rejectWithValue(error.data);
 		}
 	}
 );
@@ -62,8 +62,8 @@ export const handleCalculateLocation = createAsyncThunk(
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.response.data));
-			return rejectWithValue(error.response.data);
+			console.log('Error: ', JSON.stringify(error.data));
+			return rejectWithValue(error.data);
 		}
 	}
 );
@@ -85,6 +85,7 @@ export const distanceSlice = createSlice({
 			.addCase(fetchDistances.pending, (state) => {
 				state.loading = true;
 				state.error = null;
+				state.distances = null;
 			})
 			.addCase(fetchDistances.fulfilled, (state, action) => {
 				state.loading = false;
@@ -97,6 +98,7 @@ export const distanceSlice = createSlice({
 			.addCase(fetchWard.pending, (state) => {
 				state.loading = true;
 				state.error = null;
+				state.ward = null;
 			})
 			.addCase(fetchWard.fulfilled, (state, action) => {
 				state.loading = false;
@@ -109,6 +111,7 @@ export const distanceSlice = createSlice({
 			.addCase(fetchDistrict.pending, (state) => {
 				state.loading = true;
 				state.error = null;
+				state.district = null;
 			})
 			.addCase(fetchDistrict.fulfilled, (state, action) => {
 				state.loading = false;
@@ -121,6 +124,7 @@ export const distanceSlice = createSlice({
 			.addCase(handleCalculateLocation.pending, (state) => {
 				state.loading = true;
 				state.error = null;
+				state.location = null;
 			})
 			.addCase(handleCalculateLocation.fulfilled, (state, action) => {
 				state.loading = false;

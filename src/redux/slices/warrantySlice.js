@@ -8,8 +8,8 @@ export const getAllWarranty = createAsyncThunk(
 			const response = await api.get(`/Warranty/All`);
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.response.data));
-			return rejectWithValue(error.response.data);
+			console.log('Error: ', JSON.stringify(error.data));
+			return rejectWithValue(error.data);
 		}
 	}
 );
@@ -24,6 +24,8 @@ export const warrantySlice = createSlice({
 		builder
 			.addCase(getAllWarranty.pending, (state) => {
 				state.loading = true;
+				state.error = null;
+				state.warranties = null;
 			})
 			.addCase(getAllWarranty.fulfilled, (state, action) => {
 				state.loading = false;

@@ -8,8 +8,8 @@ export const getAllPromo = createAsyncThunk(
 			const response = await api.get(`/Promotion`);
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.response.data));
-			return rejectWithValue(error.response.data);
+			console.log('Error: ', JSON.stringify(error.data));
+			return rejectWithValue(error.data);
 		}
 	}
 );
@@ -24,8 +24,8 @@ export const checkPromoCart = createAsyncThunk(
 			});
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.response.data));
-			return rejectWithValue(error.response.data);
+			console.log('Error: ', JSON.stringify(error.data));
+			return rejectWithValue(error.data);
 		}
 	}
 );
@@ -41,6 +41,8 @@ export const promotionSlice = createSlice({
 		builder
 			.addCase(getAllPromo.pending, (state) => {
 				state.loading = true;
+				state.promotion = null;
+				state.error = null;
 			})
 			.addCase(getAllPromo.fulfilled, (state, action) => {
 				state.loading = false;
@@ -52,6 +54,8 @@ export const promotionSlice = createSlice({
 			})
 			.addCase(checkPromoCart.pending, (state) => {
 				state.loading = true;
+				state.error = null;
+				state.promoAble = null;
 			})
 			.addCase(checkPromoCart.fulfilled, (state, action) => {
 				state.loading = false;

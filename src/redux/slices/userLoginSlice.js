@@ -52,7 +52,7 @@ export const handleRegister = createAsyncThunk(
 			return data;
 		} catch (error) {
 			console.error(error);
-			return rejectWithValue(error);
+			return rejectWithValue(error.payload);
 		}
 	}
 );
@@ -65,7 +65,7 @@ export const handleRefreshToken = createAsyncThunk(
 			return data;
 		} catch (error) {
 			console.error(error);
-			return rejectWithValue(error);
+			return rejectWithValue(error.payload);
 		}
 	}
 );
@@ -78,7 +78,7 @@ export const getUserDetail = createAsyncThunk(
 			return data;
 		} catch (error) {
 			console.error(error);
-			return rejectWithValue(error);
+			return rejectWithValue(error.payload);
 		}
 	}
 );
@@ -94,7 +94,7 @@ export const handleUpdateAccount = createAsyncThunk(
 			return data;
 		} catch (error) {
 			console.error(error);
-			return rejectWithValue(error);
+			return rejectWithValue(error.payload);
 		}
 	}
 );
@@ -107,7 +107,7 @@ export const handleDefaultAccount = createAsyncThunk(
 			return data;
 		} catch (error) {
 			console.error(error);
-			return rejectWithValue(error);
+			return rejectWithValue(error.payload);
 		}
 	}
 );
@@ -122,7 +122,7 @@ export const handleVerifyAccount = createAsyncThunk(
 			return data;
 		} catch (error) {
 			console.error(error);
-			return rejectWithValue(error);
+			return rejectWithValue(error.data);
 		}
 	}
 );
@@ -155,11 +155,11 @@ export const userLoginSlice = createSlice({
 			.addCase(handleLogin.pending, (state) => {
 				state.loading = true;
 				state.error = null;
+				state.userInfo = null;
 			})
 			.addCase(handleLogin.fulfilled, (state, action) => {
 				state.loading = false;
 				state.userInfo = action.payload;
-				state.error = action.error;
 				setLocalStorage('accessToken', action.payload.accessToken);
 				setLocalStorage('refreshToken', action.payload.refreshToken);
 			})
@@ -170,6 +170,7 @@ export const userLoginSlice = createSlice({
 			.addCase(handleGoogleLogin.pending, (state) => {
 				state.loading = true;
 				state.error = null;
+				state.userInfo = null;
 			})
 			.addCase(handleGoogleLogin.fulfilled, (state, action) => {
 				state.loading = false;
@@ -184,6 +185,7 @@ export const userLoginSlice = createSlice({
 			.addCase(handleRegister.pending, (state) => {
 				state.loading = true;
 				state.error = null;
+				state.userInfo = null;
 			})
 			.addCase(handleRegister.fulfilled, (state, action) => {
 				state.loading = false;
@@ -208,6 +210,8 @@ export const userLoginSlice = createSlice({
 			})
 			.addCase(getUserDetail.pending, (state) => {
 				state.loading = true;
+				state.userDetail = null;
+				state.error = null;
 			})
 			.addCase(getUserDetail.fulfilled, (state, action) => {
 				state.loading = false;
@@ -220,6 +224,8 @@ export const userLoginSlice = createSlice({
 			})
 			.addCase(handleUpdateAccount.pending, (state) => {
 				state.loading = true;
+				state.userDetail = null;
+				state.error = null;
 			})
 			.addCase(handleUpdateAccount.fulfilled, (state, action) => {
 				state.loading = false;
@@ -232,6 +238,8 @@ export const userLoginSlice = createSlice({
 			})
 			.addCase(handleDefaultAccount.pending, (state) => {
 				state.loading = true;
+				state.userDetail = null;
+				state.error = null;
 			})
 			.addCase(handleDefaultAccount.fulfilled, (state, action) => {
 				state.loading = false;
@@ -243,6 +251,7 @@ export const userLoginSlice = createSlice({
 			})
 			.addCase(handleVerifyAccount.pending, (state) => {
 				state.loading = true;
+				state.error = null;
 			})
 			.addCase(handleVerifyAccount.fulfilled, (state, action) => {
 				state.loading = false;
