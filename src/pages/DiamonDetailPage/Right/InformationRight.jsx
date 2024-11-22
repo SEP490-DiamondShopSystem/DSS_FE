@@ -32,6 +32,7 @@ export const InformationRight = ({
 	handleChangeWarranty,
 	warrantyDiamond,
 	diamondId,
+	warrantyDiamondSelected,
 }) => {
 	const dispatch = useDispatch();
 
@@ -101,7 +102,11 @@ export const InformationRight = ({
 				{diamondChoice && (
 					<Select
 						allowClear
-						className="w-64 mb-5"
+						className="w-96 mb-5"
+						value={
+							warrantyDiamondSelected?.warranty?.MappedName ||
+							warrantyDiamondSelected?.MappedName
+						}
 						placeholder="Chọn bảo hành kim cương"
 						onChange={handleChangeWarranty}
 					>
@@ -110,11 +115,10 @@ export const InformationRight = ({
 								<Select.Option
 									key={i}
 									value={JSON.stringify({
-										warrantyCode: warranty.Code,
-										warrantyType: warranty?.Type,
+										warranty,
 									})}
 								>
-									{warranty.Name.replace(/_/g, ' ')}
+									{warranty?.MappedName?.replace(/_/g, ' ')}
 								</Select.Option>
 							))}
 					</Select>

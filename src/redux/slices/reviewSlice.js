@@ -59,8 +59,8 @@ export const getAllJewelryModelReview = createAsyncThunk(
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.response.data));
-			return rejectWithValue(error.response.data);
+			console.log('Error: ', JSON.stringify(error.data));
+			return rejectWithValue(error.data);
 		}
 	}
 );
@@ -81,6 +81,7 @@ export const reviewSlice = createSlice({
 		builder
 			.addCase(handleReviewOrder.pending, (state) => {
 				state.loading = true;
+				state.error = null;
 			})
 			.addCase(handleReviewOrder.fulfilled, (state, action) => {
 				state.loading = false;
@@ -91,6 +92,8 @@ export const reviewSlice = createSlice({
 			})
 			.addCase(getAllJewelryModelReview.pending, (state) => {
 				state.loading = true;
+				state.reviews = null;
+				state.error = null;
 			})
 			.addCase(getAllJewelryModelReview.fulfilled, (state, action) => {
 				state.loading = false;

@@ -767,10 +767,9 @@ const CheckoutPage = () => {
 										</div>
 										<label>Chọn bảo hành trang sức</label>
 										<Select
-											// allowClear
-											// value={}
-											className="w-64 mt-1 mb-5"
-											placeholder="Bảo hành"
+											allowClear
+											className="w-96 mt-2 mb-5"
+											placeholder="Chọn bảo hành trang sức"
 											onChange={onChangeWarrantyJewelry}
 										>
 											{warrantiesJewelry &&
@@ -782,7 +781,9 @@ const CheckoutPage = () => {
 															warrantyType: warranty?.Type,
 														})}
 													>
-														{warranty.Name.replace(/_/g, ' ')}
+														{warranty?.Name?.replace(/_/g, ' ')} -{' '}
+														{warranty?.MonthDuration} tháng -{' '}
+														{formatPrice(warranty?.Price)}
 													</Select.Option>
 												))}
 										</Select>

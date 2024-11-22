@@ -75,12 +75,13 @@ export const InformationRight = ({
 	const [showSecureShopping, setSecureShopping] = useState(false);
 	const [showProductWarrantly, setProductWarrantly] = useState(false);
 	const [sizeChange, setSizeChange] = useState();
-	const [jewelryType, setJewelryType] = useState(localStorage.getItem('jewelryType'));
 	const [warrantiesJewelry, setWarrantiesJewelry] = useState('');
 	const [warrantiesJewelrySelected, setWarrantiesJewelrySelected] = useState();
 	const [visible, setVisible] = useState(false);
 	const [engravedText, setEngravedText] = useState(null);
 	const [engravedFont, setEngravedFont] = useState(null);
+
+	console.log('warrantiesJewelry', warrantiesJewelry);
 
 	useEffect(() => {
 		dispatch(getAllWarranty());
@@ -151,8 +152,6 @@ export const InformationRight = ({
 			engravedText,
 		};
 
-		console.log('data', data);
-
 		const existingCart = JSON.parse(localStorage.getItem(`cart_${userId}`)) || [];
 
 		// Kiểm tra xem sản phẩm với JewelryId và các thuộc tính đã tồn tại chưa
@@ -196,7 +195,6 @@ export const InformationRight = ({
 	const onChangeWarrantyJewelry = (value) => {
 		if (value !== undefined) {
 			const parseValue = JSON.parse(value);
-			console.log('parseValue', parseValue);
 			setWarrantiesJewelrySelected(parseValue);
 		} else {
 			console.warn('Giá trị "value" là undefined, không có hành động nào được thực hiện');
@@ -209,9 +207,6 @@ export const InformationRight = ({
 	const handleSubmit = () => {
 		setVisible(false);
 	};
-
-	console.log('jewelry', jewelry);
-	console.log('jewelryDetail', jewelryDetail);
 
 	const content = (
 		<div style={{width: '200px'}}>
@@ -239,8 +234,6 @@ export const InformationRight = ({
 			</div>
 		</div>
 	);
-
-	console.log('jewelryDetail?.filteredGroups', jewelryDetail?.filteredGroups);
 
 	return (
 		<div>
@@ -314,7 +307,7 @@ export const InformationRight = ({
 										)}
 										<Select
 											allowClear
-											className="w-64 mt-2 mb-5"
+											className="w-96 mt-2 mb-5"
 											placeholder="Chọn bảo hành trang sức"
 											onChange={onChangeWarrantyJewelry}
 										>
@@ -327,7 +320,7 @@ export const InformationRight = ({
 															warrantyType: warranty?.Type,
 														})}
 													>
-														{warranty.Name.replace(/_/g, ' ')}
+														{warranty?.MappedName?.replace(/_/g, ' ')}
 													</Select.Option>
 												))}
 										</Select>

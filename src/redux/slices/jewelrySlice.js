@@ -29,8 +29,8 @@ export const getAllJewelryModel = createAsyncThunk(
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.response.data));
-			return rejectWithValue(error.response.data);
+			console.log('Error: ', JSON.stringify(error.data));
+			return rejectWithValue(error.data);
 		}
 	}
 );
@@ -62,8 +62,8 @@ export const getAllJewelry = createAsyncThunk(
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.response.data));
-			return rejectWithValue(error.response.data);
+			console.log('Error: ', JSON.stringify(error.data));
+			return rejectWithValue(error.data);
 		}
 	}
 );
@@ -77,8 +77,8 @@ export const getAllJewelryMetal = createAsyncThunk(
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.response.data));
-			return rejectWithValue(error.response.data);
+			console.log('Error: ', JSON.stringify(error.data));
+			return rejectWithValue(error.data);
 		}
 	}
 );
@@ -92,8 +92,8 @@ export const getAllJewelryModelCategory = createAsyncThunk(
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.response.data));
-			return rejectWithValue(error.response.data);
+			console.log('Error: ', JSON.stringify(error.data));
+			return rejectWithValue(error.data);
 		}
 	}
 );
@@ -108,8 +108,8 @@ export const getJewelryDetail = createAsyncThunk(
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.response.data));
-			return rejectWithValue(error.response.data);
+			console.log('Error: ', JSON.stringify(error.data));
+			return rejectWithValue(error.data);
 		}
 	}
 );
@@ -126,8 +126,8 @@ export const getJewelryDetailPreset = createAsyncThunk(
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.response.data));
-			return rejectWithValue(error.response.data);
+			console.log('Error: ', JSON.stringify(error.data));
+			return rejectWithValue(error.data);
 		}
 	}
 );
@@ -142,8 +142,8 @@ export const getJewelryDetailFile = createAsyncThunk(
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.response.data));
-			return rejectWithValue(error.response.data);
+			console.log('Error: ', JSON.stringify(error.data));
+			return rejectWithValue(error.data);
 		}
 	}
 );
@@ -167,6 +167,7 @@ export const jewelrySlice = createSlice({
 		builder
 			.addCase(getAllJewelry.pending, (state) => {
 				state.loading = true;
+				state.jewelries = null;
 			})
 			.addCase(getAllJewelry.fulfilled, (state, action) => {
 				state.loading = false;
@@ -178,6 +179,7 @@ export const jewelrySlice = createSlice({
 			})
 			.addCase(getAllJewelryModel.pending, (state) => {
 				state.loading = true;
+				state.jewelriesModel = null;
 			})
 			.addCase(getAllJewelryModel.fulfilled, (state, action) => {
 				state.loading = false;
@@ -189,6 +191,7 @@ export const jewelrySlice = createSlice({
 			})
 			.addCase(getJewelryDetail.pending, (state) => {
 				state.loading = true;
+				state.jewelryDetail = null;
 			})
 			.addCase(getJewelryDetail.fulfilled, (state, action) => {
 				state.loading = false;
@@ -200,6 +203,7 @@ export const jewelrySlice = createSlice({
 			})
 			.addCase(getAllJewelryMetal.pending, (state) => {
 				state.loading = true;
+				state.metals = null;
 			})
 			.addCase(getAllJewelryMetal.fulfilled, (state, action) => {
 				state.loading = false;
@@ -211,6 +215,7 @@ export const jewelrySlice = createSlice({
 			})
 			.addCase(getAllJewelryModelCategory.pending, (state) => {
 				state.loading = true;
+				state.categories = null;
 			})
 			.addCase(getAllJewelryModelCategory.fulfilled, (state, action) => {
 				state.loading = false;
@@ -222,6 +227,7 @@ export const jewelrySlice = createSlice({
 			})
 			.addCase(getJewelryDetailPreset.pending, (state) => {
 				state.loading = true;
+				state.jewelryDetailPreset = null;
 			})
 			.addCase(getJewelryDetailPreset.fulfilled, (state, action) => {
 				state.loading = false;
@@ -233,6 +239,7 @@ export const jewelrySlice = createSlice({
 			})
 			.addCase(getJewelryDetailFile.pending, (state) => {
 				state.loading = true;
+				state.jewelryDetailThumbnail = null;
 			})
 			.addCase(getJewelryDetailFile.fulfilled, (state, action) => {
 				state.loading = false;

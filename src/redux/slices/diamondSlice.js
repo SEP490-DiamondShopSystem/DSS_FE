@@ -118,6 +118,7 @@ export const diamondSlice = createSlice({
 		builder
 			.addCase(getAllDiamond.pending, (state) => {
 				state.loading = true;
+				state.diamonds = null;
 			})
 			.addCase(getAllDiamond.fulfilled, (state, action) => {
 				state.loading = false;
@@ -129,6 +130,7 @@ export const diamondSlice = createSlice({
 			})
 			.addCase(getDiamondDetail.pending, (state) => {
 				state.loading = true;
+				state.diamondDetail = null;
 			})
 			.addCase(getDiamondDetail.fulfilled, (state, action) => {
 				state.loading = false;
@@ -140,6 +142,7 @@ export const diamondSlice = createSlice({
 			})
 			.addCase(getDiamondFilter.pending, (state) => {
 				state.loading = true;
+				state.filterLimits = null;
 			})
 			.addCase(getDiamondFilter.fulfilled, (state, action) => {
 				state.loading = false;
@@ -151,6 +154,7 @@ export const diamondSlice = createSlice({
 			})
 			.addCase(getDiamondShape.pending, (state) => {
 				state.loading = true;
+				state.diamondShape = null;
 			})
 			.addCase(getDiamondShape.fulfilled, (state, action) => {
 				state.loading = false;

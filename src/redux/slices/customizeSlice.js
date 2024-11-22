@@ -31,8 +31,8 @@ export const getAllJewelryModelCustomize = createAsyncThunk(
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.response.data));
-			return rejectWithValue(error.response.data);
+			console.log('Error: ', JSON.stringify(error.data));
+			return rejectWithValue(error.data);
 		}
 	}
 );
@@ -48,8 +48,8 @@ export const handleSendRequest = createAsyncThunk(
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.response.data));
-			return rejectWithValue(error.response.data);
+			console.log('Error: ', JSON.stringify(error.data));
+			return rejectWithValue(error.data);
 		}
 	}
 );
@@ -64,8 +64,8 @@ export const getJewelryModelDetail = createAsyncThunk(
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.response.data));
-			return rejectWithValue(error.response.data);
+			console.log('Error: ', JSON.stringify(error.data));
+			return rejectWithValue(error.data);
 		}
 	}
 );
@@ -93,8 +93,8 @@ export const getAllRequestUser = createAsyncThunk(
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.response.data));
-			return rejectWithValue(error.response.data);
+			console.log('Error: ', JSON.stringify(error.data));
+			return rejectWithValue(error.data);
 		}
 	}
 );
@@ -108,8 +108,8 @@ export const getRequestCustomizeDetail = createAsyncThunk(
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.response.data));
-			return rejectWithValue(error.response.data);
+			console.log('Error: ', JSON.stringify(error.data));
+			return rejectWithValue(error.data);
 		}
 	}
 );
@@ -123,8 +123,8 @@ export const handleOrderCustomizeProceed = createAsyncThunk(
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.response.data));
-			return rejectWithValue(error.response.data);
+			console.log('Error: ', JSON.stringify(error.data));
+			return rejectWithValue(error.data);
 		}
 	}
 );
@@ -138,8 +138,8 @@ export const handleOrderCustomizeReject = createAsyncThunk(
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.response.data));
-			return rejectWithValue(error.response.data);
+			console.log('Error: ', JSON.stringify(error.data));
+			return rejectWithValue(error.data);
 		}
 	}
 );
@@ -153,8 +153,8 @@ export const handleOrderCustomizeCheckout = createAsyncThunk(
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.response.data));
-			return rejectWithValue(error.response.data);
+			console.log('Error: ', JSON.stringify(error.data));
+			return rejectWithValue(error.data);
 		}
 	}
 );
@@ -175,6 +175,8 @@ export const customizeSlice = createSlice({
 
 			.addCase(getAllJewelryModelCustomize.pending, (state) => {
 				state.loading = true;
+				state.jewelriesModel = null;
+				state.error = null;
 			})
 			.addCase(getAllJewelryModelCustomize.fulfilled, (state, action) => {
 				state.loading = false;
@@ -186,6 +188,8 @@ export const customizeSlice = createSlice({
 			})
 			.addCase(getJewelryModelDetail.pending, (state) => {
 				state.loading = true;
+				state.jewelryDetail = null;
+				state.error = null;
 			})
 			.addCase(getJewelryModelDetail.fulfilled, (state, action) => {
 				state.loading = false;
@@ -197,6 +201,7 @@ export const customizeSlice = createSlice({
 			})
 			.addCase(handleSendRequest.pending, (state) => {
 				state.loading = true;
+				state.error = null;
 			})
 			.addCase(handleSendRequest.fulfilled, (state, action) => {
 				state.loading = false;
@@ -207,6 +212,8 @@ export const customizeSlice = createSlice({
 			})
 			.addCase(getAllRequestUser.pending, (state) => {
 				state.loading = true;
+				state.requestByUser = null;
+				state.error = null;
 			})
 			.addCase(getAllRequestUser.fulfilled, (state, action) => {
 				state.loading = false;
@@ -218,6 +225,8 @@ export const customizeSlice = createSlice({
 			})
 			.addCase(getRequestCustomizeDetail.pending, (state) => {
 				state.loading = true;
+				state.error = null;
+				state.requestByUserDetail = null;
 			})
 			.addCase(getRequestCustomizeDetail.fulfilled, (state, action) => {
 				state.loading = false;
@@ -229,6 +238,8 @@ export const customizeSlice = createSlice({
 			})
 			.addCase(handleOrderCustomizeProceed.pending, (state) => {
 				state.loading = true;
+				state.requestByUserDetail = null;
+				state.error = null;
 			})
 			.addCase(handleOrderCustomizeProceed.fulfilled, (state, action) => {
 				state.loading = false;
@@ -240,6 +251,7 @@ export const customizeSlice = createSlice({
 			})
 			.addCase(handleOrderCustomizeCheckout.pending, (state) => {
 				state.loading = true;
+				state.error = null;
 			})
 			.addCase(handleOrderCustomizeCheckout.fulfilled, (state, action) => {
 				state.loading = false;
@@ -250,6 +262,8 @@ export const customizeSlice = createSlice({
 			})
 			.addCase(handleOrderCustomizeReject.pending, (state) => {
 				state.loading = true;
+				state.requestByUserDetail = null;
+				state.error = null;
 			})
 			.addCase(handleOrderCustomizeReject.fulfilled, (state, action) => {
 				state.loading = false;

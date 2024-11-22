@@ -69,6 +69,7 @@ export const DiamondLabList = ({diamond, filters, setFilters, handleReset, diamo
 
 	const handleDiamondChoiceClick = (id) => {
 		navigate(`/diamond-detail/${id}`);
+		// localStorage.removeItem('warrantyDiamond');
 		localStorage.setItem('diamondChoice', 'Kim Cương');
 	};
 
@@ -205,10 +206,16 @@ export const DiamondLabList = ({diamond, filters, setFilters, handleReset, diamo
 														{diamondItem.Cut || '-'}
 													</p>
 													{diamondItem.SalePrice ===
-														diamondItem.TruePrice && (
+													diamondItem.TruePrice ? (
 														<div>
 															<p>
 																{formatPrice(diamondItem.TruePrice)}
+															</p>
+														</div>
+													) : (
+														<div className="flex">
+															<p className="ml-3">
+																{formatPrice(diamondItem.SalePrice)}
 															</p>
 														</div>
 													)}

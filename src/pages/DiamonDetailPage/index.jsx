@@ -90,6 +90,7 @@ const DiamondDetailPage = () => {
 	const diamondDetail = useSelector(GetDiamondDetailSelector);
 	const userSelector = useSelector(UserInfoSelector);
 	const warrantyList = useSelector(GetOrderWarrantySelector);
+	const local = JSON.parse(localStorage.getItem(`cart_${userId}`));
 
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 	const [diamondChoice, setDiamondChoice] = useState(localStorage.getItem('diamondChoice') || '');
@@ -97,6 +98,8 @@ const DiamondDetailPage = () => {
 	const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
 	const [warrantyDiamond, setWarrantyDiamond] = useState([]);
 	const [warrantyDiamondSelected, setWarrantyDiamondSelected] = useState('');
+
+	console.log('warrantyDiamondSelected', warrantyDiamondSelected);
 
 	useEffect(() => {
 		dispatch(getAllWarranty());
@@ -107,6 +110,12 @@ const DiamondDetailPage = () => {
 			setWarrantyDiamond(warrantyList?.Values?.filter((warranty) => warranty?.Type === 1));
 		}
 	}, [warrantyList]);
+
+	useEffect(() => {
+		if (warrantyDiamond) {
+			setWarrantyDiamondSelected(warrantyDiamond[0]);
+		}
+	}, [warrantyDiamond]);
 
 	useEffect(() => {
 		dispatch(getDiamondDetail(id));
@@ -172,6 +181,7 @@ const DiamondDetailPage = () => {
 
 		if (existingIndex !== -1) {
 			// Nếu sản phẩm đã tồn tại, hiện thông báo
+
 			message.info('Sản phẩm này đã có trong giỏ hàng!');
 		} else {
 			// Kiểm tra nếu có cùng DiamondId nhưng các thuộc tính khác nhau
@@ -183,6 +193,7 @@ const DiamondDetailPage = () => {
 				// Thay thế sản phẩm cũ với các thuộc tính khác nhau
 				existingCart[similarJewelryIndex] = data;
 				message.success('Sản phẩm đã được cập nhật trong giỏ hàng!');
+				// localStorage.setItem('warrantyDiamond', JSON.stringify(warrantyDiamondSelected));
 				navigate('/cart');
 			} else {
 				// Thêm sản phẩm mới vào giỏ hàng
@@ -214,6 +225,7 @@ const DiamondDetailPage = () => {
 							warrantyDiamond={warrantyDiamond}
 							handleChangeWarranty={handleChangeWarranty}
 							diamondId={diamondId}
+							warrantyDiamondSelected={warrantyDiamondSelected}
 						/>
 					</div>
 				</div>

@@ -416,23 +416,23 @@ export const shapeItems = [
 	{
 		id: 1,
 		image: round,
-		value: '1',
+		value: 1,
 		shape: 'Round',
 	},
 	{
 		id: 2,
 		image: cushion,
 		shape: 'Cushion',
-		value: '3',
+		value: 3,
 	},
-	{id: 3, image: emerald, shape: 'Emerald', value: '4'},
-	{id: 4, image: oval, shape: 'Oval', value: '5'},
-	{id: 5, image: radiant, shape: 'Radiant', value: '6'},
-	{id: 6, image: asscher, shape: 'Asscher', value: '7'},
-	{id: 7, image: marquise, shape: 'Marquise', value: '8'},
-	{id: 8, image: heart, shape: 'Heart', value: '9'},
-	{id: 9, image: princess, shape: 'Princess', value: '2'},
-	{id: 9, image: princess, shape: 'Pear', value: '10'},
+	{id: 3, image: emerald, shape: 'Emerald', value: 4},
+	{id: 4, image: oval, shape: 'Oval', value: 5},
+	{id: 5, image: radiant, shape: 'Radiant', value: 6},
+	{id: 6, image: asscher, shape: 'Asscher', value: 7},
+	{id: 7, image: marquise, shape: 'Marquise', value: 8},
+	{id: 8, image: heart, shape: 'Heart', value: 9},
+	{id: 9, image: princess, shape: 'Princess', value: 2},
+	{id: 9, image: princess, shape: 'Pear', value: 10},
 ];
 
 export const Clarity = {

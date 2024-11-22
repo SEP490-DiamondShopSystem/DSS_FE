@@ -257,7 +257,7 @@ const MyInfoPage = () => {
 			console.log('res', res);
 
 			if (res.payload) {
-				message.success('Cập nhật thành công!');
+				message.success('Cập nhật thông tin thành công!');
 				setIsModalVisible(false);
 				setNewAddress({
 					Province: '',

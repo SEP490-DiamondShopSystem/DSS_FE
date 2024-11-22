@@ -56,21 +56,17 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 						dataIndex: 'jewelryId',
 						key: 'jewelryId',
 						render: (_, record) => {
-							if (record.jewelryId) {
-								return (
-									<div className="flex justify-center">
-										<Button
-											type="primary"
-											icon={<StarOutlined />}
-											onClick={() => handleReviewRequest(record.jewelryId)}
-										>
-											Đánh Giá
-										</Button>
-									</div>
-								);
-							}
-
-							return null;
+							return (
+								<div className="flex justify-center">
+									<Button
+										type="primary"
+										icon={<StarOutlined />}
+										onClick={() => handleReviewRequest(record.jewelryId)}
+									>
+										Đánh Giá
+									</Button>
+								</div>
+							);
 						},
 					},
 			  ]

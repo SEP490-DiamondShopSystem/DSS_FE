@@ -15,8 +15,8 @@ export const handleCheckoutOrder = createAsyncThunk(
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.response.data));
-			return rejectWithValue(error.response.data);
+			console.log('Error: ', JSON.stringify(error.data));
+			return rejectWithValue(error.data);
 		}
 	}
 );
@@ -30,8 +30,8 @@ export const handleOrderCancel = createAsyncThunk(
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.response.data));
-			return rejectWithValue(error.response.data);
+			console.log('Error: ', JSON.stringify(error.data));
+			return rejectWithValue(error.data);
 		}
 	}
 );
@@ -57,8 +57,8 @@ export const getUserOrder = createAsyncThunk(
 			const data = await api.get(url);
 			return data;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.response.data));
-			return rejectWithValue(error.response.data);
+			console.log('Error: ', JSON.stringify(error.data));
+			return rejectWithValue(error.data);
 		}
 	}
 );
@@ -72,8 +72,8 @@ export const getUserOrderDetail = createAsyncThunk(
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.response.data));
-			return rejectWithValue(error.response.data);
+			console.log('Error: ', JSON.stringify(error.data));
+			return rejectWithValue(error.data);
 		}
 	}
 );
@@ -87,8 +87,8 @@ export const getUserOrderTransaction = createAsyncThunk(
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.response.data));
-			return rejectWithValue(error.response.data);
+			console.log('Error: ', JSON.stringify(error.data));
+			return rejectWithValue(error.data);
 		}
 	}
 );
@@ -102,8 +102,8 @@ export const getOrderLog = createAsyncThunk(
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.response.data));
-			return rejectWithValue(error.response.data);
+			console.log('Error: ', JSON.stringify(error.data));
+			return rejectWithValue(error.data);
 		}
 	}
 );
@@ -131,6 +131,7 @@ export const orderSlice = createSlice({
 			})
 			.addCase(handleOrderCancel.pending, (state) => {
 				state.loading = true;
+				state.orderDetail = null;
 			})
 			.addCase(handleOrderCancel.fulfilled, (state, action) => {
 				state.loading = false;
@@ -142,6 +143,7 @@ export const orderSlice = createSlice({
 			})
 			.addCase(getUserOrder.pending, (state) => {
 				state.loading = true;
+				state.orderList = null;
 			})
 			.addCase(getUserOrder.fulfilled, (state, action) => {
 				state.loading = false;
@@ -153,6 +155,7 @@ export const orderSlice = createSlice({
 			})
 			.addCase(getUserOrderDetail.pending, (state) => {
 				state.loading = true;
+				state.orderDetail = null;
 			})
 			.addCase(getUserOrderDetail.fulfilled, (state, action) => {
 				state.loading = false;
@@ -164,6 +167,7 @@ export const orderSlice = createSlice({
 			})
 			.addCase(getUserOrderTransaction.pending, (state) => {
 				state.loading = true;
+				state.transaction = null;
 			})
 			.addCase(getUserOrderTransaction.fulfilled, (state, action) => {
 				state.loading = false;
@@ -175,6 +179,7 @@ export const orderSlice = createSlice({
 			})
 			.addCase(getOrderLog.pending, (state) => {
 				state.loading = true;
+				state.orderLogs = null;
 			})
 			.addCase(getOrderLog.fulfilled, (state, action) => {
 				state.loading = false;
