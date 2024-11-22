@@ -41,18 +41,6 @@ export const InformationRight = ({
 	const [showDetail, setDetail] = useState(false);
 	const [showSecureShopping, setSecureShopping] = useState(false);
 	const [showProductWarranty, setProductWarranty] = useState(false);
-	const [cartDesign, setCartDesign] = useState(() => {
-		// Lấy cartDesign từ localStorage
-		const storedCartDesign = localStorage.getItem('cartDesign');
-
-		// Parse dữ liệu nếu tồn tại, nếu không thì trả về mảng rỗng
-		try {
-			return storedCartDesign ? JSON.parse(storedCartDesign) : [];
-		} catch (error) {
-			console.error('Error parsing cartDesign from localStorage:', error);
-			return [];
-		}
-	});
 
 	const handleDetailOpen = () => {
 		setDetail(!showDetail);
@@ -72,14 +60,7 @@ export const InformationRight = ({
 		<div>
 			<div className="border-tintWhite">
 				<h1 className="text-3xl">{diamond.Title}</h1>
-				{/* <div className="font-semibold my-2">
-					Giao hàng như một viên kim cương rời vào: {infoMetal?.delivery}
-				</div> */}
-				{/* <div className="flex mb-2">
-					<div className="font-semibold text-green cursor-pointer">
-						Giao hàng qua đêm miễn phí
-					</div>
-				</div> */}
+
 				<div>
 					<div className="flex items-center text-sm mt-5">
 						<p className="p-2" style={{backgroundColor: '#f7f7f7'}}>
@@ -99,13 +80,16 @@ export const InformationRight = ({
 			</div>
 
 			<div className="border-y border-tintWhite py-5 my-5">
-				{diamondChoice && (
+				<div className="flex flex-col">
+					<label>Chọn Bảo Hành: </label>
 					<Select
-						allowClear
-						className="w-96 mb-5"
+						// allowClear
+						className="mb-5 mt-2"
+						style={{width: 450}}
+						size="large"
 						value={
-							warrantyDiamondSelected?.warranty?.MappedName ||
-							warrantyDiamondSelected?.MappedName
+							warrantyDiamondSelected?.warranty?.MappedName?.replace(/_/g, ' ') ||
+							warrantyDiamondSelected?.MappedName?.replace(/_/g, ' ')
 						}
 						placeholder="Chọn bảo hành kim cương"
 						onChange={handleChangeWarranty}
@@ -122,7 +106,8 @@ export const InformationRight = ({
 								</Select.Option>
 							))}
 					</Select>
-				)}
+				</div>
+
 				<div className="flex items-center">
 					<p className="font-semibold pl-2 text-2xl">{formatPrice(diamond.Price)}</p>
 					<div className="text-sm pl-2">(Giá Kim Cương)</div>

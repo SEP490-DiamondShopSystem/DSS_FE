@@ -1,7 +1,7 @@
 import React, {useEffect, useMemo, useState} from 'react';
 
 import {DeleteOutlined, EyeOutlined} from '@ant-design/icons';
-import {Button, Image, message, Select, Space} from 'antd';
+import {Button, Divider, Image, message, Select, Space} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import {getUserId} from '../../components/GetUserId';
@@ -141,20 +141,42 @@ const CartPage = () => {
 			engravedText: productId?.engravedText || null,
 			engravedFont: productId?.engravedFont || null,
 			warrantyCode:
-				productId?.warrantyJewelry?.warrantyCode ||
+				productId?.warrantyJewelry?.warranty?.Code ||
 				productId?.warrantyDiamond?.warranty?.Code,
 			warrantyType:
-				productId?.warrantyJewelry?.warrantyType ||
+				productId?.warrantyJewelry?.warranty?.Type ||
 				productId?.warrantyDiamond?.warranty?.Type,
 		}));
+		const defaultAddress = userDetail?.Addresses?.find((address) => address?.IsDefault);
 
-		dispatch(
-			handleCartValidate({
-				promotionId: null,
-				items: transformedData,
-				accountId: userDetail?.Id,
-			})
-		);
+		console.log('defaultAddress', defaultAddress);
+
+		const userAddress = {
+			province: defaultAddress?.Province,
+			district: defaultAddress?.District,
+			ward: defaultAddress?.Ward,
+			street: defaultAddress?.Street,
+		};
+
+		// Kiểm tra nếu userAddress có dữ liệu, nếu không thì không truyền userAddress
+		const actionPayload = {
+			promotionId: null,
+			items: transformedData,
+			accountId: userDetail?.Id,
+		};
+
+		// Nếu userAddress có dữ liệu, thêm vào payload
+		if (
+			userAddress.province ||
+			userAddress.district ||
+			userAddress.ward ||
+			userAddress.street
+		) {
+			actionPayload.userAddress = userAddress;
+		}
+
+		dispatch(handleCartValidate(actionPayload));
+
 		dispatch(checkPromoCart({items: transformedData}));
 	}, []);
 
@@ -368,11 +390,7 @@ const CartPage = () => {
 					<div className="flex flex-col items-center justify-center p-10">
 						<Image preview={false} src={logo} className="w-32 h-32" />
 						<p className="text-xl font-semibold text-gray-600 mb-4">Giỏ Hàng Trống</p>
-						<Button
-							type="text"
-							className="bg-primary"
-							// onClick={() => (window.location.href = '/')}
-						>
+						<Button type="text" className="bg-primary" onClick={() => navigate('/')}>
 							Về Trang Chủ
 						</Button>
 					</div>
@@ -393,7 +411,7 @@ const CartPage = () => {
 								>
 									<div
 										className={`${
-											promotion?.IsApplicable ? 'text-green' : 'text-red'
+											promotion?.IsApplicable ? 'text-darkGreen' : 'text-red'
 										}`}
 									>
 										{promotion.PromotionDto.Description}
@@ -407,58 +425,70 @@ const CartPage = () => {
 			<div className="md:w-1/3 lg:mt-0 flex-shrink-0 w-full lg:w-1/3 p-6 mx-5 shadow-lg bg-white rounded-lg lg:sticky lg:top-8">
 				<div className="bg-white p-4 mx-5 my-5 rounded-lg shadow-lg space-y-6">
 					<div className="space-y-4">
-						<p className="flex justify-between">
-							<span>Giá Gốc</span>{' '}
+						<p className="flex justify-between mb-1">
+							<span className="font-semibold">Giá Gốc</span>{' '}
 							<span>{formatPrice(cartList?.OrderPrices?.DefaultPrice || 0)}</span>
 						</p>
-						<p className="flex justify-between">
+						<p className="flex justify-between mb-1">
+							{cartList?.ShippingPrice?.FinalPrice !== 0 ? (
+								<div className="mb-1 flex justify-between w-full">
+									<span className="font-semibold">Phí Vận Chuyển</span>{' '}
+									<span>
+										{formatPrice(cartList?.ShippingPrice?.FinalPrice || 0)}
+									</span>
+								</div>
+							) : (
+								<></>
+							)}
+						</p>
+						<p className="flex justify-between mb-1">
 							{cartList?.OrderPrices?.DiscountAmountSaved !== 0 ? (
-								<>
-									<span>Giảm Giá</span>{' '}
+								<div className="mb-1 flex justify-between w-full">
+									<span className="font-semibold">Giảm Giá</span>{' '}
 									<span>
 										-
 										{formatPrice(
 											cartList?.OrderPrices?.DiscountAmountSaved || 0
 										)}
 									</span>
-								</>
+								</div>
 							) : (
 								<></>
 							)}
 						</p>
 						<p className="flex justify-between">
 							{cartList?.OrderPrices?.PromotionAmountSaved !== 0 ? (
-								<>
-									<span>Khuyến Mãi</span>{' '}
+								<div className="mb-1 flex justify-between w-full">
+									<span className="font-semibold">Khuyến Mãi</span>{' '}
 									<span>
 										-
 										{formatPrice(
 											cartList?.OrderPrices?.PromotionAmountSaved || 0
 										)}
 									</span>
-								</>
+								</div>
 							) : (
 								<></>
 							)}
 						</p>
-						<p className="flex justify-between">
+						<p className="flex justify-between mb-1">
 							{cartList?.OrderPrices?.TotalWarrantyPrice !== 0 ? (
-								<>
-									<span>Bảo Hành</span>{' '}
+								<div className="mb-1 flex justify-between w-full">
+									<span className="font-semibold">Bảo Hành</span>{' '}
 									<span>
 										{formatPrice(
 											cartList?.OrderPrices?.TotalWarrantyPrice || 0
 										)}
 									</span>
-								</>
+								</div>
 							) : (
 								<></>
 							)}
 						</p>
-						<p className="flex justify-between">
+						<p className="flex justify-between mb-1">
 							{cartList?.OrderPrices?.UserRankDiscountAmount !== 0 ? (
-								<>
-									<span>Khách Hàng Thân Thiết</span>
+								<div className="mb-1 flex justify-between w-full">
+									<span className="font-semibold">Khách Hàng Thân Thiết</span>
 
 									<span>
 										-
@@ -466,25 +496,26 @@ const CartPage = () => {
 											cartList?.OrderPrices?.UserRankDiscountAmount || 0
 										)}
 									</span>
-								</>
+								</div>
 							) : (
 								<></>
 							)}
 						</p>
-						<hr className="border-t" />
+						<Divider />
 						<p className="flex justify-between text-gray-900 font-semibold">
 							<span>Tổng Giá</span>{' '}
-							<span>{formatPrice(cartList?.OrderPrices?.FinalPrice)}</span>
+							<span>{formatPrice(cartList?.OrderPrices?.FinalPrice || 0)}</span>
 						</p>
 					</div>
 				</div>
-				<button
-					className="mr-10 px-6 py-2 bg-primary rounded-lg uppercase font-semibold hover:bg-second w-full h-12"
+				<Button
+					className="mr-10 px-6 py-2 bg-primary rounded-lg uppercase font-semibold w-full h-12"
 					style={{padding: '13px 0px 11px 0px'}}
 					onClick={handleCheckoutNavigate}
+					disabled={mappedProducts?.length === 0}
 				>
 					Thanh Toán
-				</button>
+				</Button>
 			</div>
 		</div>
 	);

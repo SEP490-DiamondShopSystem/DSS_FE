@@ -125,17 +125,11 @@ const JewelryCustomDetail = () => {
 				// Check if group matches the selected MetalId
 				const isMatchingMetal = group.Metal.Name === selectedMetal?.Name;
 
-				// Check if group matches the selected SideDiamondId (if provided)
-				// const isMatchingSideDiamond = selectedSideDiamond
-				// 	? group.SideDiamondId === selectedSideDiamond.Id
-				// 	: true; // If no SideDiamondId is provided, consider it a match
-
-				// If both metal and side diamond match (or only metal if no SideDiamondId), add details
 				if (isMatchingMetal) {
 					return {
 						...group,
 						MetalDetails: selectedMetal?.Name,
-						SideDiamondDetails: selectedSideDiamond || null, // Set SideDiamondDetails to null if not provided
+						SideDiamondDetails: selectedSideDiamond || null,
 					};
 				}
 
@@ -259,7 +253,7 @@ const JewelryCustomDetail = () => {
 							</div>
 
 							<h2 className="text-2xl font-semibold text-primary">
-								Đơn hàng của bạn đã đặt hàng thành công!
+								Yêu cầu thiết kế của bạn đã được gửi thành công!
 							</h2>
 
 							<Space className="my-5">
@@ -270,13 +264,6 @@ const JewelryCustomDetail = () => {
 								>
 									Tiếp Tục Thiết Kế
 								</Button>
-								{/* <Button
-									type="text"
-									className="bg-primary w-48 uppercase font-semibold"
-								
-								>
-									Vào Kiểm Tra
-								</Button> */}
 							</Space>
 						</div>
 					</div>

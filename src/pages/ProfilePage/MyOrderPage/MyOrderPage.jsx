@@ -1,5 +1,5 @@
 import {EyeFilled, TransactionOutlined} from '@ant-design/icons';
-import {Button, Table, Tag, Tooltip} from 'antd';
+import {Button, message, Table, Tag, Tooltip} from 'antd';
 import React, {useEffect, useState} from 'react';
 import {Helmet} from 'react-helmet';
 import {useDispatch, useSelector} from 'react-redux';
@@ -28,9 +28,6 @@ const MyOrderPage = () => {
 	const [selectedOrder, setSelectedOrder] = useState(null);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [pageSize, setPageSize] = useState(100);
-
-	console.log('orderList', orderList);
-	// console.log('dataSource', dataSource);
 
 	const columns = [
 		{
@@ -124,7 +121,6 @@ const MyOrderPage = () => {
 					)}
 				</>
 			),
-			// align: 'center',
 		},
 	];
 
@@ -138,11 +134,14 @@ const MyOrderPage = () => {
 	};
 
 	const toggleTransactionModal = (id) => {
-		dispatch(getUserOrderTransaction(id)).then((res) => {
-			if (res.payload !== undefined) {
+		dispatch(getUserOrderTransaction(id))
+			.unwrap()
+			.then((res) => {
 				window.open(res.payload?.PaymentUrl, '_blank');
-			}
-		});
+			})
+			.catch((error) => {
+				message.error(error?.data?.title || error?.detail);
+			});
 	};
 
 	useEffect(() => {
@@ -150,10 +149,8 @@ const MyOrderPage = () => {
 			getUserOrder({
 				pageSize: pageSize,
 				start: currentPage,
-				// Status: status,
 			})
 		);
-		// dispatch(getAllOrder());
 	}, [pageSize, currentPage]);
 
 	useEffect(() => {
@@ -171,21 +168,11 @@ const MyOrderPage = () => {
 					productId: item.Id,
 					productName: item.Name,
 					productPrice: item.Price,
-				})), // Mỗi sản phẩm trong đơn hàng
+				})),
 			}));
-			setDataSource(formattedOrders); // Cập nhật dataSource cho bảng
+			setDataSource(formattedOrders);
 		}
 	}, [orderList]);
-
-	const isPriceGreaterThan50Mil = (price) => {
-		// Loại bỏ ký tự không phải số và dấu thập phân
-		const numericPrice = parseFloat(price.replace(/\D/g, ''));
-
-		// So sánh giá trị đã chuyển đổi với 50,000,000
-		return numericPrice > 50000000;
-	};
-
-	console.log('dataSource', dataSource);
 
 	return (
 		<div>
@@ -199,7 +186,6 @@ const MyOrderPage = () => {
 				pagination={{pageSize: 5}}
 				className="custom-table-header"
 				rowKey="orderId"
-				// expandedRowRender={expandedRowRender}
 				loading={loading}
 			/>
 

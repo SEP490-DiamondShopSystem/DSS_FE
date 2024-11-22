@@ -20,7 +20,7 @@ export const handleChangePassword = createAsyncThunk(
 			return data;
 		} catch (error) {
 			console.error(error);
-			return rejectWithValue(error?.data || error.message);
+			return rejectWithValue(error?.data);
 		}
 	}
 );

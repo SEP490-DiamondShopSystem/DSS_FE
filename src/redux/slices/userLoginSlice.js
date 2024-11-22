@@ -52,7 +52,7 @@ export const handleRegister = createAsyncThunk(
 			return data;
 		} catch (error) {
 			console.error(error);
-			return rejectWithValue(error.payload);
+			return rejectWithValue(error);
 		}
 	}
 );
@@ -181,7 +181,6 @@ export const userLoginSlice = createSlice({
 			})
 			.addCase(handleRegister.pending, (state) => {
 				state.loading = true;
-				state.error = null;
 			})
 			.addCase(handleRegister.fulfilled, (state, action) => {
 				state.loading = false;

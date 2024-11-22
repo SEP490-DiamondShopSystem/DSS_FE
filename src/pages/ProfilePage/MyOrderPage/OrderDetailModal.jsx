@@ -8,6 +8,7 @@ import Loading from '../../../components/Loading';
 import {
 	GetAllOrderDetailSelector,
 	GetOrderLogsSelector,
+	GetStatusOrderSelector,
 	LoadingOrderSelector,
 } from '../../../redux/selectors';
 import {getOrderLog, getUserOrderDetail, handleOrderCancel} from '../../../redux/slices/orderSlice';
@@ -20,6 +21,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 	const orderDetail = useSelector(GetAllOrderDetailSelector);
 	const loading = useSelector(LoadingOrderSelector);
 	const orderLogList = useSelector(GetOrderLogsSelector);
+	const statusOrder = useSelector(GetStatusOrderSelector);
 
 	const [isCancelModalVisible, setIsCancelModalVisible] = useState(false);
 	const [isReviewModalVisible, setIsReviewModalVisible] = useState(false);
@@ -27,8 +29,16 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 	const [rating, setRating] = useState(0);
 	const [fileList, setFileList] = useState([]);
 	const [jewelryId, setJewelryId] = useState(null);
-	const [orderLogs, setOrderLogs] = useState();
-	const orderStatus = order?.Status;
+
+	console.log('statusOrder', statusOrder);
+
+	const data = order?.Items?.map((item, i) => ({
+		key: i,
+		orderDate: order?.CreatedDate,
+		productName: item?.Diamond?.Title || item?.Jewelry?.SerialCode || 'Unknown Jewelry',
+		price: formatPrice(item?.PurchasedPrice),
+		jewelryId: item?.JewelryId,
+	}));
 
 	const columns = [
 		{
@@ -49,25 +59,23 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 			key: 'price',
 			render: (text) => <div className="flex justify-center">{text}</div>,
 		},
-		...(orderStatus === 8
+		...(statusOrder === 8 && data.some((record) => record.jewelryId)
 			? [
 					{
 						title: 'Đánh Giá',
 						dataIndex: 'jewelryId',
 						key: 'jewelryId',
-						render: (_, record) => {
-							return (
-								<div className="flex justify-center">
-									<Button
-										type="primary"
-										icon={<StarOutlined />}
-										onClick={() => handleReviewRequest(record.jewelryId)}
-									>
-										Đánh Giá
-									</Button>
-								</div>
-							);
-						},
+						render: (_, record) => (
+							<div className="flex justify-center">
+								<Button
+									type="primary"
+									icon={<StarOutlined />}
+									onClick={() => handleReviewRequest(record.jewelryId)}
+								>
+									Đánh Giá
+								</Button>
+							</div>
+						),
 					},
 			  ]
 			: []),
@@ -78,12 +86,6 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 			dispatch(getOrderLog(selectedOrder.orderId));
 		}
 	}, [selectedOrder, dispatch]);
-
-	useEffect(() => {
-		if (orderLogList) {
-			setOrderLogs(orderLogList);
-		}
-	}, [orderLogList]);
 
 	useEffect(() => {
 		if (selectedOrder?.orderId) {
@@ -106,21 +108,15 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 		setIsReviewModalVisible(true);
 	};
 
-	const data = order?.Items?.map((item, i) => ({
-		key: i,
-		orderDate: order?.CreatedDate,
-		productName: item?.Diamond?.Title || item?.Jewelry?.SerialCode || 'Unknown Jewelry',
-		price: formatPrice(item?.PurchasedPrice),
-		jewelryId: item?.JewelryId,
-	}));
-
-	const submitCancelOrder = async (values) => {
-		const res = await dispatch(handleOrderCancel({orderId: order.Id, reason: values.reason}));
-		if (res.payload !== undefined) {
-			message.success('Hủy đơn thành công!');
-		} else {
-			message.error('Lỗi hệ thống!');
-		}
+	const submitCancelOrder = (values) => {
+		dispatch(handleOrderCancel({orderId: order.Id, reason: values.reason}))
+			.unwrap()
+			.then(() => {
+				message.success('Hủy đơn thành công!');
+			})
+			.catch((error) => {
+				message.error(error?.data?.title || error?.detail);
+			});
 		setIsCancelModalVisible(false);
 	};
 
@@ -131,18 +127,23 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 		dispatch(
 			handleReviewOrder({
 				Content,
-				Files: fileList[0].originFileObj,
+				Files: fileList[0]?.originFileObj,
 				StarRating,
 				JewelryId: jewelryId,
 			})
-		).then((res) => {
-			if (res.payload !== undefined) {
+		)
+			.unwrap()
+			.then(() => {
 				message.success('Đánh giá thành công!');
 				setIsReviewModalVisible(false);
-			} else {
-				message.error('Bạn đã đánh giá!');
-			}
-		});
+			})
+			.catch((error) => {
+				console.log('error', error);
+
+				message.error(
+					error?.data?.errors?.Files[0] || error?.data?.title || 'Có lỗi xảy ra!'
+				);
+			});
 	};
 
 	const handleFileChange = ({fileList}) => {
@@ -152,9 +153,6 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 	const handleRatingChange = (value) => {
 		setRating(value);
 	};
-
-	console.log('orderLogs', orderLogs);
-	console.log('orderStatus', orderStatus);
 
 	return (
 		<>
@@ -167,7 +165,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 			{openDetail && (
 				<div
 					className="fixed top-1/2 right-1/2 bg-white transform transition-transform duration-300 ease-in-out z-50 translate-x-1/2 -translate-y-1/2 p-10"
-					style={{width: 1200, maxHeight: '80vh', overflowY: 'auto'}}
+					style={{width: 1500, maxHeight: '80vh', overflowY: 'auto'}}
 				>
 					{loading ? (
 						<Loading />
@@ -196,14 +194,10 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 								<h2 className="text-2xl font-semibold">Địa chỉ giao hàng</h2>
 								<p>{order?.ShippingAddress}</p>
 							</div>
-							<OrderStatus
-								orderStatus={orderStatus}
-								orderDetail={orderDetail}
-								orderLogs={orderLogs}
-							/>
+							<OrderStatus orderStatus={statusOrder} orderDetail={order} />
 							<div className="flex justify-between">
 								<h1 className="text-xl font-semibold">Chi tiết đơn hàng</h1>
-								{orderStatus === 1 && (
+								{statusOrder === 1 && (
 									<Button
 										type="text"
 										className="bg-red text-white"
@@ -212,7 +206,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 										Hủy Đơn
 									</Button>
 								)}
-								{orderStatus === 2 && (
+								{statusOrder === 2 && (
 									<Button
 										type="text"
 										className="bg-red text-white"
@@ -221,7 +215,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 										Hủy Đơn
 									</Button>
 								)}
-								{orderStatus === 5 && (
+								{statusOrder === 5 && (
 									<Button
 										type="text"
 										className="bg-red text-white"

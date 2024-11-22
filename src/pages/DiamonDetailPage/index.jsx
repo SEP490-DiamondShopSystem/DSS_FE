@@ -198,7 +198,7 @@ const DiamondDetailPage = () => {
 			} else {
 				// Thêm sản phẩm mới vào giỏ hàng
 				existingCart.push(data);
-				message.success('Sản phẩm đã thêm vào giỏ hàng!');
+				message.success('Đã thêm sản phẩm vào giỏ hàng!');
 				navigate('/cart');
 			}
 		}

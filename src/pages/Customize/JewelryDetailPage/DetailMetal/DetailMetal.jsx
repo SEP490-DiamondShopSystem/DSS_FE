@@ -17,8 +17,8 @@ export const DetailMetal = ({customizeJewelry, imageData, selectedMetal, jewelry
 	// Get unique shape names across all MainDiamonds
 	const uniqueShapeNames = new Set();
 	jewelry?.MainDiamonds?.forEach((diamond) => {
-		diamond.Shapes.forEach((shapeItem) => {
-			const matchedShape = shape.find((s) => s.Id === shapeItem.ShapeId);
+		diamond?.Shapes?.forEach((shapeItem) => {
+			const matchedShape = shape?.find((s) => s?.Id === shapeItem?.ShapeId);
 			if (matchedShape) uniqueShapeNames.add(matchedShape.ShapeName);
 		});
 	});

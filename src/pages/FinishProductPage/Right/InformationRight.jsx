@@ -82,6 +82,13 @@ export const InformationRight = ({
 	const [engravedFont, setEngravedFont] = useState(null);
 
 	console.log('warrantiesJewelry', warrantiesJewelry);
+	console.log('warrantiesJewelrySelected', warrantiesJewelrySelected);
+
+	useEffect(() => {
+		if (warrantiesJewelry) {
+			setWarrantiesJewelrySelected(warrantiesJewelry[0]);
+		}
+	}, [warrantiesJewelry]);
 
 	useEffect(() => {
 		dispatch(getAllWarranty());
@@ -285,6 +292,7 @@ export const InformationRight = ({
 												<Select
 													value={sizeChange || jewelry?.SizeId}
 													style={{width: 120}}
+													size="middle"
 													onChange={handleChange}
 												>
 													{jewelryDetail?.filteredGroups?.[0]
@@ -305,25 +313,41 @@ export const InformationRight = ({
 												</Select>
 											</div>
 										)}
-										<Select
-											allowClear
-											className="w-96 mt-2 mb-5"
-											placeholder="Chọn bảo hành trang sức"
-											onChange={onChangeWarrantyJewelry}
-										>
-											{warrantiesJewelry &&
-												warrantiesJewelry?.map((warranty, i) => (
-													<Select.Option
-														key={i}
-														value={JSON.stringify({
-															warrantyCode: warranty.Code,
-															warrantyType: warranty?.Type,
-														})}
-													>
-														{warranty?.MappedName?.replace(/_/g, ' ')}
-													</Select.Option>
-												))}
-										</Select>
+										<div className="flex flex-col">
+											<label>Chọn Bảo Hành: </label>
+											<Select
+												size="large"
+												style={{width: 450}}
+												className="w-96 mt-2 mb-5"
+												placeholder="Chọn bảo hành trang sức"
+												onChange={onChangeWarrantyJewelry}
+												value={
+													warrantiesJewelrySelected?.warranty?.MappedName?.replace(
+														/_/g,
+														' '
+													) ||
+													warrantiesJewelrySelected?.MappedName?.replace(
+														/_/g,
+														' '
+													)
+												}
+											>
+												{warrantiesJewelry &&
+													warrantiesJewelry?.map((warranty, i) => (
+														<Select.Option
+															key={i}
+															value={JSON.stringify({
+																warranty,
+															})}
+														>
+															{warranty?.MappedName?.replace(
+																/_/g,
+																' '
+															)}
+														</Select.Option>
+													))}
+											</Select>
+										</div>
 									</div>
 								</div>
 							</div>

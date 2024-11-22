@@ -1,12 +1,32 @@
 import React, {useEffect, useState} from 'react';
 import {Steps} from 'antd';
+import {GetOrderLogsSelector} from '../../../redux/selectors';
+import {useSelector} from 'react-redux';
 
-export const OrderStatus = ({orderStatus, orderDetail, orderLogs}) => {
+export const OrderStatus = ({orderStatus, orderDetail}) => {
+	const orderLogList = useSelector(GetOrderLogsSelector);
+
 	const [currentStep, setCurrentStep] = useState(0);
+	const [orderLogs, setOrderLogs] = useState();
+	const [indexCancelled, setIndexCancelled] = useState(0);
+
+	useEffect(() => {
+		if (orderLogList) {
+			setOrderLogs(orderLogList);
+		}
+	}, [orderLogList]);
+
+	useEffect(() => {
+		if (orderLogs) {
+			const index = orderLogs?.findIndex((log) => log?.Status === 4);
+			setIndexCancelled(index);
+		}
+	}, [orderLogList, orderDetail]);
 
 	console.log('currentStep', currentStep);
-
-	const indexCancelled = orderLogs?.findIndex((log) => log?.Status === 4);
+	console.log('orderStatus', orderStatus);
+	console.log('orderLogs', orderLogs);
+	console.log('indexCancelled', indexCancelled);
 
 	useEffect(() => {
 		const getOrderStatus = (status) => {
@@ -122,7 +142,6 @@ export const OrderStatus = ({orderStatus, orderDetail, orderLogs}) => {
 		},
 	];
 
-	// Cập nhật trạng thái dựa trên currentStep
 	if (currentStep === 0) {
 		steps[0].status = 'process'; // Chờ Shop Xác Nhận
 		steps[1].status = 'wait'; // Chờ Xử Lí
