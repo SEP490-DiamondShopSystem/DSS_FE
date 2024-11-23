@@ -2497,3 +2497,7 @@ video {
 .w-1\/2 {
 	width: 50%;
 }
+
+.italic {
+	font-style: italic;
+}

@@ -8,7 +8,7 @@ export const getAllPromo = createAsyncThunk(
 			const response = await api.get(`/Promotion`);
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.data));
+			console.log('Error: ', JSON.stringify(error));
 			return rejectWithValue(error.data);
 		}
 	}
@@ -24,7 +24,7 @@ export const checkPromoCart = createAsyncThunk(
 			});
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.data));
+			console.log('Error: ', JSON.stringify(error));
 			return rejectWithValue(error.data);
 		}
 	}
