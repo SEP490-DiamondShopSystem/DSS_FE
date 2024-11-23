@@ -155,9 +155,16 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 	useEffect(() => {
 		if (orderDetail) {
 			setOrder(orderDetail);
-			setTransaction(orderDetail?.Transactions);
 		}
 	}, [orderDetail]);
+
+	console.log('selectedOrder', selectedOrder);
+
+	useEffect(() => {
+		if (orderDetail) {
+			setTransaction(orderDetail?.Transactions);
+		}
+	}, [orderDetail, selectedOrder]);
 
 	const handleCancelOrder = () => {
 		setIsCancelModalVisible(true);
