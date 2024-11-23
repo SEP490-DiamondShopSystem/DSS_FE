@@ -1,15 +1,12 @@
+import React from 'react';
+
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import React, {useEffect, useState} from 'react';
 import {Helmet} from 'react-helmet';
 import {BannerDiamond} from './../../components/Banner/Banner';
-import {BannerEarrings} from './../../components/Banner/BannerEarrings-1';
 import {BannerJewelry} from './../../components/Banner/BannerJewelry-1';
-import {BannerNecklace} from './../../components/Banner/BannerNecklace';
-import {BannerRings} from './../../components/Banner/BannerRing-1';
 import BannerShape from './../../components/Banner/BannerShape';
-// import {PopularOnStore} from './../../components/Banner/PopularOnStore'; // Import the PopularOnStore component
-
 import {list} from '../../utils/constant';
+import BlogPage from '../BlogPage/BlogPage';
 
 const HomePage = () => {
 	return (
@@ -44,7 +41,7 @@ const HomePage = () => {
 			<div className="my-10">
 				<BannerJewelry />
 			</div>
-			<div></div>
+			<BlogPage />
 		</div>
 	);
 };
