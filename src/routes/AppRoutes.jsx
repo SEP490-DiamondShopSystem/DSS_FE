@@ -38,6 +38,7 @@ import VerifyPage from '../pages/ProfilePage/VerifyPage/VerifyPage';
 import VerifyFailPage from '../pages/ProfilePage/VerifyPage/VerifyFailPage';
 import OrderSuccessPage from '../pages/OrderInfo/OrderSuccess';
 import OrderErrorPage from '../pages/OrderInfo/OrderErrorPage';
+import BlogDetail from '../pages/BlogPage/BlogDetail';
 
 export const AppRouters = () => {
 	return (
@@ -82,6 +83,7 @@ export const AppRouters = () => {
 				<Route path="/diamond/search" element={<DiamondSearchPage />} />
 				<Route path="/diamond-choose/search" element={<DiamondChoosePage />} />
 				<Route path="/jewelry-choose/search" element={<DiamondChoosePage />} />
+				<Route path="/blog/:id" element={<BlogDetail />} />
 
 				{/* Private routes */}
 				<Route
