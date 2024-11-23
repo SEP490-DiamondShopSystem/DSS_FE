@@ -11,35 +11,31 @@ import {InformationLeft} from './Left/InformationLeft';
 import {InformationRight} from './Right/InformationRight';
 import ProductReviews from './Popup/ProductReviews';
 
-const items = [
-	{
-		title: 'Chọn Vỏ',
-	},
-	{
-		title: 'Chọn Kim Cương',
-	},
-	{
-		title: 'Hoàn Thành',
-	},
-];
-
 const JewelryDetailPage = () => {
 	const {id} = useParams();
 	const dispatch = useDispatch();
 
 	const jewelryDetail = useSelector(GetJewelryDetailSelector);
-	const storedUser = localStorage.getItem('user');
-	const user = JSON.parse(storedUser);
 
-	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 	const [size, setSize] = useState(null);
 	const [jewelry, setJewelry] = useState();
 	const [selectedMetal, setSelectedMetal] = useState(null);
 	const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
-	const [sizePrice, setSizePrice] = useState();
 	const [selectedSideDiamond, setSelectedSideDiamond] = useState();
 
+	const items = [
+		{
+			title: 'Chọn Vỏ',
+		},
+		...(jewelry?.MainDiamonds?.length > 0
+			? [{title: 'Chọn Kim Cương'}]
+			: [{title: 'Chọn Trang Sức'}]),
+		{
+			title: 'Hoàn Thành',
+		},
+	];
 	console.log('idModel', id);
+	console.log('jewelry', jewelry);
 
 	useEffect(() => {
 		dispatch(getJewelryDetail({id}));
@@ -99,12 +95,12 @@ const JewelryDetailPage = () => {
 		<div className="mx-32">
 			<Steps items={items} current={0} />
 			<div className="flex flex-col md:flex-row bg-white my-10 md:my-20 rounded-lg shadow-lg">
-				<div className="w-full md:w-1/2 p-6">
+				<div className="md:w-1/2 p-6">
 					<ImageGallery />
 					<InformationLeft diamondJewelry={jewelry} selectedMetal={selectedMetal} />
 				</div>
 
-				<div className="w-full md:w-1/2 p-6 md:pr-32">
+				<div className="md:w-1/2 p-6 ">
 					<InformationRight
 						diamondJewelry={jewelry}
 						setSelectedMetal={setSelectedMetal}

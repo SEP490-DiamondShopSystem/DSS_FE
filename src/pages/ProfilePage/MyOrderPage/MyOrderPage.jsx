@@ -137,10 +137,10 @@ const MyOrderPage = () => {
 		dispatch(getUserOrderTransaction(id))
 			.unwrap()
 			.then((res) => {
-				window.open(res.payload?.PaymentUrl, '_blank');
+				window.open(res?.PaymentUrl, '_blank');
 			})
 			.catch((error) => {
-				message.error(error?.data?.title || error?.detail);
+				message.error(error?.data?.title || error?.title);
 			});
 	};
 

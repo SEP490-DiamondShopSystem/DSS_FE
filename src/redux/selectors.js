@@ -56,6 +56,7 @@ export const GetStatusOrderSelector = (state) => state.orderSlice.orderStatus;
 export const GetAllOrderDetailSelector = (state) => state.orderSlice.orderDetail;
 export const GetOrderTransactionSelector = (state) => state.orderSlice.transaction;
 export const GetOrderLogsSelector = (state) => state.orderSlice.orderLogs;
+export const GetOrderInvoiceSelector = (state) => state.orderSlice.orderInvoice;
 export const ErrorOrderSelector = (state) => state.orderSlice.error;
 
 //CUSTOMIZE

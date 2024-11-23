@@ -30,14 +30,11 @@ export const InformationRight = ({
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
-	const userId = getUserId();
-	const userSelector = useSelector(UserInfoSelector);
 	const reviewList = useSelector(GetAllReviewSelector);
 
 	const [showDetail, setDetail] = useState(false);
 	const [showSecureShopping, setSecureShopping] = useState(false);
 	const [showProductWarranty, setProductWarranty] = useState(false);
-	const [isModalVisible, setIsModalVisible] = useState(false);
 	const [reviewLength, setReviewLength] = useState(null);
 	const [reviews, setReviews] = useState(null);
 	const [orderBy, setOrderBy] = useState(false);
@@ -71,21 +68,18 @@ export const InformationRight = ({
 
 	const handleSelectMetal = (metal) => {
 		setSelectedMetal(metal);
-		console.log(metal);
-
+		setSize(null);
 		localStorage.setItem('selectedMetal', JSON.stringify(metal));
 	};
 
 	const handleSelectSideDiamond = (diamond) => {
 		setSelectedSideDiamond(diamond);
-		console.log(diamond);
-
+		setSize(null);
 		localStorage.setItem('selectedSideDiamond', JSON.stringify(diamond));
 	};
 
 	const handleChange = (value) => {
 		setSize(value);
-		console.log('value', value);
 	};
 
 	const findSize = diamondJewelry?.MetalGroups?.find(
@@ -107,17 +101,19 @@ export const InformationRight = ({
 			filteredGroups,
 		};
 
-		navigate(`/diamond-choose/search`, {state: {jewelryModel}});
+		console.log('jewelryModel', jewelryModel);
+		if (diamondJewelry?.MainDiamonds?.length > 0) {
+			navigate(`/diamond-choose/search`, {state: {jewelryModel}});
+		} else {
+			navigate(`/jewelry-choose/search`, {state: {jewelryModel}});
+		}
 	};
 
 	// Tính điểm trung bình
 	const averageRating =
-		reviews?.reduce((total, review) => total + review.StarRating, 0) / reviewLength;
+		reviews?.reduce((total, review) => total + review.StarRating, 0) / reviewLength || 0;
 
 	const someSize = filteredGroups[0]?.SizeGroups?.some((size) => size?.IsInStock);
-
-	console.log('reviews', reviews);
-	console.log('orderBy', orderBy);
 
 	return (
 		<div>
@@ -241,7 +237,9 @@ export const InformationRight = ({
 						className="border py-7 px-14 font-bold text-lg bg-primary rounded hover:bg-second w-full uppercase"
 						onClick={handleDiamondNavigate}
 					>
-						Chọn Kim Cương
+						{diamondJewelry?.MainDiamonds.length > 0
+							? 'Chọn Kim Cương'
+							: 'Chọn Trang Sức'}
 					</Button>
 				</div>
 			)}

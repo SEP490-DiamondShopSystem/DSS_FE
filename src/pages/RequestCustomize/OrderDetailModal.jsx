@@ -54,12 +54,12 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 	};
 
 	const statusColors = {
-		1: 'orange', // Pending
-		2: 'blue', // Priced
-		3: 'purple', // Requesting
-		4: 'green', // Accepted
-		5: 'red', // Shop_Rejected
-		6: 'volcano', // Customer_Rejected
+		1: 'orange',
+		2: 'blue',
+		3: 'purple',
+		4: 'green',
+		5: 'red',
+		6: 'volcano',
 	};
 
 	const mainColumns = [
@@ -343,7 +343,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 			{openDetail && (
 				<div
 					className="fixed top-1/2 right-1/2 bg-white transform transition-transform duration-300 ease-in-out z-50 translate-x-1/2 -translate-y-1/2 p-10"
-					style={{width: 1500, maxHeight: '80vh', overflowY: 'auto'}}
+					style={{width: '95%', maxHeight: '80vh', overflowY: 'auto'}}
 				>
 					<div className="flex justify-between items-center">
 						<div>
@@ -400,7 +400,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 								</Button>
 							</Space>
 						)}
-						{orderStatus === 4 && (
+						{orderStatus === 4 && order?.Order === null && (
 							<Space>
 								<Button
 									type="text"

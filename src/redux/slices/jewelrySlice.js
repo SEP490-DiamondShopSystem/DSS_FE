@@ -41,10 +41,21 @@ export const getAllJewelry = createAsyncThunk(
 		console.log('params', params);
 
 		try {
-			const {ModelId, MetalId, SizeId, SideDiamondOptId, MinPrice, MaxPrice} = params;
+			const {
+				CurrentPage,
+				PageSize,
+				ModelId,
+				MetalId,
+				SizeId,
+				SideDiamondOptId,
+				MinPrice,
+				MaxPrice,
+			} = params;
 			let url = '/Jewelry/Selling';
 			const queryParams = new URLSearchParams();
 
+			if (CurrentPage) queryParams.append('CurrentPage', CurrentPage);
+			if (PageSize) queryParams.append('PageSize', PageSize);
 			if (ModelId) queryParams.append('ModelId', ModelId);
 			if (MetalId) queryParams.append('MetalId', MetalId);
 			if (SizeId) queryParams.append('SizeId', SizeId);

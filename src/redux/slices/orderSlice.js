@@ -1,7 +1,5 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import {message} from 'antd';
 import {api} from '../../services/api';
-import {getUserId} from '../../components/GetUserId';
 
 export const handleCheckoutOrder = createAsyncThunk(
 	'orderSlice/handleCheckoutOrder',
@@ -108,6 +106,20 @@ export const getOrderLog = createAsyncThunk(
 	}
 );
 
+export const getOrderFiles = createAsyncThunk(
+	'orderSlice/getOrderFiles',
+	async (orderId, {rejectWithValue}) => {
+		try {
+			const response = await api.get(`/OrderFiles?orderId=${orderId}`);
+
+			return response;
+		} catch (error) {
+			console.log('Error: ', JSON.stringify(error));
+			return rejectWithValue(error);
+		}
+	}
+);
+
 export const orderSlice = createSlice({
 	name: 'cart',
 	initialState: {
@@ -116,6 +128,7 @@ export const orderSlice = createSlice({
 		orderStatus: null,
 		orderLogs: null,
 		transaction: null,
+		orderInvoice: null,
 	},
 	reducers: {},
 	extraReducers: (builder) => {
@@ -132,6 +145,7 @@ export const orderSlice = createSlice({
 			})
 			.addCase(handleOrderCancel.pending, (state) => {
 				state.loading = true;
+				state.orderDetail = null;
 			})
 			.addCase(handleOrderCancel.fulfilled, (state, action) => {
 				state.loading = false;
@@ -188,6 +202,18 @@ export const orderSlice = createSlice({
 				state.orderLogs = action.payload;
 			})
 			.addCase(getOrderLog.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload;
+			})
+			.addCase(getOrderFiles.pending, (state) => {
+				state.loading = true;
+				state.orderInvoice = null;
+			})
+			.addCase(getOrderFiles.fulfilled, (state, action) => {
+				state.loading = false;
+				state.orderInvoice = action.payload;
+			})
+			.addCase(getOrderFiles.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload;
 			});

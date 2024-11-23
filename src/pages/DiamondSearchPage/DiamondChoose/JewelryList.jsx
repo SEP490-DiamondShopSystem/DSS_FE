@@ -9,7 +9,7 @@ import {
 import {Divider, Image} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
-import diamondImg from '../../../assets/img-diamond.png';
+import diamondImg from '../../../assets/ring_classic.png';
 import {FilterDiamond, FilterJewelryDiamond} from '../../../components/Filter/Filter';
 import {LoadingDiamondSelector} from '../../../redux/selectors';
 
@@ -17,7 +17,7 @@ import {formatPrice} from '../../../utils';
 import Loading from '../../../components/Loading';
 import {Clarity, Color, Cut} from '../../../utils/constant';
 
-export const DiamondList = ({
+export const JewelryList = ({
 	filters,
 	setFilters,
 	handleReset,
@@ -89,83 +89,34 @@ export const DiamondList = ({
 								<p className="p-2">{diamondList?.length} Kết quả</p>
 							</div>
 
-							<div className="transition-all duration-300 mt-10">
-								<Divider />
+							<div className="transition-all duration-300 grid grid-cols-4 gap-10 mb-20 mt-10">
 								{diamondList?.length > 0 ? (
 									diamondList.map((item, index) => (
 										<div
-											key={item?.Id || index}
-											className="shadow-lg bg-white rounded-lg cursor-pointer border-2 border-white hover:border-2 hover:border-black my-10"
+											key={item.Id}
+											className="shadow-lg bg-white border-2 border-white rounded-lg hover:border-2 hover:border-black cursor-pointer"
 											onClick={() => handleClick(item?.Id)}
 										>
-											{item.Diamonds.filter(
-												(diamond) => !diamond.IsLabDiamond
-											).map((diamond) => (
-												<div className="flex w-full">
-													<div
-														className=" justify-center "
-														style={{background: '#b8b7b5'}}
-													>
-														<Image
-															src={diamondImg}
-															alt={diamond?.Title || 'Diamond'}
-															// className="w-16"
-															style={{maxWidth: 130}}
-															preview={false}
-														/>
-													</div>
-													<div className="flex justify-between items-center w-4/5 ml-5">
-														<p className="text-xl w-1/5 text-center">
-															{diamond?.DiamondShape?.ShapeName ||
-																'-'}
-														</p>
-														<p className="text-xl w-1/5 text-center">
-															{diamond?.Carat || '-'}ct
-														</p>
-														<p className="text-xl w-1/5 text-center">
-															{getLabelFromCode(
-																diamond?.Color,
-																Color
-															) || '-'}{' '}
-															Color
-														</p>
-														<p className="text-xl w-1/5 text-center">
-															{getLabelFromCode(
-																diamond?.Clarity,
-																Clarity
-															) || '-'}{' '}
-															Clarity
-														</p>
-														<p className="text-xl w-1/5 text-center">
-															{getLabelFromCode(diamond?.Cut, Cut) ||
-																'-'}
-														</p>
-														{diamond?.SalePrice ===
-														diamond?.TruePrice ? (
-															<div>
-																<p>
-																	{formatPrice(
-																		diamond?.SalePrice
-																	)}
-																</p>
-															</div>
-														) : (
-															<>
-																<p>
-																	{formatPrice(
-																		diamond?.TruePrice
-																	)}
-																</p>
-																<p>
-																	{formatPrice(
-																		diamond?.SalePrice
-																	)}
-																</p>
-															</>
-														)}
-													</div>
+											<div className="">
+												<div style={{background: '#b8b7b5'}}>
+													<Image
+														src={
+															item.Thumbnail?.MediaPath || diamondImg
+														}
+														alt={
+															item.Thumbnail?.MediaName ||
+															'Default Image'
+														}
+														className="w-full"
+														preview={false}
+													/>
 												</div>
-											))}
+												<div className="my-5">
+													<p className="ml-3">
+														{formatPrice(item.ND_Price)}
+													</p>
+												</div>
+											</div>
 										</div>
 									))
 								) : (
