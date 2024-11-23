@@ -11,7 +11,9 @@ export const OrderStatus = ({orderStatus, orderDetail}) => {
 	const [indexCancelled, setIndexCancelled] = useState(0);
 	const [indexRejected, setIndexRejected] = useState(0);
 
+	console.log('orderDetail', orderDetail);
 	console.log('indexCancelled', indexCancelled);
+	console.log('indexRejected', indexRejected);
 
 	useEffect(() => {
 		if (orderLogList) {
@@ -161,6 +163,12 @@ export const OrderStatus = ({orderStatus, orderDetail}) => {
 	} else if (currentStep === 2 && orderStatus === 3 && indexRejected === 1) {
 		steps[0].status = 'error'; // Đã Xác Nhận
 		steps[1].status = 'wait'; // Đã Xử Lí
+		steps[2].status = 'wait'; // Đang Vận Chuyển
+		steps[3].status = 'wait'; // Giao Hàng
+		steps[4].status = 'wait'; // Hoàn Thành
+	} else if (currentStep === 2 && orderStatus === 3 && indexRejected === 2) {
+		steps[0].status = 'finish'; // Đã Xác Nhận
+		steps[1].status = 'error'; // Đã Xử Lí
 		steps[2].status = 'wait'; // Đang Vận Chuyển
 		steps[3].status = 'wait'; // Giao Hàng
 		steps[4].status = 'wait'; // Hoàn Thành
