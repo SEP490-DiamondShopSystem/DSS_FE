@@ -107,42 +107,50 @@ export const DiamondList = ({
 														style={{background: '#b8b7b5'}}
 													>
 														<Image
-															src={diamondImg}
+															src={
+																diamond?.Thumbnail?.MediaPath &&
+																diamond?.Thumbnail.MediaPath.trim()
+																	? diamond.Thumbnail.MediaPath
+																	: diamondImg
+															}
 															alt={diamond?.Title || 'Diamond'}
 															// className="w-16"
-															style={{maxWidth: 130}}
+															style={{width: '80%'}}
+															className="mx-auto"
 															preview={false}
 														/>
 													</div>
-													<div className="flex justify-between items-center w-4/5 ml-5">
-														<p className="text-xl w-1/5 text-center">
+													<div className="flex justify-between items-center w-4/6 ml-5">
+														<p className="text-xl w-1/6 text-center">
 															{diamond?.DiamondShape?.ShapeName ||
 																'-'}
 														</p>
-														<p className="text-xl w-1/5 text-center">
+														<p className="text-xl w-1/6 text-center">
 															{diamond?.Carat || '-'}ct
 														</p>
-														<p className="text-xl w-1/5 text-center">
+														<p className="text-xl w-1/6 text-center">
 															{getLabelFromCode(
 																diamond?.Color,
 																Color
 															) || '-'}{' '}
 															Color
 														</p>
-														<p className="text-xl w-1/5 text-center">
+														<p className="text-xl w-1/6 text-center">
 															{getLabelFromCode(
 																diamond?.Clarity,
 																Clarity
 															) || '-'}{' '}
 															Clarity
 														</p>
-														<p className="text-xl w-1/5 text-center">
-															{getLabelFromCode(diamond?.Cut, Cut) ||
-																'-'}
+														<p className="text-xl w-1/6 text-center">
+															{getLabelFromCode(
+																diamond?.Cut,
+																Cut
+															).replace('_', ' ') || '-'}
 														</p>
 														{diamond?.SalePrice ===
 														diamond?.TruePrice ? (
-															<div>
+															<div className=" w-2/6 text-center">
 																<p>
 																	{formatPrice(
 																		diamond?.SalePrice
@@ -150,7 +158,7 @@ export const DiamondList = ({
 																</p>
 															</div>
 														) : (
-															<>
+															<div className=" w-2/6 text-center">
 																<p>
 																	{formatPrice(
 																		diamond?.TruePrice
@@ -161,7 +169,7 @@ export const DiamondList = ({
 																		diamond?.SalePrice
 																	)}
 																</p>
-															</>
+															</div>
 														)}
 													</div>
 												</div>

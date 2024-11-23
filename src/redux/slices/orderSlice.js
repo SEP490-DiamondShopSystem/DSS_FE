@@ -149,7 +149,6 @@ export const orderSlice = createSlice({
 			})
 			.addCase(handleOrderCancel.fulfilled, (state, action) => {
 				state.loading = false;
-				state.orderDetail = action.payload;
 				state.orderStatus = action.payload.Status;
 				state.orderLogs = action.payload.Logs;
 			})
@@ -174,7 +173,6 @@ export const orderSlice = createSlice({
 			})
 			.addCase(getUserOrderDetail.fulfilled, (state, action) => {
 				state.loading = false;
-				state.orderDetail = action.payload;
 				state.orderStatus = action.payload.Status;
 			})
 			.addCase(getUserOrderDetail.rejected, (state, action) => {

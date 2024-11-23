@@ -41,9 +41,6 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 	const [jewelryId, setJewelryId] = useState(null);
 	const [transaction, setTransaction] = useState();
 
-	console.log('orderDetail', orderDetail);
-	console.log('transaction', transaction);
-
 	const data = order?.Items?.map((item, i) => ({
 		key: i,
 		orderDate: order?.CreatedDate || 'N/A',
@@ -153,7 +150,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 			dispatch(getOrderFiles(selectedOrder.orderId));
 			dispatch(getUserOrderDetail(selectedOrder.orderId));
 		}
-	}, [selectedOrder, dispatch]);
+	}, [selectedOrder, dispatch, statusOrder]);
 
 	useEffect(() => {
 		if (orderDetail) {

@@ -2501,3 +2501,11 @@ video {
 .italic {
 	font-style: italic;
 }
+
+.w-1\/6 {
+	width: 16.666667%;
+}
+
+.w-4\/6 {
+	width: 66.666667%;
+}

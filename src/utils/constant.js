@@ -10,6 +10,7 @@ import banner_3 from '../assets/Lab_Grown_Diamonds.png';
 import jewelry from '../assets/jewelry.png';
 import round from '../assets/diamondShapes/round.png';
 import princess from '../assets/diamondShapes/princess.png';
+import pear from '../assets/diamondShapes/pear.png';
 import cushion from '../assets/diamondShapes/cushionSquare.png';
 import emerald from '../assets/diamondShapes/emerald.png';
 import oval from '../assets/diamondShapes/oval.png';
@@ -432,7 +433,7 @@ export const shapeItems = [
 	{id: 7, image: marquise, shape: 'Marquise', value: 8},
 	{id: 8, image: heart, shape: 'Heart', value: 9},
 	{id: 9, image: princess, shape: 'Princess', value: 2},
-	{id: 9, image: princess, shape: 'Pear', value: 10},
+	{id: 9, image: pear, shape: 'Pear', value: 10},
 ];
 
 export const shapeItemsCustomize = [
@@ -455,7 +456,7 @@ export const shapeItemsCustomize = [
 	{id: 7, image: marquise, shape: 'Marquise', value: '8'},
 	{id: 8, image: heart, shape: 'Heart', value: '9'},
 	{id: 9, image: princess, shape: 'Princess', value: '2'},
-	{id: 9, image: princess, shape: 'Pear', value: '10'},
+	{id: 9, image: pear, shape: 'Pear', value: '10'},
 ];
 
 export const Clarity = {
