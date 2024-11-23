@@ -65,16 +65,13 @@ api.interceptors.response.use(
 					return api(error.config);
 				} catch (refreshError) {
 					console.error('Token refresh failed', refreshError);
-					// Điều hướng người dùng đến trang đăng nhập
 					window.location.href = '/';
 					return Promise.reject(refreshError);
 				}
 			}
 		} else if (error.request) {
-			// Yêu cầu đã được gửi nhưng không có phản hồi nào
 			console.log(error.request);
 		} else {
-			// Một điều gì đó đã xảy ra khi thiết lập yêu cầu
 			console.log('Error', error.message);
 		}
 		return Promise.reject(res);

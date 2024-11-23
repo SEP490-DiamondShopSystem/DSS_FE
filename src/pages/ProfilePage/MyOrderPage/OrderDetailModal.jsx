@@ -1,20 +1,29 @@
 import React, {useEffect, useState} from 'react';
 
-import {StarOutlined} from '@ant-design/icons';
-import {Button, Form, Image, Input, message, Modal, Rate, Table, Upload} from 'antd';
+import {FileTextOutlined, StarOutlined} from '@ant-design/icons';
+import {Button, Form, Image, Input, message, Modal, Rate, Table, Typography, Upload} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
 import logo from '../../../assets/logo-short-ex.png';
 import Loading from '../../../components/Loading';
 import {
 	GetAllOrderDetailSelector,
+	GetOrderInvoiceSelector,
 	GetOrderLogsSelector,
 	GetStatusOrderSelector,
 	LoadingOrderSelector,
 } from '../../../redux/selectors';
-import {getOrderLog, getUserOrderDetail, handleOrderCancel} from '../../../redux/slices/orderSlice';
+import {
+	getOrderFiles,
+	getOrderLog,
+	getUserOrderDetail,
+	handleOrderCancel,
+} from '../../../redux/slices/orderSlice';
 import {handleReviewOrder} from '../../../redux/slices/reviewSlice';
 import {formatPrice} from '../../../utils';
 import {OrderStatus} from './OrderStatus';
+import {TransactionDetails} from './TransactionList';
+
+const {Text, Title} = Typography;
 
 export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder}) => {
 	const dispatch = useDispatch();
@@ -22,6 +31,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 	const loading = useSelector(LoadingOrderSelector);
 	const orderLogList = useSelector(GetOrderLogsSelector);
 	const statusOrder = useSelector(GetStatusOrderSelector);
+	const orderInvoice = useSelector(GetOrderInvoiceSelector);
 
 	const [isCancelModalVisible, setIsCancelModalVisible] = useState(false);
 	const [isReviewModalVisible, setIsReviewModalVisible] = useState(false);
@@ -29,15 +39,29 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 	const [rating, setRating] = useState(0);
 	const [fileList, setFileList] = useState([]);
 	const [jewelryId, setJewelryId] = useState(null);
-
-	console.log('statusOrder', statusOrder);
+	const [transaction, setTransaction] = useState();
 
 	const data = order?.Items?.map((item, i) => ({
 		key: i,
-		orderDate: order?.CreatedDate,
-		productName: item?.Diamond?.Title || item?.Jewelry?.SerialCode || 'Unknown Jewelry',
-		price: formatPrice(item?.PurchasedPrice),
-		jewelryId: item?.JewelryId,
+		orderDate: order?.CreatedDate || 'N/A',
+		productName: item?.Diamond?.Title || item?.Jewelry?.SerialCode,
+		price: formatPrice(item?.PurchasedPrice || 0),
+		jewelryId: item?.JewelryId || null,
+		diamondId: item?.DiamondId || null,
+		orderId: order?.Id || null,
+		orderCode: order?.OrderCode,
+		paymentMethod: order?.PaymentMethod?.MappedName,
+		shippingAddress: order?.ShippingAddress,
+		status: order?.Status,
+		shippingFee: formatPrice(order?.ShippingFee || 0),
+		totalPrice: formatPrice(order?.TotalPrice || 0),
+		totalRefund: formatPrice(order?.TotalRefund || 0),
+		cancelledReason: order?.CancelledReason || null,
+		cancelledDate: order?.CancelledDate || null,
+		logs: order?.Logs || [],
+		delivererId: order?.DelivererId || null,
+		expectedDate: order?.ExpectedDate || null,
+		UserRankAmountSaved: order?.UserRankAmountSaved,
 	}));
 
 	const columns = [
@@ -45,26 +69,44 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 			title: 'Ngày Đặt Hàng',
 			dataIndex: 'orderDate',
 			key: 'orderDate',
+			align: 'center',
 			render: (text) => <div className="flex justify-center">{text}</div>,
 		},
 		{
 			title: 'Tên Sản Phẩm',
 			dataIndex: 'productName',
 			key: 'productName',
+			align: 'center',
 			render: (text) => <div className="flex justify-center">{text}</div>,
 		},
 		{
-			title: 'Giá',
+			title: 'Phí phát sinh',
 			dataIndex: 'price',
 			key: 'price',
-			render: (text) => <div className="flex justify-center">{text}</div>,
+			align: 'center',
+			render: (_, record) => (
+				<div className="flex flex-col items-center">
+					<div>{record.price}</div>
+					{/* <div>Phí giao hàng: {record.shippingFee}</div>
+					{record?.UserRankAmountSaved !== 0 && (
+						<div>Khách hàng thân thiết: -{formatPrice(record.UserRankAmountSaved)}</div>
+					)} */}
+				</div>
+			),
 		},
-		...(statusOrder === 8 && data.some((record) => record.jewelryId)
+
+		...(statusOrder === 8 &&
+		data?.some((record) =>
+			data?.some(
+				(record) => record?.Items && record?.Items?.every((item) => !item?.IsPreview)
+			)
+		)
 			? [
 					{
 						title: 'Đánh Giá',
 						dataIndex: 'jewelryId',
 						key: 'jewelryId',
+						align: 'center',
 						render: (_, record) => (
 							<div className="flex justify-center">
 								<Button
@@ -79,23 +121,41 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 					},
 			  ]
 			: []),
+		...(orderInvoice
+			? [
+					{
+						title: 'Hóa Đơn',
+						dataIndex: 'jewelryId',
+						key: 'jewelryId',
+						align: 'center',
+						render: (_, record) => (
+							<div className="flex justify-center">
+								<Button
+									type="text"
+									icon={<FileTextOutlined />}
+									onClick={handleInvoice}
+								>
+									Hóa Đơn
+								</Button>
+							</div>
+						),
+					},
+			  ]
+			: []),
 	];
 
 	useEffect(() => {
 		if (selectedOrder?.orderId) {
 			dispatch(getOrderLog(selectedOrder.orderId));
-		}
-	}, [selectedOrder, dispatch]);
-
-	useEffect(() => {
-		if (selectedOrder?.orderId) {
+			dispatch(getOrderFiles(selectedOrder.orderId));
 			dispatch(getUserOrderDetail(selectedOrder.orderId));
 		}
-	}, [selectedOrder, dispatch]);
+	}, [selectedOrder, dispatch, statusOrder]);
 
 	useEffect(() => {
 		if (orderDetail) {
 			setOrder(orderDetail);
+			setTransaction(orderDetail?.Transactions);
 		}
 	}, [orderDetail]);
 
@@ -138,8 +198,6 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 				setIsReviewModalVisible(false);
 			})
 			.catch((error) => {
-				console.log('error', error);
-
 				message.error(
 					error?.data?.errors?.Files[0] || error?.data?.title || 'Có lỗi xảy ra!'
 				);
@@ -154,6 +212,12 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 		setRating(value);
 	};
 
+	const handleInvoice = () => {
+		if (orderInvoice) {
+			window.open(`${orderInvoice?.MediaPath}`, '_blank');
+		}
+	};
+
 	return (
 		<>
 			{openDetail && (
@@ -165,7 +229,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 			{openDetail && (
 				<div
 					className="fixed top-1/2 right-1/2 bg-white transform transition-transform duration-300 ease-in-out z-50 translate-x-1/2 -translate-y-1/2 p-10"
-					style={{width: 1500, maxHeight: '80vh', overflowY: 'auto'}}
+					style={{width: '95%', maxHeight: '80vh', overflowY: 'auto'}}
 				>
 					{loading ? (
 						<Loading />
@@ -185,18 +249,20 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 									<h2 className="uppercase text-2xl font-semibold">
 										Trạng thái đơn hàng
 									</h2>
-									<p>Hóa đơn: #{order?.OrderCode}</p>
+									<p>Mã đơn hàng: #{order?.OrderCode}</p>
 									<p>Ngày: {order?.CreatedDate}</p>
 								</div>
 							</div>
-
 							<div className="mt-5">
 								<h2 className="text-2xl font-semibold">Địa chỉ giao hàng</h2>
 								<p>{order?.ShippingAddress}</p>
 							</div>
 							<OrderStatus orderStatus={statusOrder} orderDetail={order} />
+							<TransactionDetails transactions={transaction} />
 							<div className="flex justify-between">
-								<h1 className="text-xl font-semibold">Chi tiết đơn hàng</h1>
+								<Title level={3} className="text-xl font-semibold">
+									Chi tiết đơn hàng
+								</Title>
 								{statusOrder === 1 && (
 									<Button
 										type="text"
@@ -234,13 +300,18 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 									bordered
 								/>
 							</div>
-							<div className="justify-end items-center flex mt-10">
-								<p className="font-semibold text-lg mr-10">Tổng cộng:</p>
-								<p className="text-2xl font-semibold text-red-600">
-									{formatPrice(order?.TotalPrice)}
+							<div className="justify-end items-end flex flex-col mt-10">
+								<div>Phí giao hàng: {formatPrice(order?.ShippingFee)}</div>
+								{order?.UserRankAmountSaved !== 0 && (
+									<div>
+										Khách hàng thân thiết: -
+										{formatPrice(order?.UserRankAmountSaved)}
+									</div>
+								)}
+								<p className="font-semibold text-lg mt-2">
+									Tổng cộng: {formatPrice(order?.TotalPrice)}
 								</p>
 							</div>
-
 							{/* Cancel Order Modal */}
 							<Modal
 								title="Hủy Đơn"
@@ -272,7 +343,6 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 									</div>
 								</Form>
 							</Modal>
-
 							{/* Review Modal */}
 							<Modal
 								title="Đánh giá"

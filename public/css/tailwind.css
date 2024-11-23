@@ -2481,3 +2481,31 @@ video {
 	--tw-text-opacity: 1;
 	color: rgb(62 204 44 / var(--tw-text-opacity)) /* #3ecc2c */;
 }
+
+@media (min-width: 768px) {
+	.md\:w-3\/5 {
+		width: 60%;
+	}
+}
+
+@media (min-width: 768px) {
+	.md\:w-2\/5 {
+		width: 40%;
+	}
+}
+
+.w-1\/2 {
+	width: 50%;
+}
+
+.italic {
+	font-style: italic;
+}
+
+.w-1\/6 {
+	width: 16.666667%;
+}
+
+.w-4\/6 {
+	width: 66.666667%;
+}

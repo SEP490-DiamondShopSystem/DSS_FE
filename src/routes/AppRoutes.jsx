@@ -81,6 +81,7 @@ export const AppRouters = () => {
 				<Route path="/jewelry/setting/all" element={<ProductPage />} />
 				<Route path="/diamond/search" element={<DiamondSearchPage />} />
 				<Route path="/diamond-choose/search" element={<DiamondChoosePage />} />
+				<Route path="/jewelry-choose/search" element={<DiamondChoosePage />} />
 
 				{/* Private routes */}
 				<Route

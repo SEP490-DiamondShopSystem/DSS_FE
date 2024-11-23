@@ -117,7 +117,7 @@ const DiamondSearchPage = () => {
 		try {
 			return JSON.parse(localStorage.getItem('selected')) || '';
 		} catch (error) {
-			return ''; // Giá trị mặc định nếu không phải là JSON hợp lệ
+			return '';
 		}
 	};
 

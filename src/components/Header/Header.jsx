@@ -49,14 +49,14 @@ export const Header = () => {
 							Bảng giá
 						</Link>
 					</li>
-					{/* <li>
-						<a
-							href="/promotion"
+					<li>
+						<Link
+							to="/promotion"
 							className={`py-7 px-3 inline-block no-underline text-black`}
 						>
 							Khuyến mãi
-						</a>
-					</li> */}
+						</Link>
+					</li>
 				</ul>
 
 				<ul className="flex uppercase items-center gap-8">

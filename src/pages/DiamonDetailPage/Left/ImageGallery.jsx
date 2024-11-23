@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+
 import {Image} from 'antd';
 import {useDispatch} from 'react-redux';
 import {fetchDiamondFiles} from '../../../redux/slices/fileSlice';
@@ -46,9 +47,12 @@ export const ImageGallery = ({diamondId}) => {
 				<>
 					<div className="relative large-image mb-4">
 						<Image
-							width={650}
+							width={'100%'}
 							height={400}
-							src={imageFiles[currentImageIndex]?.MediaPath}
+							src={
+								imageFiles[currentImageIndex]?.MediaPath ||
+								'https://via.placeholder.com'
+							}
 							alt="Large"
 							className="border rounded-lg"
 						/>
@@ -71,7 +75,7 @@ export const ImageGallery = ({diamondId}) => {
 								style={{flexShrink: 0}} // Prevent shrinking in a flex container
 							>
 								<Image
-									width={100}
+									width={'100%'}
 									height={80}
 									preview={false}
 									src={image.MediaPath}

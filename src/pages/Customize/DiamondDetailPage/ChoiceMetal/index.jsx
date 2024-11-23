@@ -168,7 +168,9 @@ export const ChoiceMetalDiamond = ({
 				setStepChoose(3);
 			})
 			.catch((error) => {
-				message.error(error?.data?.title || error?.detail);
+				console.log('error', error);
+
+				message.error(error?.data?.title || error?.title);
 			});
 	};
 

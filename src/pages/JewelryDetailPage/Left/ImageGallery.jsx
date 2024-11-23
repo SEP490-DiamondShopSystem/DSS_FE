@@ -19,7 +19,7 @@ export const ImageGallery = () => {
 		<div className="container mx-auto">
 			<div className="relative large-image mb-4">
 				<Image
-					width={650}
+					width="100%"
 					height={400}
 					src={currentImage}
 					alt="Large"

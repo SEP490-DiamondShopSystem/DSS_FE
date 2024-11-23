@@ -1,19 +1,14 @@
 import React, {useEffect, useState} from 'react';
 
-import {
-	AppstoreOutlined,
-	HeartFilled,
-	HeartOutlined,
-	UnorderedListOutlined,
-} from '@ant-design/icons';
+import {AppstoreOutlined, UnorderedListOutlined} from '@ant-design/icons';
 import {Image} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import diamondImg from '../../assets/img-diamond.png';
 import {FilterDiamond} from '../../components/Filter/Filter';
+import Loading from '../../components/Loading';
 import {LoadingDiamondSelector} from '../../redux/selectors';
 import {formatPrice} from '../../utils';
-import Loading from '../../components/Loading';
 
 export const DiamondList = ({
 	diamond,
@@ -139,11 +134,12 @@ export const DiamondList = ({
 												>
 													<Image
 														src={
-															diamondItem.Thumbnail?.MediaPath ||
-															diamondImg
+															diamondItem?.Thumbnail === null
+																? diamondImg
+																: diamondItem.Thumbnail.MediaPath
 														}
 														alt={
-															diamondItem.Thumbnail?.MediaName ||
+															diamondItem?.Thumbnail?.MediaName ||
 															'Default Image'
 														}
 														className="w-full"
@@ -203,7 +199,11 @@ export const DiamondList = ({
 													style={{background: '#b8b7b5'}}
 												>
 													<Image
-														src={diamondItem.Thumbnail?.MediaPath}
+														src={
+															diamondItem?.Thumbnail === null
+																? diamondImg
+																: diamondItem.Thumbnail.MediaPath
+														}
 														alt={diamondItem.Thumbnail?.MediaName}
 														className="w-full"
 														preview={false}

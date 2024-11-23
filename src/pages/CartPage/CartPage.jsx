@@ -110,6 +110,8 @@ const CartPage = () => {
 	const [cartValidateProduct, setCartValidateProduct] = useState([]);
 	const [promoId, setPromoId] = useState(null);
 
+	console.log('promoAble', promoAble);
+
 	useEffect(() => {
 		dispatch(getAllPromo());
 	}, []);
@@ -430,76 +432,48 @@ const CartPage = () => {
 							<span>{formatPrice(cartList?.OrderPrices?.DefaultPrice || 0)}</span>
 						</p>
 						<p className="flex justify-between mb-1">
-							{cartList?.ShippingPrice?.FinalPrice !== 0 ? (
-								<div className="mb-1 flex justify-between w-full">
-									<span className="font-semibold">Phí Vận Chuyển</span>{' '}
-									<span>
-										{formatPrice(cartList?.ShippingPrice?.FinalPrice || 0)}
-									</span>
-								</div>
-							) : (
-								<></>
-							)}
+							<div className="mb-1 flex justify-between w-full">
+								<span className="font-semibold">Phí Vận Chuyển</span>{' '}
+								<span>{formatPrice(cartList?.ShippingPrice?.FinalPrice || 0)}</span>
+							</div>
 						</p>
 						<p className="flex justify-between mb-1">
-							{cartList?.OrderPrices?.DiscountAmountSaved !== 0 ? (
-								<div className="mb-1 flex justify-between w-full">
-									<span className="font-semibold">Giảm Giá</span>{' '}
-									<span>
-										-
-										{formatPrice(
-											cartList?.OrderPrices?.DiscountAmountSaved || 0
-										)}
-									</span>
-								</div>
-							) : (
-								<></>
-							)}
+							<div className="mb-1 flex justify-between w-full">
+								<span className="font-semibold">Giảm Giá</span>{' '}
+								<span>
+									{cartList?.OrderPrices?.DiscountAmountSaved !== 0 && '-'}
+									{formatPrice(cartList?.OrderPrices?.DiscountAmountSaved || 0)}
+								</span>
+							</div>
 						</p>
 						<p className="flex justify-between">
-							{cartList?.OrderPrices?.PromotionAmountSaved !== 0 ? (
-								<div className="mb-1 flex justify-between w-full">
-									<span className="font-semibold">Khuyến Mãi</span>{' '}
-									<span>
-										-
-										{formatPrice(
-											cartList?.OrderPrices?.PromotionAmountSaved || 0
-										)}
-									</span>
-								</div>
-							) : (
-								<></>
-							)}
+							<div className="mb-1 flex justify-between w-full">
+								<span className="font-semibold">Khuyến Mãi</span>{' '}
+								<span>
+									{cartList?.OrderPrices?.DiscountAmountSaved !== 0 && '-'}
+									{formatPrice(cartList?.OrderPrices?.PromotionAmountSaved || 0)}
+								</span>
+							</div>
 						</p>
 						<p className="flex justify-between mb-1">
-							{cartList?.OrderPrices?.TotalWarrantyPrice !== 0 ? (
-								<div className="mb-1 flex justify-between w-full">
-									<span className="font-semibold">Bảo Hành</span>{' '}
-									<span>
-										{formatPrice(
-											cartList?.OrderPrices?.TotalWarrantyPrice || 0
-										)}
-									</span>
-								</div>
-							) : (
-								<></>
-							)}
+							<div className="mb-1 flex justify-between w-full">
+								<span className="font-semibold">Bảo Hành</span>{' '}
+								<span>
+									{formatPrice(cartList?.OrderPrices?.TotalWarrantyPrice || 0)}
+								</span>
+							</div>
 						</p>
 						<p className="flex justify-between mb-1">
-							{cartList?.OrderPrices?.UserRankDiscountAmount !== 0 ? (
-								<div className="mb-1 flex justify-between w-full">
-									<span className="font-semibold">Khách Hàng Thân Thiết</span>
+							<div className="mb-1 flex justify-between w-full">
+								<span className="font-semibold">Khách Hàng Thân Thiết</span>
 
-									<span>
-										-
-										{formatPrice(
-											cartList?.OrderPrices?.UserRankDiscountAmount || 0
-										)}
-									</span>
-								</div>
-							) : (
-								<></>
-							)}
+								<span>
+									{cartList?.OrderPrices?.UserRankDiscountAmount !== 0 && '-'}
+									{formatPrice(
+										cartList?.OrderPrices?.UserRankDiscountAmount || 0
+									)}
+								</span>
+							</div>
 						</p>
 						<Divider />
 						<p className="flex justify-between text-gray-900 font-semibold">

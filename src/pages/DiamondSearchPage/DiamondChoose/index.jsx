@@ -14,19 +14,8 @@ import {getAllJewelry} from '../../../redux/slices/jewelrySlice';
 import {enums} from '../../../utils/constant';
 import {DiamondLabList} from './DiamondLabList';
 import {DiamondList} from './DiamondList';
+import {JewelryList} from './JewelryList';
 import {useLocation} from 'react-router-dom';
-
-const items = [
-	{
-		title: 'Chọn Vỏ',
-	},
-	{
-		title: 'Chọn Kim Cương',
-	},
-	{
-		title: 'Hoàn Thành',
-	},
-];
 
 const DiamondChoosePage = () => {
 	const dispatch = useDispatch();
@@ -40,28 +29,33 @@ const DiamondChoosePage = () => {
 	const [changeDiamond, setChangeDiamond] = useState(true);
 	const [pageSize, setPageSize] = useState(100);
 	const [start, setStart] = useState(0);
-	const [filters, setFilters] = useState({});
+	const [filters, setFilters] = useState({
+		price: {minPrice: 0, maxPrice: 20000000000},
+	});
 	const [selectedIndex, setSelectedIndex] = useState(0);
 	const [diamond, setDiamond] = useState();
 
-	useEffect(() => {
-		if (filterLimits) {
-			setFilters({
-				// shape: getShapeFromLocalStorage(),
-				price: {minPrice: filterLimits?.Price?.Min, maxPrice: filterLimits?.Price?.Max},
-				// carat: {
-				// 	minCarat: findShape?.CaratFrom || filterLimits?.Carat?.Min,
-				// 	maxCarat: findShape?.CaratTo || filterLimits?.Carat?.Max,
-				// },
-				// color: {minColor: filterLimits?.Color?.Min, maxColor: filterLimits?.Color?.Max},
-				// clarity: {
-				// 	minClarity: filterLimits?.Clarity?.Min,
-				// 	maxClarity: filterLimits?.Clarity?.Max,
-				// },
-				// cut: {minCut: filterLimits?.Cut?.Min, maxCut: filterLimits?.Cut?.Max},
-			});
-		}
-	}, [filterLimits]);
+	console.log('diamond', diamond);
+
+	const items = [
+		{
+			title: 'Chọn Vỏ',
+		},
+		...(jewelryModel?.MainDiamonds?.length > 0
+			? [{title: 'Chọn Kim Cương'}]
+			: [{title: 'Chọn Trang Sức'}]),
+		{
+			title: 'Hoàn Thành',
+		},
+	];
+
+	// useEffect(() => {
+	// 	if (filterLimits) {
+	// 		setFilters({
+	// 			price: {minPrice: filterLimits?.Price?.Min, maxPrice: filterLimits?.Price?.Max},
+	// 		});
+	// 	}
+	// }, [filterLimits]);
 
 	useEffect(() => {
 		if (jewelryList) {
@@ -76,6 +70,8 @@ const DiamondChoosePage = () => {
 	const fetchJewelryData = debounce(() => {
 		dispatch(
 			getAllJewelry({
+				PageSize: pageSize,
+				CurrentPage: start,
 				ModelId: jewelryModel?.jewelryModelId,
 				MetalId: jewelryModel?.selectedMetal?.Id,
 				SizeId: jewelryModel?.size,
@@ -90,7 +86,7 @@ const DiamondChoosePage = () => {
 		fetchJewelryData();
 
 		return () => fetchJewelryData.cancel();
-	}, [jewelryModel, filters]);
+	}, [jewelryModel, filters, pageSize, start]);
 
 	const getDiamondForFilter = (index) => {
 		if (index >= 0 && index < jewelryModel?.MainDiamonds?.length) {
@@ -137,46 +133,60 @@ const DiamondChoosePage = () => {
 					className="bg-white p-4 rounded-full my-10"
 				/>
 			)}
+			{jewelryModel?.MainDiamonds?.length > 0 && (
+				<div className="divide-x flex items-center justify-center my-5">
+					<button
+						className={`px-4 py-2 w-32 ${
+							changeDiamond ? 'bg-primary' : 'bg-tintWhite'
+						} rounded-s-lg`}
+						onClick={() => setChangeDiamond(true)}
+					>
+						Tự nhiên
+					</button>
+					<button
+						className={`px-4 py-2 w-32 ${
+							!changeDiamond ? 'bg-primary' : 'bg-tintWhite'
+						} rounded-e-lg`}
+						onClick={() => setChangeDiamond(false)}
+					>
+						Nhân tạo
+					</button>
+				</div>
+			)}
 
-			<div className="divide-x flex items-center justify-center my-5">
-				<button
-					className={`px-4 py-2 w-32 ${
-						changeDiamond ? 'bg-primary' : 'bg-tintWhite'
-					} rounded-s-lg`}
-					onClick={() => setChangeDiamond(true)}
-				>
-					Tự nhiên
-				</button>
-				<button
-					className={`px-4 py-2 w-32 ${
-						!changeDiamond ? 'bg-primary' : 'bg-tintWhite'
-					} rounded-e-lg`}
-					onClick={() => setChangeDiamond(false)}
-				>
-					Nhân tạo
-				</button>
-			</div>
-
-			{/* Use the mapped diamond data */}
-			{changeDiamond ? (
-				<DiamondList
-					filters={filters}
-					setFilters={setFilters}
-					handleReset={handleReset}
-					diamondForFilter={diamondForFilter}
-					findShape={findShape}
-					jewelryModel={jewelryModel}
-					diamondList={diamond}
-				/>
+			{jewelryModel?.MainDiamonds?.length > 0 ? (
+				<>
+					{changeDiamond ? (
+						<DiamondList
+							filters={filters}
+							setFilters={setFilters}
+							handleReset={handleReset}
+							diamondForFilter={diamondForFilter}
+							findShape={findShape}
+							jewelryModel={jewelryModel}
+							diamondList={diamond}
+						/>
+					) : (
+						<DiamondLabList
+							filters={filters}
+							setFilters={setFilters}
+							handleReset={handleReset}
+							diamondForFilter={diamondForFilter}
+							findShape={findShape}
+							diamondList={diamond}
+							jewelryModel={jewelryModel}
+						/>
+					)}
+				</>
 			) : (
-				<DiamondLabList
+				<JewelryList
 					filters={filters}
 					setFilters={setFilters}
 					handleReset={handleReset}
 					diamondForFilter={diamondForFilter}
 					findShape={findShape}
-					diamondList={diamond}
 					jewelryModel={jewelryModel}
+					diamondList={diamond}
 				/>
 			)}
 		</div>

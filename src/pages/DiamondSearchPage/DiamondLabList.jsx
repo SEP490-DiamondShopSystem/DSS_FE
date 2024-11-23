@@ -132,7 +132,11 @@ export const DiamondLabList = ({diamond, filters, setFilters, handleReset, diamo
 													style={{background: '#b8b7b5'}}
 												>
 													<Image
-														src={diamondImg}
+														src={
+															diamondItem?.Thumbnail === null
+																? diamondImg
+																: diamondItem.Thumbnail.MediaPath
+														}
 														alt={diamondItem.Name}
 													/>
 												</div>
@@ -183,7 +187,11 @@ export const DiamondLabList = ({diamond, filters, setFilters, handleReset, diamo
 													style={{background: '#b8b7b5'}}
 												>
 													<Image
-														src={diamondImg}
+														src={
+															diamondItem?.Thumbnail === null
+																? diamondImg
+																: diamondItem.Thumbnail.MediaPath
+														}
 														alt={diamondItem.title}
 														className="w-full"
 														preview={false}

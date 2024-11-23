@@ -82,7 +82,7 @@ export const InformationLeft = ({jewelryDetail, diamondDetail, jewelry}) => {
 
 	return (
 		<>
-			<div className="bg-gray-50 rounded-lg shadow-md w-full mt-10 pr-36">
+			<div className="bg-gray-50 rounded-lg shadow-md w-full mt-10 ">
 				{mappedDiamond?.map((diamond) => (
 					<>
 						<h2 className="text-lg font-semibold flex items-center justify-center my-10">
@@ -156,46 +156,74 @@ export const InformationLeft = ({jewelryDetail, diamondDetail, jewelry}) => {
 					</>
 				))}
 			</div>
+			{jewelry?.Diamonds?.length > 0 ? (
+				<>
+					<div
+						className={`transition-max-height duration-500 ease-in-out overflow-hidden ${
+							showMore ? 'max-h-screen' : 'max-h-0'
+						}`}
+					>
+						<div className="bg-gray-50  rounded-lg shadow-md w-full">
+							<div className="flex justify-center items-center text-xl font-semibold my-10">
+								<span>Thông Số Vỏ</span>
+							</div>
+							<div class="flex justify-between px-4 border-b border-tintWhite py-2">
+								<span className="text-gray-600">Vật Liệu</span>
+								<span className="text-gray-800">{jewelry?.Metal?.Name}</span>
+							</div>
 
-			<div
-				className={`transition-max-height duration-500 ease-in-out overflow-hidden ${
-					showMore ? 'max-h-screen' : 'max-h-0'
-				}`}
-			>
-				<div className="bg-gray-50  rounded-lg shadow-md w-full pr-36">
-					<div className="flex justify-center items-center text-xl font-semibold my-10">
-						<span>Thông Số Vỏ</span>
+							<div className="flex justify-between px-4 border-b border-tintWhite py-2">
+								<span className="text-gray-600">Kích Cỡ Nhẫn (mm)</span>
+								<span className="text-gray-800 flex items-center">
+									{jewelry?.Size?.Value}
+								</span>
+							</div>
+							<div className="flex justify-between px-4 border-b border-tintWhite py-2">
+								<span className="text-gray-600">Rhodium Finish</span>
+								<span className="text-gray-800 flex items-center">
+									{jewelry?.IsRhodiumFinish ? 'Có' : 'Không'}
+								</span>
+							</div>
+						</div>
 					</div>
-					<div class="flex justify-between px-4 border-b border-tintWhite py-2">
-						<span className="text-gray-600">Vật Liệu</span>
-						<span className="text-gray-800">{jewelry?.Metal?.Name}</span>
+					<div
+						className="border-y my-4 flex justify-between cursor-pointer"
+						onClick={toggleShowMore}
+					>
+						<div className="text-black m-4 px-4 rounded-lg focus:outline-none ">
+							{showMore ? 'Thu Gọn' : 'Xem Thêm'}
+						</div>
+						<div className="m-4 px-4 rounded-lg focus:outline-none">
+							{showMore ? <MinusOutlined /> : <PlusOutlined />}
+						</div>
 					</div>
+				</>
+			) : (
+				<>
+					<div className="bg-gray-50  rounded-lg shadow-md w-full">
+						<div className="flex justify-center items-center text-xl font-semibold my-10">
+							<span>Thông Số Vỏ</span>
+						</div>
+						<div class="flex justify-between px-4 border-b border-tintWhite py-2">
+							<span className="text-gray-600">Vật Liệu</span>
+							<span className="text-gray-800">{jewelry?.Metal?.Name}</span>
+						</div>
 
-					<div className="flex justify-between px-4 border-b border-tintWhite py-2">
-						<span className="text-gray-600">Kích Cỡ Nhẫn (mm)</span>
-						<span className="text-gray-800 flex items-center">
-							{jewelry?.Size?.Value}
-						</span>
+						<div className="flex justify-between px-4 border-b border-tintWhite py-2">
+							<span className="text-gray-600">Kích Cỡ Nhẫn (mm)</span>
+							<span className="text-gray-800 flex items-center">
+								{jewelry?.Size?.Value}
+							</span>
+						</div>
+						<div className="flex justify-between px-4 border-b border-tintWhite py-2">
+							<span className="text-gray-600">Rhodium Finish</span>
+							<span className="text-gray-800 flex items-center">
+								{jewelry?.IsRhodiumFinish ? 'Có' : 'Không'}
+							</span>
+						</div>
 					</div>
-					<div className="flex justify-between px-4 border-b border-tintWhite py-2">
-						<span className="text-gray-600">Rhodium Finish</span>
-						<span className="text-gray-800 flex items-center">
-							{jewelry?.IsRhodiumFinish ? 'Có' : 'Không'}
-						</span>
-					</div>
-				</div>
-			</div>
-			<div
-				className="border-y my-4 mr-36 flex justify-between cursor-pointer"
-				onClick={toggleShowMore}
-			>
-				<div className="text-black m-4 px-4 rounded-lg focus:outline-none ">
-					{showMore ? 'Thu Gọn' : 'Xem Thêm'}
-				</div>
-				<div className="m-4 px-4 rounded-lg focus:outline-none">
-					{showMore ? <MinusOutlined /> : <PlusOutlined />}
-				</div>
-			</div>
+				</>
+			)}
 		</>
 	);
 };

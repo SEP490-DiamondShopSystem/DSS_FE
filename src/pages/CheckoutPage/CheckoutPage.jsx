@@ -154,7 +154,6 @@ const CheckoutPage = () => {
 	});
 
 	const idCustomize = order?.Id;
-	console.log('userDetail', userDetail);
 
 	const defaultAddress =
 		userDetail.Addresses.length > 0 &&
@@ -167,7 +166,6 @@ const CheckoutPage = () => {
 	useEffect(() => {
 		if (userDetail && userDetail.Addresses && userDetail.Addresses.length > 0) {
 			const firstAddress = userDetail.Addresses[0];
-			console.log('firstAddress', firstAddress);
 			setUserInfo((prev) => ({
 				...prev,
 				district: defaultAddress?.District || firstAddress?.District || '',
@@ -379,7 +377,7 @@ const CheckoutPage = () => {
 				.catch((error) => {
 					console.log('error', error);
 
-					message.error(error?.data?.title || error?.detail);
+					message.error(error?.data?.title || error?.title);
 				});
 		} else {
 			dispatch(handleCheckoutOrder({createOrderInfo, billingDetail}))
@@ -389,8 +387,6 @@ const CheckoutPage = () => {
 					showOrderSuccessModal();
 				})
 				.catch((error) => {
-					console.log('error', error);
-
 					message.error(error?.data?.title || error?.detail);
 				});
 		}
@@ -399,7 +395,6 @@ const CheckoutPage = () => {
 	const onChangeWarrantyJewelry = (value) => {
 		if (value !== undefined) {
 			const parseValue = JSON.parse(value);
-			console.log('parseValue', parseValue);
 			setWarrantiesJewelrySelected(parseValue);
 		} else {
 			console.warn('Giá trị "value" là undefined, không có hành động nào được thực hiện');
@@ -415,7 +410,6 @@ const CheckoutPage = () => {
 			ward: '',
 		}));
 		setProvinceId(selected.Id);
-		console.log(value);
 	};
 
 	const handleDistrictChange = (value) => {
@@ -426,7 +420,6 @@ const CheckoutPage = () => {
 			ward: '',
 		}));
 		setDistrictId(selected.Id);
-		console.log(value);
 	};
 
 	const handleWardChange = (value) => {
@@ -436,7 +429,6 @@ const CheckoutPage = () => {
 			ward: selected.Name,
 		}));
 		setWardId(selected.Id);
-		console.log(value);
 	};
 
 	const handlePaymentMethodChange = (e) => {
@@ -464,14 +456,13 @@ const CheckoutPage = () => {
 	};
 
 	const handlePromoChange = (value) => {
-		console.log('value', value);
 		setPromoCustomizeId(value);
 	};
 
 	return (
 		<div className="min-h-screen flex justify-center items-center bg-gray-100 mx-40 my-20">
 			<div className="w-full flex">
-				<div className="md:w-2/3">
+				<div className="md:w-3/5">
 					<div className="mb-6">
 						<div className=" bg-white p-6 rounded-lg shadow-lg transition-shadow duration-300 hover:shadow-2xl">
 							<h2 className="text-2xl font-semibold text-gray-800">
@@ -554,6 +545,7 @@ const CheckoutPage = () => {
 											undefined
 										}
 										value={userInfo.province || undefined}
+										notFoundContent="Đang tải"
 									>
 										{province &&
 											province.map((distance) => (
@@ -577,6 +569,7 @@ const CheckoutPage = () => {
 										disabled={loading}
 										loading={loading}
 										value={userInfo?.district}
+										notFoundContent="Đang tải"
 									>
 										{district &&
 											district?.map((distance) => (
@@ -600,6 +593,7 @@ const CheckoutPage = () => {
 										disabled={loading}
 										loading={loading}
 										value={userInfo?.ward}
+										notFoundContent="Đang tải"
 									>
 										{ward &&
 											ward.map((distance) => (
@@ -756,7 +750,7 @@ const CheckoutPage = () => {
 					</div>
 				</div>
 
-				<div className="md:w-1/3 bg-white p-6 rounded-lg shadow-lg md:mt-0 transition-shadow duration-300 hover:shadow-2xl">
+				<div className="md:w-2/5 bg-white p-6 rounded-lg shadow-lg md:mt-0 transition-shadow duration-300 hover:shadow-2xl">
 					<div className="flex justify-between">
 						<h2 className="text-2xl font-semibold text-gray-800 mb-6">
 							Tóm tắt đơn hàng
@@ -818,9 +812,7 @@ const CheckoutPage = () => {
 															warrantyType: warranty?.Type,
 														})}
 													>
-														{warranty?.Name?.replace(/_/g, ' ')} -{' '}
-														{warranty?.MonthDuration} tháng -{' '}
-														{formatPrice(warranty?.Price)}
+														{warranty?.MappedName?.replace(/_/g, ' ')}
 													</Select.Option>
 												))}
 										</Select>
@@ -887,14 +879,20 @@ const CheckoutPage = () => {
 						<div className="bg-white p-6 rounded-lg shadow-lg space-y-4">
 							{/* Total and Savings Section */}
 							<div className="p-4 border rounded-lg bg-gray-50">
-								<div className="flex justify-between font-semibold text-gray-800 mb-2">
-									<span>Giá tạm tính:</span>
-									<span>{formatPrice(cartList?.OrderPrices?.DefaultPrice)}</span>
-								</div>
-								<div className="flex justify-between text-gray-800 mb-2">
-									<span>Phí vận chuyển:</span>
-									<span>{formatPrice(location?.DeliveryFee?.Cost || 0)}</span>
-								</div>
+								<p className="flex justify-between mb-1">
+									<span className="font-semibold">Giá Gốc</span>{' '}
+									<span>
+										{formatPrice(cartList?.OrderPrices?.DefaultPrice || 0)}
+									</span>
+								</p>
+								<p className="flex justify-between mb-1">
+									<div className="mb-1 flex justify-between w-full">
+										<span className="font-semibold">Phí Vận Chuyển</span>{' '}
+										<span>
+											{formatPrice(cartList?.ShippingPrice?.FinalPrice || 0)}
+										</span>
+									</div>
+								</p>
 								{idCustomize && (
 									<>
 										<label
@@ -914,69 +912,69 @@ const CheckoutPage = () => {
 													<Select.Option
 														key={promotion.PromoId}
 														value={promotion.PromoId}
+														disabled={!promotion?.IsApplicable}
 													>
-														{promotion.PromotionDto.IsActive && (
-															<>
-																{promotion.PromotionDto.Description}
-															</>
-														)}
+														<div
+															className={`${
+																promotion?.IsApplicable
+																	? 'text-darkGreen'
+																	: 'text-red'
+															}`}
+														>
+															{promotion.PromotionDto.Description}
+														</div>
 													</Select.Option>
 												))}
 										</Select>
 									</>
 								)}
 
-								<p className="flex justify-between mb-2">
-									{cartList?.OrderPrices?.DiscountAmountSaved !== 0 ? (
-										<>
-											<span>Giảm Giá</span>{' '}
-											<span>
-												-
-												{formatPrice(
-													cartList?.OrderPrices?.DiscountAmountSaved
-												)}
-											</span>
-										</>
-									) : (
-										<></>
-									)}
+								<p className="flex justify-between mb-1">
+									<div className="mb-1 flex justify-between w-full">
+										<span className="font-semibold">Giảm Giá</span>{' '}
+										<span>
+											{cartList?.OrderPrices?.DiscountAmountSaved !== 0 &&
+												'-'}
+											{formatPrice(
+												cartList?.OrderPrices?.DiscountAmountSaved || 0
+											)}
+										</span>
+									</div>
 								</p>
 								<p className="flex justify-between">
-									{cartList?.OrderPrices?.PromotionAmountSaved !== 0 ? (
-										<>
-											<span>Khuyến Mãi</span>{' '}
-											<span>
-												-
-												{formatPrice(
-													cartList?.OrderPrices?.PromotionAmountSaved
-												)}
-											</span>
-										</>
-									) : (
-										<></>
-									)}
+									<div className="mb-1 flex justify-between w-full">
+										<span className="font-semibold">Khuyến Mãi</span>{' '}
+										<span>
+											{cartList?.OrderPrices?.PromotionAmountSaved !== 0 &&
+												'-'}
+											{formatPrice(
+												cartList?.OrderPrices?.PromotionAmountSaved || 0
+											)}
+										</span>
+									</div>
 								</p>
-								<p className="flex justify-between mb-2">
-									<span>Bảo Hành</span>{' '}
-									<span>
-										{formatPrice(cartList?.OrderPrices?.TotalWarrantyPrice)}
-									</span>
+								<p className="flex justify-between mb-1">
+									<div className="mb-1 flex justify-between w-full">
+										<span className="font-semibold">Bảo Hành</span>{' '}
+										<span>
+											{formatPrice(
+												cartList?.OrderPrices?.TotalWarrantyPrice || 0
+											)}
+										</span>
+									</div>
 								</p>
-								<p className="flex justify-between mb-2">
-									{cartList?.OrderPrices?.UserRankDiscountAmount !== 0 ? (
-										<>
-											<span>Khách Hàng Thân Thiết</span>
+								<p className="flex justify-between mb-1">
+									<div className="mb-1 flex justify-between w-full">
+										<span className="font-semibold">Khách Hàng Thân Thiết</span>
 
-											<span>
-												-
-												{formatPrice(
-													cartList?.OrderPrices?.UserRankDiscountAmount
-												)}
-											</span>
-										</>
-									) : (
-										<></>
-									)}
+										<span>
+											{cartList?.OrderPrices?.UserRankDiscountAmount !== 0 &&
+												'-'}
+											{formatPrice(
+												cartList?.OrderPrices?.UserRankDiscountAmount || 0
+											)}
+										</span>
+									</div>
 								</p>
 
 								<div className="flex text-sm text-gray-600 my-2">
