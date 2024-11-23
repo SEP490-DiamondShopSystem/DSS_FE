@@ -15,7 +15,7 @@ export const getBlogDetail = createAsyncThunk(
 	'blogSlice/getBlogDetail',
 	async (BlogId, {rejectWithValue}) => {
 		try {
-			const response = await api.post(`/Blog/Detail/BlogId=${BlogId}`);
+			const response = await api.get(`/Blog/Detail?BlogId=${BlogId}`);
 			return response;
 		} catch (error) {
 			console.log('Error: ', JSON.stringify(error));

@@ -5,11 +5,13 @@ import {GetAllBlogSelector} from '../../redux/selectors';
 import {getAllBlog} from '../../redux/slices/blogSlice';
 import {Button, Card, Typography} from 'antd';
 import {ArrowRightOutlined} from '@ant-design/icons';
+import {useNavigate} from 'react-router-dom';
 
 const {Title} = Typography;
 
 const BlogPage = () => {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
 	const blogList = useSelector(GetAllBlogSelector);
 
@@ -29,6 +31,11 @@ const BlogPage = () => {
 	const handleShowMore = () => {
 		setVisibleCount((prevCount) => prevCount + 3);
 	};
+
+	const handleView = (id) => {
+		navigate(`/blog/${id}`);
+	};
+
 	return (
 		<div className="">
 			<div className="container mx-auto p-4">
@@ -56,6 +63,7 @@ const BlogPage = () => {
 									type="primary"
 									className="mt-4 bg-purple-500 text-white hover:bg-purple-700"
 									icon={<ArrowRightOutlined />}
+									onClick={() => handleView(item?.Id)}
 								>
 									Đọc tiếp
 								</Button>
