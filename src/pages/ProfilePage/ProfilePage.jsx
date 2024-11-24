@@ -15,19 +15,22 @@ import {GetAllOrderSelector, LoadingOrderSelector, UserInfoSelector} from '../..
 import {getUserOrder} from '../../redux/slices/orderSlice';
 import {formatPrice, getOrderPaymentStatus, getOrderStatus} from '../../utils';
 
+const roleMapping = {
+	1: {text: 'Khách Hàng Bình Thường', color: 'default'},
+	2: {text: 'Khách Hàng Hạng Đồng', color: 'orange'},
+	3: {text: 'Khách Hàng Hạng Bạc', color: 'silver'},
+	4: {text: 'Khách Hàng Hạng Vàng', color: 'gold'},
+};
 const ProfilePage = () => {
 	const navigate = useNavigate();
-	const observer = useRef();
 	const dispatch = useDispatch();
 
 	const orderList = useSelector(GetAllOrderSelector);
 	const userDetail = useSelector(UserInfoSelector);
 	const loading = useSelector(LoadingOrderSelector);
-	// const refreshToken = localStorage.getItem('refreshToken');
 
 	console.log('orderList', orderList);
 
-	// const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
 	const [status, setStatus] = useState('');
 	const [currentPage, setCurrentPage] = useState(1);
 	const [pageSize, setPageSize] = useState(100);
@@ -220,6 +223,11 @@ const ProfilePage = () => {
 		setCurrentPage(1);
 	};
 
+	const highestRank =
+		userDetail?.Roles?.length > 0
+			? userDetail.Roles.reduce((max, role) => (parseInt(role) > parseInt(max) ? role : max))
+			: null;
+
 	return (
 		<div>
 			<Helmet>
@@ -233,9 +241,11 @@ const ProfilePage = () => {
 				<div className="font-semibold w-full px-20 py-10 bg-white rounded-lg shadow-lg">
 					<div className="flex justify-between items-center">
 						<h1 className="text-2xl">Chào mừng {userDetail?.Name}</h1>
-						{/* <Button danger onClick={refreshTokenClick}>
-							Xác thực lại
-						</Button> */}
+						{highestRank && (
+							<Tag color={roleMapping[highestRank]?.color}>
+								{roleMapping[highestRank]?.text}
+							</Tag>
+						)}
 					</div>
 					<div className="flex items-center font-medium justify-between mt-10">
 						{orderStatus.map((statusItem) => (
