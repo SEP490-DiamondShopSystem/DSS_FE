@@ -58,7 +58,7 @@ const BlogPage = () => {
 								}
 								className="rounded-lg shadow-md"
 							>
-								<Card.Meta title={item.Content} />
+								<Card.Meta title={item.Title} />
 								<Button
 									type="primary"
 									className="mt-4 bg-purple-500 text-white hover:bg-purple-700"
