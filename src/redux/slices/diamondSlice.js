@@ -99,12 +99,28 @@ export const getDiamondFilter = createAsyncThunk(
 	}
 );
 
+export const getProductLock = createAsyncThunk(
+	'diamondSlice/getProductLock',
+	async (accountId, {rejectWithValue}) => {
+		try {
+			const response = await api.get(`/Diamond/LockProduct?accountId=${accountId}`);
+			console.log(response);
+
+			return response;
+		} catch (error) {
+			console.log('Error: ', JSON.stringify(error.data));
+			return rejectWithValue(error.data);
+		}
+	}
+);
+
 export const diamondSlice = createSlice({
 	name: 'diamondSlice',
 	initialState: {
 		diamonds: null,
 		diamondDetail: null,
 		diamondShape: null,
+		lockProduct: null,
 		filterLimits: null,
 		loading: false,
 		error: null,
@@ -161,6 +177,18 @@ export const diamondSlice = createSlice({
 				state.diamondShape = action.payload;
 			})
 			.addCase(getDiamondShape.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload;
+			})
+			.addCase(getProductLock.pending, (state) => {
+				state.loading = true;
+				state.diamondShape = null;
+			})
+			.addCase(getProductLock.fulfilled, (state, action) => {
+				state.loading = false;
+				state.lockProduct = action.payload;
+			})
+			.addCase(getProductLock.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload;
 			});

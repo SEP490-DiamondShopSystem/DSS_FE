@@ -19,9 +19,10 @@ import {getAllWarranty} from '../../redux/slices/warrantySlice';
 
 const mapAttributes = (data, attributes) => {
 	return {
-		DiamondId: data.Id,
-		Carat: data.Carat,
-		Title: data.Title,
+		DiamondId: data?.Id,
+		SerialCode: data?.SerialCode,
+		Carat: data?.Carat,
+		Title: data?.Title,
 		Clarity:
 			attributes.Clarity && data.Clarity !== undefined
 				? Object.keys(attributes.Clarity).find(
@@ -99,8 +100,6 @@ const DiamondDetailPage = () => {
 	const [warrantyDiamond, setWarrantyDiamond] = useState([]);
 	const [warrantyDiamondSelected, setWarrantyDiamondSelected] = useState('');
 
-	console.log('warrantyDiamondSelected', warrantyDiamondSelected);
-
 	useEffect(() => {
 		dispatch(getAllWarranty());
 	}, []);
@@ -138,7 +137,6 @@ const DiamondDetailPage = () => {
 	const handleChangeWarranty = (value) => {
 		if (value !== undefined) {
 			const parseValue = JSON.parse(value);
-			console.log('parseValue', parseValue);
 			setWarrantyDiamondSelected(parseValue);
 		} else {
 			console.warn('Giá trị "value" là undefined, không có hành động nào được thực hiện');
@@ -149,7 +147,7 @@ const DiamondDetailPage = () => {
 		const isLoggedIn = userSelector && userSelector.UserId;
 
 		if (!isLoggedIn) {
-			message.warning('Bạn cần phải đăng nhập để thêm vào giỏ hàng!');
+			message.warning('Bạn cần phải đăng nhập để thêm sản phẩm vào giỏ hàng!');
 			setIsLoginModalVisible(true);
 			setIsSidebarOpen(false);
 			return;
@@ -213,7 +211,10 @@ const DiamondDetailPage = () => {
 				<div className="flex flex-col md:flex-row bg-white my-10 md:my-20 rounded-lg shadow-lg">
 					<div className="w-full md:w-1/2 p-6">
 						<ImageGallery diamondId={mappedDiamond.DiamondId} />
-						<InformationLeft diamond={mappedDiamond} diamondId={mappedDiamond.DiamondId} />
+						<InformationLeft
+							diamond={mappedDiamond}
+							diamondId={mappedDiamond.DiamondId}
+						/>
 					</div>
 
 					<div className="w-full md:w-1/2 p-6 md:pr-32">

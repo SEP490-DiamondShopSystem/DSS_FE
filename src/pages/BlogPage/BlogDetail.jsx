@@ -48,7 +48,6 @@ const BlogDetail = () => {
 				<div className="my-5" dangerouslySetInnerHTML={{__html: blogs.Content}}></div>
 			)}
 
-			{/* Hiển thị Tags */}
 			{blogs?.Tags && (
 				<div className="mt-4">
 					<Title level={4}>Tags:</Title>

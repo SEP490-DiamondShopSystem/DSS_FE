@@ -95,18 +95,22 @@ export const OrderStatus = ({orderStatus, orderDetail}) => {
 				: stage === 4
 				? 'Đơn thiết kế đã bị hủy.'
 				: stage === 5
-				? `Yêu cầu thiết kế đã bị từ chối. `
+				? `Yêu cầu thiết kế đã bị từ chối.`
 				: 'Yêu cầu thiết kế đã có thiết lập giá.',
 		},
 		// Step 2:Requesting
 		{
-			title: [2, 3, 4].includes(currentStep) ? 'Đã Chấp Nhận Giá' : 'Chưa Xác Nhận',
+			title: [2, 3, 4].includes(currentStep)
+				? 'Đã Chấp Nhận Giá'
+				: stage === 9
+				? 'Đã Từ Chối'
+				: 'Chưa Xác Nhận',
 			description: [2, 3, 4].includes(currentStep)
 				? 'Khách hàng đã chấp nhận giá yêu cầu thiết kế.'
 				: stage === 8
 				? 'Đã Hủy'
 				: stage === 9
-				? 'Đã Từ Chối'
+				? `Yêu cầu thiết kế đã bị từ chối.`
 				: 'Đang chờ khách chấp nhận giá yêu cầu thiết kế.',
 		},
 		// Step 4: Accepted

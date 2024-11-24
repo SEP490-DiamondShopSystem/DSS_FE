@@ -89,55 +89,27 @@ export const FilterDiamond = ({filters, setFilters, handleReset, diamondForFilte
 			<div className="ml-10 min-w-44">
 				<p className="mb-4">Hình Dạng:</p>
 				<div className="grid grid-cols-5 gap-10 w-96 mx-auto">
-					{diamondChoice === null ? (
-						<>
-							{filteredShapeItems?.map((item) => (
-								<div
-									className={`flex items-center flex-col border-2 hover:border-2 hover:border-black px-10 ${
-										filters?.shape === item?.value
-											? 'border-black'
-											: 'border-white'
-									}`}
-									onClick={() => handleShapeChange(item?.value)}
-								>
-									<div className="my-5 mx-10">
-										<Image
-											preview={false}
-											src={item.image}
-											height={30}
-											width={30}
-										/>
-									</div>
-									<p className="font-semibold">{item.shape}</p>
-									{/* <p className="font-semibold ml-20">{item.price}</p> */}
+					<>
+						{shapeItems?.map((item) => (
+							<div
+								className={`flex items-center flex-col border-2 hover:border-2 hover:border-black px-10 ${
+									filters?.shape === item?.value ? 'border-black' : 'border-white'
+								}`}
+								onClick={() => handleShapeChange(item?.value)}
+							>
+								<div className="my-5 mx-10">
+									<Image
+										preview={false}
+										src={item.image}
+										height={30}
+										width={30}
+									/>
 								</div>
-							))}
-						</>
-					) : (
-						<>
-							{shapeItems?.map((item) => (
-								<div
-									className={`flex items-center flex-col border-2 hover:border-2 hover:border-black px-10 ${
-										filters?.shape === item?.value
-											? 'border-black'
-											: 'border-white'
-									}`}
-									onClick={() => handleShapeChange(item?.value)}
-								>
-									<div className="my-5 mx-10">
-										<Image
-											preview={false}
-											src={item.image}
-											height={30}
-											width={30}
-										/>
-									</div>
-									<p className="font-semibold">{item.shape}</p>
-									{/* <p className="font-semibold ml-20">{item.price}</p> */}
-								</div>
-							))}
-						</>
-					)}
+								<p className="font-semibold">{item.shape}</p>
+								{/* <p className="font-semibold ml-20">{item.price}</p> */}
+							</div>
+						))}
+					</>
 				</div>
 			</div>
 

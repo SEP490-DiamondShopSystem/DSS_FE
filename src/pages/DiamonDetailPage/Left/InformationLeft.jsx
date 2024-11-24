@@ -1,7 +1,9 @@
 import React, {useState, useEffect} from 'react';
+
 import {MinusOutlined, PlusOutlined} from '@ant-design/icons';
 import {useDispatch} from 'react-redux';
 import {fetchDiamondFiles} from '../../../redux/slices/fileSlice';
+import GIA_logo from '../../../assets/GIA/GIA_logo.png';
 
 export const InformationLeft = ({diamond, diamondId}) => {
 	const dispatch = useDispatch();
@@ -14,20 +16,21 @@ export const InformationLeft = ({diamond, diamondId}) => {
 
 	// Fetch certificates when component mounts or when `diamond` changes
 	useEffect(() => {
-		
-			dispatch(fetchDiamondFiles(diamondId)).then((response) => {
-				if (response.payload) {
-					console.log('Fetched Certificates:', response);
-					setCertificates(response.payload.Certificates);
-				} else {
-					console.log('No certificates found for diamond ID:', diamondId);
-				}
-			});
-		}
-	, [diamond, dispatch]);
+		dispatch(fetchDiamondFiles(diamondId)).then((response) => {
+			if (response.payload) {
+				console.log('Fetched Certificates:', response);
+				setCertificates(response.payload.Certificates);
+			} else {
+				console.log('No certificates found for diamond ID:', diamondId);
+			}
+		});
+	}, [diamond, dispatch]);
+
+	console.log('diamond', diamond);
+
 	return (
 		<>
-			<div className="bg-gray-50 rounded-lg shadow-md w-full mt-10 pr-36">
+			<div className="bg-gray-50 rounded-lg shadow-md w-full mt-10 ">
 				<div className="flex justify-between px-4 border-b border-tintWhite py-2">
 					<span className="text-gray">Giấy chứng nhận</span>
 					<div>
@@ -51,7 +54,7 @@ export const InformationLeft = ({diamond, diamondId}) => {
 				</div>
 				<div className="flex justify-between px-4 border-b border-tintWhite py-2">
 					<span className="text-gray-600">Mã Định Danh</span>
-					<span className="text-gray-800">{diamond.Criteria}</span>
+					<span className="text-gray-800">{diamond.SerialCode}</span>
 				</div>
 				<div className="flex justify-between px-4 border-b border-tintWhite py-2">
 					<span className="text-gray-600">Hình dạng</span>
@@ -84,7 +87,7 @@ export const InformationLeft = ({diamond, diamondId}) => {
 					showMore ? 'max-h-screen' : 'max-h-0'
 				}`}
 			>
-				<div className="bg-gray-50 rounded-lg shadow-md w-full pr-36">
+				<div className="bg-gray-50 rounded-lg shadow-md w-full ">
 					<div className="flex justify-between px-4 border-b border-tintWhite py-2">
 						<span className="text-gray-600">Depth %</span>
 						<span className="text-gray-800">{diamond.Depth}</span>
@@ -112,7 +115,7 @@ export const InformationLeft = ({diamond, diamondId}) => {
 				</div>
 			</div>
 			<div
-				className="border-y my-4 mr-36 flex justify-between cursor-pointer"
+				className="border-y my-4 flex justify-between cursor-pointer"
 				onClick={toggleShowMore}
 			>
 				<div className="text-black m-4 px-4 rounded-lg focus:outline-none">

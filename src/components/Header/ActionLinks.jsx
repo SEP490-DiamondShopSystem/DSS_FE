@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 
 import {UserOutlined} from '@ant-design/icons';
-import {message} from 'antd';
+import {message, Popover} from 'antd';
 import {useDispatch} from 'react-redux';
 import {Link, useNavigate} from 'react-router-dom';
 import {logout} from '../../redux/slices/userLoginSlice';
@@ -12,7 +12,6 @@ import SignUpModal from '../LogModal/SignUpModal';
 
 const ActionLinks = () => {
 	const token = localStorage.getItem('accessToken');
-
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
@@ -34,7 +33,7 @@ const ActionLinks = () => {
 		message.success('Đăng xuất thành công!');
 		hideLogoutModal();
 		navigate('/');
-		window.location.reload();
+		// window.location.reload();
 	};
 
 	const handleLinkClick = (page) => {
@@ -47,74 +46,60 @@ const ActionLinks = () => {
 			icon: <UserOutlined />,
 			ref: 'diamond',
 			submenu: true,
-			sublinks: [
-				{
-					sublink: token
-						? [
-								{name: 'Hồ sơ', link: '/profile'},
-								{name: 'Thông tin', link: '/my-info'},
-								{name: 'Đơn hàng của tôi', link: '/my-orders'},
-								{name: 'Đơn thiết kế', link: '/request-customize'},
-								{name: 'Đăng xuất', action: showLogoutModal},
-						  ]
-						: [
-								{name: 'Đăng nhập', action: showLoginModal},
-								{name: 'Đăng ký', action: showSignInModal},
-						  ],
-				},
-			],
+			sublinks: token
+				? [
+						{name: 'Hồ sơ', link: '/profile'},
+						{name: 'Thông tin', link: '/my-info'},
+						{name: 'Đơn hàng của tôi', link: '/my-orders'},
+						{name: 'Đơn thiết kế', link: '/request-customize'},
+						{name: 'Thay đổi mật khẩu', link: '/change-password'},
+						{name: 'Đăng xuất', action: showLogoutModal},
+				  ]
+				: [
+						{name: 'Đăng nhập', action: showLoginModal},
+						{name: 'Đăng ký', action: showSignInModal},
+				  ],
 		},
 	];
+
+	// Popover content rendering
+	const content = (sublinks) => (
+		<div>
+			{sublinks.map((sl, subIndex) => (
+				<li key={subIndex} className="text-base text-gray-600 my-2.5 whitespace-nowrap">
+					{sl.link ? (
+						<Link
+							to={sl.link}
+							onClick={() => handleLinkClick(sl.name)}
+							className="hover:text-primary font-normal normal-case"
+						>
+							{sl.name}
+						</Link>
+					) : (
+						<button
+							onClick={sl.action}
+							className="text-base text-gray-600 my-2.5 whitespace-nowrap bg-transparent border-0 md:cursor-pointer hover:text-primary font-normal normal-case"
+						>
+							{sl.name}
+						</button>
+					)}
+				</li>
+			))}
+		</div>
+	);
 
 	return (
 		<>
 			{links.map((link) => (
 				<div key={link.ref} className="relative">
-					<div className="px-3 text-left md:cursor-pointer group">
-						<div className="py-7 text-black">{link.icon}</div>
-						{link.submenu && (
-							<div>
-								<div className="absolute z-50 top-20 hidden group-hover:block hover:block">
-									<div className="py-2">
-										<div className="w-4 h-4 left-2 absolute mt-1 bg-white rotate-45 shadow-xl"></div>
-									</div>
-									<div className="bg-white p-3.5 flex flex-col items-start shadow-xl">
-										{link.sublinks?.map((mySubLink, index) => (
-											<div key={index}>
-												{mySubLink.sublink?.map((sl, subIndex) => (
-													<li
-														key={subIndex}
-														className="text-base text-gray-600 my-2.5 whitespace-nowrap"
-													>
-														{sl.link ? (
-															<Link
-																to={sl.link}
-																onClick={() =>
-																	handleLinkClick(sl.name)
-																}
-																className="hover:text-primary font-normal normal-case"
-															>
-																{sl.name}
-															</Link>
-														) : (
-															<button
-																onClick={sl.action}
-																className="text-base text-gray-600 my-2.5 whitespace-nowrap bg-transparent border-0 md:cursor-pointer hover:text-primary font-normal normal-case"
-															>
-																{sl.name}
-															</button>
-														)}
-													</li>
-												))}
-											</div>
-										))}
-									</div>
-								</div>
-							</div>
-						)}
-					</div>
+					<Popover content={content(link.sublinks)} trigger="hover" placement="bottom">
+						<div className="px-3 text-left md:cursor-pointer group">
+							<div className="py-7 text-black">{link.icon}</div>
+						</div>
+					</Popover>
 				</div>
 			))}
+
 			<LoginModal isOpen={isLoginModalVisible} onClose={hideLoginModal} />
 			<LogoutModal
 				visible={isLogoutModalVisible}

@@ -22,6 +22,7 @@ import {handleReviewOrder} from '../../../redux/slices/reviewSlice';
 import {formatPrice} from '../../../utils';
 import {OrderStatus} from './OrderStatus';
 import {TransactionDetails} from './TransactionList';
+import {OrderLog} from './OrderLog';
 
 const {Text, Title} = Typography;
 
@@ -40,6 +41,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 	const [fileList, setFileList] = useState([]);
 	const [jewelryId, setJewelryId] = useState(null);
 	const [transaction, setTransaction] = useState();
+	const [orderLog, setOrderLog] = useState();
 
 	const data = order?.Items?.map((item, i) => ({
 		key: i,
@@ -73,14 +75,14 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 			render: (text) => <div className="flex justify-center">{text}</div>,
 		},
 		{
-			title: 'Tên Sản Phẩm',
+			title: 'Sản Phẩm',
 			dataIndex: 'productName',
 			key: 'productName',
 			align: 'center',
 			render: (text) => <div className="flex justify-center">{text}</div>,
 		},
 		{
-			title: 'Phí phát sinh',
+			title: 'Giá Sản Phẩm',
 			dataIndex: 'price',
 			key: 'price',
 			align: 'center',
@@ -163,6 +165,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 	useEffect(() => {
 		if (orderDetail) {
 			setTransaction(orderDetail?.Transactions);
+			setOrderLog(orderDetail?.Logs);
 		}
 	}, [orderDetail, selectedOrder]);
 
@@ -225,6 +228,8 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 		}
 	};
 
+	console.log('log', orderLog);
+
 	return (
 		<>
 			{openDetail && (
@@ -265,7 +270,15 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 								<p>{order?.ShippingAddress}</p>
 							</div>
 							<OrderStatus orderStatus={statusOrder} orderDetail={order} />
-							<TransactionDetails transactions={transaction} />
+							<div className="w-full flex">
+								<div className="w-2/3">
+									<TransactionDetails transactions={transaction} />
+								</div>
+								<div className="w-1/3">
+									<OrderLog orderLogs={orderLog} />
+								</div>
+							</div>
+
 							<div className="flex justify-between">
 								<Title level={3} className="text-xl font-semibold">
 									Chi tiết đơn hàng

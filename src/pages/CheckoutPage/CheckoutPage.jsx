@@ -9,6 +9,7 @@ import {
 	GetAllPaymentSelector,
 	GetAllWardSelector,
 	GetCartSelector,
+	GetLoadingCustomizeSelector,
 	GetOrderWarrantySelector,
 	GetPromotionAbleSelector,
 	GetUserDetailSelector,
@@ -119,10 +120,9 @@ const CheckoutPage = () => {
 	const wards = useSelector(GetAllWardSelector);
 	const loading = useSelector(selectLoading);
 	const loadingCheckout = useSelector(LoadingOrderSelector);
-	const error = useSelector(selectError);
+	const loadingCustomize = useSelector(GetLoadingCustomizeSelector);
 	const userDetail = useSelector(GetUserDetailSelector);
 	const cartList = useSelector(GetCartSelector);
-	const location = useSelector(CalculateLocationSelector);
 	const paymentList = useSelector(GetAllPaymentSelector);
 	const warrantyList = useSelector(GetOrderWarrantySelector);
 	const promoAble = useSelector(GetPromotionAbleSelector);
@@ -799,7 +799,7 @@ const CheckoutPage = () => {
 										<label>Chọn bảo hành trang sức</label>
 										<Select
 											allowClear
-											className="w-96 mt-2 mb-5"
+											className="w-full mt-2 mb-5" // Sử dụng class custom
 											placeholder="Chọn bảo hành trang sức"
 											onChange={onChangeWarrantyJewelry}
 										>
@@ -812,7 +812,7 @@ const CheckoutPage = () => {
 															warrantyType: warranty?.Type,
 														})}
 													>
-														{warranty?.MappedName?.replace(/_/g, ' ')}
+														{warranty?.Name?.replace(/_/g, ' ')}
 													</Select.Option>
 												))}
 										</Select>
@@ -997,7 +997,7 @@ const CheckoutPage = () => {
 								<Button
 									className="mx-10 px-6 py-2 bg-primary rounded-lg uppercase font-semibold hover:bg-second w-full h-12"
 									onClick={onFinish}
-									loading={loadingCheckout}
+									loading={loadingCheckout || loadingCustomize}
 									type="text"
 								>
 									Đặt hàng

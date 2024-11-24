@@ -1,8 +1,10 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {MinusOutlined, PlusOutlined} from '@ant-design/icons';
 import GIA_logo from '../../../assets/GIA/GIA_logo.png';
 import {enums} from '../../../utils/constant';
+import {fetchDiamondFiles} from '../../../redux/slices/fileSlice';
+import {useDispatch} from 'react-redux';
 
 const mapAttributes = (diamonds, attributes) => {
 	if (!Array.isArray(diamonds)) return [];
@@ -69,7 +71,9 @@ const mapAttributes = (diamonds, attributes) => {
 };
 
 export const InformationLeft = ({jewelryDetail, diamondDetail, jewelry}) => {
+	const dispatch = useDispatch();
 	const [showMore, setShowMore] = useState(false);
+	const [certificates, setCertificates] = useState([]);
 
 	const toggleShowMore = () => {
 		setShowMore(!showMore);
@@ -90,7 +94,28 @@ export const InformationLeft = ({jewelryDetail, diamondDetail, jewelry}) => {
 						</h2>
 						<div className="flex justify-between px-4 border-b border-tintWhite py-2">
 							<span className="text-gray-600">Chứng nhận</span>
-							<img src={GIA_logo} className="text-gray-800 w-14 h-5" />
+							{/* <div>
+								{certificates.length > 0 ? (
+									certificates.map((certificate, index) => (
+										<div
+											key={index}
+											className="flex items-center space-x-2 mb-2"
+										>
+											<a
+												href={certificate.MediaPath}
+												target="_blank"
+												rel="noopener noreferrer"
+												className="text-blue hover:underline"
+											>
+												{certificate.MediaName ||
+													`Certificate ${index + 1}`}
+											</a>
+										</div>
+									))
+								) : (
+									<span className="text-gray-800">Không có</span>
+								)}
+							</div> */}
 						</div>
 						<div className="flex justify-between px-4 border-b border-tintWhite py-2">
 							<span className="text-gray-600">Mã Định Danh</span>
