@@ -62,6 +62,7 @@ const mapAttributes = (data, attributes) => {
 		Weight: data?.Jewelry?.Weight,
 		JewelryModel: data.JewelryModel,
 		PromotionId: data.PromotionId,
+		SerialCodeDiamond: data?.Diamond?.SerialCode,
 		RequirementQualifedId: data.RequirementQualifedId,
 		Carat: data?.Diamond?.Carat || null,
 		CategoryName: data?.Jewelry?.Model?.Category?.Name || null,
@@ -199,6 +200,7 @@ const CartPage = () => {
 	const jewelryOrDiamondProducts = cartValidate?.Products.filter(
 		(product) => product.Jewelry || product.Diamond
 	);
+	console.log('cartValidate', cartValidate);
 
 	const mappedProducts = useMemo(() => {
 		if (cartValidate && enums) {
@@ -285,7 +287,7 @@ const CartPage = () => {
 													</p>
 													<p className="text-gray-700 text-sm py-3 ml-1">
 														Giá:
-														<span className="text-gray-900 font-semibold">
+														<span className="text-gray-900 font-semibold ml-1">
 															{formatPrice(item.JewelryPrice)}
 														</span>
 													</p>
@@ -303,33 +305,17 @@ const CartPage = () => {
 															)}
 														</span>
 													</p>
-													{/* {item?.Diamonds?.map((diamond) => (
-												<>
-													<p className="mb-1 text-gray-800 font-semibold">
-														{diamond.Title}
-													</p>
-													<p className="text-gray-700 text-sm py-3">
-														Giá:
-														<span className="text-gray-900 font-semibold">
-															{formatPrice(diamond.TruePrice)}
-														</span>
-													</p>
-												</>
-											))} */}
-
-													{/* {item.CategoryName === 'Ring' && (
-												<div className="flex items-center mt-2">
-													<label className="mr-2">
-														Kích thước nhẫn:
-													</label>
-													<p>{item.SizeId}</p>
-												</div>
-											)} */}
 												</div>
 											) : item.Carat ? (
 												<div>
 													<p className="mb-1 text-gray-800 font-semibold">
 														{item?.Title}
+													</p>
+													<p className="text-gray-700 text-sm mt-3">
+														SKU:
+														<span className="text-gray-900 font-semibold ml-1">
+															{item?.SerialCodeDiamond}
+														</span>
 													</p>
 													<p className="text-gray-700 text-sm py-3">
 														Giá:
@@ -337,6 +323,7 @@ const CartPage = () => {
 															{formatPrice(item.DiamondTruePrice)}
 														</span>
 													</p>
+
 													<p className="text-gray-700 text-sm">
 														Bảo hành:
 														<span className="text-gray-900 font-semibold mx-3">

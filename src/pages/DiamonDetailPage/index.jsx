@@ -149,7 +149,7 @@ const DiamondDetailPage = () => {
 		const isLoggedIn = userSelector && userSelector.UserId;
 
 		if (!isLoggedIn) {
-			message.warning('Bạn cần phải đăng nhập để thêm vào giỏ hàng!');
+			message.warning('Bạn cần phải đăng nhập để thêm sản phẩm vào giỏ hàng!');
 			setIsLoginModalVisible(true);
 			setIsSidebarOpen(false);
 			return;
@@ -213,7 +213,10 @@ const DiamondDetailPage = () => {
 				<div className="flex flex-col md:flex-row bg-white my-10 md:my-20 rounded-lg shadow-lg">
 					<div className="w-full md:w-1/2 p-6">
 						<ImageGallery diamondId={mappedDiamond.DiamondId} />
-						<InformationLeft diamond={mappedDiamond} diamondId={mappedDiamond.DiamondId} />
+						<InformationLeft
+							diamond={mappedDiamond}
+							diamondId={mappedDiamond.DiamondId}
+						/>
 					</div>
 
 					<div className="w-full md:w-1/2 p-6 md:pr-32">

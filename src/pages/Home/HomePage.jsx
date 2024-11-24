@@ -7,6 +7,8 @@ import {BannerJewelry} from './../../components/Banner/BannerJewelry-1';
 import BannerShape from './../../components/Banner/BannerShape';
 import {list} from '../../utils/constant';
 import BlogPage from '../BlogPage/BlogPage';
+import {BannerEarrings2} from '../../components/Banner/BannerEarrings-2';
+import {BannerNecklace2} from '../../components/Banner/BannerNecklace2';
 
 const HomePage = () => {
 	return (
@@ -41,6 +43,8 @@ const HomePage = () => {
 			<div className="my-10">
 				<BannerJewelry />
 			</div>
+			<BannerEarrings2 />
+
 			<BlogPage />
 		</div>
 	);

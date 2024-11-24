@@ -16,6 +16,7 @@ export const GetDiamondShapeSelector = (state) => state.diamondSlice.diamondShap
 export const GetDiamondAttributesSelector = (state) => state.diamondSlice.diamondAttributes;
 export const LoadingDiamondSelector = (state) => state.diamondSlice.loading;
 export const ErrorDiamondSelector = (state) => state.diamondSlice.error;
+export const GetLockProductSelector = (state) => state.diamondSlice.lockProduct;
 
 //JEWELRY
 export const GetAllJewelrySelector = (state) => state.jewelrySlice.jewelries;
@@ -56,6 +57,7 @@ export const GetStatusOrderSelector = (state) => state.orderSlice.orderStatus;
 export const GetAllOrderDetailSelector = (state) => state.orderSlice.orderDetail;
 export const GetOrderTransactionSelector = (state) => state.orderSlice.transaction;
 export const GetOrderLogsSelector = (state) => state.orderSlice.orderLogs;
+export const GetOrderChildLogsSelector = (state) => state.logSlice.orderChildLogList;
 export const GetOrderInvoiceSelector = (state) => state.orderSlice.orderInvoice;
 export const ErrorOrderSelector = (state) => state.orderSlice.error;
 

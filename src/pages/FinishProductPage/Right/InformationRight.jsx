@@ -116,7 +116,7 @@ export const InformationRight = ({
 
 	const handleAddToCart = () => {
 		if (!userId) {
-			message.warning('Bạn cần phải đăng nhập để thêm vào giỏ hàng!');
+			message.warning('Bạn cần phải đăng nhập để thêm sản phẩm vào giỏ hàng!');
 			setIsLoginModalVisible(true);
 			return;
 		}

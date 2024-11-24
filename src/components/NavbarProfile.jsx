@@ -1,6 +1,7 @@
 import {
 	faKey,
 	faListCheck,
+	faLock,
 	faReceipt,
 	faShoppingBag,
 	faUser,
@@ -33,6 +34,11 @@ const NavbarProfile = () => {
 			name: 'Đơn thiết kế',
 			link: '/request-customize',
 			icon: <FontAwesomeIcon icon={faListCheck} color="black" />,
+		},
+		{
+			name: 'Sản Phẩm Đã Khóa',
+			link: '/lock-product',
+			icon: <FontAwesomeIcon icon={faLock} color="black" />,
 		},
 		{
 			name: 'Thay đổi mật khẩu',

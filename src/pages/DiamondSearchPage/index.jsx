@@ -199,21 +199,20 @@ const DiamondSearchPage = () => {
 					className="bg-white p-4 rounded-full my-10"
 				/>
 			)}
-			{diamondChoice && (
-				<div className="flex justify-center mt-20 mb-10">
-					<div className="flex flex-col items-center justify-center" style={{width: 600}}>
-						<h1 className="mb-5 font-semibold text-2xl">Tìm Kiếm Kim Cương</h1>
-						<p className="text-center">
-							Sử dụng tính năng tìm kiếm kim cương của chúng tôi để tìm những viên kim
-							cương rời được chứng nhận bởi GIA, không có xung đột và có chất lượng
-							cao nhất. Duyệt qua hàng ngàn tùy chọn và sử dụng bộ lọc để thu hẹp lựa
-							chọn theo carat, kiểu cắt, màu sắc, độ tinh khiết, hình dạng và giá cả.
-							Vẫn chưa chắc chắn về viên kim cương nào nên đầu tư? Hướng dẫn mua kim
-							cương của chúng tôi sẽ giúp bạn chọn lựa phù hợp nhất.
-						</p>
-					</div>
+
+			<div className="flex justify-center mt-20 mb-10">
+				<div className="flex flex-col items-center justify-center" style={{width: 600}}>
+					<h1 className="mb-5 font-semibold text-2xl">Tìm Kiếm Kim Cương</h1>
+					<p className="text-center">
+						Sử dụng tính năng tìm kiếm kim cương của chúng tôi để tìm những viên kim
+						cương rời được chứng nhận bởi GIA, không có xung đột và có chất lượng cao
+						nhất. Duyệt qua hàng ngàn tùy chọn và sử dụng bộ lọc để thu hẹp lựa chọn
+						theo carat, kiểu cắt, màu sắc, độ tinh khiết, hình dạng và giá cả. Vẫn chưa
+						chắc chắn về viên kim cương nào nên đầu tư? Hướng dẫn mua kim cương của
+						chúng tôi sẽ giúp bạn chọn lựa phù hợp nhất.
+					</p>
 				</div>
-			)}
+			</div>
 
 			<div className="divide-x flex items-center justify-center my-5">
 				<button

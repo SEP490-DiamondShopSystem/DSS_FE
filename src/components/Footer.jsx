@@ -7,7 +7,7 @@ import Logo from '../assets/logo-short-ex.png';
 
 export const Footer = () => {
 	return (
-		<footer className="bg-gray-100 py-8 px-10 w-full bg-white ">
+		<footer className="bg-gray-100 py-8 px-10 w-full bg-hite ">
 			<div className="container mx-auto grid grid-cols-4 gap-8">
 				{/* Logo và Phần Địa Chỉ */}
 				<div>
@@ -23,7 +23,7 @@ export const Footer = () => {
 							<div>
 								<FontAwesomeIcon icon={faEnvelope} className="mr-2" />
 							</div>
-							<div>shopdiamond@gmail.com</div>
+							<div>diamondshopsystem@gmail.com</div>
 						</p>
 						<p className="text-gray-600 mt-2 flex ">
 							<div>
@@ -35,7 +35,7 @@ export const Footer = () => {
 							<div>
 								<FontAwesomeIcon icon={faPhoneAlt} className="mr-2" />
 							</div>
-							<div>0912 3456 78</div>
+							<div>0764750393</div>
 						</p>
 					</div>
 				</div>
@@ -45,10 +45,9 @@ export const Footer = () => {
 					<h2 className="font-bold text-xl">Giới Thiệu Về Cửa Hàng</h2>
 					<ul className="mt-4 text-gray-700">
 						<li className="m-2">Trả Hàng Miễn Phí</li>
-						<li className="m-2">Bảo Hành Trọn Đời Miễn Phí</li>
-						<li className="m-2">Giao Hàng An Toàn Miễn Phí</li>
+						<li className="m-2">Giao Hàng An Toàn</li>
 						<li className="m-2">Hộp Và Thiệp Miễn Phí</li>
-						<li className="m-2">Bảo Hiểm Trang Sức</li>
+						<li className="m-2">Bảo Hành Trang Sức</li>
 					</ul>
 				</div>
 
@@ -56,10 +55,9 @@ export const Footer = () => {
 				<div>
 					<h2 className="font-bold text-xl">Chính Sách Liên Quan</h2>
 					<ul className="mt-4 text-gray-700">
-						<li className="m-2">Đổi Sản Phẩm</li>
+						<li className="m-2">Chính Sách Đổi Trả</li>
 						<li className="m-2">Chính Sách Giao Hàng</li>
 						<li className="m-2">Chính Sách Bảo Hành</li>
-						<li className="m-2">Mua Trả Góp</li>
 						<li className="m-2">Điều Khoản Sử Dụng</li>
 						<li className="m-2">Chính Sách Bảo Mật</li>
 						<li className="m-2">Cam Kết Về Vỏ Trang Sức</li>

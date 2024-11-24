@@ -39,6 +39,7 @@ import VerifyFailPage from '../pages/ProfilePage/VerifyPage/VerifyFailPage';
 import OrderSuccessPage from '../pages/OrderInfo/OrderSuccess';
 import OrderErrorPage from '../pages/OrderInfo/OrderErrorPage';
 import BlogDetail from '../pages/BlogPage/BlogDetail';
+import LockProduct from '../pages/ProfilePage/LockProduct';
 
 export const AppRouters = () => {
 	return (
@@ -187,6 +188,14 @@ export const AppRouters = () => {
 					element={
 						<PrivateRoute roles={'customer'}>
 							<RequestCustomize />
+						</PrivateRoute>
+					}
+				/>
+				<Route
+					path="/lock-product"
+					element={
+						<PrivateRoute roles={'customer'}>
+							<LockProduct />
 						</PrivateRoute>
 					}
 				/>
