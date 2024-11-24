@@ -45,7 +45,7 @@ const RequestCustomize = () => {
 	const [startDate, setStartDate] = useState(null);
 	const [endDate, setEndDate] = useState(null);
 	const [status, setStatus] = useState('');
-	const [currentPage, setCurrentPage] = useState(0);
+	const [currentPage, setCurrentPage] = useState(1);
 	const [pageSize, setPageSize] = useState(5);
 
 	useEffect(() => {
@@ -65,6 +65,8 @@ const RequestCustomize = () => {
 			setDataSource(requestList?.Values || []);
 		}
 	}, [requestList]);
+
+	console.log('requestList', requestList?.TotalPage);
 
 	const reverseEnum = (enumObj) => {
 		return Object.fromEntries(
@@ -193,11 +195,15 @@ const RequestCustomize = () => {
 						columns={mainColumns}
 						dataSource={dataSource}
 						pagination={{
-							current: requestList?.CurrentPage,
+							current: currentPage + 1,
+							total: requestList?.TotalPage * pageSize,
 							pageSize: pageSize,
-							total: requestList?.TotalPage,
+							onChange: (page) => setCurrentPage(page - 1),
+							showSizeChanger: true,
+							onShowSizeChange: (current, size) => setPageSize(size),
 						}}
 					/>
+
 					<OrderDetailModal
 						toggleDetailModal={toggleDetailModal}
 						openDetail={openDetail}

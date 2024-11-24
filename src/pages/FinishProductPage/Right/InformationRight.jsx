@@ -254,9 +254,12 @@ export const InformationRight = ({
 				{/* <div className="font-semibold my-2">Ngày Giao Hàng Dự Kiến: {metalType?.ship}</div> */}
 
 				<div>
-					<Text strong style={{fontSize: '18px'}}>
-						Kim Cương:
-					</Text>
+					{jewelry?.Diamonds?.length > 0 && (
+						<Text strong style={{fontSize: '18px'}}>
+							Kim Cương:
+						</Text>
+					)}
+
 					<div className="mt-5">
 						{jewelry &&
 							jewelry?.Diamonds?.map((diamond) => (
@@ -285,7 +288,7 @@ export const InformationRight = ({
 							<div className="flex">
 								<div>
 									<div className="ml-5">
-										{jewelry?.Category?.Name === 'Ring' && (
+										{/* {jewelry?.Category?.Name === 'Ring' && (
 											<div className="flex items-center">
 												<p className="mr-3">Kích Cỡ Hiện Tại:</p>
 
@@ -312,7 +315,7 @@ export const InformationRight = ({
 														)}
 												</Select>
 											</div>
-										)}
+										)} */}
 										<div className="flex flex-col">
 											<label>Chọn Bảo Hành: </label>
 											<Select

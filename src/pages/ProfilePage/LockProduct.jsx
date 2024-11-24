@@ -28,7 +28,7 @@ const LockProduct = () => {
 					<NavbarProfile />
 				</div>
 				<div className="font-semibold w-full px-20 py-10 bg-white rounded-lg shadow-lg">
-					<Title level={2} className="mt-10 text-center">
+					<Title level={2} className="text-center">
 						Danh Sách Sản Phẩm Đã Khóa Của Bạn
 					</Title>
 					<div className="grid grid-cols-3 my-10 ">

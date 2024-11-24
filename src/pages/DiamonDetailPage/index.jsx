@@ -19,9 +19,10 @@ import {getAllWarranty} from '../../redux/slices/warrantySlice';
 
 const mapAttributes = (data, attributes) => {
 	return {
-		DiamondId: data.Id,
-		Carat: data.Carat,
-		Title: data.Title,
+		DiamondId: data?.Id,
+		SerialCode: data?.SerialCode,
+		Carat: data?.Carat,
+		Title: data?.Title,
 		Clarity:
 			attributes.Clarity && data.Clarity !== undefined
 				? Object.keys(attributes.Clarity).find(
@@ -99,8 +100,6 @@ const DiamondDetailPage = () => {
 	const [warrantyDiamond, setWarrantyDiamond] = useState([]);
 	const [warrantyDiamondSelected, setWarrantyDiamondSelected] = useState('');
 
-	console.log('warrantyDiamondSelected', warrantyDiamondSelected);
-
 	useEffect(() => {
 		dispatch(getAllWarranty());
 	}, []);
@@ -138,7 +137,6 @@ const DiamondDetailPage = () => {
 	const handleChangeWarranty = (value) => {
 		if (value !== undefined) {
 			const parseValue = JSON.parse(value);
-			console.log('parseValue', parseValue);
 			setWarrantyDiamondSelected(parseValue);
 		} else {
 			console.warn('Giá trị "value" là undefined, không có hành động nào được thực hiện');

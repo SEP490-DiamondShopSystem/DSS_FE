@@ -223,10 +223,17 @@ const ProfilePage = () => {
 		setCurrentPage(1);
 	};
 
-	const highestRank =
-		userDetail?.Roles?.length > 0
-			? userDetail.Roles.reduce((max, role) => (parseInt(role) > parseInt(max) ? role : max))
-			: null;
+	const highestRank = Array.isArray(userDetail?.Roles)
+		? userDetail?.Roles.length > 0
+			? userDetail?.Roles?.reduce((max, role) =>
+					parseInt(role) > parseInt(max) ? role : max
+			  )
+			: null
+		: userDetail?.Roles
+		? userDetail?.Roles
+		: null;
+
+	console.log('highestRank', highestRank);
 
 	return (
 		<div>

@@ -25,6 +25,9 @@ export const InformationLeft = ({diamond, diamondId}) => {
 			}
 		});
 	}, [diamond, dispatch]);
+
+	console.log('diamond', diamond);
+
 	return (
 		<>
 			<div className="bg-gray-50 rounded-lg shadow-md w-full mt-10 ">
@@ -51,7 +54,7 @@ export const InformationLeft = ({diamond, diamondId}) => {
 				</div>
 				<div className="flex justify-between px-4 border-b border-tintWhite py-2">
 					<span className="text-gray-600">Mã Định Danh</span>
-					<span className="text-gray-800">{diamond.Criteria}</span>
+					<span className="text-gray-800">{diamond.SerialCode}</span>
 				</div>
 				<div className="flex justify-between px-4 border-b border-tintWhite py-2">
 					<span className="text-gray-600">Hình dạng</span>

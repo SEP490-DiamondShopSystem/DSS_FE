@@ -75,14 +75,14 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 			render: (text) => <div className="flex justify-center">{text}</div>,
 		},
 		{
-			title: 'Tên Sản Phẩm',
+			title: 'Sản Phẩm',
 			dataIndex: 'productName',
 			key: 'productName',
 			align: 'center',
 			render: (text) => <div className="flex justify-center">{text}</div>,
 		},
 		{
-			title: 'Phí phát sinh',
+			title: 'Giá Sản Phẩm',
 			dataIndex: 'price',
 			key: 'price',
 			align: 'center',

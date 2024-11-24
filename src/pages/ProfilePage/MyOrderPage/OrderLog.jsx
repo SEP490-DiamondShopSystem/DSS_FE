@@ -67,8 +67,8 @@ export const OrderLog = ({orderLogs}) => {
 				footer={null}
 			>
 				<Timeline mode="left">
-					{Array.isArray(childLogs?.ChildLogs) &&
-						[...childLogs.ChildLogs].reverse().map((log) => (
+					{Array.isArray(childLogs?.ChildLogs) && childLogs?.ChildLogs.length > 0 ? (
+						childLogs.ChildLogs.map((log) => (
 							<Timeline.Item key={log?.Id}>
 								<div className="font-semibold">{log?.CreatedDate}</div>
 								<div>{log?.Message}</div>
@@ -82,7 +82,12 @@ export const OrderLog = ({orderLogs}) => {
 									/>
 								))}
 							</Timeline.Item>
-						))}
+						))
+					) : (
+						<Timeline.Item>
+							<div>Chưa có thông báo trạng thái đơn hàng</div>
+						</Timeline.Item>
+					)}
 				</Timeline>
 			</Modal>
 		</div>

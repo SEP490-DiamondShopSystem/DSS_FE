@@ -1,5 +1,5 @@
 import React from 'react';
-import {Card, List, Typography, Col, Row, Space, Tag} from 'antd';
+import {Card, List, Typography, Col, Row, Space, Tag, Empty} from 'antd';
 import {MoneyCollectOutlined, CreditCardOutlined} from '@ant-design/icons';
 import {formatPrice} from '../../../utils';
 
@@ -12,6 +12,9 @@ export const TransactionDetails = ({transactions}) => {
 		<>
 			<Title level={3}>Chi tiết giao dịch</Title>
 			<List
+				locale={{
+					emptyText: <Empty description="Hiện tại không có giao dịch để hiển thị!" />,
+				}}
 				itemLayout="vertical"
 				size="large"
 				dataSource={transactions}

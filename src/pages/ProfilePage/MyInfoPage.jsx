@@ -13,6 +13,7 @@ import {
 	GetAllDistrictSelector,
 	GetAllWardSelector,
 	GetUserDetailSelector,
+	LoadingUserSelector,
 	selectDistances,
 	selectLoading,
 	UserInfoSelector,
@@ -35,6 +36,7 @@ const MyInfoPage = () => {
 	const wards = useSelector(GetAllWardSelector);
 	const provinces = useSelector(selectDistances);
 	const loading = useSelector(selectLoading);
+	const loadingUser = useSelector(LoadingUserSelector);
 
 	const [editing, setEditing] = useState(false);
 	const [province, setProvince] = useState('');
@@ -192,8 +194,6 @@ const MyInfoPage = () => {
 				message.error(error?.data?.title || error?.detail);
 			});
 	};
-
-	console.log('useDetail', userDetail);
 
 	const handleDefaultAddress = (id) => {
 		console.log('id address', id);
@@ -422,7 +422,7 @@ const MyInfoPage = () => {
 										</Tooltip>
 									) : (
 										<Tooltip title="Nhấn Để Xác Thực">
-											<Button className="ml-2 " loading={loading}>
+											<Button className="ml-2 " loading={loadingUser}>
 												<ExclamationCircleOutlined
 													style={{
 														color: 'orange',
@@ -495,15 +495,13 @@ const MyInfoPage = () => {
 					loading={loading}
 					notFoundContent="Đang tải"
 				>
-					{province && province.length > 0 ? (
+					{province &&
+						province.length > 0 &&
 						province.map((distance) => (
 							<Select.Option key={distance.Id} value={distance.Id}>
 								{distance.Name}
 							</Select.Option>
-						))
-					) : (
-						<Select.Option disabled>No data available</Select.Option>
-					)}
+						))}
 				</Select>
 				<Select
 					placeholder="Chọn Quận/Huyện"
@@ -513,15 +511,13 @@ const MyInfoPage = () => {
 					loading={loading}
 					notFoundContent="Đang tải"
 				>
-					{district && district.length > 0 ? (
+					{district &&
+						district.length > 0 &&
 						district.map((district) => (
 							<Option key={district.Id} value={district.Id}>
 								{district.Name}
 							</Option>
-						))
-					) : (
-						<Option disabled>No data available</Option>
-					)}
+						))}
 				</Select>
 
 				<Select
