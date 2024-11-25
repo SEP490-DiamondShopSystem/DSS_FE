@@ -33,7 +33,6 @@ const ActionLinks = () => {
 		message.success('Đăng xuất thành công!');
 		hideLogoutModal();
 		navigate('/');
-		// window.location.reload();
 	};
 
 	const handleLinkClick = (page) => {
@@ -48,7 +47,6 @@ const ActionLinks = () => {
 			submenu: true,
 			sublinks: token
 				? [
-						{name: 'Hồ sơ', link: '/profile'},
 						{name: 'Thông tin', link: '/my-info'},
 						{name: 'Đơn hàng của tôi', link: '/my-orders'},
 						{name: 'Đơn thiết kế', link: '/request-customize'},

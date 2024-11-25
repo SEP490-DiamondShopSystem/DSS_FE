@@ -379,7 +379,7 @@ const MyInfoPage = () => {
 					<div className="w-full max-w-4xl mx-auto p-6">
 						<div className="grid grid-cols-2 gap-8">
 							<div className="w-full">
-								<label>Tên</label>
+								<label>Họ</label>
 								<Input
 									value={userInfo.firstName}
 									onChange={(e) =>
@@ -392,7 +392,7 @@ const MyInfoPage = () => {
 								/>
 							</div>
 							<div className="w-full">
-								<label>Họ</label>
+								<label>Tên</label>
 								<Input
 									value={userInfo.lastName}
 									onChange={(e) =>

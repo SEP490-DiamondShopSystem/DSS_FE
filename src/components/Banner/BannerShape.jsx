@@ -35,7 +35,7 @@ const BannerShape = () => {
 			{' '}
 			{/* Added top margin and padding */}
 			<h2 className="text-center text-3xl font-bold m-5 text-gray-800">
-				Explore Diamonds
+				Khám Phá Thế Giới Kim Cương
 			</h2>{' '}
 			{/* Increased margin-bottom */}
 			<div className="flex justify-around gap-6">

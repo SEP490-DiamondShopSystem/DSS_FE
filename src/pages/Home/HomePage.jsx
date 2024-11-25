@@ -9,6 +9,7 @@ import {list} from '../../utils/constant';
 import BlogPage from '../BlogPage/BlogPage';
 import {BannerEarrings2} from '../../components/Banner/BannerEarrings-2';
 import {BannerNecklace2} from '../../components/Banner/BannerNecklace2';
+import SliderTopSelling from '../../components/SliderTopSelling';
 
 const HomePage = () => {
 	return (
@@ -43,7 +44,8 @@ const HomePage = () => {
 			<div className="my-10">
 				<BannerJewelry />
 			</div>
-			<BannerEarrings2 />
+			{/* <BannerEarrings2 /> */}
+			<SliderTopSelling />
 
 			<BlogPage />
 		</div>

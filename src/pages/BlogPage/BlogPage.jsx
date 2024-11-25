@@ -16,7 +16,7 @@ const BlogPage = () => {
 	const blogList = useSelector(GetAllBlogSelector);
 
 	const [blogs, setBlogs] = useState();
-	const [visibleCount, setVisibleCount] = useState(3); // Số bài viết được hiển thị
+	const [visibleCount, setVisibleCount] = useState(3);
 
 	useEffect(() => {
 		dispatch(getAllBlog());
@@ -38,9 +38,11 @@ const BlogPage = () => {
 
 	return (
 		<div className="">
-			<div className="container mx-auto p-4">
-				<Title level={3}>Bài Viết</Title>
-				<div className="grid grid-cols-3 sm:grid-cols-2 md:grid-cols-3 gap-4">
+			<div className=" p-4">
+				<Title level={3} className="text-center mt-5">
+					Bài Viết
+				</Title>
+				<div className="grid grid-cols-3 sm:grid-cols-2 md:grid-cols-3 gap-4 bg-tintWhite p-5">
 					{Array.isArray(blogs) &&
 						blogs.slice(0, visibleCount).map((item, index) => (
 							<Card
@@ -49,7 +51,6 @@ const BlogPage = () => {
 								cover={
 									<img
 										alt="example"
-										style={{height: '50%'}}
 										src={
 											item?.Thumbnail?.MediaPath ||
 											'https://via.placeholder.com/200x20'
