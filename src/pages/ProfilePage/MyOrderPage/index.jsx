@@ -21,7 +21,7 @@ const OrderPage = () => {
 				<div className="mr-20">
 					<NavbarProfile />
 				</div>
-				<div className="font-semibold w-full px-20 bg-white rounded-lg">
+				<div className="font-semibold w-full px-20 py-10 bg-white rounded-lg shadow-lg">
 					<MyOrderPage />
 				</div>
 			</div>

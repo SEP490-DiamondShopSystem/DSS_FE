@@ -1,4 +1,11 @@
-import {EyeFilled, TransactionOutlined} from '@ant-design/icons';
+import {
+	CheckCircleOutlined,
+	DeliveredProcedureOutlined,
+	EyeFilled,
+	HourglassOutlined,
+	OrderedListOutlined,
+	TransactionOutlined,
+} from '@ant-design/icons';
 import {Button, message, Table, Tag, Tooltip} from 'antd';
 import React, {useEffect, useState} from 'react';
 import {Helmet} from 'react-helmet';
@@ -15,6 +22,13 @@ import {
 import {OrderDetailModal} from './OrderDetailModal';
 import {OrderInvoiceModal} from './OrderInvoiceModal';
 
+const orderStatus = [
+	{icon: <OrderedListOutlined />, name: 'Tổng đơn hàng', status: '', order: 1},
+	{icon: <HourglassOutlined />, name: 'Đang xử lí', status: '1', order: 3},
+	{icon: <DeliveredProcedureOutlined />, name: 'Đang vận chuyển', status: '6', order: 4},
+	{icon: <CheckCircleOutlined />, name: 'Đã giao', status: '8', order: 10},
+];
+
 const MyOrderPage = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
@@ -28,6 +42,7 @@ const MyOrderPage = () => {
 	const [selectedOrder, setSelectedOrder] = useState(null);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [pageSize, setPageSize] = useState(5);
+	const [status, setStatus] = useState('');
 
 	const columns = [
 		{
@@ -149,9 +164,10 @@ const MyOrderPage = () => {
 			getUserOrder({
 				pageSize: pageSize,
 				start: currentPage,
+				Status: status,
 			})
 		);
-	}, [pageSize, currentPage]);
+	}, [pageSize, currentPage, status]);
 
 	useEffect(() => {
 		if (orderList && orderList?.Values) {
@@ -174,27 +190,49 @@ const MyOrderPage = () => {
 		}
 	}, [orderList]);
 
+	const handleStatusClick = (newStatus) => {
+		setStatus(newStatus);
+		setCurrentPage(1);
+	};
+
 	return (
 		<div>
 			<Helmet>
 				<title>Đơn Hàng Của Tôi</title>
 			</Helmet>
-
-			<Table
-				dataSource={dataSource}
-				columns={columns}
-				pagination={{
-					current: currentPage,
-					total: orderList?.TotalPage * pageSize,
-					pageSize: pageSize,
-					onChange: (page) => setCurrentPage(page),
-					// showSizeChanger: true,
-					onShowSizeChange: (current, size) => setPageSize(size),
-				}}
-				className="custom-table-header"
-				rowKey="orderId"
-				loading={loading}
-			/>
+			<div className="flex items-center font-medium justify-between mt-10">
+				{orderStatus.map((statusItem) => (
+					<div
+						key={statusItem.status}
+						className={`flex items-center justify-around shadow-xl py-3 px-12 ${
+							status === statusItem.status ? 'bg-primary' : 'bg-white'
+						} rounded-lg cursor-pointer border ${
+							status === statusItem.status ? 'border-black' : 'border-white'
+						} hover:border-black`}
+						onClick={() => handleStatusClick(statusItem.status)}
+					>
+						<div className="p-3 w-20">{statusItem.icon}</div>
+						<div className="ml-5">{statusItem.name}</div>
+					</div>
+				))}
+			</div>
+			<div className="font-semibold w-full py-10 bg-white rounded-lg">
+				<Table
+					dataSource={dataSource}
+					columns={columns}
+					pagination={{
+						current: currentPage,
+						total: orderList?.TotalPage * pageSize,
+						pageSize: pageSize,
+						onChange: (page) => setCurrentPage(page),
+						// showSizeChanger: true,
+						onShowSizeChange: (current, size) => setPageSize(size),
+					}}
+					className="custom-table-header"
+					rowKey="orderId"
+					loading={loading}
+				/>
+			</div>
 
 			<OrderDetailModal
 				toggleDetailModal={toggleDetailModal}

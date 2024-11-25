@@ -2,6 +2,8 @@ import React from 'react';
 import {Route, Routes} from 'react-router-dom';
 import PrivateRoute from './PrivateRoute';
 
+import ScrollToTop from '../components/ScrollToTop';
+import BlogDetail from '../pages/BlogPage/BlogDetail';
 import CartPage from '../pages/CartPage/CartPage';
 import CheckoutPage from '../pages/CheckoutPage/CheckoutPage';
 import Invoice from '../pages/CheckoutPage/Invoice';
@@ -11,6 +13,7 @@ import JewelryCustomDetail from '../pages/Customize/JewelryDetailPage';
 import DiamondDetailPage from '../pages/DiamonDetailPage';
 import DiamondJewelryPage from '../pages/DiamondJewelryPage';
 import DiamondSearchPage from '../pages/DiamondSearchPage';
+import DiamondChoosePage from '../pages/DiamondSearchPage/DiamondChoose';
 import FinishProductPage from '../pages/FinishProductPage';
 import HomeEarringPage from '../pages/Home/HomeEarringPage';
 import HomeJewelryPage from '../pages/Home/HomeJewelryPage';
@@ -19,27 +22,22 @@ import HomePage from '../pages/Home/HomePage';
 import HomeRingPage from '../pages/Home/HomeRingPage';
 import JewelryDetailPage from '../pages/JewelryDetailPage';
 import NotFoundPage from '../pages/NotFoundPage/NotFoundPage';
+import OrderErrorPage from '../pages/OrderInfo/OrderErrorPage';
+import OrderSuccessPage from '../pages/OrderInfo/OrderSuccess';
+import PaymentPage from '../pages/PaymentPage';
 import ProductDetailPage from '../pages/ProductDetailPage';
 import ProductPage from '../pages/ProductPage';
 import EarringSearchPage from '../pages/ProductPage/EarringSearchPage';
 import NecklaceSearchPage from '../pages/ProductPage/NecklaceSearchPage';
 import RingSearchPage from '../pages/ProductPage/RingSearchPage';
 import ChangePassword from '../pages/ProfilePage/ChangePassword';
-import MyInfoPage from '../pages/ProfilePage/MyInfoPage';
-import MyOrderPage from '../pages/ProfilePage/MyOrderPage/MyOrderPage';
-import ProfilePage from '../pages/ProfilePage/ProfilePage';
-import PromotionPage from '../pages/PromotionPage/PromotionPage';
-import PaymentPage from '../pages/PaymentPage';
-import ScrollToTop from '../components/ScrollToTop';
-import DiamondChoosePage from '../pages/DiamondSearchPage/DiamondChoose';
-import RequestCustomize from '../pages/RequestCustomize';
-import OrderPage from '../pages/ProfilePage/MyOrderPage';
-import VerifyPage from '../pages/ProfilePage/VerifyPage/VerifyPage';
-import VerifyFailPage from '../pages/ProfilePage/VerifyPage/VerifyFailPage';
-import OrderSuccessPage from '../pages/OrderInfo/OrderSuccess';
-import OrderErrorPage from '../pages/OrderInfo/OrderErrorPage';
-import BlogDetail from '../pages/BlogPage/BlogDetail';
 import LockProduct from '../pages/ProfilePage/LockProduct';
+import MyInfoPage from '../pages/ProfilePage/MyInfoPage';
+import OrderPage from '../pages/ProfilePage/MyOrderPage';
+import VerifyFailPage from '../pages/ProfilePage/VerifyPage/VerifyFailPage';
+import VerifyPage from '../pages/ProfilePage/VerifyPage/VerifyPage';
+import PromotionPage from '../pages/PromotionPage/PromotionPage';
+import RequestCustomize from '../pages/RequestCustomize';
 
 export const AppRouters = () => {
 	return (
@@ -151,14 +149,7 @@ export const AppRouters = () => {
 						</PrivateRoute>
 					}
 				/>
-				<Route
-					path="/profile"
-					element={
-						<PrivateRoute roles={'customer'}>
-							<ProfilePage />
-						</PrivateRoute>
-					}
-				/>
+
 				<Route
 					path="/my-orders"
 					element={
