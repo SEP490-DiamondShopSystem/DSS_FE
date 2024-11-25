@@ -65,10 +65,24 @@ export const getAllJewelryModelReview = createAsyncThunk(
 	}
 );
 
+export const deleteReviewAction = createAsyncThunk(
+	'reviewSlice/deleteReviewAction',
+	async (JewelryId, {rejectWithValue}) => {
+		try {
+			const response = await api.delete(`/JewelryReview/Remove?JewelryId=${JewelryId}`);
+			return response;
+		} catch (error) {
+			console.log('Error: ', JSON.stringify(error));
+			return rejectWithValue(error);
+		}
+	}
+);
+
 export const reviewSlice = createSlice({
 	name: 'reviewSlice',
 	initialState: {
 		reviews: null,
+		review: null,
 		loading: false,
 		error: null,
 	},
@@ -85,6 +99,7 @@ export const reviewSlice = createSlice({
 			})
 			.addCase(handleReviewOrder.fulfilled, (state, action) => {
 				state.loading = false;
+				state.review = action.payload;
 			})
 			.addCase(handleReviewOrder.rejected, (state, action) => {
 				state.loading = false;
@@ -100,6 +115,19 @@ export const reviewSlice = createSlice({
 				state.reviews = action.payload;
 			})
 			.addCase(getAllJewelryModelReview.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload;
+			})
+			.addCase(deleteReviewAction.pending, (state) => {
+				state.loading = true;
+				state.reviews = null;
+				state.error = null;
+			})
+			.addCase(deleteReviewAction.fulfilled, (state, action) => {
+				state.loading = false;
+				state.review = action.payload;
+			})
+			.addCase(deleteReviewAction.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload;
 			});

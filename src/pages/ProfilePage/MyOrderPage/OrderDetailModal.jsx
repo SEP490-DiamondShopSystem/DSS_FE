@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 
-import {FileTextOutlined, StarOutlined} from '@ant-design/icons';
+import {DeleteOutlined, FileTextOutlined, StarOutlined} from '@ant-design/icons';
 import {Button, Form, Image, Input, message, Modal, Rate, Table, Typography, Upload} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
 import logo from '../../../assets/logo-short-ex.png';
@@ -11,6 +11,7 @@ import {
 	GetOrderLogsSelector,
 	GetStatusOrderSelector,
 	LoadingOrderSelector,
+	ReviewSelector,
 } from '../../../redux/selectors';
 import {
 	getOrderFiles,
@@ -18,8 +19,8 @@ import {
 	getUserOrderDetail,
 	handleOrderCancel,
 } from '../../../redux/slices/orderSlice';
-import {handleReviewOrder} from '../../../redux/slices/reviewSlice';
-import {formatPrice} from '../../../utils';
+import {deleteReviewAction, handleReviewOrder} from '../../../redux/slices/reviewSlice';
+import {formatPrice, getOrderItemStatusTag} from '../../../utils';
 import {OrderStatus} from './OrderStatus';
 import {TransactionDetails} from './TransactionList';
 import {OrderLog} from './OrderLog';
@@ -33,15 +34,18 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 	const orderLogList = useSelector(GetOrderLogsSelector);
 	const statusOrder = useSelector(GetStatusOrderSelector);
 	const orderInvoice = useSelector(GetOrderInvoiceSelector);
+	const reviewDetail = useSelector(ReviewSelector);
 
 	const [isCancelModalVisible, setIsCancelModalVisible] = useState(false);
 	const [isReviewModalVisible, setIsReviewModalVisible] = useState(false);
+	const [isModalVisible, setIsModalVisible] = useState(false);
 	const [order, setOrder] = useState(null);
 	const [rating, setRating] = useState(0);
 	const [fileList, setFileList] = useState([]);
 	const [jewelryId, setJewelryId] = useState(null);
 	const [transaction, setTransaction] = useState();
 	const [orderLog, setOrderLog] = useState();
+	const [reviewContent, setReviewContent] = useState(null);
 
 	const data = order?.Items?.map((item, i) => ({
 		key: i,
@@ -64,6 +68,8 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 		delivererId: order?.DelivererId || null,
 		expectedDate: order?.ExpectedDate || null,
 		UserRankAmountSaved: order?.UserRankAmountSaved,
+		Review: item?.Jewelry?.Review,
+		itemStatus: item?.Status,
 	}));
 
 	const columns = [
@@ -89,37 +95,74 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 			render: (_, record) => (
 				<div className="flex flex-col items-center">
 					<div>{record.price}</div>
-					{/* <div>Phí giao hàng: {record.shippingFee}</div>
-					{record?.UserRankAmountSaved !== 0 && (
-						<div>Khách hàng thân thiết: -{formatPrice(record.UserRankAmountSaved)}</div>
-					)} */}
+				</div>
+			),
+		},
+		{
+			title: 'Trangj Thái',
+			dataIndex: 'itemStatus',
+			key: 'itemStatus',
+			align: 'center',
+			render: (_, record) => (
+				<div className="flex flex-col items-center">
+					<div>{getOrderItemStatusTag(record.itemStatus)}</div>
 				</div>
 			),
 		},
 
-		...(statusOrder === 8 &&
-		data?.some((record) =>
-			data?.some(
-				(record) => record?.Items && record?.Items?.every((item) => !item?.IsPreview)
-			)
-		)
+		...(orderDetail?.Status === 8 &&
+		orderDetail.Items?.some((item) => item.Jewelry && item.Jewelry.Review === null)
 			? [
 					{
 						title: 'Đánh Giá',
 						dataIndex: 'jewelryId',
 						key: 'jewelryId',
 						align: 'center',
-						render: (_, record) => (
-							<div className="flex justify-center">
-								<Button
-									type="primary"
-									icon={<StarOutlined />}
-									onClick={() => handleReviewRequest(record.jewelryId)}
-								>
-									Đánh Giá
-								</Button>
-							</div>
-						),
+						render: (_, record) => {
+							const jewelryId = record?.jewelryId;
+
+							// Kiểm tra xem jewelry có tồn tại và có dữ liệu không
+							if (record?.Jewelry) {
+								return (
+									<div className="flex justify-center">
+										<Button
+											type="primary"
+											icon={<StarOutlined />}
+											onClick={() => handleReviewRequest(jewelryId)} // Gọi hàm review request
+										>
+											Đánh Giá
+										</Button>
+									</div>
+								);
+							} else {
+								return null; // Nếu không có jewelry, không hiển thị gì
+							}
+						},
+					},
+			  ]
+			: orderDetail?.Items?.some((item) => item.Jewelry) // Nếu Jewelry tồn tại
+			? [
+					{
+						title: 'Đánh Giá',
+						dataIndex: 'jewelryId',
+						key: 'jewelryId',
+						align: 'center',
+						render: (_, record) => {
+							const review = record?.Review;
+							console.log('record', record);
+
+							return (
+								<div className="flex justify-center">
+									<Button
+										type="primary"
+										icon={<StarOutlined />}
+										onClick={() => showModal(review)} // Mở modal với review
+									>
+										Xem Đánh Giá
+									</Button>
+								</div>
+							);
+						},
 					},
 			  ]
 			: []),
@@ -152,7 +195,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 			dispatch(getOrderFiles(selectedOrder.orderId));
 			dispatch(getUserOrderDetail(selectedOrder.orderId));
 		}
-	}, [selectedOrder, dispatch, statusOrder]);
+	}, [selectedOrder, dispatch, statusOrder, reviewDetail]);
 
 	useEffect(() => {
 		if (orderDetail) {
@@ -169,11 +212,41 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 		}
 	}, [orderDetail, selectedOrder]);
 
+	const showModal = (review) => {
+		setReviewContent(review);
+		setIsModalVisible(true);
+		setRating(review ? review.rating : 0);
+	};
+
+	const handleCancel = () => {
+		setIsModalVisible(false);
+	};
+
+	const handleDeleteReview = () => {
+		console.log('reviewContent', reviewContent);
+
+		if (reviewContent) {
+			dispatch(deleteReviewAction(reviewContent.Id))
+				.unwrap()
+				.then((res) => {
+					setReviewContent(null);
+					setRating(0);
+					message.success('Đánh giá đã được xóa');
+					setIsModalVisible(false);
+				})
+				.catch((error) => {
+					message.error(error?.title || error?.data?.title);
+				});
+		}
+	};
+
 	const handleCancelOrder = () => {
 		setIsCancelModalVisible(true);
 	};
 
 	const handleReviewRequest = (id) => {
+		console.log('jewelryId', id);
+
 		setJewelryId(id);
 		setIsReviewModalVisible(true);
 	};
@@ -228,7 +301,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 		}
 	};
 
-	console.log('log', orderLog);
+	console.log('reviewContent', reviewContent);
 
 	return (
 		<>
@@ -363,7 +436,6 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 									</div>
 								</Form>
 							</Modal>
-							{/* Review Modal */}
 							<Modal
 								title="Đánh giá"
 								visible={isReviewModalVisible}
@@ -386,11 +458,12 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 									</Form.Item>
 									<Form.Item label="Tải ảnh lên" name="Files">
 										<Upload
+											multiple
 											listType="picture"
 											fileList={fileList}
 											onChange={handleFileChange}
 											beforeUpload={() => false}
-											maxCount={1}
+											maxCount={3}
 										>
 											<Button>Chọn ảnh</Button>
 										</Upload>
@@ -422,6 +495,38 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 					)}
 				</div>
 			)}
+			<Modal
+				title="Thông tin Đánh Giá"
+				visible={isModalVisible}
+				onCancel={handleCancel}
+				footer={[
+					<Button
+						key="delete"
+						type="danger"
+						icon={<DeleteOutlined />}
+						onClick={handleDeleteReview}
+					>
+						Xóa Đánh Giá
+					</Button>,
+					<Button key="cancel" onClick={handleCancel}>
+						Đóng
+					</Button>,
+				]}
+			>
+				<div>
+					{reviewContent ? (
+						<>
+							<p>{reviewContent.Content}</p> {/* Hiển thị nội dung review nếu có */}
+							<Rate value={reviewContent?.StarRating} disabled />
+							{reviewContent?.Medias?.map((item) => (
+								<Image src={item.MediaPath} />
+							))}
+						</>
+					) : (
+						<p>Không có đánh giá nào</p>
+					)}
+				</div>
+			</Modal>
 		</>
 	);
 };

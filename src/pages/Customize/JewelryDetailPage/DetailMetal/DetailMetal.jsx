@@ -79,11 +79,11 @@ export const DetailMetal = ({customizeJewelry, imageData, selectedMetal, jewelry
 					<Image src={imageData} alt={imageData} />
 				</p>
 			</div>
-			<Divider />
+			{/* <Divider />
 			<div className="flex items-center justify-between">
 				<p className="font-semibold">Tổng cộng:</p>
 				<p className="font-semibold">$2,040</p>
-			</div>
+			</div> */}
 		</div>
 	);
 };

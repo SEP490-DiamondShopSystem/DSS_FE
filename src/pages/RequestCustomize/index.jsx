@@ -92,6 +92,7 @@ const RequestCustomize = () => {
 		4: 'green', // Accepted
 		5: 'red', // Shop_Rejected
 		6: 'volcano', // Customer_Rejected
+		7: 'volcano', // Customer_Cancelled
 	};
 
 	const handleDateChange = (dates, dateStrings) => {
@@ -195,11 +196,11 @@ const RequestCustomize = () => {
 						columns={mainColumns}
 						dataSource={dataSource}
 						pagination={{
-							current: currentPage + 1,
+							current: currentPage,
 							total: requestList?.TotalPage * pageSize,
 							pageSize: pageSize,
-							onChange: (page) => setCurrentPage(page - 1),
-							showSizeChanger: true,
+							onChange: (page) => setCurrentPage(page),
+							// showSizeChanger: true,
 							onShowSizeChange: (current, size) => setPageSize(size),
 						}}
 					/>

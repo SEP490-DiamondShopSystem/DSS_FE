@@ -6,6 +6,7 @@ export const OrderStatus = ({orderStatus, orderDetail}) => {
 	const [currentStep, setCurrentStep] = useState(0);
 
 	const stage = orderDetail?.Stage;
+	const order = orderDetail?.Order;
 
 	console.log('currentStep', currentStep);
 	console.log('orderDetail', orderDetail);
@@ -40,6 +41,8 @@ export const OrderStatus = ({orderStatus, orderDetail}) => {
 					return 'Shop Từ Chối';
 				case 6:
 					return 'Khách Từ Chối';
+				case 7:
+					return 'Khách Hủy Hàng';
 
 				default:
 					return 'Unknown';
@@ -51,9 +54,9 @@ export const OrderStatus = ({orderStatus, orderDetail}) => {
 			'Đã Có Giá': 1,
 			'Khách Đang Gửi Yêu Cầu': 2,
 			'Shop Đã Đồng Ý': 3,
-			'Shop Đồng Ý': 4,
-			'Shop Từ Chối': 5,
-			'Khách Từ Chối': 6,
+			'Shop Từ Chối': 4,
+			'Khách Từ Chối': 5,
+			'Khách Hủy Hàng': 6,
 		};
 
 		const statusName = getOrderStatus(orderStatus);
@@ -115,16 +118,20 @@ export const OrderStatus = ({orderStatus, orderDetail}) => {
 		},
 		// Step 4: Accepted
 		{
-			title: stage === 8 ? 'Đã Hủy' : 'Tạo Đơn Đặt Hàng',
+			title:
+				stage === 11 ? 'Đã Hủy' : order !== null ? 'Đã Tạo Đơn Hàng' : 'Tạo Đơn Đặt Hàng',
 			description:
-				stage === 8
+				stage === 11
 					? 'Đơn thiết kế đã bị hủy.'
+					: order !== null
+					? 'Đơn thiết kế đã được đặt hàng.'
 					: 'Yêu cầu thiết kế đã được shop chấp nhận. Tiến hành tạo đơn!',
 		},
 	];
 	console.log('orderStatus', orderStatus);
 	console.log('currentStep', currentStep);
 	console.log('orderDetail', orderDetail);
+	console.log('order', order);
 
 	// Cập nhật trạng thái dựa trên currentStep
 	if (currentStep === 0) {
@@ -142,6 +149,11 @@ export const OrderStatus = ({orderStatus, orderDetail}) => {
 		steps[1].status = 'finish';
 		steps[2].status = 'process';
 		steps[3].status = 'wait';
+	} else if (currentStep === 3 && order === null) {
+		steps[0].status = 'finish';
+		steps[1].status = 'finish';
+		steps[2].status = 'finish';
+		steps[3].status = 'process';
 	} else if (currentStep === 3) {
 		steps[0].status = 'finish';
 		steps[1].status = 'finish';
@@ -162,6 +174,11 @@ export const OrderStatus = ({orderStatus, orderDetail}) => {
 		steps[1].status = 'error';
 		steps[2].status = 'wait';
 		steps[3].status = 'wait';
+	} else if (currentStep === 5 && stage === 4) {
+		steps[0].status = 'finish';
+		steps[1].status = 'error';
+		steps[2].status = 'wait';
+		steps[3].status = 'wait';
 	} else if (currentStep === 5 && stage === 9) {
 		steps[0].status = 'finish';
 		steps[1].status = 'finish';
@@ -169,12 +186,7 @@ export const OrderStatus = ({orderStatus, orderDetail}) => {
 		steps[3].status = 'wait';
 	} else if (currentStep === 6 && stage === 1) {
 		steps[0].status = 'error';
-		steps[1].status = 'finish';
-		steps[2].status = 'wait';
-		steps[3].status = 'wait';
-	} else if (currentStep === 6 && stage === 4) {
-		steps[0].status = 'finish';
-		steps[1].status = 'error';
+		steps[1].status = 'wait';
 		steps[2].status = 'wait';
 		steps[3].status = 'wait';
 	} else if (currentStep === 6 && stage === 8) {
@@ -185,7 +197,7 @@ export const OrderStatus = ({orderStatus, orderDetail}) => {
 	} else if (currentStep === 6 && stage === 11) {
 		steps[0].status = 'finish';
 		steps[1].status = 'finish';
-		steps[2].status = 'wait';
+		steps[2].status = 'finish';
 		steps[3].status = 'error';
 	}
 

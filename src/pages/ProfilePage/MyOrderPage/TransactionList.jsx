@@ -31,12 +31,12 @@ export const TransactionDetails = ({transactions}) => {
 										style={{width: '100%'}}
 										className="grid grid-cols-3 gap-5"
 									>
-										<div className="flex flex-col">
+										{/* <div className="flex flex-col">
 											<Text strong>Mã giao dịch: </Text>
 											<Text className="font-semibold text-lg">
 												{transaction.AppTransactionCode}
 											</Text>
-										</div>
+										</div> */}
 										<div className="flex flex-col">
 											<Text strong>Mô tả giao dịch: </Text>
 											<Text className="font-semibold text-lg">
@@ -94,13 +94,16 @@ export const TransactionDetails = ({transactions}) => {
 											</div>
 										)}
 
-										<div className="flex flex-col">
-											<Text strong>Mã giao dịch Paygate: </Text>
-											<Text className="font-semibold text-lg">
-												{transaction.PaygateTransactionCode}
-											</Text>
-										</div>
-										<div></div>
+										{transaction?.PaygateTransactionCode && (
+											<div className="flex flex-col">
+												<Text strong>Mã giao dịch Paygate: </Text>
+												<Text className="font-semibold text-lg">
+													{transaction.PaygateTransactionCode}
+												</Text>
+											</div>
+										)}
+
+										{/* <div></div> */}
 									</div>
 								</Col>
 

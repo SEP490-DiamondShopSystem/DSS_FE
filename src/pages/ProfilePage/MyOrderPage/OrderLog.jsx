@@ -49,8 +49,8 @@ export const OrderLog = ({orderLogs}) => {
 								<p>{log.CreatedDate}</p>
 								{log?.Status === 2 || log?.Status === 6 ? (
 									<Button
-										type="text"
-										className="bg-primary"
+										type="link"
+										className="text-primary"
 										onClick={() => handleViewDetails(log)}
 									>
 										Xem Chi Tiết
