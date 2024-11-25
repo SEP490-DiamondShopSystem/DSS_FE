@@ -7,10 +7,12 @@ export const getAllJewelryModel = createAsyncThunk(
 		console.log('params', params);
 
 		try {
-			const {Category, metalId, minPrice, maxPrice, IsEngravable, IsRhodiumFinished} = params;
+			const {page, Category, metalId, minPrice, maxPrice, IsEngravable, IsRhodiumFinished} =
+				params;
 			let url = '/JewelryModel/Selling';
 			const queryParams = new URLSearchParams();
 
+			if (page) queryParams.append('page', page);
 			if (Category) queryParams.append('Category', Category);
 			if (metalId) queryParams.append('MetalId', metalId);
 			if (IsEngravable !== undefined && IsEngravable !== null)
