@@ -84,6 +84,7 @@ export const ErrorPaymentSelector = (state) => state.paymentSlice.error;
 //REVIEW
 export const LoadingReviewSelector = (state) => state.reviewSlice.loading;
 export const GetAllReviewSelector = (state) => state.reviewSlice.reviews;
+export const ReviewSelector = (state) => state.reviewSlice.review;
 export const ErrorReviewSelector = (state) => state.reviewSlice.error;
 
 //BLOG

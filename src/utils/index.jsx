@@ -1,6 +1,7 @@
-import {Rate} from 'antd';
+import {Rate, Tag} from 'antd';
 import React from 'react';
 import {StarFilled, StarOutlined, StarTwoTone} from '@ant-design/icons';
+import {enums} from './constant';
 
 export const Rating = ({rating}) => {
 	const maxStars = 5;
@@ -134,4 +135,19 @@ export const getStepFromStatus = (status) => {
 		default:
 			return 0;
 	}
+};
+
+export const getOrderItemStatusTag = (status) => {
+	const statusMap = {
+		[enums.OrderItemStatus.Pending]: {label: 'Chờ xử lý', color: 'blue'},
+		[enums.OrderItemStatus.Prepared]: {label: 'Đã chuẩn bị', color: 'gold'},
+		[enums.OrderItemStatus.Done]: {label: 'Hoàn thành', color: 'green'},
+		[enums.OrderItemStatus.Removed]: {label: 'Đã xóa', color: 'red'},
+	};
+
+	const statusInfo = statusMap[status];
+	if (statusInfo) {
+		return <Tag color={statusInfo.color}>{statusInfo.label}</Tag>;
+	}
+	return <Tag color="default">Không xác định</Tag>;
 };

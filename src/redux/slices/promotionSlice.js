@@ -9,7 +9,7 @@ export const getAllPromo = createAsyncThunk(
 			return response;
 		} catch (error) {
 			console.log('Error: ', JSON.stringify(error));
-			return rejectWithValue(error.data);
+			return rejectWithValue(error);
 		}
 	}
 );
@@ -25,7 +25,7 @@ export const checkPromoCart = createAsyncThunk(
 			return response;
 		} catch (error) {
 			console.log('Error: ', JSON.stringify(error));
-			return rejectWithValue(error.data);
+			return rejectWithValue(error);
 		}
 	}
 );

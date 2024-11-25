@@ -27,7 +27,7 @@ const MyOrderPage = () => {
 	const [openInvoice, setOpenInvoice] = useState(false);
 	const [selectedOrder, setSelectedOrder] = useState(null);
 	const [currentPage, setCurrentPage] = useState(1);
-	const [pageSize, setPageSize] = useState(100);
+	const [pageSize, setPageSize] = useState(5);
 
 	const columns = [
 		{
@@ -183,7 +183,14 @@ const MyOrderPage = () => {
 			<Table
 				dataSource={dataSource}
 				columns={columns}
-				pagination={{pageSize: 5}}
+				pagination={{
+					current: currentPage,
+					total: orderList?.TotalPage * pageSize,
+					pageSize: pageSize,
+					onChange: (page) => setCurrentPage(page),
+					// showSizeChanger: true,
+					onShowSizeChange: (current, size) => setPageSize(size),
+				}}
 				className="custom-table-header"
 				rowKey="orderId"
 				loading={loading}

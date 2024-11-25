@@ -6,6 +6,7 @@ import logo from '../../assets/logo-short-ex.png';
 import {GetRequestCustomizeDetailSelector} from '../../redux/selectors';
 import {
 	getRequestCustomizeDetail,
+	handleOrderCustomizeCancel,
 	handleOrderCustomizeProceed,
 	handleOrderCustomizeReject,
 } from '../../redux/slices/customizeSlice';
@@ -60,6 +61,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 		4: 'green',
 		5: 'red',
 		6: 'volcano',
+		7: 'volcano',
 	};
 
 	const mainColumns = [
@@ -308,20 +310,42 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 
 	const handleCancelOrder = () => {
 		Modal.confirm({
-			title: 'Hủy đơn thiết kế này',
+			title: 'Hủy đơn đơn thiết kế này',
 			content: 'Bạn có chắc chắn muốn tiếp tục?',
-			okText: 'Xác nhận Hủy',
+			okText: 'Xác nhận',
 			cancelText: 'Hủy Bỏ',
 			onOk: submitCancelOrder,
 		});
 	};
 
 	const submitCancelOrder = () => {
-		dispatch(handleOrderCustomizeReject(selectedOrder.Id))
+		dispatch(handleOrderCustomizeCancel(selectedOrder.Id))
 			.unwrap()
 			.then(() => {
 				message.success('Hủy đơn thành công!');
 				setIsCancelModalVisible(false);
+			})
+			.catch((error) => {
+				message.error(error?.data?.title || error?.detail);
+			});
+	};
+
+	const handleRejectOrder = () => {
+		Modal.confirm({
+			title: 'Từ chối đơn thiết kế này',
+			content: 'Bạn có chắc chắn muốn tiếp tục?',
+			okText: 'Xác nhận',
+			cancelText: 'Hủy Bỏ',
+			onOk: submitRejectOrder,
+		});
+	};
+
+	const submitRejectOrder = () => {
+		dispatch(handleOrderCustomizeReject(selectedOrder.Id))
+			.unwrap()
+			.then(() => {
+				message.success('Hủy đơn thành công!');
+				setIsRejectModalVisible(false);
 			})
 			.catch((error) => {
 				message.error(error?.data?.title || error?.detail);
@@ -388,8 +412,8 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 								>
 									Đồng Ý Đơn
 								</Button>
-								<Button danger className="text-white" onClick={handleCancelOrder}>
-									Hủy Đơn
+								<Button danger className="text-white" onClick={handleRejectOrder}>
+									Từ Chối Đơn
 								</Button>
 							</Space>
 						)}
