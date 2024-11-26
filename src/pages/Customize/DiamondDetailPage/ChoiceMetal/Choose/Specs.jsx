@@ -75,54 +75,6 @@ export const Specs = ({
 		}));
 	};
 
-	// const handleNextStep = () => {
-	// 	if (!customizeDiamond) {
-	// 		alert('Please select a diamond before continuing.'); // Alert if no diamond is selected
-	// 		return;
-	// 	}
-
-	// 	// Update or add the diamond to selectedDiamonds based on currentDiamond Id
-	// 	setSelectedDiamonds((prev) => {
-	// 		// Check if a diamond with the same currentDiamondId already exists
-	// 		const existingIndex = prev.findIndex(
-	// 			(selected) =>
-	// 				selected.Id === customizeDiamond.Id &&
-	// 				selected.currentDiamondId === currentDiamond.Id
-	// 		);
-
-	// 		// If found, replace it; otherwise, add a new entry
-	// 		if (existingIndex !== -1) {
-	// 			// Create a new array with the updated diamond
-	// 			const updatedDiamonds = [...prev];
-	// 			updatedDiamonds[existingIndex] = {
-	// 				...customizeDiamond,
-	// 				currentDiamondId: currentDiamond.Id,
-	// 			};
-	// 			return updatedDiamonds;
-	// 		} else {
-	// 			// Add as a new entry
-	// 			return [...prev, {...customizeDiamond, currentDiamondId: currentDiamond.Id}];
-	// 		}
-	// 	});
-
-	// 	// Reset customizeDiamond and proceed to the next step
-	// 	setCustomizeDiamond({
-	// 		caratFrom: '',
-	// 		caratTo: '',
-	// 		shape: '',
-	// 		color: '',
-	// 		cut: '',
-	// 		clarity: '',
-	// 		polish: '',
-	// 		symmetry: '',
-	// 		girdle: '',
-	// 		culet: '',
-	// 		isLabGrown: null,
-	// 	});
-	// 	setStep(0);
-	// 	setStepChooseDiamond((prev) => prev + 1);
-	// };
-
 	const handleCompleted = () => {
 		Modal.confirm({
 			title: 'Vui lòng kiểm tra lại thông số kim cương trước khi tiếp tục!',
@@ -150,12 +102,12 @@ export const Specs = ({
 			caratFrom: '',
 			caratTo: '',
 			shape: '',
-			colorFrom: '',
-			colorTo: '',
-			cutFrom: '',
-			cutTo: '',
-			clarityFrom: '',
-			clarityTo: '',
+			colorFrom: 1,
+			colorTo: 8,
+			cutFrom: 1,
+			cutTo: 3,
+			clarityFrom: 1,
+			clarityTo: 8,
 			polish: '',
 			symmetry: '',
 			girdle: '',
