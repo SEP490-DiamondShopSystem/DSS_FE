@@ -32,8 +32,6 @@ export const DiamondList = ({
 
 	const loading = useSelector(LoadingDiamondSelector);
 
-	const [changeGrid, setChangeGrid] = useState(false);
-
 	useEffect(() => {
 		const savedShape = localStorage.getItem('selected');
 		if (savedShape) {
@@ -43,13 +41,6 @@ export const DiamondList = ({
 			}));
 		}
 	}, []);
-
-	const handleGridClick = () => {
-		setChangeGrid(true);
-	};
-	const handleListClick = () => {
-		setChangeGrid(false);
-	};
 
 	const getLabelFromCode = (code, mapping) => {
 		// Find the key in the mapping object that matches the code
@@ -98,9 +89,7 @@ export const DiamondList = ({
 											className="shadow-lg bg-white rounded-lg cursor-pointer border-2 border-white hover:border-2 hover:border-black my-10"
 											onClick={() => handleClick(item?.Id)}
 										>
-											{item.Diamonds.filter(
-												(diamond) => !diamond.IsLabDiamond
-											).map((diamond) => (
+											{item.Diamonds.map((diamond) => (
 												<div className="flex w-full">
 													<div
 														className=" justify-center "

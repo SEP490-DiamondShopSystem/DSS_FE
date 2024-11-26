@@ -13,7 +13,7 @@ export const handleReviewOrder = createAsyncThunk(
 
 			// Kiểm tra và thêm tệp nếu nó tồn tại
 			if (Files) {
-				formData.append('Files', Files);
+				Files.forEach((file) => formData.append('Files', file));
 			}
 
 			formData.append('StarRating', StarRating);

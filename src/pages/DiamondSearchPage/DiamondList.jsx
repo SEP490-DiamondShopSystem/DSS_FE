@@ -27,10 +27,6 @@ export const DiamondList = ({
 	const loading = useSelector(LoadingDiamondSelector);
 
 	const [changeGrid, setChangeGrid] = useState(false);
-	const [like, setLike] = useState({});
-
-	const [hasMore, setHasMore] = useState(true);
-	const [visibleDiamonds, setVisibleDiamonds] = useState([]);
 	const [diamondChoice, setDiamondChoice] = useState(localStorage.getItem('diamondChoice') || '');
 	const [diamondNatural, setDiamondNatural] = useState();
 
@@ -59,13 +55,6 @@ export const DiamondList = ({
 	};
 	const handleListClick = () => {
 		setChangeGrid(false);
-	};
-
-	const handleHeartClick = (id) => {
-		setLike((prevLike) => ({
-			...prevLike,
-			[id]: !prevLike[id],
-		}));
 	};
 
 	const handleDiamondChoiceClick = (id) => {

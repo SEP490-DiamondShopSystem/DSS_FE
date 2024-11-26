@@ -1,7 +1,19 @@
 import React, {useEffect, useState} from 'react';
 
 import {DeleteOutlined, FileTextOutlined, StarOutlined} from '@ant-design/icons';
-import {Button, Form, Image, Input, message, Modal, Rate, Table, Typography, Upload} from 'antd';
+import {
+	Button,
+	Form,
+	Image,
+	Input,
+	message,
+	Modal,
+	Rate,
+	Table,
+	Tooltip,
+	Typography,
+	Upload,
+} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
 import logo from '../../../assets/logo-short-ex.png';
 import Loading from '../../../components/Loading';
@@ -46,6 +58,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 	const [transaction, setTransaction] = useState();
 	const [orderLog, setOrderLog] = useState();
 	const [reviewContent, setReviewContent] = useState(null);
+	const [imageFiles, setImageFiles] = useState([]);
 
 	const data = order?.Items?.map((item, i) => ({
 		key: i,
@@ -99,7 +112,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 			),
 		},
 		{
-			title: 'Trangj Thái',
+			title: 'Trạng Thái',
 			dataIndex: 'itemStatus',
 			key: 'itemStatus',
 			align: 'center',
@@ -122,25 +135,22 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 							const jewelryId = record?.jewelryId;
 
 							// Kiểm tra xem jewelry có tồn tại và có dữ liệu không
-							if (record?.Jewelry) {
-								return (
-									<div className="flex justify-center">
+
+							return (
+								<div className="flex justify-center">
+									<Tooltip title="Đánh giá">
 										<Button
 											type="primary"
 											icon={<StarOutlined />}
 											onClick={() => handleReviewRequest(jewelryId)} // Gọi hàm review request
-										>
-											Đánh Giá
-										</Button>
-									</div>
-								);
-							} else {
-								return null; // Nếu không có jewelry, không hiển thị gì
-							}
+										></Button>
+									</Tooltip>
+								</div>
+							);
 						},
 					},
 			  ]
-			: orderDetail?.Items?.some((item) => item.Jewelry) // Nếu Jewelry tồn tại
+			: orderDetail?.Status === 8 && orderDetail?.Items?.some((item) => item.Jewelry !== null) // Nếu Jewelry tồn tại
 			? [
 					{
 						title: 'Đánh Giá',
@@ -153,13 +163,13 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 
 							return (
 								<div className="flex justify-center">
-									<Button
-										type="primary"
-										icon={<StarOutlined />}
-										onClick={() => showModal(review)} // Mở modal với review
-									>
-										Xem Đánh Giá
-									</Button>
+									<Tooltip title="Xem lại đánh giá">
+										<Button
+											type="primary"
+											icon={<StarOutlined />}
+											onClick={() => showModal(review)} // Mở modal với review
+										></Button>
+									</Tooltip>
 								</div>
 							);
 						},
@@ -270,7 +280,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 		dispatch(
 			handleReviewOrder({
 				Content,
-				Files: fileList[0]?.originFileObj,
+				Files: imageFiles,
 				StarRating,
 				JewelryId: jewelryId,
 			})
@@ -462,7 +472,10 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 											listType="picture"
 											fileList={fileList}
 											onChange={handleFileChange}
-											beforeUpload={() => false}
+											beforeUpload={(file) => {
+												setImageFiles((fileList) => [...fileList, file]);
+												return false;
+											}}
 											maxCount={3}
 										>
 											<Button>Chọn ảnh</Button>
@@ -515,13 +528,13 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 			>
 				<div>
 					{reviewContent ? (
-						<>
+						<div className="flex flex-col">
 							<p>{reviewContent.Content}</p> {/* Hiển thị nội dung review nếu có */}
 							<Rate value={reviewContent?.StarRating} disabled />
 							{reviewContent?.Medias?.map((item) => (
-								<Image src={item.MediaPath} />
+								<Image src={item.MediaPath} width={200} />
 							))}
-						</>
+						</div>
 					) : (
 						<p>Không có đánh giá nào</p>
 					)}

@@ -29,15 +29,6 @@ export const DiamondLabList = ({
 	const navigate = useNavigate();
 	const loading = useSelector(LoadingDiamondSelector);
 
-	const [changeGrid, setChangeGrid] = useState(false);
-
-	const handleGridClick = () => {
-		setChangeGrid(true);
-	};
-	const handleListClick = () => {
-		setChangeGrid(false);
-	};
-
 	const handleClick = (id) => {
 		navigate(`/completed-jewelry/${id}`, {state: {jewelryModel}});
 	};
