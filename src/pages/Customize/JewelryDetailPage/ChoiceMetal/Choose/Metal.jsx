@@ -39,22 +39,13 @@ export const Metal = ({
 								value={selectedMetal?.Name}
 							>
 								<Radio value={metal.Name}>
-									<div className="flex items-center justify-between">
-										<div className="flex items-center m-5 justify-between ">
+									<div className="">
+										<div className="flex items-center m-5 justify-between">
 											<div className="mr-10">
-												{/* <div className="mx-5 my-5">
-												<Image
-													preview={false}
-													src={metal.image}
-													height={50}
-													width={50}
-												/>
-											</div> */}
 												<p className="font-semibold">{metal?.Name}</p>
 											</div>
 											<p className="">{formatPrice(metal?.Price)}</p>
 										</div>
-										{/* <p className="font-semibold">{formatPrice(metal.Price)}</p> */}
 									</div>
 								</Radio>
 							</Radio.Group>

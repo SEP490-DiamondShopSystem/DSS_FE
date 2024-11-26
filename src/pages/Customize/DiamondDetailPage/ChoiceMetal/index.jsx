@@ -54,9 +54,6 @@ export const ChoiceMetalDiamond = ({
 
 	const currentDiamond = expandedDiamonds[stepChooseDiamond];
 
-	console.log('expandedDiamonds', expandedDiamonds);
-	console.log('currentDiamond', currentDiamond);
-
 	const currentJewelry = filteredGroups[stepChooseDiamond];
 
 	const quantities = jewelry?.MainDiamonds?.map((diamond) => diamond.Quantity) || [];
@@ -69,33 +66,6 @@ export const ChoiceMetalDiamond = ({
 	useEffect(() => {
 		dispatch(getAllJewelryMetal());
 	}, []);
-
-	// useEffect(() => {
-	// 	const findSelectedDiamond = selectedDiamonds?.find(
-	// 		(diamond) => diamond?.currentDiamondId === currentDiamond?.Id
-	// 	);
-	// 	setCustomizeDiamond({
-	// 		caratFrom: findSelectedDiamond?.caratFrom,
-	// 		caratTo: findSelectedDiamond?.caratTo,
-	// 		shape: findSelectedDiamond?.shape,
-	// 		colorFrom: findSelectedDiamond?.colorFrom,
-	// 		colorTo: findSelectedDiamond?.colorTo,
-	// 		cutFrom: findSelectedDiamond?.cutFrom,
-	// 		cutTo: findSelectedDiamond?.cutTo,
-	// 		clarityFrom: findSelectedDiamond?.clarityFrom,
-	// 		clarityTo: findSelectedDiamond?.clarityTo,
-	// 		polish: findSelectedDiamond?.polish,
-	// 		symmetry: findSelectedDiamond?.symmetry,
-	// 		girdle: findSelectedDiamond?.girdle,
-	// 		culet: findSelectedDiamond?.culet,
-	// 		isLabGrown: findSelectedDiamond?.isLabGrown,
-	// 	});
-	// }, [selectedDiamonds, currentDiamond]);
-
-	console.log('jewelry', jewelry);
-	console.log('metals', metals);
-	console.log('currentDiamond', currentDiamond);
-	console.log('selectedDiamonds', selectedDiamonds);
 
 	const itemsDiamond = Array.from({length: jewelry?.MainDiamondCount || 0}, (_, index) => ({
 		title: `Kim Cương ${index + 1}`,

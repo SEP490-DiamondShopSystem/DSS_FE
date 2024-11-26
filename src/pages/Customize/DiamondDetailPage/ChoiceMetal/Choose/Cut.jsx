@@ -8,31 +8,6 @@ import {marksCut} from '../../../../../utils/constant';
 
 export const Cut = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 	const [cutSelected, setCutSelected] = useState('Good');
-	const cutItems = [
-		{
-			id: 1,
-			value: 1,
-			cut: 'Tốt (Good)',
-		},
-		{
-			id: 2,
-			value: 2,
-			cut: 'Rất tốt (Very good)',
-		},
-		{
-			id: 3,
-			value: 3,
-			cut: 'Hoàn hảo (Excellent)',
-		},
-	];
-
-	const onChange = (e) => {
-		console.log('radio checked', e.target.value);
-		setCustomizeDiamond((prev) => ({
-			...prev,
-			cut: e.target.value,
-		}));
-	};
 
 	const handleCutChange = (value) => {
 		setCustomizeDiamond((prev) => ({
@@ -102,7 +77,7 @@ export const Cut = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 					</Popover>
 				</label>
 			</div>
-			<div className="mx-40 my-10">
+			<div className="mx-20 my-10">
 				<Slider
 					range
 					marks={marksCut}

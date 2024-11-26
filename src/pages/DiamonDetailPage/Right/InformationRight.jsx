@@ -54,26 +54,24 @@ export const InformationRight = ({
 
 	console.log('diamond', diamond);
 
-	console.log('warrantyDiamond', warrantyDiamond);
-
 	return (
 		<div>
 			<div className="border-tintWhite">
-				<h1 className="text-3xl">{diamond.Title}</h1>
+				<h1 className="text-3xl">{diamond?.Title}</h1>
 
 				<div>
 					<div className="flex items-center text-sm mt-5">
 						<p className="p-2" style={{backgroundColor: '#f7f7f7'}}>
-							{diamond.Carat}ct
+							{diamond?.Carat}ct
 						</p>
 						<p className="ml-4 p-2" style={{backgroundColor: '#f7f7f7'}}>
-							{diamond.Color} Color
+							{diamond?.Color} Color
 						</p>
 						<p className="ml-4 p-2" style={{backgroundColor: '#f7f7f7'}}>
-							{diamond.Clarity} Clarity
+							{diamond?.Clarity} Clarity
 						</p>
 						<p className="ml-4 p-2" style={{backgroundColor: '#f7f7f7'}}>
-							{diamond.Cut}
+							{diamond?.Cut}
 						</p>
 					</div>
 				</div>
@@ -153,7 +151,7 @@ export const InformationRight = ({
 				</div>
 			</div>
 
-			<div className="border-y">
+			<div className="border-t">
 				<div className="border-b pb-4 my-4 cursor-pointer" onClick={handleDetailOpen}>
 					<div className="flex justify-between">
 						<div className="text-black m-4 px-4 rounded-lg focus:outline-none font-semibold">
@@ -169,7 +167,10 @@ export const InformationRight = ({
 						}`}
 					>
 						<div className="flex justify-between px-4 py-2">
-							<span>{infoMetal.detailProduct}</span>
+							<span>
+								Viên kim cương {diamond?.DiamondShape} {diamond?.Carat}ct này chỉ
+								được bán tại Cửa hàng Kim cương.
+							</span>
 						</div>
 					</div>
 				</div>
@@ -193,31 +194,6 @@ export const InformationRight = ({
 								Đây là báo cáo ghi nhận các đặc điểm cụ thể của viên kim cương, do
 								GIA cấp, một trong những tổ chức được kính trọng nhất trong ngành
 								kim cương.
-							</span>
-						</div>
-					</div>
-				</div>
-
-				<div className="my-4 cursor-pointer" onClick={handleWarrantyOpen}>
-					<div className="flex justify-between">
-						<div className="text-black m-4 px-4 rounded-lg focus:outline-none font-semibold">
-							Chương trình nâng cấp kim cương trọn đời
-						</div>
-						<div className="m-4 px-4 rounded-lg focus:outline-none">
-							{showProductWarranty ? <MinusOutlined /> : <PlusOutlined />}
-						</div>
-					</div>
-					<div
-						className={`transition-max-height duration-500 ease-in-out overflow-hidden ${
-							showProductWarranty ? 'max-h-screen' : 'max-h-0'
-						}`}
-					>
-						<div className="flex justify-between px-4 py-2">
-							<span>
-								Diamond Shop rất vui mừng cung cấp chương trình nâng cấp kim cương
-								trọn đời cho tất cả các viên kim cương được chứng nhận. Gọi cho
-								Chuyên gia Tư vấn Kim cương & Trang sức tại số 012345678 để biết
-								thêm thông tin.
 							</span>
 						</div>
 					</div>

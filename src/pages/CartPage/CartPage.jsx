@@ -390,7 +390,12 @@ const CartPage = () => {
 						Khuyến mãi có sẵn
 					</label>
 
-					<Select className="w-full" onChange={handlePromoChange} allowClear>
+					<Select
+						className="w-full"
+						onChange={handlePromoChange}
+						allowClear
+						notFoundContent="Chưa Có Khuyến Mãi Nào Áp Dụng Được Cho Các Sản Phẩm Này"
+					>
 						{promo &&
 							promo.map((promotion) => (
 								<Select.Option

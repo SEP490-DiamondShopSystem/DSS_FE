@@ -5,7 +5,7 @@ import {Engrave} from './Choose/Engrave';
 import {Metal} from './Choose/Metal';
 import {handleSendRequest} from '../../../../redux/slices/customizeSlice';
 import {useDispatch, useSelector} from 'react-redux';
-import {GetAllJewelryMetalSelector} from '../../../../redux/selectors';
+import {GetAllJewelryMetalSelector, GetLoadingCustomizeSelector} from '../../../../redux/selectors';
 import {getAllJewelryMetal} from '../../../../redux/slices/jewelrySlice';
 
 export const ChoiceMetal = ({
@@ -32,6 +32,8 @@ export const ChoiceMetal = ({
 	setSelectedSideDiamond,
 	id,
 }) => {
+	const loading = useSelector(GetLoadingCustomizeSelector);
+
 	const [steps, setStep] = useState(0);
 	const dispatch = useDispatch();
 	const [note, setNote] = useState('');
@@ -87,14 +89,15 @@ export const ChoiceMetal = ({
 					note: note,
 					customizeDiamondRequests,
 				})
-			).then((res) => {
-				if (res.payload !== undefined) {
+			)
+				.unwrap()
+				.then((res) => {
 					message.success('Thiết kế trang sức thành công!');
 					setStepChoose(3);
-				} else {
-					message.error('Có lỗi khi thiết kế.');
-				}
-			});
+				})
+				.catch((error) => {
+					message.error(error.data.title || error.title || error.detail);
+				});
 		} else {
 			setStepChoose((prev) => prev + 1);
 		}
@@ -102,6 +105,13 @@ export const ChoiceMetal = ({
 
 	const handleNoteChange = (e) => {
 		setNote(e.target.value);
+	};
+
+	const handleReChoose = () => {
+		setStep(0);
+		setSize(null);
+		setImageData(null);
+		setSelectedMetal('');
 	};
 
 	console.log('diamondJewelry', diamondJewelry);
@@ -174,13 +184,6 @@ export const ChoiceMetal = ({
 										<Button danger onClick={() => setStep(0)}>
 											Chọn lại
 										</Button>
-										{/* <Button
-											type="text"
-											className="bg-tintWhite border ml-4"
-											onClick={() => setStep((prev) => prev - 1)}
-										>
-											Quay lại
-										</Button> */}
 									</div>
 									<Button
 										type="text"
@@ -208,7 +211,7 @@ export const ChoiceMetal = ({
 						)}
 						<div className="flex items-center justify-between mt-10">
 							<div className="flex items-center ">
-								<Button danger onClick={() => setStep(0)}>
+								<Button danger onClick={handleReChoose}>
 									Chọn lại
 								</Button>
 							</div>
@@ -216,8 +219,9 @@ export const ChoiceMetal = ({
 								type="text"
 								className="bg-primary border"
 								onClick={handleNextStep}
+								loading={loading}
 							>
-								Xác Nhận
+								Đặt thiết kế
 							</Button>
 						</div>
 					</div>

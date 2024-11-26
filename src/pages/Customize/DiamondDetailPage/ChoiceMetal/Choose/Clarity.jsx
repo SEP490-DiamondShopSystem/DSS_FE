@@ -17,57 +17,6 @@ import {marksClarity} from '../../../../../utils/constant';
 export const Clarity = ({setStep, customizeDiamond, setCustomizeDiamond, filter}) => {
 	const [claritySelected, setClaritySelected] = useState('I3');
 
-	const clarityItems = [
-		{
-			id: 1,
-			value: 1,
-			clarity: 'S12',
-		},
-		{
-			id: 2,
-			value: 2,
-			clarity: 'S11',
-		},
-		{
-			id: 3,
-			value: 3,
-			clarity: 'VS2',
-		},
-		{
-			id: 4,
-			value: 4,
-			clarity: 'VS1',
-		},
-		{
-			id: 5,
-			value: 5,
-			clarity: 'VVS2',
-		},
-		{
-			id: 6,
-			value: 6,
-			clarity: 'VVS1',
-		},
-		{
-			id: 7,
-			value: 7,
-			clarity: 'IF',
-		},
-		{
-			id: 8,
-			value: 8,
-			clarity: 'FL',
-		},
-	];
-
-	const onChange = (e) => {
-		console.log('radio checked', e.target.value);
-		setCustomizeDiamond((prev) => ({
-			...prev,
-			clarity: e.target.value,
-		}));
-	};
-
 	const handleClarityChange = (value) => {
 		setCustomizeDiamond((prev) => ({
 			...prev,
@@ -161,7 +110,6 @@ export const Clarity = ({setStep, customizeDiamond, setCustomizeDiamond, filter}
 
 	return (
 		<div>
-			{/* <Image className="my-10" src={clarityChart} preview={false} alt="" /> */}
 			<div className="flex items-center justify-center mt-10">
 				<label className=" font-semibold text-xl my-5">
 					Chọn Độ Trong (Clarity){' '}
@@ -170,7 +118,7 @@ export const Clarity = ({setStep, customizeDiamond, setCustomizeDiamond, filter}
 					</Popover>
 				</label>
 			</div>
-			<div className="mx-40 my-10">
+			<div className="mx-20 my-10">
 				<Slider
 					range
 					marks={marksClarity}
@@ -180,23 +128,6 @@ export const Clarity = ({setStep, customizeDiamond, setCustomizeDiamond, filter}
 					onChange={handleClarityChange}
 				/>
 			</div>
-			{/* <div className="flex justify-between items-center mt-10">
-				<Button
-					type="text"
-					className="bg-primary w-48 uppercase font-semibold"
-					onClick={() => setStep(1)}
-				>
-					Quay lại
-				</Button>
-				<Button
-					type="text"
-					className="bg-primary w-48 uppercase font-semibold"
-					disabled={customizeDiamond.clarity?.length === 0}
-					onClick={handleNextStep}
-				>
-					Tiếp tục
-				</Button>
-			</div> */}
 		</div>
 	);
 };
