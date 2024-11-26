@@ -263,6 +263,13 @@ const JewelryCustomDetail = () => {
 								>
 									Tiếp Tục Thiết Kế
 								</Button>
+								<Button
+									type="text"
+									className="bg-primary w-48 uppercase font-semibold"
+									onClick={() => navigate('/request-customize')}
+								>
+									Kiểm Tra Đơn Thiết Kế
+								</Button>
 							</Space>
 						</div>
 					</div>

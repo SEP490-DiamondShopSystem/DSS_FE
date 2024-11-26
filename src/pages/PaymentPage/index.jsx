@@ -125,7 +125,7 @@ const PaymentPage = () => {
 					<div style={{flex: 2.5}}>
 						<div style={{marginBottom: '40px'}}>
 							<Title level={3} style={{textAlign: 'center'}}>
-								Giỏ Hàng
+								Mặt Hàng
 							</Title>
 							<div className="space-y-6">
 								{mappedProducts?.map((item, index) => (
