@@ -36,7 +36,6 @@ const LoginModal = ({isOpen, onClose}) => {
 				message.success('Đăng nhập thành công!');
 				form.resetFields();
 				onClose();
-				navigate('/');
 			})
 			.catch((error) => {
 				message.error(error?.data?.title || error?.detail);
