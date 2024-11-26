@@ -145,6 +145,8 @@ const DiamondSearchPage = () => {
 			getAllDiamond({
 				pageSize,
 				start,
+				priceStart: filters?.price?.minPrice,
+				priceEnd: filters?.price?.maxPrice,
 				shapeId: filters?.shape,
 				cutFrom: filters?.cut?.minCut,
 				cutTo: filters?.cut?.maxCut,
@@ -184,9 +186,6 @@ const DiamondSearchPage = () => {
 			cut: {minCut: 1, maxCut: 3},
 		});
 	};
-
-	console.log('jewelryModel', jewelryModel);
-	console.log('diamondList', diamondList);
 
 	return (
 		<div className="mx-32">
