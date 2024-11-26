@@ -43,12 +43,12 @@ export const InformationLeft = ({diamond, diamondId}) => {
 										rel="noopener noreferrer"
 										className="text-blue hover:underline"
 									>
-										{certificate.MediaName || `Certificate ${index + 1}`}
+										View Report
 									</a>
 								</div>
 							))
 						) : (
-							<span className="text-gray-800">Không có</span>
+							<span className="text-gray">Không có</span>
 						)}
 					</div>
 				</div>

@@ -66,7 +66,7 @@ const FinishProductPage = () => {
 
 			<div className="flex flex-col md:flex-row bg-white my-10 md:my-20 rounded-lg shadow-lg">
 				<div className="w-full md:w-1/2 p-6">
-					<ImageGallery />
+					<ImageGallery jewelryDetail={jewelryDetail} jewelry={jewelry} />
 					<InformationLeft
 						jewelryDetail={jewelryDetail}
 						diamondDetail={diamondDetail}

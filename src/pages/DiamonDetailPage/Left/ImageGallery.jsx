@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react';
-
 import {Image} from 'antd';
 import {useDispatch} from 'react-redux';
 import {fetchDiamondFiles} from '../../../redux/slices/fileSlice';
@@ -45,19 +44,24 @@ export const ImageGallery = ({diamondId}) => {
 		<div className="container mx-auto">
 			{imageFiles.length > 0 ? (
 				<>
-					<div className="relative large-image mb-4">
+					{/* Centered Large Image */}
+					<div
+						className="relative large-image mb-4 border rounded-lg flex justify-center items-center"
+						style={{height: '400px'}}
+					>
 						<Image
-							width={'100%'}
-							height={400}
+							width="auto"
+							height="100%"
 							src={
 								imageFiles[currentImageIndex]?.MediaPath ||
-								'https://via.placeholder.com'
+								'https://via.placeholder.com/400'
 							}
 							alt="Large"
-							className="border rounded-lg"
+							style={{maxHeight: '100%', maxWidth: '100%'}}
 						/>
 					</div>
 
+					{/* Thumbnails Section */}
 					<div
 						className="thumbnail-container flex space-x-4 overflow-x-auto"
 						style={{
@@ -75,7 +79,7 @@ export const ImageGallery = ({diamondId}) => {
 								style={{flexShrink: 0}} // Prevent shrinking in a flex container
 							>
 								<Image
-									width={'100%'}
+									width="100%"
 									height={80}
 									preview={false}
 									src={image.MediaPath}
