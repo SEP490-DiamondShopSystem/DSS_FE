@@ -133,7 +133,7 @@ const DiamondChoosePage = () => {
 					className="bg-white p-4 rounded-full my-10"
 				/>
 			)}
-			{jewelryModel?.MainDiamonds?.length > 0 && (
+			{/* {jewelryModel?.MainDiamonds?.length > 0 && (
 				<div className="divide-x flex items-center justify-center my-5">
 					<button
 						className={`px-4 py-2 w-32 ${
@@ -152,21 +152,20 @@ const DiamondChoosePage = () => {
 						Nhân tạo
 					</button>
 				</div>
-			)}
+			)} */}
 
 			{jewelryModel?.MainDiamonds?.length > 0 ? (
 				<>
-					{changeDiamond ? (
-						<DiamondList
-							filters={filters}
-							setFilters={setFilters}
-							handleReset={handleReset}
-							diamondForFilter={diamondForFilter}
-							findShape={findShape}
-							jewelryModel={jewelryModel}
-							diamondList={diamond}
-						/>
-					) : (
+					<DiamondList
+						filters={filters}
+						setFilters={setFilters}
+						handleReset={handleReset}
+						diamondForFilter={diamondForFilter}
+						findShape={findShape}
+						jewelryModel={jewelryModel}
+						diamondList={diamond}
+					/>
+					{/* ) : (
 						<DiamondLabList
 							filters={filters}
 							setFilters={setFilters}
@@ -176,7 +175,7 @@ const DiamondChoosePage = () => {
 							diamondList={diamond}
 							jewelryModel={jewelryModel}
 						/>
-					)}
+					)} */}
 				</>
 			) : (
 				<JewelryList
