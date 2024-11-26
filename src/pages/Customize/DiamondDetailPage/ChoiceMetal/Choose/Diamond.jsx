@@ -25,12 +25,12 @@ export const Diamond = ({
 
 	useEffect(() => {
 		if (currentDiamond) {
-			setCaratFromShape(matchedShape.CaratFrom);
-			setCaratToShape(matchedShape.CaratTo);
+			setCaratFromShape(matchedShape?.CaratFrom);
+			setCaratToShape(matchedShape?.CaratTo);
 			setCustomizeDiamond((prev) => ({
 				...prev,
-				caratFrom: matchedShape.CaratFrom,
-				caratTo: matchedShape.CaratTo,
+				caratFrom: matchedShape?.CaratFrom,
+				caratTo: matchedShape?.CaratTo,
 			}));
 		}
 	}, [currentDiamond]);
@@ -128,11 +128,11 @@ export const Diamond = ({
 						type="text"
 						className="w-48 uppercase font-semibold bg-primary mr-5"
 						size="large"
-						disabled={
-							customizeDiamond?.color === '' ||
-							customizeDiamond?.clarity === '' ||
-							customizeDiamond?.cut === ''
-						}
+						// disabled={
+						// 	customizeDiamond?.color === '' ||
+						// 	customizeDiamond?.clarity === '' ||
+						// 	customizeDiamond?.cut === ''
+						// }
 						onClick={handleAdvanceClick}
 					>
 						Chọn Nâng Cao
@@ -141,11 +141,11 @@ export const Diamond = ({
 						type="text"
 						className="w-48 uppercase font-semibold bg-primary"
 						size="large"
-						disabled={
-							customizeDiamond?.colorFrom === '' ||
-							customizeDiamond?.clarityFrom === '' ||
-							customizeDiamond?.cutFrom === ''
-						}
+						// disabled={
+						// 	customizeDiamond?.colorFrom === '' ||
+						// 	customizeDiamond?.clarityFrom === '' ||
+						// 	customizeDiamond?.cutFrom === ''
+						// }
 						onClick={handleCompleted}
 					>
 						Hoàn Thành
