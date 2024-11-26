@@ -81,7 +81,37 @@ export const DiamondList = ({
 							</div>
 
 							<div className="transition-all duration-300 mt-10">
-								<Divider />
+								{/* <Divider /> */}
+								<div className="shadow-md bg-gray-100 rounded-lg">
+									<div className="flex justify-between items-center py-3 px-5 bg-primary border">
+										<p className="text-lg font-semibold text-center w-1/6">
+											Hình Ảnh
+										</p>
+										<div className="w-5/6 flex justify-between items-center">
+											<p className="text-lg font-semibold text-center w-1/5">
+												Hình Dạng
+											</p>
+											<p className="text-lg font-semibold text-center w-1/5">
+												Carat
+											</p>
+											<p className="text-lg font-semibold text-center w-1/5">
+												Color
+											</p>
+											<p className="text-lg font-semibold text-center w-1/5">
+												Clarity
+											</p>
+											<p className="text-lg font-semibold text-center w-1/5">
+												Cut
+											</p>
+											<p className="text-lg font-semibold text-center w-1/5">
+												Giá
+											</p>
+											<p className="text-lg font-semibold text-center w-1/5">
+												Nguồn Gốc
+											</p>
+										</div>
+									</div>
+								</div>
 								{diamondList?.length > 0 ? (
 									diamondList.map((item, index) => (
 										<div
@@ -92,7 +122,7 @@ export const DiamondList = ({
 											{item.Diamonds.map((diamond) => (
 												<div className="flex w-full">
 													<div
-														className=" justify-center "
+														className="justify-center w-1/6"
 														style={{background: '#b8b7b5'}}
 													>
 														<Image
@@ -109,7 +139,7 @@ export const DiamondList = ({
 															preview={false}
 														/>
 													</div>
-													<div className="flex justify-between items-center w-4/6 ml-5">
+													<div className="flex justify-between items-center w-5/6 ml-5">
 														<p className="text-xl w-1/6 text-center">
 															{diamond?.DiamondShape?.ShapeName ||
 																'-'}
@@ -139,7 +169,7 @@ export const DiamondList = ({
 														</p>
 														{diamond?.SalePrice ===
 														diamond?.TruePrice ? (
-															<div className=" w-2/6 text-center">
+															<div className=" w-1/6 text-center">
 																<p>
 																	{formatPrice(
 																		diamond?.SalePrice
@@ -147,7 +177,7 @@ export const DiamondList = ({
 																</p>
 															</div>
 														) : (
-															<div className=" w-2/6 text-center">
+															<div className=" w-1/6 text-center">
 																<p>
 																	{formatPrice(
 																		diamond?.TruePrice
@@ -160,6 +190,11 @@ export const DiamondList = ({
 																</p>
 															</div>
 														)}
+														<p className=" w-1/6 text-center">
+															{diamond?.IsLabDiamond
+																? 'Nhân Tạo'
+																: 'Tự Nhiên'}
+														</p>
 													</div>
 												</div>
 											))}

@@ -141,14 +141,7 @@ export const AppRouters = () => {
 						</PrivateRoute>
 					}
 				/>
-				<Route
-					path="/promotion"
-					element={
-						<PrivateRoute roles={'customer'}>
-							<PromotionPage />
-						</PrivateRoute>
-					}
-				/>
+				<Route path="/promotion" element={<PromotionPage />} />
 
 				<Route
 					path="/my-orders"

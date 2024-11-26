@@ -172,6 +172,36 @@ export const DiamondList = ({
 								</div>
 							) : (
 								<div className="transition-all duration-300 mb-20 mt-10">
+									{/* Thanh tiêu đề */}
+									<div className="shadow-md bg-gray-100 rounded-lg">
+										<div className="flex justify-between items-center py-3 px-5 bg-primary border">
+											<p className="text-lg font-semibold text-center w-1/6">
+												Hình Ảnh
+											</p>
+											<div className="w-5/6 flex justify-between items-center">
+												<p className="text-lg font-semibold text-center w-1/5">
+													Shape
+												</p>
+												<p className="text-lg font-semibold text-center w-1/5">
+													Carat
+												</p>
+												<p className="text-lg font-semibold text-center w-1/5">
+													Color
+												</p>
+												<p className="text-lg font-semibold text-center w-1/5">
+													Clarity
+												</p>
+												<p className="text-lg font-semibold text-center w-1/5">
+													Cut
+												</p>
+												<p className="text-lg font-semibold text-center w-1/5">
+													Giá
+												</p>
+											</div>
+										</div>
+									</div>
+
+									{/* Danh sách kim cương */}
 									{diamondNatural?.map((diamondItem) => (
 										<div
 											key={diamondItem.Id}
@@ -184,7 +214,7 @@ export const DiamondList = ({
 										>
 											<div className="flex w-full">
 												<div
-													className="flex justify-center w-1/5"
+													className="flex justify-center w-1/6"
 													style={{background: '#b8b7b5'}}
 												>
 													<Image
@@ -194,11 +224,12 @@ export const DiamondList = ({
 																: diamondItem.Thumbnail.MediaPath
 														}
 														alt={diamondItem.Thumbnail?.MediaName}
-														className="w-full"
+														className=""
+														style={{width: '100%'}}
 														preview={false}
 													/>
 												</div>
-												<div className="flex justify-between items-center w-4/5 ml-5">
+												<div className="flex justify-between items-center w-5/6 ml-5">
 													<p className="text-xl w-1/5 text-center">
 														{diamondItem.DiamondShape || '-'}
 													</p>
@@ -214,17 +245,9 @@ export const DiamondList = ({
 													<p className="text-xl w-1/5 text-center">
 														{diamondItem.Cut || '-'}
 													</p>
-													{diamondItem.SalePrice ===
-														diamondItem.TruePrice && (
-														<div>
-															<p>
-																{formatPrice(
-																	diamondItem?.TruePrice
-																)}
-															</p>
-														</div>
-													)}
-													<p className="text-xl w-1/5 text-center cursor-pointer"></p>
+													<p className="text-xl w-1/5 text-center">
+														{formatPrice(diamondItem?.TruePrice)}
+													</p>
 												</div>
 											</div>
 										</div>
