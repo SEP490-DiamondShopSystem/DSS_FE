@@ -32,10 +32,6 @@ export const Carat = ({
 
 	return (
 		<div>
-			{/* <div>
-				<Image preview={false} src={caratImage} />
-			</div> */}
-
 			<div className="flex items-center justify-center mt-10">
 				<label className=" font-semibold text-xl">
 					Chọn Ly (Carat){' '}
@@ -47,7 +43,7 @@ export const Carat = ({
 			<div className="my-10 text-primary text-lg font-semibold flex justify-center items-center">
 				Kim Cương Được Chọn Ly (Carat): {caratFromShape} - {caratToShape}
 			</div>
-			<div className="mx-40 my-10">
+			<div className="mx-20 my-10">
 				<Slider
 					range
 					value={[customizeDiamond?.caratFrom, customizeDiamond?.caratTo]}
@@ -57,16 +53,6 @@ export const Carat = ({
 					onChange={handleCaratChange}
 				/>
 			</div>
-			{/* <div className="flex justify-center items-center mt-10">
-				<Button
-					type="text"
-					className="bg-primary w-48 uppercase font-semibold"
-					disabled={customizeDiamond.carat?.length === 0}
-					onClick={handleNextStep}
-				>
-					Tiếp tục
-				</Button>
-			</div> */}
 		</div>
 	);
 };

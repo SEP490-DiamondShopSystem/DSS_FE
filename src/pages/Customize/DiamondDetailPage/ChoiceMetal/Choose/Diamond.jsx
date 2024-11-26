@@ -86,6 +86,8 @@ export const Diamond = ({
 		setStep((prev) => prev - 1);
 	};
 
+	console.log('customizeDiamond', customizeDiamond);
+
 	return (
 		<div>
 			<Carat
@@ -140,9 +142,9 @@ export const Diamond = ({
 						className="w-48 uppercase font-semibold bg-primary"
 						size="large"
 						disabled={
-							customizeDiamond?.color === '' ||
-							customizeDiamond?.clarity === '' ||
-							customizeDiamond?.cut === ''
+							customizeDiamond?.colorFrom === '' ||
+							customizeDiamond?.clarityFrom === '' ||
+							customizeDiamond?.cutFrom === ''
 						}
 						onClick={handleCompleted}
 					>

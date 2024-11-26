@@ -68,11 +68,6 @@ export const DetailMetal = ({customizeJewelry, imageData, selectedMetal, jewelry
 			</div>
 			<Divider />
 
-			{/* <div className="flex items-center justify-between">
-				<p className="font-semibold text-primary">Hình dạng vỏ đã chọn:</p>
-				<p>{customizeJewelry.shape}</p>
-			</div>
-			<Divider /> */}
 			<div className="flex items-center justify-between">
 				<p className="font-semibold text-primary">Hình:</p>
 				<p className="h-16 w-16">

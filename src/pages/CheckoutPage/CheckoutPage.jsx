@@ -481,7 +481,7 @@ const CheckoutPage = () => {
 											label={
 												<>
 													<FaRegAddressBook className="inline-block mr-2" />
-													Tên
+													Họ
 												</>
 											}
 											name="firstName"
@@ -504,7 +504,7 @@ const CheckoutPage = () => {
 											label={
 												<>
 													<FaRegAddressBook className="inline-block mr-2" />
-													Họ
+													Tên
 												</>
 											}
 											name="lastName"

@@ -2509,3 +2509,7 @@ video {
 .w-4\/6 {
 	width: 66.666667%;
 }
+
+.border-t {
+	border-top-width: 1px;
+}

@@ -59,14 +59,6 @@ export const Color = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 		},
 	];
 
-	const onChange = (e) => {
-		console.log('radio checked', e.target.value);
-		setCustomizeDiamond((prev) => ({
-			...prev,
-			color: e.target.value,
-		}));
-	};
-
 	const handleColorChange = (value) => {
 		setCustomizeDiamond((prev) => ({
 			...prev,
@@ -192,7 +184,7 @@ export const Color = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 					</Popover>
 				</label>
 			</div>
-			<div className="mx-40 my-10">
+			<div className="mx-20 my-10">
 				<Slider
 					range
 					marks={marks}

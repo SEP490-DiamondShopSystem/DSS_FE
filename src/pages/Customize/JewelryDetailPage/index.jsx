@@ -42,12 +42,12 @@ const JewelryCustomDetail = () => {
 		caratFrom: '',
 		caratTo: '',
 		shape: '',
-		colorFrom: '',
-		colorTo: '',
-		cutFrom: '',
-		cutTo: '',
-		clarityFrom: '',
-		clarityTo: '',
+		colorFrom: 1,
+		colorTo: 8,
+		cutFrom: 1,
+		cutTo: 3,
+		clarityFrom: 1,
+		clarityTo: 8,
 		polish: '',
 		symmetry: '',
 		girdle: '',
@@ -71,7 +71,6 @@ const JewelryCustomDetail = () => {
 		if (jewelryDetail) {
 			setJewelry(jewelryDetail);
 			setSelectedSideDiamond(jewelryDetail?.SideDiamonds[0]?.Id);
-			// setSize(jewelryDetail?.MetalGroups[0]?.SizeGroups[0].Size);
 		}
 		if (metals) {
 			setSelectedMetal(findMetals[0]);
