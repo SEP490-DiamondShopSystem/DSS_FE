@@ -42,7 +42,7 @@ import RequestCustomize from '../pages/RequestCustomize';
 export const AppRouters = () => {
 	return (
 		<>
-			<ScrollToTop /> {/* Moved outside Routes to apply for every route change */}
+			<ScrollToTop />
 			<Routes>
 				<Route path="/" element={<HomePage />} />
 				<Route path="/jewelry" element={<HomeJewelryPage />} />

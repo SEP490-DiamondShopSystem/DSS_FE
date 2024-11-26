@@ -83,28 +83,9 @@ const mapAttributes = (data, attributes) => {
 };
 
 const PaymentPage = () => {
-	const dispatch = useDispatch();
 	const cartList = useSelector(GetCartSelector);
 
 	const [isModalVisible, setIsModalVisible] = useState(false);
-
-	const cartItems = [
-		{
-			id: 1,
-			imageURL: 'https://example.com/image1.jpg',
-			title: 'Item 1',
-			price: 200000,
-		},
-		{
-			id: 2,
-			imageURL: 'https://example.com/image2.jpg',
-			title: 'Item 2',
-			price: 150000,
-		},
-	];
-
-	// Calculate total price
-	const totalPrice = cartItems.reduce((acc, item) => acc + item.price, 0);
 
 	const jewelryOrDiamondProducts = cartList?.Products.filter(
 		(product) => product.Jewelry || product.Diamond
@@ -125,7 +106,7 @@ const PaymentPage = () => {
 		setIsModalVisible(false);
 	};
 
-	console.log('mappedProducts', mappedProducts);
+	console.log('cartList', cartList);
 
 	return (
 		<div className="my-10 mx-20 shadow-xl rounded">
@@ -248,7 +229,7 @@ const PaymentPage = () => {
 										<b>Tên Người Nhận:</b> Diamond Shop
 									</p>
 									<p>
-										<b>Tin nhắn:</b> Thanh Toán
+										<b>Tin nhắn:</b> Thanh Toán Đơn Hàng
 									</p>
 								</div>
 							</div>
