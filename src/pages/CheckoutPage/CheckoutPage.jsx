@@ -155,6 +155,8 @@ const CheckoutPage = () => {
 
 	const idCustomize = order?.Id;
 
+	console.log('payment', payment);
+
 	const defaultAddress =
 		userDetail.Addresses.length > 0 &&
 		userDetail?.Addresses?.find((address) => address?.IsDefault === true);
@@ -305,13 +307,18 @@ const CheckoutPage = () => {
 			icon: <CheckCircleOutlined style={{color: '#52c41a'}} />,
 			content:
 				'Đơn hàng của bạn đã được đặt thành công. Cảm ơn bạn đã mua sắm với chúng tôi!',
-			okText: 'Kiểm Tra Đơn Hàng',
-			cancelText: 'Về Trang Chủ',
+			okText: `${paymentMethod === '2' ? 'Kiểm Tra Đơn Hàng' : 'Thanh Toán Đơn Hàng'}`,
+			cancelText: null,
 			onCancel() {
 				navigate('/');
 			},
+
 			onOk() {
-				navigate('/my-orders');
+				if (paymentMethod === '2') {
+					navigate('/my-orders');
+				} else {
+					navigate('/payment');
+				}
 			},
 		});
 	};

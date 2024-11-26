@@ -10,11 +10,11 @@ export const Popup = ({closeModal, isModalVisible}) => {
 				onCancel={closeModal}
 				footer={[
 					<Button key="close" type="primary" onClick={closeModal}>
-						Close
+						Đóng
 					</Button>,
 				]}
 			>
-				<p>Thank you for your purchase with us.</p>
+				<p>Cảm ơn bạn đã mua hàng của chúng tôi.</p>
 			</Modal>
 		</div>
 	);
