@@ -14,7 +14,6 @@ export const Shape = ({
 	currentJewelry,
 }) => {
 	const onChange = (e) => {
-		console.log('radio checked', e.target.value);
 		setCustomizeDiamond((prev) => ({
 			...prev,
 			shape: e.target.value,
@@ -28,9 +27,6 @@ export const Shape = ({
 	const matchedShapeItems = shapeItemsCustomize?.filter((item) =>
 		currentDiamond?.Shapes?.some((shape) => shape?.ShapeId === item?.value)
 	);
-
-	console.log('shapeItems', shapeItems);
-	console.log('currentDiamond', currentDiamond?.Shapes);
 
 	return (
 		<div>
@@ -60,7 +56,7 @@ export const Shape = ({
 				<Button
 					type="text"
 					className="w-48 uppercase font-semibold bg-primary"
-					disabled={customizeDiamond?.shape === null}
+					disabled={customizeDiamond?.shape === ''}
 					onClick={handleNextStep}
 				>
 					{setStepChooseDiamond === 0 ? 'Tiếp tục' : 'Xác Nhận'}
