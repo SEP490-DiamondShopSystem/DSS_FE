@@ -43,14 +43,6 @@ export const Header = () => {
 					</li>
 					<li>
 						<Link
-							to="/price-list"
-							className={`py-7 px-3 inline-block no-underline text-black`}
-						>
-							Bảng giá
-						</Link>
-					</li>
-					<li>
-						<Link
 							to="/promotion"
 							className={`py-7 px-3 inline-block no-underline text-black`}
 						>

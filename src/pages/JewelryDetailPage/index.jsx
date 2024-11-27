@@ -96,7 +96,7 @@ const JewelryDetailPage = () => {
 			<Steps items={items} current={0} />
 			<div className="flex flex-col md:flex-row bg-white my-10 md:my-20 rounded-lg shadow-lg">
 				<div className="md:w-1/2 p-6">
-					<ImageGallery />
+					<ImageGallery diamondJewelry={jewelry} selectedMetal={selectedMetal} />
 					<InformationLeft diamondJewelry={jewelry} selectedMetal={selectedMetal} />
 				</div>
 

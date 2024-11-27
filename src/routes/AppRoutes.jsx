@@ -38,6 +38,8 @@ import VerifyFailPage from '../pages/ProfilePage/VerifyPage/VerifyFailPage';
 import VerifyPage from '../pages/ProfilePage/VerifyPage/VerifyPage';
 import PromotionPage from '../pages/PromotionPage/PromotionPage';
 import RequestCustomize from '../pages/RequestCustomize';
+import MainDiamondPricePage from '../pages/DiamondPricePage/MainDiamondPricePage';
+import SideDiamondPricePage from '../pages/DiamondPricePage/SideDiamondPricePage';
 
 export const AppRouters = () => {
 	return (
@@ -72,6 +74,14 @@ export const AppRouters = () => {
 				<Route
 					path="/jewelry/design-your-own-earrings/setting/:id"
 					element={<ProductDetailPage />}
+				/>
+				<Route
+					path="/price-list/main"
+					element={<MainDiamondPricePage />}
+				/>
+				<Route
+					path="/price-list/side"
+					element={<SideDiamondPricePage/>}
 				/>
 				<Route path="/jewelry/setting/:id" element={<ProductDetailPage />} />
 				<Route path="/jewelry-model/search" element={<DiamondJewelryPage />} />

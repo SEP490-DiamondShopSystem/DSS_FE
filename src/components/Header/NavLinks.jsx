@@ -42,6 +42,30 @@ const NavLinks = () => {
 				},
 			],
 		},
+		{
+			name: 'Bảng Giá',
+			ref: 'price-list',
+			col: 2,
+			submenu: true,
+			mess: 'Xem Giá Kim Cương',
+			link: '/price-list',
+			sublinks: [
+				{
+					Head: 'Bảng Giá Kim Cương Chính',
+					sublink: [
+						{name: 'Kim Cương Chính', link: '/price-list/main', value: '1'},
+						
+					],
+				},
+				{
+					Head: 'Bảng Giá Kim Cương Tấm',
+					sublink: [
+						{name: 'Kim Cương Tấm', link: '/price-list/side'},
+						
+					],
+				},
+			],
+		},
 	];
 
 	const handleClick = (shape, type, diamond, jewelry) => {

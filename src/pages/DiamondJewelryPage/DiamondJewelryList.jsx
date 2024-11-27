@@ -112,8 +112,8 @@ export const DiamondJewelryList = () => {
 												style={{background: '#b8b7b5'}}
 											>
 												<Image
-													src={jewelry.ThumbnailPath || jewelryImg}
-													alt={jewelry.Name}
+													src={jewelry?.Thumbnail?.MediaPath|| jewelryImg}
+													alt={jewelry?.Thumbnail?.MediaName}
 													className=""
 													preview={false}
 												/>
