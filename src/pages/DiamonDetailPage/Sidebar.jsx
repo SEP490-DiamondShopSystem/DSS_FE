@@ -1,61 +1,32 @@
 import {RightOutlined} from '@ant-design/icons';
 import {faGem, faShoppingBag} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {Button} from 'antd';
+import {Button, message} from 'antd';
 import React, {useEffect, useState} from 'react';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import diamondImage from '../../assets/img-diamond.png';
 import {addOrUpdateCartDesignDiamondItem, addOrUpdateItem} from '../../redux/slices/cartSlice';
+import {UserInfoSelector} from '../../redux/selectors';
+import {getUserId} from '../../components/GetUserId';
 
-const shapes = [
-	{
-		name: 'Round',
-		logo: '',
-
-		options: [
-			{metal: '1.53 Carat F VS2', price: '$14,040', image: diamondImage},
-			{metal: '1.53 Carat F VS2', price: '$14,040', image: diamondImage},
-			{metal: '1.53 Carat F VS2', price: '$14,040', image: diamondImage},
-			{metal: '1.53 Carat F VS2', price: '$14,040', image: ''},
-			{metal: '1.53 Carat F VS2', price: '$14,040', image: ''},
-			{metal: '1.53 Carat F VS2', price: '$14,040', image: ''},
-			{metal: '1.53 Carat F VS2', price: '$14,040', image: ''},
-		],
-	},
-	{
-		name: 'Princess',
-		logo: '',
-
-		options: [
-			{metal: '1.53 Carat F VS2', price: '$14,040', image: ''},
-			{metal: '1.53 Carat F VS2', price: '$14,040', image: ''},
-			{metal: '1.53 Carat F VS2', price: '$14,040', image: ''},
-			{metal: '1.53 Carat F VS2', price: '$14,040', image: ''},
-			{metal: '1.53 Carat F VS2', price: '$14,040', image: ''},
-			{metal: '1.53 Carat F VS2', price: '$14,040', image: ''},
-			{metal: '1.53 Carat F VS2', price: '$14,040', image: ''},
-			{metal: '1.53 Carat F VS2', price: '$14,040', image: ''},
-		],
-	},
-];
-
-export const Sidebar = ({isOpen, toggleSidebar, diamond}) => {
+export const Sidebar = ({
+	isOpen,
+	toggleSidebar,
+	diamond,
+	setIsLoginModalVisible,
+	setIsSidebarOpen,
+}) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+
+	const userSelector = useSelector(UserInfoSelector);
+
+	const userId = getUserId();
+
 	const [link, setLink] = useState('/diamond/search');
 	const [activeRcm, setActiveRcm] = useState('');
 	const [active, setActive] = useState('diamond');
-	const [shapeActive, setShapeActive] = useState();
-	const [selectedImage, setSelectedImage] = useState('');
-	const [diamondChoice, setDiamondChoice] = useState(localStorage.getItem('diamondChoice') || '');
-
-	useEffect(() => {
-		if (shapes.length > 0) {
-			setShapeActive(shapes[0].name);
-			setSelectedImage(shapes[0].options[0].image);
-		}
-	}, [shapes]);
 
 	const handleSelect = (url, ac, jewelry) => {
 		setLink(url);
@@ -66,20 +37,45 @@ export const Sidebar = ({isOpen, toggleSidebar, diamond}) => {
 	console.log(diamond);
 
 	const handleNavigate = () => {
+		const isLoggedIn = userSelector && userSelector.UserId;
+
+		if (!isLoggedIn) {
+			message.warning('Bạn cần phải đăng nhập để thêm vào giỏ hàng!');
+			setIsLoginModalVisible(true);
+			setIsSidebarOpen(false);
+			return;
+		}
+
 		const data = {
 			...diamond,
 			DiamondPrice: diamond.Price,
 		};
-		// Xác định xem lưu vào 'cart' hay 'cartDesign'
+
 		if (active === 'addToCart') {
-			// Gọi action để thêm/cập nhật giỏ hàng trong Redux
-			dispatch(addOrUpdateItem({diamond: data}));
+			// Lấy cart hiện tại từ localStorage
+			const existingCart = JSON.parse(localStorage.getItem(`cart_${userId}`)) || [];
+
+			const existingIndex = existingCart.findIndex(
+				(item) => item.DiamondId === diamond.DiamondId
+			);
+
+			if (existingIndex !== -1) {
+				// Nếu sản phẩm đã tồn tại, hiện thông báo
+				message.info('Sản phẩm này đã có trong giỏ hàng!');
+			} else {
+				// Nếu không tồn tại, thêm sản phẩm mới vào giỏ hàng thiết kế
+				existingCart.push(data);
+				message.success('Sản phẩm đã được thêm vào giỏ hàng!');
+			}
+
+			// Lưu cart cập nhật lại vào localStorage
+			localStorage.setItem(`cart_${userId}`, JSON.stringify(existingCart));
+
+			toggleSidebar();
 		} else {
-			// Gọi action để thêm/cập nhật giỏ hàng thiết kế trong Redux
 			dispatch(addOrUpdateCartDesignDiamondItem({diamond: data}));
 		}
 
-		// Điều hướng tới link mong muốn
 		navigate(link);
 	};
 
@@ -152,7 +148,7 @@ export const Sidebar = ({isOpen, toggleSidebar, diamond}) => {
 							className={`flex border-2 ${
 								active === 'addToCart' ? 'border-black' : 'border-white'
 							} p-4 m-5 rounded-lg md:cursor-pointer`}
-							onClick={() => handleSelect('/cart', 'addToCart')}
+							onClick={() => handleSelect(null, 'addToCart')}
 						>
 							<div className="pr-5">
 								<FontAwesomeIcon icon={faShoppingBag} />

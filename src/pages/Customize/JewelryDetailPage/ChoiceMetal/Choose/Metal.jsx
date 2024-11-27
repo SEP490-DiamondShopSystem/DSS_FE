@@ -1,68 +1,100 @@
 import React from 'react';
 
-import gold from '../../../../../assets/gold.png';
-import rose_gold from '../../../../../assets/rose-gold.png';
-import platinum from '../../../../../assets/platinum.png';
 import {Button, Image, Radio} from 'antd';
-import {notifyError} from '../../../../../utils/toast';
+import {formatPrice} from '../../../../../utils';
 
-export const Metal = ({setStep, customizeJewelry, setCustomizeJewelry}) => {
-	const metalItems = [
-		{
-			id: 1,
-			image: gold,
-			name: '14K Gold',
-			price: '$1,102/Gram',
-		},
-		{
-			id: 2,
-			image: rose_gold,
-			name: '14K Rose Gold',
-			price: '$1,102/Gram',
-		},
-		{id: 3, image: gold, name: '18K Gold', price: '$2,002 / Gram'},
-		{id: 4, image: platinum, name: 'Platinum', price: '$2,002 / Gram'},
-	];
-
-	const onChange = (e) => {
-		console.log('radio checked', e.target.value);
-		setCustomizeJewelry((prev) => ({
-			...prev,
-			metal: e.target.value,
-		}));
-	};
-
+export const Metal = ({
+	setStep,
+	customizeJewelry,
+	setCustomizeJewelry,
+	diamondJewelry,
+	selectedMetal,
+	setSelectedMetal,
+	handleSelectMetal,
+	filteredGroups,
+	handleSizeChange,
+	size,
+	metals,
+	findMetals,
+	selectedSideDiamond,
+	handleSideDiamondChange,
+}) => {
 	const handleNextStep = () => {
-		if (customizeJewelry?.metal.length > 0) {
-			setStep(1);
-		} else {
-			notifyError('Vui lòng chọn vật liệu!');
-		}
+		setStep((prev) => prev + 1);
 	};
+
+	console.log('filteredGroups', filteredGroups);
 
 	return (
 		<div>
 			<div>
-				{metalItems?.map((item) => (
-					<div key={item.id}>
-						<Radio.Group onChange={onChange} value={customizeJewelry.metal}>
-							<Radio value={item.name}>
+				<div className="flex items-center justify-center mt-10">
+					<label className=" font-semibold text-xl">Chọn Vật Liệu</label>
+				</div>
+				<div className="grid grid-cols-2 gap-5">
+					{findMetals?.map((metal, i) => (
+						<div key={i}>
+							<Radio.Group
+								onChange={() => handleSelectMetal(metal)}
+								value={selectedMetal?.Name}
+							>
+								<Radio value={metal.Name}>
+									<div className="">
+										<div className="flex items-center m-5 justify-between">
+											<div className="mr-10">
+												<p className="font-semibold">{metal?.Name}</p>
+											</div>
+											<p className="">{formatPrice(metal?.Price)}</p>
+										</div>
+									</div>
+								</Radio>
+							</Radio.Group>
+						</div>
+					))}
+				</div>
+			</div>
+			{diamondJewelry?.SideDiamonds?.length > 0 && (
+				<>
+					<div className="flex items-center justify-center mt-10">
+						<label className=" font-semibold text-xl">Chọn Kim Cương Tấm</label>
+					</div>
+					<div className="grid grid-cols-3 gap-5">
+						{diamondJewelry?.SideDiamonds?.map((diamond, i) => (
+							<div key={i}>
+								<Radio.Group
+									onChange={handleSideDiamondChange}
+									value={selectedSideDiamond}
+								>
+									<Radio value={diamond?.Id}>
+										<div className="">
+											<div className="m-5">
+												<p className="">{diamond?.CaratWeight} ct</p>
+											</div>
+										</div>
+									</Radio>
+								</Radio.Group>
+							</div>
+						))}
+					</div>
+				</>
+			)}
+
+			<div className="flex items-center justify-center mt-10">
+				<label className=" font-semibold text-xl">Chọn Kích Thước</label>
+			</div>
+			<div className="grid grid-cols-3 gap-5">
+				{filteredGroups?.map((metal, i) => (
+					<div key={i}>
+						<Radio.Group onChange={handleSizeChange} value={size}>
+							<Radio value={metal?.SizeId}>
 								<div
 									className="flex items-center justify-between"
-									style={{width: 500}}
+									style={{width: 1000}}
 								>
-									<div className="flex items-center">
-										<div className="mx-5 my-5">
-											<Image
-												preview={false}
-												src={item.image}
-												height={50}
-												width={50}
-											/>
-										</div>
-										<p className="">{item.name}</p>
+									<div className="flex items-center justify-between  m-5">
+										<p className="">{metal?.SizeId}</p>
 									</div>
-									<p className="font-semibold">{item.price}</p>
+									{/* <p className="font-semibold">{formatPrice(metal.Price)}</p> */}
 								</div>
 							</Radio>
 						</Radio.Group>
@@ -73,7 +105,7 @@ export const Metal = ({setStep, customizeJewelry, setCustomizeJewelry}) => {
 				<Button
 					type="text"
 					className="bg-primary w-48 uppercase font-semibold"
-					disabled={customizeJewelry.metal.length === 0}
+					disabled={size === null}
 					onClick={handleNextStep}
 				>
 					Tiếp tục

@@ -1,54 +1,57 @@
 import React from 'react';
 
-import {Button, Image, Input} from 'antd';
-import caratImage from '../../../../../assets/carat-weight.png';
-import {notifyError} from '../../../../../utils/toast';
+import {InfoCircleFilled} from '@ant-design/icons';
+import {Input, Popover, Slider, Space} from 'antd';
 
-export const Carat = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
-	const onChange = (e) => {
-		const {name, value} = e.target;
+export const Carat = ({
+	setStep,
+	customizeDiamond,
+	setCustomizeDiamond,
+	currentDiamond,
+	caratFromShape,
+	caratToShape,
+}) => {
+	const handleCaratChange = (value) => {
 		setCustomizeDiamond((prev) => ({
 			...prev,
-			[name]: value,
+			caratFrom: value[0],
+			caratTo: value[1],
 		}));
 	};
 
-	const handleNextStep = () => {
-		const {carat} = customizeDiamond;
+	const text = <span>Carat (ct.)</span>;
 
-		if (carat < 0.05 || carat > 2) {
-			notifyError('Vui lòng chọn giới hạn carat hợp lệ!'); // Show an error
-		}
-
-		// If all conditions are valid, move to the next step
-		else {
-			setStep(1);
-		}
-	};
+	const content = (
+		<div style={{width: 300, textAlign: 'justify'}}>
+			<p>
+				Đơn vị trọng lượng quốc tế, được sử dụng để đo kim cương và đá quý. 1 carat bằng 200
+				miligam hoặc 0,2 gam.
+			</p>
+		</div>
+	);
 
 	return (
 		<div>
-			<div>
-				<Image preview={false} src={caratImage} />
+			<div className="flex items-center justify-center mt-10">
+				<label className=" font-semibold text-xl">
+					Chọn Ly (Carat){' '}
+					<Popover placement="topLeft" title={text} content={content}>
+						<InfoCircleFilled />
+					</Popover>
+				</label>
 			</div>
-			<div className="flex items-center justify-center">
-				<Input
-					addonBefore="Carat"
-					name="carat"
-					value={customizeDiamond.carat}
-					className="w-32 ml-10"
-					onChange={onChange}
+			<div className="my-10 text-primary text-lg font-semibold flex justify-center items-center">
+				Kim Cương Được Chọn Ly (Carat): {caratFromShape} - {caratToShape}
+			</div>
+			<div className="mx-20 my-10">
+				<Slider
+					range
+					value={[customizeDiamond?.caratFrom, customizeDiamond?.caratTo]}
+					step={0.01}
+					min={caratFromShape}
+					max={caratToShape}
+					onChange={handleCaratChange}
 				/>
-			</div>
-			<div className="flex justify-center items-center mt-10">
-				<Button
-					type="text"
-					className="bg-primary w-48 uppercase font-semibold"
-					disabled={customizeDiamond.carat?.length === 0}
-					onClick={handleNextStep}
-				>
-					Tiếp tục
-				</Button>
 			</div>
 		</div>
 	);

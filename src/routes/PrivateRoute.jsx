@@ -1,48 +1,53 @@
-import React, {useEffect, useState} from 'react';
 import {message} from 'antd';
+import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Navigate} from 'react-router-dom';
-import {GetUserDetailSelector, UserInfoSelector} from '../redux/selectors';
+import Loading from '../components/Loading';
+import {GetUserDetailSelector} from '../redux/selectors';
 import {getUserDetail} from '../redux/slices/userLoginSlice';
 
-export const PrivateRoute = ({children, roles}) => {
-	const userSelector = useSelector(UserInfoSelector);
+const PrivateRoute = ({children, roles}) => {
+	const userId = localStorage.getItem('userId');
 	const userDetail = useSelector(GetUserDetailSelector);
+
 	const dispatch = useDispatch();
 
-	const [loading, setLoading] = useState(true); // Thêm state loading
+	console.log('userId', userId);
+	console.log(userDetail);
+
+	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
-		if (userSelector && userSelector.UserId) {
-			dispatch(getUserDetail(userSelector.UserId)).finally(() => {
+		if (userId) {
+			dispatch(getUserDetail(userId)).finally(() => {
 				setLoading(false);
 			});
 		} else {
 			setLoading(false);
 		}
-	}, [dispatch, userSelector]);
+	}, [dispatch, userId]);
 
 	if (loading) {
-		return <div>Loading...</div>;
+		return <Loading />;
 	}
 
 	// Kiểm tra xem người dùng đã đăng nhập chưa
 	if (
-		!userSelector ||
-		userSelector === 0 ||
+		!userId ||
+		userId === 0 ||
 		!userDetail ||
 		!userDetail.Roles ||
 		userDetail.Roles.length === 0
 	) {
 		console.log('Private route redirect: User not logged in');
-		message.error('Xin Đăng Nhập!');
+		message.error('Vui Lòng Đăng Nhập!');
 		return <Navigate to="/" />;
 	}
 
 	// Kiểm tra xem userDetail có tồn tại không
 	if (!userDetail || !userDetail.Roles || userDetail.Roles.length === 0) {
 		console.log('Private route redirect: User roles not available');
-		message.error('User roles are not available!');
+		message.error('Vai trò người dùng không có sẵn!');
 		return <Navigate to="/" />;
 	}
 
@@ -59,3 +64,4 @@ export const PrivateRoute = ({children, roles}) => {
 	// Nếu có quyền, cho phép truy cập vào children
 	return <>{children}</>;
 };
+export default PrivateRoute;

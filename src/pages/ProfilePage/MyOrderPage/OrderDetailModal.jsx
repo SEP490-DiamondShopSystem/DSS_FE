@@ -1,147 +1,317 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Divider, Image, Space, Steps} from 'antd';
+
+import {DeleteOutlined, FileTextOutlined, StarOutlined} from '@ant-design/icons';
+import {
+	Button,
+	Form,
+	Image,
+	Input,
+	message,
+	Modal,
+	Rate,
+	Table,
+	Tooltip,
+	Typography,
+	Upload,
+} from 'antd';
+import {useDispatch, useSelector} from 'react-redux';
 import logo from '../../../assets/logo-short-ex.png';
-import '../../../css/antd.css';
+import Loading from '../../../components/Loading';
+import {
+	GetAllOrderDetailSelector,
+	GetOrderInvoiceSelector,
+	GetOrderLogsSelector,
+	GetStatusOrderSelector,
+	LoadingOrderSelector,
+	ReviewSelector,
+} from '../../../redux/selectors';
+import {
+	getOrderFiles,
+	getOrderLog,
+	getUserOrderDetail,
+	handleOrderCancel,
+} from '../../../redux/slices/orderSlice';
+import {deleteReviewAction, handleReviewOrder} from '../../../redux/slices/reviewSlice';
+import {formatPrice, getOrderItemStatusTag} from '../../../utils';
+import {OrderStatus} from './OrderStatus';
+import {TransactionDetails} from './TransactionList';
+import {OrderLog} from './OrderLog';
 
-const detailGroups = {
-	total_price: 20138000,
-	groups: [
+const {Text, Title} = Typography;
+
+export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder}) => {
+	const dispatch = useDispatch();
+	const orderDetail = useSelector(GetAllOrderDetailSelector);
+	const loading = useSelector(LoadingOrderSelector);
+	const orderLogList = useSelector(GetOrderLogsSelector);
+	const statusOrder = useSelector(GetStatusOrderSelector);
+	const orderInvoice = useSelector(GetOrderInvoiceSelector);
+	const reviewDetail = useSelector(ReviewSelector);
+
+	const [isCancelModalVisible, setIsCancelModalVisible] = useState(false);
+	const [isReviewModalVisible, setIsReviewModalVisible] = useState(false);
+	const [isModalVisible, setIsModalVisible] = useState(false);
+	const [order, setOrder] = useState(null);
+	const [rating, setRating] = useState(0);
+	const [fileList, setFileList] = useState([]);
+	const [jewelryId, setJewelryId] = useState(null);
+	const [transaction, setTransaction] = useState();
+	const [orderLog, setOrderLog] = useState();
+	const [reviewContent, setReviewContent] = useState(null);
+	const [imageFiles, setImageFiles] = useState([]);
+
+	const data = order?.Items?.map((item, i) => ({
+		key: i,
+		orderDate: order?.CreatedDate || 'N/A',
+		productName: item?.Diamond?.Title || item?.Jewelry?.SerialCode,
+		price: formatPrice(item?.PurchasedPrice || 0),
+		jewelryId: item?.JewelryId || null,
+		diamondId: item?.DiamondId || null,
+		orderId: order?.Id || null,
+		orderCode: order?.OrderCode,
+		paymentMethod: order?.PaymentMethod?.MappedName,
+		shippingAddress: order?.ShippingAddress,
+		status: order?.Status,
+		shippingFee: formatPrice(order?.ShippingFee || 0),
+		totalPrice: formatPrice(order?.TotalPrice || 0),
+		totalRefund: formatPrice(order?.TotalRefund || 0),
+		cancelledReason: order?.CancelledReason || null,
+		cancelledDate: order?.CancelledDate || null,
+		logs: order?.Logs || [],
+		delivererId: order?.DelivererId || null,
+		expectedDate: order?.ExpectedDate || null,
+		UserRankAmountSaved: order?.UserRankAmountSaved,
+		Review: item?.Jewelry?.Review,
+		itemStatus: item?.Status,
+	}));
+
+	const columns = [
 		{
-			jewelry_price: 10069000,
-			status: 'Completed',
-			items: [
-				{
-					id: 86,
-					name: 'Round Diamond 3.5 Carat IF',
-					unitPrice: 3357000,
-					orderTime: '26/09/2024',
-				},
-				{
-					id: 87,
-					name: 'Round Diamond 3.5 Carat VVS1',
-					unitPrice: 4467000,
-					orderTime: '26/09/2024',
-				},
-				{
-					id: 88,
-					name: 'Petite Solitaire Engagement Ring In 14k White Gold',
-					unitPrice: 2245000,
-					orderTime: '26/09/2024',
-				},
-			],
+			title: 'Ngày Đặt Hàng',
+			dataIndex: 'orderDate',
+			key: 'orderDate',
+			align: 'center',
+			render: (text) => <div className="flex justify-center">{text}</div>,
 		},
-	],
-};
+		{
+			title: 'Sản Phẩm',
+			dataIndex: 'productName',
+			key: 'productName',
+			align: 'center',
+			render: (text) => <div className="flex justify-center">{text}</div>,
+		},
+		{
+			title: 'Giá Sản Phẩm',
+			dataIndex: 'price',
+			key: 'price',
+			align: 'center',
+			render: (_, record) => (
+				<div className="flex flex-col items-center">
+					<div>{record.price}</div>
+				</div>
+			),
+		},
+		{
+			title: 'Trạng Thái',
+			dataIndex: 'itemStatus',
+			key: 'itemStatus',
+			align: 'center',
+			render: (_, record) => (
+				<div className="flex flex-col items-center">
+					<div>{getOrderItemStatusTag(record.itemStatus)}</div>
+				</div>
+			),
+		},
 
-export const OrderDetailModal = ({openDetail, toggleDetailModal}) => {
-	const [showMore, setShowMore] = useState(false);
-	const [currentStep, setCurrentStep] = useState(0);
+		...(orderDetail?.Status === 8 &&
+		orderDetail.Items?.some((item) => item.Jewelry && item.Jewelry.Review === null)
+			? [
+					{
+						title: 'Đánh Giá',
+						dataIndex: 'jewelryId',
+						key: 'jewelryId',
+						align: 'center',
+						render: (_, record) => {
+							const jewelryId = record?.jewelryId;
 
-	const orderStatus = 'Vận Chuyển';
+							// Kiểm tra xem jewelry có tồn tại và có dữ liệu không
+
+							return (
+								<div className="flex justify-center">
+									<Tooltip title="Đánh giá">
+										<Button
+											type="primary"
+											icon={<StarOutlined />}
+											onClick={() => handleReviewRequest(jewelryId)} // Gọi hàm review request
+										></Button>
+									</Tooltip>
+								</div>
+							);
+						},
+					},
+			  ]
+			: orderDetail?.Status === 8 && orderDetail?.Items?.some((item) => item.Jewelry !== null) // Nếu Jewelry tồn tại
+			? [
+					{
+						title: 'Đánh Giá',
+						dataIndex: 'jewelryId',
+						key: 'jewelryId',
+						align: 'center',
+						render: (_, record) => {
+							const review = record?.Review;
+							console.log('record', record);
+
+							return (
+								<div className="flex justify-center">
+									<Tooltip title="Xem lại đánh giá">
+										<Button
+											type="primary"
+											icon={<StarOutlined />}
+											onClick={() => showModal(review)} // Mở modal với review
+										></Button>
+									</Tooltip>
+								</div>
+							);
+						},
+					},
+			  ]
+			: []),
+		...(orderInvoice
+			? [
+					{
+						title: 'Hóa Đơn',
+						dataIndex: 'jewelryId',
+						key: 'jewelryId',
+						align: 'center',
+						render: (_, record) => (
+							<div className="flex justify-center">
+								<Button
+									type="text"
+									icon={<FileTextOutlined />}
+									onClick={handleInvoice}
+								>
+									Hóa Đơn
+								</Button>
+							</div>
+						),
+					},
+			  ]
+			: []),
+	];
 
 	useEffect(() => {
-		switch (orderStatus) {
-			case 'Shop Chấp Nhận':
-				setCurrentStep(0);
-				break;
-			case 'Chuẩn Bị Hàng':
-				setCurrentStep(1);
-				break;
-			case 'Vận Chuyển':
-				setCurrentStep(2);
-				break;
-			case 'Nhận Hàng':
-				setCurrentStep(3);
-				break;
-			case 'Hoàn Thành':
-				setCurrentStep(4);
-				break;
-			default:
-				setCurrentStep(0);
+		if (selectedOrder?.orderId) {
+			dispatch(getOrderLog(selectedOrder.orderId));
+			dispatch(getOrderFiles(selectedOrder.orderId));
+			dispatch(getUserOrderDetail(selectedOrder.orderId));
 		}
-	}, [orderStatus]);
+	}, [selectedOrder, dispatch, statusOrder, reviewDetail]);
 
-	const steps = [
-		{
-			title: 'Shop Chấp Nhận',
-		},
-		{
-			title:
-				currentStep === 2 || currentStep === 3 || currentStep === 4
-					? 'Chuẩn Bị Hàng Xong'
-					: 'Đang Chuẩn Bị Hàng',
-		},
-		{
-			title:
-				currentStep === 3 || currentStep === 4
-					? 'Vận Chuyển Thành Công'
-					: 'Đang Vận Chuyển',
-		},
-		{
-			title: currentStep === 4 ? 'Nhận Hàng Thành Công' : 'Nhận Hàng',
-		},
-	];
+	useEffect(() => {
+		if (orderDetail) {
+			setOrder(orderDetail);
+		}
+	}, [orderDetail]);
 
-	const allSteps = [
-		{
-			title: 'Finished 123',
-			description: 'This is a description.',
-			subTitle: '00:01:02',
-			status: 'finish',
-		},
-		{
-			title: 'Finished 345',
-			description: 'This is a description.',
-			subTitle: '00:01:02',
-			status: 'finish',
-		},
-		{
-			title: 'In Progress 123',
-			description: 'This is a description.',
-			subTitle: '00:01:02',
-			status: 'finish',
-		},
-		{
-			title: 'Waiting 123',
-			description: 'This is a description.',
-			subTitle: '00:01:02',
-			status: 'process',
-		},
-		{
-			title: 'Error 345',
-			description: 'This is a description.',
-			subTitle: '00:01:02',
-			status: 'error',
-		},
-	];
+	console.log('selectedOrder', selectedOrder);
 
-	const handleShowMore = () => {
-		setShowMore(!showMore);
+	useEffect(() => {
+		if (orderDetail) {
+			setTransaction(orderDetail?.Transactions);
+			setOrderLog(orderDetail?.Logs);
+		}
+	}, [orderDetail, selectedOrder]);
+
+	const showModal = (review) => {
+		setReviewContent(review);
+		setIsModalVisible(true);
+		setRating(review ? review.rating : 0);
 	};
 
-	const getFilteredSteps = () => {
-		const reversedSteps = [...allSteps].reverse();
-
-		// Lọc ra các bước có trạng thái 'finish' và 'process'
-		const filteredSteps = reversedSteps.filter(
-			(step) => step.status === 'finish' || step.status === 'process'
-		);
-
-		if (showMore) {
-			return filteredSteps;
-		}
-
-		// Tìm các bước có trạng thái 'process'
-		const processSteps = filteredSteps.filter((step) => step.status === 'process');
-
-		if (processSteps.length > 0) {
-			return processSteps;
-		}
-
-		// Nếu không có bước 'process', chỉ hiển thị 2 bước 'finish' cuối cùng
-		const finishSteps = filteredSteps.filter((step) => step.status === 'finish');
-		return finishSteps.slice(0, 2);
+	const handleCancel = () => {
+		setIsModalVisible(false);
 	};
+
+	const handleDeleteReview = () => {
+		console.log('reviewContent', reviewContent);
+
+		if (reviewContent) {
+			dispatch(deleteReviewAction(reviewContent.Id))
+				.unwrap()
+				.then((res) => {
+					setReviewContent(null);
+					setRating(0);
+					message.success('Đánh giá đã được xóa');
+					setIsModalVisible(false);
+				})
+				.catch((error) => {
+					message.error(error?.title || error?.data?.title);
+				});
+		}
+	};
+
+	const handleCancelOrder = () => {
+		setIsCancelModalVisible(true);
+	};
+
+	const handleReviewRequest = (id) => {
+		console.log('jewelryId', id);
+
+		setJewelryId(id);
+		setIsReviewModalVisible(true);
+	};
+
+	const submitCancelOrder = (values) => {
+		dispatch(handleOrderCancel({orderId: order.Id, reason: values.reason}))
+			.unwrap()
+			.then(() => {
+				message.success('Hủy đơn thành công!');
+			})
+			.catch((error) => {
+				message.error(error?.data?.title || error?.detail);
+			});
+		setIsCancelModalVisible(false);
+	};
+
+	const submitReviewRequest = (values) => {
+		console.log('values', values);
+		const {Content, StarRating} = values;
+
+		dispatch(
+			handleReviewOrder({
+				Content,
+				Files: imageFiles,
+				StarRating,
+				JewelryId: jewelryId,
+			})
+		)
+			.unwrap()
+			.then(() => {
+				message.success('Đánh giá thành công!');
+				setIsReviewModalVisible(false);
+			})
+			.catch((error) => {
+				message.error(
+					error?.data?.errors?.Files[0] || error?.data?.title || 'Có lỗi xảy ra!'
+				);
+			});
+	};
+
+	const handleFileChange = ({fileList}) => {
+		setFileList(fileList);
+	};
+
+	const handleRatingChange = (value) => {
+		setRating(value);
+	};
+
+	const handleInvoice = () => {
+		if (orderInvoice) {
+			window.open(`${orderInvoice?.MediaPath}`, '_blank');
+		}
+	};
+
+	console.log('reviewContent', reviewContent);
 
 	return (
 		<>
@@ -153,141 +323,223 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal}) => {
 			)}
 			{openDetail && (
 				<div
-					className={`fixed top-1/2 right-1/2 bg-white transform transition-transform duration-300 ease-in-out ${
-						openDetail ? 'z-50' : 'z-0'
-					} ${openDetail ? 'translate-x-1/2 -translate-y-1/2' : 'translate-x-full'} p-10`}
-					style={{width: 1200, maxHeight: '80vh', overflowY: 'auto'}}
+					className="fixed top-1/2 right-1/2 bg-white transform transition-transform duration-300 ease-in-out z-50 translate-x-1/2 -translate-y-1/2 p-10"
+					style={{width: '95%', maxHeight: '80vh', overflowY: 'auto'}}
 				>
-					<div className="flex justify-between items-center">
-						<div className="">
-							<Image
-								src={logo}
-								alt=""
-								preview={false}
-								className="max-h-10 max-w-10 mb-2"
-							/>
-							<p>Thủ Đức, TP.Hồ Chí Minh, VietNam</p>
-						</div>
-						<div className="text-end">
-							<h2 className="uppercase text-2xl font-semibold">
-								Trạng thái đơn hàng
-							</h2>
-							<p>Hóa đơn ID: #1031</p>
-							<p>Ngày: 19/9/2024</p>
-						</div>
-					</div>
-
-					<div className="mt-5">
-						<div>
-							<h2 className="text-2xl font-semibold">Địa chỉ giao hàng</h2>
-							<p>VietNam</p>
-							<p>Quận 9, Tp. Hồ Chí Minh</p>
-							<p>0912345678</p>
-						</div>
-
-						<div className="flex justify-center items-center space-x-4 mt-8">
-							<Steps labelPlacement="vertical" current={currentStep} items={steps} />
-						</div>
-
-						<div className="mt-8">
-							<div>
-								<Steps
-									progressDot
-									direction="vertical"
-									items={getFilteredSteps()}
-								/>
-								<button
-									className="mt-4 text-primary underline cursor-pointer"
-									onClick={handleShowMore}
-								>
-									{showMore ? 'Show Less' : 'Show More'}
-								</button>
-							</div>
-						</div>
-					</div>
-					<div className="flex justify-between">
-						<h1 className="text-xl font-semibold">Chi tiết đơn hàng</h1>
-						<Button type="text" className="bg-red text-white">
-							Yêu cầu trả lại
-						</Button>
-					</div>
-					<div className="mt-10">
-						<div className="w-full bg-primary p-5 border rounded">
-							<div className="w-full flex items-center font-semibold text-lg">
-								<p style={{width: '10%'}} className="flex justify-center">
-									Id
-								</p>
-								<p
-									style={{width: '20%'}}
-									className="flex justify-center text-center"
-								>
-									Thời gian đặt hàng
-								</p>
-								<p style={{width: '40%'}} className="flex justify-center">
-									Sản phẩm
-								</p>
-								<p style={{width: '10%'}} className="flex justify-center">
-									Giá
-								</p>
-								<p style={{width: '20%'}} className="flex justify-center">
-									Trạng thái
-								</p>
-							</div>
-						</div>
-						<div className="w-full">
-							{detailGroups.groups.map((gr, i) => (
-								<div key={i} className="border mb-5 p-5 rounded">
-									{gr.items.map((item, j) => (
-										<div key={j}>
-											<div className="w-full flex items-center text-lg">
-												<p
-													style={{width: '10%'}}
-													className="flex justify-center"
-												>
-													{item.id}
-												</p>
-												<p
-													style={{width: '20%'}}
-													className="flex justify-center"
-												>
-													{item.orderTime}
-												</p>
-												<p style={{width: '40%'}} className="flex my-2">
-													{item.name}
-												</p>
-												<p
-													style={{width: '10%'}}
-													className="flex justify-center my-2"
-												>
-													{item.unitPrice.toLocaleString()} ₫
-												</p>
-												<p
-													style={{width: '20%'}}
-													className="flex justify-center"
-												>
-													{gr.status}
-												</p>
-											</div>
-											<Divider />
-										</div>
-									))}
-									<div className="flex items-center justify-end">
-										<p className="font-semibold">Giá trang sức</p>
-										<p className="text-2xl font-semibold text-red-600 ml-5">
-											{gr.jewelry_price.toLocaleString()} ₫
-										</p>
-									</div>
+					{loading ? (
+						<Loading />
+					) : (
+						<>
+							<div className="flex justify-between items-center">
+								<div>
+									<Image
+										src={logo}
+										alt="Logo"
+										preview={false}
+										className="max-h-10 max-w-10 mb-2"
+									/>
+									<p>Thủ Đức, TP.Hồ Chí Minh, VietNam</p>
 								</div>
-							))}
-						</div>
-					</div>
-					<div className="text-end">
-						<p className="text-2xl font-semibold text-red-600">
-							Tổng giá: {detailGroups.total_price.toLocaleString()} ₫
-						</p>
-					</div>
+								<div className="text-end">
+									<h2 className="uppercase text-2xl font-semibold">
+										Trạng thái đơn hàng
+									</h2>
+									<p>Mã đơn hàng: #{order?.OrderCode}</p>
+									<p>Ngày: {order?.CreatedDate}</p>
+								</div>
+							</div>
+							<div className="mt-5">
+								<h2 className="text-2xl font-semibold">Địa chỉ giao hàng</h2>
+								<p>{order?.ShippingAddress}</p>
+							</div>
+							<OrderStatus orderStatus={statusOrder} orderDetail={order} />
+							<div className="w-full flex">
+								<div className="w-2/3">
+									<TransactionDetails transactions={transaction} />
+								</div>
+								<div className="w-1/3">
+									<OrderLog orderLogs={orderLog} />
+								</div>
+							</div>
+
+							<div className="flex justify-between">
+								<Title level={3} className="text-xl font-semibold">
+									Chi tiết đơn hàng
+								</Title>
+								{statusOrder === 1 && (
+									<Button
+										type="text"
+										className="bg-red text-white"
+										onClick={handleCancelOrder}
+									>
+										Hủy Đơn
+									</Button>
+								)}
+								{statusOrder === 2 && (
+									<Button
+										type="text"
+										className="bg-red text-white"
+										onClick={handleCancelOrder}
+									>
+										Hủy Đơn
+									</Button>
+								)}
+								{statusOrder === 5 && (
+									<Button
+										type="text"
+										className="bg-red text-white"
+										onClick={handleCancelOrder}
+									>
+										Hủy Đơn
+									</Button>
+								)}
+							</div>
+							<div className="mt-10">
+								<Table
+									columns={columns}
+									dataSource={data}
+									pagination={false}
+									size="large"
+									bordered
+								/>
+							</div>
+							<div className="justify-end items-end flex flex-col mt-10">
+								<div>Phí giao hàng: {formatPrice(order?.ShippingFee)}</div>
+								{order?.UserRankAmountSaved !== 0 && (
+									<div>
+										Khách hàng thân thiết: -
+										{formatPrice(order?.UserRankAmountSaved)}
+									</div>
+								)}
+								<p className="font-semibold text-lg mt-2">
+									Tổng cộng: {formatPrice(order?.TotalPrice)}
+								</p>
+							</div>
+							{/* Cancel Order Modal */}
+							<Modal
+								title="Hủy Đơn"
+								visible={isCancelModalVisible}
+								onCancel={() => setIsCancelModalVisible(false)}
+								footer={null}
+							>
+								<Form onFinish={submitCancelOrder}>
+									<Form.Item
+										label="Lý do hủy"
+										name="reason"
+										rules={[
+											{
+												required: true,
+												message: 'Vui lòng nhập lý do hủy đơn',
+											},
+										]}
+									>
+										<Input.TextArea />
+									</Form.Item>
+									<div className="flex items-center justify-center">
+										<Button
+											type="text"
+											className="bg-primary"
+											htmlType="submit"
+										>
+											Xác nhận hủy
+										</Button>
+									</div>
+								</Form>
+							</Modal>
+							<Modal
+								title="Đánh giá"
+								visible={isReviewModalVisible}
+								onCancel={() => setIsReviewModalVisible(false)}
+								footer={null}
+							>
+								<Form onFinish={submitReviewRequest}>
+									<Form.Item
+										label="Đánh giá sản phẩm"
+										name="StarRating"
+										rules={[
+											{required: true, message: 'Vui lòng đánh giá sản phẩm'},
+										]}
+									>
+										<Rate
+											value={rating}
+											onChange={handleRatingChange}
+											style={{color: 'yellow'}}
+										/>
+									</Form.Item>
+									<Form.Item label="Tải ảnh lên" name="Files">
+										<Upload
+											multiple
+											listType="picture"
+											fileList={fileList}
+											onChange={handleFileChange}
+											beforeUpload={(file) => {
+												setImageFiles((fileList) => [...fileList, file]);
+												return false;
+											}}
+											maxCount={3}
+										>
+											<Button>Chọn ảnh</Button>
+										</Upload>
+									</Form.Item>
+									<Form.Item
+										label="Ý kiến của bạn"
+										name="Content"
+										rules={[
+											{
+												required: true,
+												message: 'Vui lòng nhập ý kiến đánh giá',
+											},
+										]}
+									>
+										<Input.TextArea />
+									</Form.Item>
+									<div className="flex items-center justify-center">
+										<Button
+											type="text"
+											className="bg-primary"
+											htmlType="submit"
+										>
+											Gửi đánh giá
+										</Button>
+									</div>
+								</Form>
+							</Modal>
+						</>
+					)}
 				</div>
 			)}
+			<Modal
+				title="Thông tin Đánh Giá"
+				visible={isModalVisible}
+				onCancel={handleCancel}
+				footer={[
+					<Button
+						key="delete"
+						type="danger"
+						icon={<DeleteOutlined />}
+						onClick={handleDeleteReview}
+					>
+						Xóa Đánh Giá
+					</Button>,
+					<Button key="cancel" onClick={handleCancel}>
+						Đóng
+					</Button>,
+				]}
+			>
+				<div>
+					{reviewContent ? (
+						<div className="flex flex-col">
+							<p>{reviewContent.Content}</p> {/* Hiển thị nội dung review nếu có */}
+							<Rate value={reviewContent?.StarRating} disabled />
+							{reviewContent?.Medias?.map((item) => (
+								<Image src={item.MediaPath} width={200} />
+							))}
+						</div>
+					) : (
+						<p>Không có đánh giá nào</p>
+					)}
+				</div>
+			</Modal>
 		</>
 	);
 };

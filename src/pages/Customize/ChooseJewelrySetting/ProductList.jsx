@@ -1,29 +1,35 @@
 import React, {useEffect, useState} from 'react';
 
 import {Image} from 'antd';
-import ReactLoading from 'react-loading';
+import debounce from 'lodash/debounce';
+import Loading from 'react-loading';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
-import jewelryImg from '../../../assets/ring_classic.png';
-import {GetAllJewelrySelector, LoadingJewelrySelector} from '../../../redux/selectors';
-import {getAllJewelry} from '../../../redux/slices/jewelrySlice';
-import {FilterAllJewelry} from '../../../components/Filter/Filter';
+import jewelryImg from '../../../assets/jewelry.png';
+import {FilterJewelryCustomize} from '../../../components/Filter/Filter';
+import {
+	GetAllJewelryModelCustomizeSelector,
+	LoadingJewelrySelector,
+} from '../../../redux/selectors';
+import {getAllJewelryModelCustomize} from '../../../redux/slices/customizeSlice';
 
 export const ProductList = () => {
 	const navigate = useNavigate();
-	const jewelryList = useSelector(GetAllJewelrySelector);
+	const jewelryList = useSelector(GetAllJewelryModelCustomizeSelector);
 	const loading = useSelector(LoadingJewelrySelector);
 	const dispatch = useDispatch();
 
 	const [jewelries, setJewelries] = useState();
+	// const [page, setPage] = useState(100);
 	const [filters, setFilters] = useState({
-		gender: [],
-		type: [],
-		metal: [],
-		price: {minPrice: 0, maxPrice: 1000},
+		// gender: [],
+		Type: undefined,
+		name: undefined,
+		IsRhodiumFinished: undefined,
+		IsEngravable: undefined,
 	});
 
-	console.log(filters);
+	console.log('filters', filters);
 
 	useEffect(() => {
 		const saved = localStorage.getItem('jewelry');
@@ -35,25 +41,39 @@ export const ProductList = () => {
 		}
 	}, []);
 
-	console.log(filters);
+	console.log('jewelryList', jewelryList);
+	console.log('jewelries', jewelries);
+
+	const fetchJewelryData = debounce(() => {
+		dispatch(
+			getAllJewelryModelCustomize({
+				Category: filters.Type,
+				name: filters?.name,
+				IsRhodiumFinished: filters?.IsRhodiumFinished,
+				IsEngravable: filters?.IsEngravable,
+			})
+		);
+	}, 500);
 
 	useEffect(() => {
-		dispatch(getAllJewelry());
-	}, [dispatch]);
+		fetchJewelryData();
+
+		return () => fetchJewelryData.cancel();
+	}, [filters]);
 
 	useEffect(() => {
-		if (jewelryList) setJewelries(jewelryList);
+		if (jewelryList) setJewelries(jewelryList.Values);
 	}, [jewelryList]);
 
 	const handleReset = () => {
 		localStorage.removeItem('jewelry');
-		setFilters({gender: [], type: [], metal: [], price: {minPrice: 0, maxPrice: 1000}});
+		setFilters({gender: [], Type: [], metal: [], price: {minPrice: 0, maxPrice: 1000}});
 	};
 
 	return (
 		<>
 			<div className="mt-10">
-				<FilterAllJewelry
+				<FilterJewelryCustomize
 					setFilters={setFilters}
 					filters={filters}
 					handleReset={handleReset}
@@ -61,9 +81,7 @@ export const ProductList = () => {
 			</div>
 
 			{loading ? (
-				<div className="flex items-center justify-center my-10">
-					<ReactLoading height={'10%'} width={'10%'} type="spin" color="#dec986" />
-				</div>
+				<Loading />
 			) : (
 				<>
 					{/* <div className="text-2xl flex justify-end mt-10">
@@ -73,23 +91,23 @@ export const ProductList = () => {
 						{jewelries?.map((jewelry, i) => (
 							<div
 								key={i}
-								className="shadow-lg bg-white rounded-lg hover:border-2 cursor-pointer"
-								onClick={() => navigate(`/customize/diamond-jewelry/${jewelry.id}`)}
+								className="shadow-lg bg-white rounded-lg border-2 border-white hover:border-2 hover:border-black cursor-pointer"
+								onClick={() => navigate(`/customize/diamond-jewelry/${jewelry.Id}`)}
 							>
-								<div className="w-80">
+								<div className="">
 									<div
 										className=" flex justify-center mb-5"
 										style={{background: '#b8b7b5'}}
 									>
 										<Image
-											src={jewelryImg}
-											alt={jewelry.title}
+											src={jewelry.ThumbnailPath || jewelryImg}
+											alt={jewelry.Name}
 											className=""
 											preview={false}
 										/>
 									</div>
 									<div className="mx-5 my-5">
-										<p>{jewelry.title}</p>
+										<p>{jewelry.Name}</p>
 										<div className="flex mt-2">
 											<p className="line-through" style={{color: '#b0b0b0'}}>
 												{jewelry.price}

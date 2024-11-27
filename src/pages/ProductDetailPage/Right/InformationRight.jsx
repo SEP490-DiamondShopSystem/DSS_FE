@@ -53,7 +53,7 @@ export const InformationRight = ({
 					<p className="ml-5">477 Đánh Giá</p>
 				</div>
 				<div className="font-semibold my-2">
-					Ngày Giao Hàng Dự Kiến: {convertToVietnamDate(diamondJewelry?.ShippingDate)}
+					Ngày Giao Hàng Dự Kiến: {diamondJewelry?.ShippingDate}
 				</div>
 				{/* <div className="flex mb-2">
 					<div className="font-semibold  text-green cursor-pointer">

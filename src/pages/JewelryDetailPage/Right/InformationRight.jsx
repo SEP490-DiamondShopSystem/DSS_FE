@@ -1,58 +1,19 @@
+import React, {useEffect, useState} from 'react';
+
 import {MinusOutlined, PlusOutlined} from '@ant-design/icons';
 import {faRefresh, faTruck} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {Button, message, Rate, Select} from 'antd';
-import React, {useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
-import {convertToVietnamDate, formatPrice} from '../../../utils';
-import {addToCart} from '../../../redux/slices/cartSlice';
-import {useDispatch} from 'react-redux';
+import {getUserId} from '../../../components/GetUserId';
+import {GetAllReviewSelector, UserInfoSelector} from '../../../redux/selectors';
+import {convertToVietnamDate, formatPrice, Rating} from '../../../utils';
+import JewelryPopup from '../Popup/ProductReviews';
+import {getAllJewelryModelReview} from '../../../redux/slices/reviewSlice';
+import ProductReviews from '../Popup/ProductReviews';
 
-const metalType = {
-	id: 12212,
-	name: 'Nhẫn Đính Hôn Heirloom Petite Milgrain',
-	price: '$620',
-	priceDiscount: '$465',
-	productDetail:
-		'Thể hiện tình yêu của bạn với chiếc nhẫn đính hôn bằng vàng trắng 14k này, với thiết kế gài kim cương bằng móc theo hướng đông-tây.',
-	clarity: '',
-	cut: '',
-	color: '',
-	optionsMetal: [
-		{
-			metal: '14k',
-			metalSelect: 'Vàng Trắng 14k',
-			color: 'gray',
-			ship: 'Thứ Hai, 26 tháng 8',
-		},
-		{
-			metal: '14k',
-			metalSelect: 'Vàng Vàng 14k',
-			color: 'second',
-			ship: 'Thứ Sáu, 30 tháng 8',
-		},
-		{
-			metal: '14k',
-			metalSelect: 'Vàng Hồng 14k',
-			color: 'red',
-			ship: 'Chủ Nhật, 25 tháng 8',
-		},
-	],
-	optionsWidth: [
-		{
-			width: '2.00',
-		},
-		{
-			width: '3.00',
-		},
-		{
-			width: '4.00',
-		},
-		{
-			width: '5.00',
-		},
-	],
-};
+const {Option} = Select;
 
 export const InformationRight = ({
 	selectedMetal,
@@ -60,14 +21,44 @@ export const InformationRight = ({
 	diamondJewelry,
 	size,
 	setSize,
+	setIsLoginModalVisible,
+	setSelectedSideDiamond,
+	selectedSideDiamond,
+	filteredGroups,
+	id,
 }) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
+	const reviewList = useSelector(GetAllReviewSelector);
+
 	const [showDetail, setDetail] = useState(false);
 	const [showSecureShopping, setSecureShopping] = useState(false);
 	const [showProductWarranty, setProductWarranty] = useState(false);
-	const [jewelryType, setJewelryType] = useState(localStorage.getItem('jewelryType'));
+	const [reviewLength, setReviewLength] = useState(null);
+	const [reviews, setReviews] = useState(null);
+	const [orderBy, setOrderBy] = useState(false);
+
+	useEffect(() => {
+		dispatch(
+			getAllJewelryModelReview({
+				ModelId: id,
+				MetalId: selectedMetal?.Id,
+				OrderByOldest: orderBy,
+			})
+		);
+	}, [id, selectedMetal, orderBy]);
+
+	useEffect(() => {
+		if (reviewList) {
+			setReviewLength(reviewList?.Values?.length);
+			setReviews(reviewList?.Values);
+		}
+	}, [reviewList]);
+
+	// useEffect(() => {
+
+	// },[])
 
 	const toggleDetail = () => {
 		setDetail(!showDetail);
@@ -79,160 +70,184 @@ export const InformationRight = ({
 		setProductWarranty(!showProductWarranty);
 	};
 
-	// Function to handle metal selection
 	const handleSelectMetal = (metal) => {
 		setSelectedMetal(metal);
-		console.log(metal);
-
+		setSize(null);
 		localStorage.setItem('selectedMetal', JSON.stringify(metal));
 	};
 
-	const handleSelectWidth = (width) => {
-		setSelectedWidth(width);
-		console.log(width);
-
-		localStorage.setItem('selectedWidth', JSON.stringify(width));
+	const handleSelectSideDiamond = (diamond) => {
+		setSelectedSideDiamond(diamond);
+		setSize(null);
+		localStorage.setItem('selectedSideDiamond', JSON.stringify(diamond));
 	};
 
 	const handleChange = (value) => {
 		setSize(value);
 	};
 
-	const handleAddCart = () => {
-		// if (size === '') return message.warning('Vui lòng chọn kích thước nhẫn!');
+	const findSize = diamondJewelry?.MetalGroups?.find(
+		(metal) => metal?.Name === filteredGroups[0]?.Name
+	);
 
-		const data = {
+	const findSizePrice = findSize?.SizeGroups?.find(
+		(sizePrice) => sizePrice?.Size === Number(size)
+	);
+
+	const handleDiamondNavigate = () => {
+		const jewelryModel = {
 			...diamondJewelry,
-			JewelryId: diamondJewelry.Id,
-			JewelryName: diamondJewelry.Name,
-			JewelryPrice: diamondJewelry.Price,
-			JewelryThumbnail: diamondJewelry.Thumbnail,
+			findSizePrice,
+			size,
+			selectedMetal,
+			selectedSideDiamond,
+			jewelryModelId: id,
+			filteredGroups,
 		};
 
-		// Dispatch action để thêm sản phẩm vào giỏ hàng trong Redux
-		dispatch(addToCart(data));
-
-		// Thông báo thành công khi sản phẩm được thêm vào
-		message.success('Sản phẩm đã được thêm vào giỏ hàng!');
+		console.log('jewelryModel', jewelryModel);
+		if (diamondJewelry?.MainDiamonds?.length > 0) {
+			navigate(`/diamond-choose/search`, {state: {jewelryModel}});
+		} else {
+			navigate(`/jewelry-choose/search`, {state: {jewelryModel}});
+		}
 	};
+
+	// Tính điểm trung bình
+	const averageRating =
+		reviews?.reduce((total, review) => total + review.StarRating, 0) / reviewLength || 0;
+
+	const someSize = filteredGroups[0]?.SizeGroups?.some((size) => size?.IsInStock);
 
 	return (
 		<div>
-			<div className="border-b border-tintWhite">
+			<div className="border-tintWhite">
 				<h1 className="text-3xl">
 					{diamondJewelry?.Name} {selectedMetal?.Name || selectedMetal}
 				</h1>
-				<div className="my-5 flex">
-					<Rate
-						allowHalf
-						defaultValue={5}
-						style={{fontSize: 20, color: '#F9A825'}}
-						disabled
-					/>
-					<p className="ml-5">477 Đánh Giá</p>
-				</div>
-				<div className="font-semibold my-2">
-					Ngày Giao Hàng Dự Kiến: {convertToVietnamDate(diamondJewelry?.ShippingDate)}
-				</div>
-				{/* <div className="flex mb-2">
-					<div className="font-semibold  text-green cursor-pointer">
-						Giao Hàng Miễn Phí Ngay
-					</div>
 
-					<div className="font-semibold pl-2 text-green cursor-pointer">
-						Giao Hàng Miễn Phí Ngay
-					</div>
-				</div> */}
+				<div className="my-5 flex">
+					<Rate value={averageRating} disabled allowHalf />
+					<ProductReviews
+						reviewLength={reviewLength}
+						reviewList={reviews}
+						averageRating={averageRating}
+						setOrderBy={setOrderBy}
+						orderBy={orderBy}
+					/>
+				</div>
 			</div>
 			<div>
 				<div className="my-5 flex items-center">
 					<div className="font-semibold">Loại Kim Loại</div>
 					<div className={`font-semibold text-xl pl-4 text-primary`}>
-						{selectedMetal?.Name}
+						{selectedMetal?.Name} - {formatPrice(selectedMetal?.Price)}
 					</div>
 				</div>
 				<div>
 					<div className="flex">
-						<div
-							className={`${
-								selectedMetal?.Name === diamondJewelry?.Metal?.Name
-									? 'border border-black'
-									: 'border border-white'
-							} m-2 py-2 px-4 rounded-lg cursor-pointer hover:bg-offWhite`}
-							onClick={() => handleSelectMetal(diamondJewelry?.Metal)} // Save selected metal on click
-						>
-							<div className={`rounded-full  p-1`}>{diamondJewelry?.Metal?.Name}</div>
-						</div>
-					</div>
-				</div>
-				<div className="my-5 flex items-center">
-					<div className="font-semibold">Độ dài</div>
-					<div className={`font-semibold text-xl pl-4 text-primary`}>
-						{diamondJewelry?.Width}mm
-					</div>
-				</div>
-				<div>
-					<div className="flex">
-						{metalType?.optionsWidth?.map((metal, i) => (
+						{diamondJewelry?.Metals?.map((metal, i) => (
 							<div
 								key={i}
 								className={`${
-									selectedWidth?.width === metal?.width
-										? 'border border-black'
-										: 'border border-white'
-								} m-2 py-2 px-4 rounded-lg cursor-pointer hover:bg-offWhite`}
-								onClick={() => handleSelectWidth(metal)} // Save selected metal on click
+									selectedMetal?.Name === metal?.Name
+										? 'border-2 border-black'
+										: 'border-2 border-white'
+								} my-2 py-2 px-4 rounded-lg cursor-pointer hover:bg-offWhite`}
+								onClick={() => handleSelectMetal(metal)} // Save selected metal on click
 							>
-								<div className={`rounded-full p-1`}>{metal.width}</div>
+								<div className={`rounded-full p-1`}>{metal?.Name}</div>
 							</div>
 						))}
 					</div>
 				</div>
-				{jewelryType && jewelryType === 'Nhẫn' && (
-					<div className="my-5 flex items-center">
-						<div className="font-semibold">Chọn kích thước nhẫn:</div>
-						<div className={`font-semibold text-xl pl-4 text-primary`}>
-							<Select
-								defaultValue=""
-								style={{width: 120}}
-								onChange={handleChange}
-								options={[
-									{value: '', label: 'Chọn size'},
-									{value: '1', label: '1'},
-									{value: '2', label: '2'},
-									{value: '3', label: '3'},
-									{value: '4', label: '4'},
-								]}
-							/>
+				{selectedSideDiamond !== null && (
+					<>
+						<div className="my-5 flex items-center">
+							<div className="font-semibold">Kim Cương Tấm</div>
+							<div className={`font-semibold text-xl pl-4 text-primary`}>
+								Số Lượng: {selectedSideDiamond?.Quantity} - Carat:{' '}
+								{selectedSideDiamond?.CaratWeight}
+							</div>
 						</div>
-					</div>
+						<div>
+							<div className="flex">
+								{diamondJewelry?.SideDiamonds?.map((diamond, i) => (
+									<div
+										key={i}
+										className={`
+								${
+									selectedSideDiamond.CaratWeight === diamond?.CaratWeight
+										? 'border-2 border-black'
+										: 'border-2 border-white'
+								}
+						my-2 py-2 px-4 rounded-lg cursor-pointer hover:bg-offWhite`}
+										onClick={() => handleSelectSideDiamond(diamond)} // Save selected diamond on click
+									>
+										<div className={`rounded-full p-1 flex items-center`}>
+											{/* <p className="mr-2">{diamond?.Quantity}</p> -{' '} */}
+											<p className="">{diamond?.CaratWeight}ct</p>
+										</div>
+									</div>
+								))}
+							</div>
+						</div>
+					</>
 				)}
 			</div>
-			<div className="border-y border-tintWhite py-5 my-5">
-				<div className="flex items-center">
-					{/* <p className="line-through text-gray decoration-gray text-2xl">
-						{metalType.price}
-					</p> */}
-					<p className="font-semibold pl-2 text-2xl">
-						{formatPrice(diamondJewelry.Price)}
-					</p>
-					<div className="text-sm pl-2">(Giá Cài Đặt)</div>
-				</div>
-				<div>
-					<div className="text-xl pt-2 font-semibold">
-						*Mã giảm giá được áp dụng tự động
-					</div>
-				</div>
+			<div className="border-y border-tintWhite my-5">
+				{someSize && (
+					<>
+						<div className="mt-5 flex items-center">
+							<div className="font-semibold">Chọn kích thước:</div>
+							<div className="font-semibold text-xl pl-4 text-primary">
+								<Select value={size} style={{width: 120}} onChange={handleChange}>
+									{filteredGroups[0]?.SizeGroups.map(
+										(size, i) =>
+											size?.IsInStock === true && (
+												<Option key={size?.Size} value={size?.Size}>
+													<p className="font-semibold mr-2">
+														{size?.Size}
+													</p>
+												</Option>
+											)
+									)}
+								</Select>
+							</div>
+							<div>
+								<p className="text-red ml-5">* Vui lòng chọn kích thước!</p>
+							</div>
+						</div>
+						<div className="flex items-center mt-2">
+							<p className="text-2xl mr-2 font-semibold">Giá Sàn:</p>
+							<p className="font-semibold text-2xl my-2">
+								{formatPrice(findSizePrice?.Price || 0)}
+							</p>
+							{/* <div className="text-sm pl-2">(Giá Sàn)</div> */}
+						</div>
+						{/* <div>
+							<div className="text-xl pt-2 font-semibold">
+								*Mã giảm giá được áp dụng tự động
+							</div>
+						</div> */}
+					</>
+				)}
 			</div>
-			<div className="flex justify-between items-center mt-5">
-				<Button
-					type="text"
-					className="border py-7 px-14 font-bold text-lg bg-primary rounded hover:bg-second w-full uppercase"
-					onClick={handleAddCart}
-				>
-					Thêm Vào Giỏ Hàng
-				</Button>
-			</div>
+
+			{size !== null && selectedMetal !== null && (
+				<div className="flex justify-between items-center mt-5">
+					<Button
+						type="text"
+						className="border py-7 px-14 font-bold text-lg bg-primary rounded hover:bg-second w-full uppercase"
+						onClick={handleDiamondNavigate}
+					>
+						{diamondJewelry?.MainDiamonds.length > 0
+							? 'Chọn Kim Cương'
+							: 'Chọn Trang Sức'}
+					</Button>
+				</div>
+			)}
+
 			<div className="my-10">
 				<h2 className="font-bold text-xl pb-3">Đơn Hàng Của Bạn Bao Gồm:</h2>
 				<div className="flex bg-offWhite p-5">
@@ -276,7 +291,7 @@ export const InformationRight = ({
 						}`}
 					>
 						<div className="flex justify-between px-4 py-2">
-							<span>{metalType.productDetail}</span>
+							<span>{diamondJewelry?.Model?.Category?.Description}</span>
 						</div>
 					</div>
 				</div>

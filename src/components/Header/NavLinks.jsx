@@ -4,6 +4,7 @@ import {DownOutlined} from '@ant-design/icons';
 import {Image} from 'antd';
 import {Link, useNavigate} from 'react-router-dom';
 import Logo from '../../assets/logo-short-ex.png';
+import {getUserId} from '../GetUserId';
 
 const NavLinks = () => {
 	const navigate = useNavigate();
@@ -18,89 +19,60 @@ const NavLinks = () => {
 			link: '/jewelry',
 			sublinks: [
 				{
-					Head: 'Sản Phẩm',
-					sublink: [
-						{name: 'Trang Sức Kim Cương Đính Sẵn', link: '/jewelry/diamond-jewelry'},
-						{name: 'Kim Cương', link: '/diamond/search'},
-					],
-				},
-
-				{
-					Head: 'Thiết Kế Trang Sức Của Bạn',
-					sublink: [
-						{name: 'Nhẫn', link: '/jewelry/design-your-own-rings'},
-						{name: 'Bông Tai', link: '/jewelry/design-your-own-earrings'},
-						{name: 'Dây Chuyền', link: '/jewelry/design-your-own-necklaces'},
-					],
-				},
-				{
 					Head: 'Mua Kim Cương Theo Hình Dạng',
 					sublink: [
-						{name: 'Round', link: '/diamond/search'},
-						{name: 'Princess', link: '/diamond/search'},
-						{name: 'Cushion', link: '/diamond/search'},
-						{name: 'Oval', link: '/diamond/search'},
-						{name: 'Emerald', link: '/diamond/search'},
-						{name: 'Pear', link: '/diamond/search'},
-						{name: 'Asscher', link: '/diamond/search'},
-						{name: 'Heart', link: '/diamond/search'},
-						{name: 'Radiant', link: '/diamond/search'},
-						{name: 'Marquise', link: '/diamond/search'},
+						{name: 'Round', link: '/diamond/search', value: '1'},
+						{name: 'Princess', link: '/diamond/search', value: '2'},
+						{name: 'Cushion', link: '/diamond/search', value: '3'},
+						{name: 'Oval', link: '/diamond/search', value: '5'},
+						{name: 'Emerald', link: '/diamond/search', value: '4'},
+						{name: 'Pear', link: '/diamond/search', value: '10'},
+						{name: 'Asscher', link: '/diamond/search', value: '7'},
+						{name: 'Heart', link: '/diamond/search', value: '9'},
+						{name: 'Radiant', link: '/diamond/search', value: '6'},
+						{name: 'Marquise', link: '/diamond/search', value: '8'},
+					],
+				},
+				{
+					Head: 'Sản Phẩm',
+					sublink: [
+						{name: 'Trang Sức', link: '/jewelry-model/search'},
+						{name: 'Kim Cương', link: '/diamond/search'},
 					],
 				},
 			],
 		},
-		// {
-		// 	name: 'Trang Sức',
-		// 	ref: 'jewelry',
-		// 	col: 3,
-		// 	submenu: true,
-		// 	link: '/jewelry/all-jewelry',
-		// 	mess: 'Xem Tất Cả Trang Sức',
-		// 	sublinks: [
-		// 		{
-		// 			Head: 'Bông Tai',
-		// 			sublink: [
-		// 				{
-		// 					name: 'Tự Thiết Kế Bông Tai',
-		// 					link: '/jewelry/design-your-own-earrings',
-		// 				},
-		// 				{name: 'Bông Tai Kim Cương', link: '/'},
-		// 				{name: 'Bông Tai Đinh', link: '/'},
-		// 			],
-		// 		},
-		// 		{
-		// 			Head: 'Nhẫn',
-		// 			sublink: [
-		// 				{name: 'Nhẫn Kim Cương', link: '/'},
-		// 				{name: 'Nhẫn Cưới', link: '/'},
-		// 				{name: 'Nhẫn Đính Hôn', link: '/'},
-		// 			],
-		// 		},
-		// 		{
-		// 			Head: 'Trang Sức Thiết Kế',
-		// 			sublink: [
-		// 				{name: 'Monica Rich Kosann', link: '/'},
-		// 				{name: 'Zac Zac Posen', link: '/'},
-		// 				{name: 'Bella Vaughan', link: '/'},
-		// 				{name: 'Blue Nile Studio', link: '/'},
-		// 				{name: 'The Gallery Collection™', link: '/'},
-		// 			],
-		// 		},
-		// 		{
-		// 			Head: 'Dây Chuyền',
-		// 			sublink: [
-		// 				{name: 'Tự Thiết Kế Mặt Dây Chuyền', link: '/'},
-		// 				{name: 'Dây Chuyền Kim Cương', link: '/'},
-		// 			],
-		// 		},
-		// 	],
-		// },
+		{
+			name: 'Bảng Giá',
+			ref: 'price-list',
+			col: 2,
+			submenu: true,
+			mess: 'Xem Giá Kim Cương',
+			link: '/price-list',
+			sublinks: [
+				{
+					Head: 'Bảng Giá Kim Cương Chính',
+					sublink: [
+						{name: 'Kim Cương Chính', link: '/price-list/main', value: '1'},
+						
+					],
+				},
+				{
+					Head: 'Bảng Giá Kim Cương Tấm',
+					sublink: [
+						{name: 'Kim Cương Tấm', link: '/price-list/side'},
+						
+					],
+				},
+			],
+		},
 	];
 
 	const handleClick = (shape, type, diamond, jewelry) => {
+		const userId = getUserId();
+
 		if (shape) {
-			localStorage.setItem('selected', shape);
+			localStorage.setItem('selected', JSON.stringify(shape));
 			localStorage.removeItem('jewelryType');
 			localStorage.setItem('diamondChoice', 'Kim Cương');
 			localStorage.removeItem('jewelryChoice');
@@ -120,6 +92,7 @@ const NavLinks = () => {
 			localStorage.removeItem('jewelryChoice');
 			localStorage.removeItem('jewelryType');
 			localStorage.removeItem('selected');
+			localStorage.removeItem(`jewelryModel_${userId}`);
 		}
 	};
 
@@ -157,8 +130,8 @@ const NavLinks = () => {
 																className="text-sm text-gray-600 my-2.5 md:cursor-pointer"
 																key={k}
 															>
-																<a
-																	href={sl.link}
+																<Link
+																	to={sl.link}
 																	className="hover:text-primary font-normal normal-case"
 																	onClick={() => {
 																		if (
@@ -166,24 +139,25 @@ const NavLinks = () => {
 																			'Mua Kim Cương Theo Hình Dạng'
 																		) {
 																			handleClick(
-																				sl.name,
+																				sl.value,
 																				null,
 																				null,
 																				null
 																			);
-																		} else if (
-																			mySubLink.Head ===
-																			'Thiết Kế Trang Sức Của Bạn'
-																		) {
-																			handleClick(
-																				null,
-																				sl.name,
-																				null,
-																				null
-																			);
-																		} else if (
-																			sl.name ===
-																			'Trang Sức Kim Cương Đính Sẵn'
+																		}
+																		// else if (
+																		// 	mySubLink.Head ===
+																		// 	'Thiết Kế Trang Sức Của Bạn'
+																		// ) {
+																		// 	handleClick(
+																		// 		null,
+																		// 		sl.name,
+																		// 		null,
+																		// 		null
+																		// 	);
+																		// }
+																		else if (
+																			sl.name === 'Trang Sức'
 																		) {
 																			handleClick(
 																				null,
@@ -204,7 +178,7 @@ const NavLinks = () => {
 																	}}
 																>
 																	{sl.name}
-																</a>
+																</Link>
 															</li>
 														))}
 													</ul>

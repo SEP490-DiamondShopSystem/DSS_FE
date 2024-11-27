@@ -1,56 +1,51 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {Steps} from 'antd';
 import {items} from '../../components/StepProgressBar/StepProgressBar-1';
 import {ImageGallery} from './Left/ImageGallery';
 import {InformationLeft} from './Left/InformationLeft';
 import {InformationRight} from './Right/InformationRight';
+import LoginModal from '../../components/LogModal/LoginModal';
+import {getUserId} from '../../components/GetUserId';
+import {useLocation, useParams} from 'react-router-dom';
+import {useDispatch, useSelector} from 'react-redux';
+import {GetJewelryDetailPresetSelector} from '../../redux/selectors';
+import {getJewelryDetailPreset} from '../../redux/slices/jewelrySlice';
 
 const FinishProductPage = () => {
-	const [jewelryChoice, setJewelryChoice] = useState(localStorage.getItem('jewelryChoice') || '');
-	const [diamondChoice, setDiamondChoice] = useState(localStorage.getItem('diamondChoice') || '');
-	const [jewelryType, setJewelryType] = useState(localStorage.getItem('jewelryType') || '');
-	const [diamondDetail, setDiamondDetail] = useState(() => {
-		const cartDesign = localStorage.getItem('cartDesign');
+	const userId = getUserId();
+	const {id} = useParams();
+	const dispatch = useDispatch();
+	const jewelryDetailPreset = useSelector(GetJewelryDetailPresetSelector);
+	const location = useLocation();
+	const jewelryId = location.state?.jewelryId;
+	const jewelryDetail = location.state?.jewelryModel;
 
-		if (cartDesign) {
-			try {
-				const parsedCartDesign = JSON.parse(cartDesign);
+	const [jewelry, setJewelry] = useState({});
+	const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
+	const [diamondDetail, setDiamondDetail] = useState(
+		JSON.parse(localStorage.getItem(`diamond_${userId}`)) || ''
+	);
 
-				const diamond = parsedCartDesign.find((item) => item.DiamondId);
+	console.log('diamondDetail', diamondDetail);
+	console.log('jewelryDetail', jewelryDetail);
+	console.log('jewelry', jewelry);
 
-				return diamond || null;
-			} catch (error) {
-				console.error('Error parsing cartDesign from localStorage:', error);
-				return null;
-			}
+	useEffect(() => {
+		dispatch(getJewelryDetailPreset(id));
+	}, []);
+
+	useEffect(() => {
+		if (jewelryDetailPreset) {
+			setJewelry(jewelryDetailPreset);
 		}
+	}, [jewelryDetailPreset]);
 
-		return null;
-	});
-
-	const [jewelryDetail, setJewelryDetail] = useState(() => {
-		const cartDesign = localStorage.getItem('cartDesign');
-
-		if (cartDesign) {
-			try {
-				const parsedCartDesign = JSON.parse(cartDesign);
-
-				const jewelry = parsedCartDesign.find((item) => item.JewelryId);
-
-				return jewelry || null;
-			} catch (error) {
-				console.error('Error parsing cartDesign from localStorage:', error);
-				return null;
-			}
-		}
-
-		return null;
-	});
+	const hideLoginModal = () => setIsLoginModalVisible(false);
 
 	const items = [
 		{
-			title: `Chọn ${jewelryType}`,
+			title: `Chọn Vỏ`,
 		},
 		{
 			title: 'Chọn Kim Cương',
@@ -59,45 +54,39 @@ const FinishProductPage = () => {
 			title: 'Hoàn Thành',
 		},
 	];
-	const itemsDiamond = [
-		{
-			title: `Chọn Kim Cương`,
-		},
-		{
-			title: `Chọn ${jewelryType}`,
-		},
-		{
-			title: 'Hoàn Thành',
-		},
-	];
+
 	return (
 		<div className="mx-32">
-			{diamondChoice.length > 0 ? (
-				<Steps
-					current={2}
-					labelPlacement="horizontal"
-					items={itemsDiamond}
-					className="bg-white p-4 rounded-full my-10"
-				/>
-			) : (
-				<Steps
-					current={2}
-					labelPlacement="horizontal"
-					items={items}
-					className="bg-white p-4 rounded-full my-10"
-				/>
-			)}
+			<Steps
+				current={3}
+				labelPlacement="horizontal"
+				items={items}
+				className="bg-white p-4 rounded-full my-10"
+			/>
 
 			<div className="flex flex-col md:flex-row bg-white my-10 md:my-20 rounded-lg shadow-lg">
 				<div className="w-full md:w-1/2 p-6">
-					<ImageGallery />
-					<InformationLeft jewelryDetail={jewelryDetail} diamondDetail={diamondDetail} />
+					<ImageGallery jewelryDetail={jewelryDetail} jewelry={jewelry} />
+					<InformationLeft
+						jewelryDetail={jewelryDetail}
+						diamondDetail={diamondDetail}
+						jewelry={jewelry}
+					/>
 				</div>
 
 				<div className="w-full md:w-1/2 p-6 md:pr-32">
-					<InformationRight jewelryDetail={jewelryDetail} diamondDetail={diamondDetail} />
+					<InformationRight
+						jewelryDetail={jewelryDetail}
+						diamondDetail={diamondDetail}
+						setIsLoginModalVisible={setIsLoginModalVisible}
+						isLoginModalVisible={isLoginModalVisible}
+						userId={userId}
+						jewelry={jewelry}
+						jewelryId={jewelryId}
+					/>
 				</div>
 			</div>
+			<LoginModal isOpen={isLoginModalVisible} onClose={hideLoginModal} />
 		</div>
 	);
 };

@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
-import '../../css/BannerDiamond.css'; // Import custom CSS for transition
 
 // Importing images
 import img1 from '../../assets/leftBackgroundSlide/1.jpg';
@@ -9,9 +8,11 @@ import img3 from '../../assets/leftBackgroundSlide/3.png';
 import img4 from '../../assets/leftBackgroundSlide/4.png';
 import img5 from '../../assets/leftBackgroundSlide/5.avif';
 import img6 from '../../assets/leftBackgroundSlide/6.jpg';
+import {getUserId} from '../GetUserId';
 
 export const BannerDiamond = () => {
 	const navigate = useNavigate();
+	const userId = getUserId();
 
 	// Array of imported image paths
 	const images = [img1, img2, img3, img4, img5, img6];
@@ -40,10 +41,11 @@ export const BannerDiamond = () => {
 		localStorage.removeItem('jewelryChoice');
 		localStorage.removeItem('jewelryType');
 		localStorage.removeItem('selected');
+		localStorage.removeItem(`jewelryModel_${userId}`);
 	};
 
 	const handleJewelryShopClick = () => {
-		navigate('/jewelry');
+		navigate('/jewelry-model/search');
 		localStorage.removeItem('jewelryChoice');
 		localStorage.removeItem('diamondChoice');
 		localStorage.removeItem('jewelryType');
@@ -52,11 +54,12 @@ export const BannerDiamond = () => {
 	};
 
 	return (
-		<div className="relative bg-gray-800 text-white" style={{height: 700}}>
+		<div className="relative bg-gray-800 text-white">
 			{/* Background image slideshow with fade transition */}
 			<div className={`slideshow-image ${fadeState}`}>
 				<img
-					className="w-full h-full object-fit"
+					className="w-full object-fit"
+					style={{maxHeight: 700}}
 					src={images[currentImageIndex]}
 					alt="Banner Slide"
 				/>

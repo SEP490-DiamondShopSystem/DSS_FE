@@ -1,11 +1,11 @@
-import React, {useEffect, useState} from 'react';
 import {Image} from 'antd';
+import React, {useEffect, useState} from 'react';
+import Loading from 'react-loading';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
-import ReactLoading from 'react-loading';
+import jewelryImg from '../../assets/ring_classic.png'; // Fallback image
 import {GetAllJewelrySelector, LoadingJewelrySelector} from '../../redux/selectors';
 import {getAllJewelry} from '../../redux/slices/jewelrySlice';
-import jewelryImg from '../../assets/ring_classic.png'; // Fallback image
 
 export const PopularOnStore = () => {
 	const navigate = useNavigate();
@@ -40,7 +40,7 @@ export const PopularOnStore = () => {
 	}, [jewelries.length]); // Runs when the length of jewelry changes
 
 	const onProductClick = (id) => {
-		navigate(`/jewelry/diamond-jewelry/${id}`);
+		navigate(`/jewelry-model/search/${id}`);
 	};
 
 	// Function to display only the current set of items
@@ -54,9 +54,7 @@ export const PopularOnStore = () => {
 			{' '}
 			{/* Added padding on the x-axis */}
 			{loading ? (
-				<div className="flex items-center justify-center my-10">
-					<ReactLoading height={'10%'} width={'10%'} type="spin" color="#dec986" />
-				</div>
+				<Loading />
 			) : (
 				<div>
 					<h2 className="text-center text-3xl font-bold m-5 text-gray-800">

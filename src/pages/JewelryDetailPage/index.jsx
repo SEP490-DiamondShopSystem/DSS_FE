@@ -1,14 +1,15 @@
 import React, {useEffect, useState} from 'react';
 
 import {Steps} from 'antd';
+import {useDispatch, useSelector} from 'react-redux';
+import {useParams} from 'react-router-dom';
+import LoginModal from '../../components/LogModal/LoginModal';
+import {GetJewelryDetailSelector} from '../../redux/selectors';
+import {getJewelryDetail} from '../../redux/slices/jewelrySlice';
 import {ImageGallery} from './Left/ImageGallery';
 import {InformationLeft} from './Left/InformationLeft';
 import {InformationRight} from './Right/InformationRight';
-import {useParams} from 'react-router-dom';
-import {useDispatch, useSelector} from 'react-redux';
-import {getJewelryDetail} from '../../redux/slices/jewelrySlice';
-import {GetJewelryDetailSelector} from '../../redux/selectors';
-import {data} from '../../utils/constant';
+import ProductReviews from './Popup/ProductReviews';
 
 const JewelryDetailPage = () => {
 	const {id} = useParams();
@@ -16,44 +17,102 @@ const JewelryDetailPage = () => {
 
 	const jewelryDetail = useSelector(GetJewelryDetailSelector);
 
-	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-	const [diamondJewelry, setDiamondJewelry] = useState(data);
-	const [size, setSize] = useState('');
+	const [size, setSize] = useState(null);
 	const [jewelry, setJewelry] = useState();
-	const [selectedMetal, setSelectedMetal] = useState(diamondJewelry.Metal.Name);
+	const [selectedMetal, setSelectedMetal] = useState(null);
+	const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
+	const [selectedSideDiamond, setSelectedSideDiamond] = useState();
 
-	const toggleSidebar = () => {
-		setIsSidebarOpen(!isSidebarOpen);
-	};
+	const items = [
+		{
+			title: 'Chọn Vỏ',
+		},
+		...(jewelry?.MainDiamonds?.length > 0 ? [{title: 'Chọn Kim Cương'}] : []),
+		{
+			title: 'Hoàn Thành',
+		},
+	];
 
 	useEffect(() => {
 		dispatch(getJewelryDetail({id}));
 	}, []);
 
 	useEffect(() => {
-		if (jewelryDetail) setJewelry(jewelryDetail);
+		if (jewelryDetail) {
+			setJewelry(jewelryDetail);
+
+			setSelectedMetal(jewelryDetail?.Metals?.[0] || null);
+
+			setSelectedSideDiamond(jewelryDetail?.SideDiamonds?.[0] || null);
+		}
 	}, [jewelryDetail]);
 
-	console.log('jewelry', jewelry);
+	const hideLoginModal = () => setIsLoginModalVisible(false);
+
+	const filterMetalGroups = (metalGroups, selectedMetal, selectedSideDiamond) => {
+		// Check if metalGroups is defined and is an array
+		if (!Array.isArray(metalGroups)) {
+			console.warn('metalGroups is undefined or not an array');
+			return []; // Return an empty array if metalGroups is undefined or not an array
+		}
+
+		return metalGroups
+			.map((group) => {
+				// Check if group matches the selected MetalId
+				const isMatchingMetal = group.MetalId === selectedMetal?.Id;
+
+				// Check if group matches the selected SideDiamondId (if provided)
+				const isMatchingSideDiamond = selectedSideDiamond
+					? group.SideDiamondId === selectedSideDiamond.Id
+					: true; // If no SideDiamondId is provided, consider it a match
+
+				// If both metal and side diamond match (or only metal if no SideDiamondId), add details
+				if (isMatchingMetal && isMatchingSideDiamond) {
+					return {
+						...group,
+						MetalDetails: selectedMetal,
+						SideDiamondDetails: selectedSideDiamond || null, // Set SideDiamondDetails to null if not provided
+					};
+				}
+
+				return null; // return null if no match
+			})
+			.filter((item) => item !== null); // filter out unmatched items
+	};
+
+	// Usage with individual selected items
+	const filteredGroups = filterMetalGroups(
+		jewelry?.MetalGroups,
+		selectedMetal,
+		selectedSideDiamond
+	);
 
 	return (
 		<div className="mx-32">
-			<div className="flex flex-col md:flex-row mx-6 md:mx-32 bg-white my-10 md:my-20 rounded-lg shadow-lg">
-				<div className="w-full md:w-1/2 p-6">
-					<ImageGallery />
-					<InformationLeft diamondJewelry={jewelry} />
+			<Steps items={items} current={0} />
+			<div className="flex flex-col md:flex-row bg-white my-10 md:my-20 rounded-lg shadow-lg">
+				<div className="md:w-1/2 p-6">
+					<ImageGallery diamondJewelry={jewelry} selectedMetal={selectedMetal} />
+					<InformationLeft diamondJewelry={jewelry} selectedMetal={selectedMetal} />
 				</div>
 
-				<div className="w-full md:w-1/2 p-6 md:pr-32">
+				<div className="md:w-1/2 p-6 ">
 					<InformationRight
 						diamondJewelry={jewelry}
 						setSelectedMetal={setSelectedMetal}
 						selectedMetal={selectedMetal}
 						setSize={setSize}
 						size={size}
+						setIsLoginModalVisible={setIsLoginModalVisible}
+						setSelectedSideDiamond={setSelectedSideDiamond}
+						selectedSideDiamond={selectedSideDiamond}
+						filteredGroups={filteredGroups}
+						id={id}
 					/>
 				</div>
 			</div>
+			<ProductReviews />
+			<LoginModal isOpen={isLoginModalVisible} onClose={hideLoginModal} />
 		</div>
 	);
 };

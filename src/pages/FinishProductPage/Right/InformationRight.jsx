@@ -1,13 +1,23 @@
 import {CheckCircleFilled, MinusOutlined, PlusOutlined} from '@ant-design/icons';
-import {faRefresh, faRing, faTruck} from '@fortawesome/free-solid-svg-icons';
+import {
+	faClose,
+	faDiamond,
+	faMinus,
+	faPlus,
+	faRefresh,
+	faRing,
+	faTruck,
+} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {Button, message, Rate, Select, Typography} from 'antd';
-import React, {useState} from 'react';
+import {Button, Input, message, Popover, Select, Typography} from 'antd';
+import React, {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
-import {formatPrice} from '../../../utils';
-import {Clarity} from '../../Customize/DiamondDetailPage/ChoiceMetal/Choose/Clarity';
-import {useDispatch} from 'react-redux';
+import {GetOrderWarrantySelector, UserInfoSelector} from '../../../redux/selectors';
 import {addToCartFinish} from '../../../redux/slices/cartSlice';
+import {formatPrice, Rating} from '../../../utils';
+import {getAllWarranty} from '../../../redux/slices/warrantySlice';
+import DiamondIcon from '@mui/icons-material/Diamond';
 
 const {Text} = Typography;
 
@@ -46,14 +56,49 @@ const ring = [
 	},
 ];
 
-export const InformationRight = ({jewelryDetail, diamondDetail}) => {
+export const InformationRight = ({
+	jewelryDetail,
+	diamondDetail,
+	setIsLoginModalVisible,
+	isLoginModalVisible,
+	userId,
+	jewelry,
+	jewelryId,
+}) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+
+	const userSelector = useSelector(UserInfoSelector);
+	const warrantyList = useSelector(GetOrderWarrantySelector);
+
 	const [showDetail, setDetail] = useState(false);
 	const [showSecureShopping, setSecureShopping] = useState(false);
 	const [showProductWarrantly, setProductWarrantly] = useState(false);
 	const [sizeChange, setSizeChange] = useState();
-	const [jewelryType, setJewelryType] = useState(localStorage.getItem('jewelryType'));
+	const [warrantiesJewelry, setWarrantiesJewelry] = useState('');
+	const [warrantiesJewelrySelected, setWarrantiesJewelrySelected] = useState();
+	const [visible, setVisible] = useState(false);
+	const [engravedText, setEngravedText] = useState(null);
+	const [engravedFont, setEngravedFont] = useState(null);
+
+	console.log('warrantiesJewelry', warrantiesJewelry);
+	console.log('warrantiesJewelrySelected', warrantiesJewelrySelected);
+
+	useEffect(() => {
+		if (warrantiesJewelry) {
+			setWarrantiesJewelrySelected(warrantiesJewelry[0]);
+		}
+	}, [warrantiesJewelry]);
+
+	useEffect(() => {
+		dispatch(getAllWarranty());
+	}, []);
+
+	useEffect(() => {
+		if (warrantyList) {
+			setWarrantiesJewelry(warrantyList?.Values?.filter((warranty) => warranty?.Type === 2));
+		}
+	}, [warrantyList]);
 
 	const toggleDetail = () => {
 		setDetail(!showDetail);
@@ -69,135 +114,301 @@ export const InformationRight = ({jewelryDetail, diamondDetail}) => {
 		setSizeChange(value);
 	};
 
-	const plus = jewelryDetail?.Price + diamondDetail?.Price;
-
 	const handleAddToCart = () => {
-		if (sizeChange === '') return message.warning('Vui lòng chọn kích thước nhẫn!');
+		if (!userId) {
+			message.warning('Bạn cần phải đăng nhập để thêm sản phẩm vào giỏ hàng!');
+			setIsLoginModalVisible(true);
+			return;
+		}
+
+		if (
+			warrantiesJewelrySelected === undefined ||
+			warrantiesJewelrySelected === '' ||
+			warrantiesJewelrySelected === null
+		) {
+			message.warning('Bạn cần phải chọn phiếu bảo hành!');
+			return;
+		}
+
+		const diamond = jewelry?.Diamonds?.map((dia) => ({
+			DiamondId: dia.Id,
+			Cut: dia.Cut,
+			Clarity: dia.Clarity,
+			Color: dia.Color,
+			Carat: dia.Carat,
+			DiamondPrice: dia.TruePrice,
+			DiamondShape: dia.DiamondShape,
+			Title: dia.Title,
+			CriteriaId: dia?.CriteriaId,
+			DiamondThumbnail: dia?.Thumbnail,
+		}));
 
 		const data = {
-			...jewelryDetail,
-			...diamondDetail,
-			JewelryId: jewelryDetail.JewelryId,
-			JewelryName: jewelryDetail.JewelryName,
-			Size: sizeChange || jewelryDetail.Size,
-			Width: jewelryDetail.Width,
-			Metal: jewelryDetail.Metal,
-			JewelryThumbnail: jewelryDetail.Thumbnail,
-			JewelryPrice: jewelryDetail.Price,
-			DiamondId: diamondDetail.DiamondId,
-			Cut: diamondDetail.Cut,
-			Clarity: diamondDetail.Clarity,
-			Color: diamondDetail.Color,
-			Carat: diamondDetail.Carat,
-			DiamondPrice: diamondDetail.Price,
-			DiamondShape: diamondDetail.DiamondShape,
+			...jewelry,
+			JewelryId: jewelry.Id,
+			jewelryModelId: jewelry.ModelId,
+			JewelryName: jewelry.JewelryName,
+			Size: sizeChange || jewelry.Size,
+			Metal: jewelry.MetalId,
+			JewelryThumbnail: jewelry.Thumbnail,
+			JewelryPrice: jewelry.TotalPrice,
+			SerialCode: jewelry?.SerialCode,
+			diamond,
+			warrantyJewelry: warrantiesJewelrySelected,
+			engravedFont,
+			engravedText,
 		};
 
-		// Dispatch action để thêm sản phẩm vào Redux
-		dispatch(addToCartFinish(data));
+		const existingCart = JSON.parse(localStorage.getItem(`cart_${userId}`)) || [];
 
-		// Thông báo thành công
-		message.success('Sản phẩm đã được thêm vào giỏ hàng!');
-		navigate('/cart');
+		// Kiểm tra xem sản phẩm với JewelryId và các thuộc tính đã tồn tại chưa
+		const existingIndex = existingCart.findIndex(
+			(cartItem) =>
+				cartItem.JewelryId === jewelry.Id &&
+				cartItem.warrantyJewelry === warrantiesJewelrySelected &&
+				cartItem.engravedFont === engravedFont &&
+				cartItem.engravedText === engravedText &&
+				cartItem.Size === (sizeChange || jewelry.Size)
+		);
+
+		if (existingIndex !== -1) {
+			message.info('Sản phẩm này đã có trong giỏ hàng!');
+		} else {
+			// Kiểm tra nếu có cùng JewelryId nhưng các thuộc tính khác nhau
+			const similarJewelryIndex = existingCart.findIndex(
+				(cartItem) => cartItem.JewelryId === jewelry.Id
+			);
+
+			if (similarJewelryIndex !== -1) {
+				// Thay thế sản phẩm cũ với các thuộc tính khác nhau
+				existingCart[similarJewelryIndex] = data;
+				message.success('Sản phẩm đã được cập nhật trong giỏ hàng!');
+				navigate('/cart');
+			} else {
+				// Thêm sản phẩm mới vào giỏ hàng
+				existingCart.push(data);
+				message.success('Sản phẩm đã thêm vào giỏ hàng!');
+				navigate('/cart');
+			}
+		}
+
+		localStorage.setItem(`cart_${userId}`, JSON.stringify(existingCart));
 	};
+
+	const handleVisibleChange = (newVisible) => {
+		setVisible(newVisible);
+	};
+
+	const onChangeWarrantyJewelry = (value) => {
+		if (value !== undefined) {
+			const parseValue = JSON.parse(value);
+			setWarrantiesJewelrySelected(parseValue);
+		} else {
+			console.warn('Giá trị "value" là undefined, không có hành động nào được thực hiện');
+		}
+	};
+
+	const handleEngravedTextChange = (e) => setEngravedText(e.target.value);
+	const handleEngravedFontChange = (value) => setEngravedFont(value);
+
+	const handleSubmit = () => {
+		setVisible(false);
+	};
+
+	const content = (
+		<div style={{width: '200px'}}>
+			<label>Chữ Khắc</label>
+			<Input
+				placeholder="Nhập chữ khắc"
+				style={{marginBottom: '10px'}}
+				value={engravedText}
+				onChange={handleEngravedTextChange}
+			/>
+			<label>Kiểu Chữ</label>
+			<Select
+				placeholder="Chọn kiểu chữ"
+				style={{width: '100%', marginBottom: '10px'}}
+				value={engravedFont}
+				onChange={handleEngravedFontChange}
+			>
+				<Select.Option value="Lucida Sans">Lucida Sans</Select.Option>
+				<Select.Option value="Pinyon Script">Pinyon Script</Select.Option>
+			</Select>
+			<div className="flex items-center justify-center my-2">
+				<Button type="text" className="bg-primary" onClick={handleSubmit}>
+					Xác Nhận
+				</Button>
+			</div>
+		</div>
+	);
 
 	return (
 		<div>
 			<div className="border-tintWhite">
-				<h1 className="text-3xl">
-					{jewelryDetail?.JewelryName} - Kim Cương {diamondDetail?.DiamondShape}{' '}
-					{diamondDetail?.Carat} {diamondDetail?.Clarity} Clarity {diamondDetail?.Color}{' '}
-					Color {diamondDetail?.Cut}
-				</h1>
-				<div className="my-5 flex">
-					<Rate
-						allowHalf
-						defaultValue={5}
-						style={{fontSize: 20, color: '#F9A825'}}
-						disabled
-					/>
+				<h1 className="text-3xl mb-5">{jewelry?.SerialCode}</h1>
+				{/* <div className="my-5 flex">
+					<Rating rating={0} />
 					<p className="ml-5">477 Đánh Giá</p>
-				</div>
+				</div> */}
 				<div></div>
-				<div className="font-semibold my-2">Ngày Giao Hàng Dự Kiến: {metalType?.ship}</div>
-				<div className="flex mb-2">
-					{/* <div className="font-semibold text-green cursor-pointer">
-						Giao hàng miễn phí qua đêm
-					</div> */}
+				{/* <div className="font-semibold my-2">Ngày Giao Hàng Dự Kiến: {metalType?.ship}</div> */}
 
-					{/* <div className="font-semibold pl-2 text-green cursor-pointer">
-						Giao hàng miễn phí qua đêm
-					</div> */}
-				</div>
 				<div>
-					<Text strong style={{fontSize: '18px'}}>
-						Nhẫn Hoàn Chỉnh:
-					</Text>
-					<div className="mt-5">
-						<div className="flex justify-between mb-2">
-							<div className="flex">
-								<div className="">
-									<CheckCircleFilled className="text-green" />
-								</div>
-								<div>
-									<div className="ml-5">
-										<p style={{width: 400}}>
-											Kim Cương {diamondDetail?.DiamondShape}{' '}
-											{diamondDetail?.Carat} {diamondDetail?.Clarity} Clarity{' '}
-											{diamondDetail?.Color} Color {diamondDetail?.Cut}
-										</p>
-										<p className="" style={{color: '#d2d5d8'}}>
-											{metalType.stock}
-										</p>
-										<p className="text-xl font-semibold">
-											{formatPrice(diamondDetail?.Price)}
-										</p>
-									</div>
-								</div>
-							</div>
-							<p className="text-primary cursor-pointer">Thay Đổi Kim Cương</p>
-						</div>
-						<div className="flex justify-between mb-2">
-							<div className="flex">
-								<div className="">
-									<FontAwesomeIcon icon={faRing} color="#dec986" />
-								</div>
-								<div>
-									<div className="ml-5">
-										<p style={{width: 400}}>{jewelryDetail.JewelryName}</p>
-										<p className="" style={{color: '#d2d5d8'}}>
-											{metalType.stock}
-										</p>
-										<p className="text-xl font-semibold">
-											{formatPrice(jewelryDetail.Price)}
-										</p>
-									</div>
-								</div>
-							</div>
-							<p className="text-primary cursor-pointer">Thay Đổi Vỏ</p>
-						</div>
-						{jewelryType && jewelryType === 'Nhẫn' && (
-							<div className="flex items-center">
-								<p className="mr-3">Kích Cỡ Nhẫn Hiện Tại:</p>
+					{jewelry?.Diamonds?.length > 0 && (
+						<Text strong style={{fontSize: '18px'}}>
+							Kim Cương:
+						</Text>
+					)}
 
-								<Select
-									defaultValue={jewelryDetail.Size}
-									style={{
-										width: 120,
-									}}
-									onChange={handleChange}
-									options={ring}
-								/>
+					<div className="mt-5">
+						{jewelry &&
+							jewelry?.Diamonds?.map((diamond) => (
+								<div className="flex justify-between mb-2">
+									<div className="flex">
+										<div className="">
+											<DiamondIcon />
+										</div>
+										<div>
+											<div className="ml-5">
+												<p style={{width: 400}}>{diamond?.Title}</p>
+												<p className="text-gray">
+													SKU: {diamond?.Criteria}
+												</p>
+												<p className="text-xl font-semibold">
+													{formatPrice(diamond?.TruePrice)}
+												</p>
+											</div>
+										</div>
+									</div>
+									{/* <p className="text-primary cursor-pointer">Thay Đổi Kim Cương</p> */}
+								</div>
+							))}
+
+						<div className="flex justify-between mb-2">
+							<div className="flex">
+								<div>
+									<div className="ml-5">
+										{/* {jewelry?.Category?.Name === 'Ring' && (
+											<div className="flex items-center">
+												<p className="mr-3">Kích Cỡ Hiện Tại:</p>
+
+												<Select
+													value={sizeChange || jewelry?.SizeId}
+													style={{width: 120}}
+													size="middle"
+													onChange={handleChange}
+												>
+													{jewelryDetail?.filteredGroups?.[0]
+														?.SizeGroups &&
+														jewelryDetail.filteredGroups[0].SizeGroups.map(
+															(size, i) =>
+																size?.IsInStock === true && (
+																	<Option
+																		key={size?.Size}
+																		value={size?.Size}
+																	>
+																		<p className="font-semibold mr-2">
+																			{size?.Size}
+																		</p>
+																	</Option>
+																)
+														)}
+												</Select>
+											</div>
+										)} */}
+										<div className="flex flex-col">
+											<label>Chọn Bảo Hành: </label>
+											<Select
+												size="large"
+												style={{width: 450}}
+												className="w-96 mt-2 mb-5"
+												placeholder="Chọn bảo hành trang sức"
+												onChange={onChangeWarrantyJewelry}
+												value={
+													warrantiesJewelrySelected?.warranty?.MappedName?.replace(
+														/_/g,
+														' '
+													) ||
+													warrantiesJewelrySelected?.MappedName?.replace(
+														/_/g,
+														' '
+													)
+												}
+											>
+												{warrantiesJewelry &&
+													warrantiesJewelry?.map((warranty, i) => (
+														<Select.Option
+															key={i}
+															value={JSON.stringify({
+																warranty,
+															})}
+														>
+															{warranty?.MappedName?.replace(
+																/_/g,
+																' '
+															)}
+														</Select.Option>
+													))}
+											</Select>
+										</div>
+									</div>
+								</div>
 							</div>
-						)}
+						</div>
 					</div>
+					{engravedText ? (
+						<>
+							<Popover
+								content={content}
+								title="Thêm Chữ Khắc"
+								trigger="click"
+								visible={visible}
+								onVisibleChange={handleVisibleChange}
+							>
+								<div className="w-40 flex items-center">
+									<span className="text-primary cursor-pointer hover:text-lightGray font-semibold mr-2 underline">
+										{engravedText}
+									</span>
+									<span>
+										<FontAwesomeIcon
+											icon={faClose}
+											color="red"
+											onClick={() => {
+												setEngravedFont('');
+												setEngravedText('');
+											}}
+										/>
+									</span>
+								</div>
+							</Popover>
+						</>
+					) : (
+						<>
+							<Popover
+								content={content}
+								title="Thêm Chữ Khắc"
+								trigger="click"
+								visible={visible}
+								onVisibleChange={handleVisibleChange}
+							>
+								<div className="w-40">
+									<span className="text-primary cursor-pointer hover:text-lightGray font-semibold">
+										<FontAwesomeIcon icon={faPlus} color="#dec986" /> Thêm Chữ
+										Khắc
+									</span>
+								</div>
+							</Popover>
+						</>
+					)}
 				</div>
 				<div className="border-y border-tintWhite py-5 my-5">
 					<div className="flex items-center">
 						{/* <p className="line-through text-gray decoration-gray text-2xl">
 							{metalType.price}
 						</p> */}
-						<p className="font-semibold text-2xl">{formatPrice(plus)}</p>
+						<p className="font-semibold text-2xl">
+							{formatPrice(jewelry?.TotalPrice || 0)}
+						</p>
 					</div>
 					<div>
 						<div className="text-xl pt-2 font-semibold">
@@ -212,7 +423,7 @@ export const InformationRight = ({jewelryDetail, diamondDetail}) => {
 					className="border py-7 px-14 font-bold text-lg bg-primary rounded hover:bg-second w-full uppercase"
 					onClick={handleAddToCart}
 				>
-					THÊM VÀO GIỎ Hàng
+					{jewelryId ? 'Cập Nhật Giỏ Hàng' : 'THÊM VÀO GIỎ Hàng'}
 				</Button>
 			</div>
 			<div className="my-10">

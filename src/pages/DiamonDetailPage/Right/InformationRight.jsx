@@ -1,13 +1,14 @@
 import {MinusOutlined, PlusOutlined} from '@ant-design/icons';
 import {faRefresh, faTruck} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {Button, Rate} from 'antd';
+import {Button, Rate, Select} from 'antd';
 import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {formatPrice} from '../../../utils';
 import {useDispatch} from 'react-redux';
 import {addOrUpdateCartDesignDiamondItem} from '../../../redux/slices/cartSlice';
 import {jewelries} from '../../../utils/constant';
+import {getUserId} from '../../../components/GetUserId';
 
 const infoMetal = {
 	name: 'Kim cương tròn 1.00 Carat',
@@ -23,28 +24,23 @@ const infoMetal = {
 		},
 	],
 };
-export const InformationRight = ({diamondChoice, toggleSidebar, diamond}) => {
-	const navigate = useNavigate();
+export const InformationRight = ({
+	diamondChoice,
+	toggleSidebar,
+	diamond,
+	handleAddToCart,
+	handleChangeWarranty,
+	warrantyDiamond,
+	diamondId,
+	warrantyDiamondSelected,
+}) => {
 	const dispatch = useDispatch();
+
+	const userId = getUserId();
+
 	const [showDetail, setDetail] = useState(false);
 	const [showSecureShopping, setSecureShopping] = useState(false);
 	const [showProductWarranty, setProductWarranty] = useState(false);
-	const [cartDesign, setCartDesign] = useState(() => {
-		// Lấy cartDesign từ localStorage
-		const storedCartDesign = localStorage.getItem('cartDesign');
-
-		// Parse dữ liệu nếu tồn tại, nếu không thì trả về mảng rỗng
-		try {
-			return storedCartDesign ? JSON.parse(storedCartDesign) : [];
-		} catch (error) {
-			console.error('Error parsing cartDesign from localStorage:', error);
-			return [];
-		}
-	});
-
-	const jewelryItem = cartDesign.find((item) => item.JewelryId);
-
-	console.log(jewelryItem);
 
 	const handleDetailOpen = () => {
 		setDetail(!showDetail);
@@ -56,50 +52,60 @@ export const InformationRight = ({diamondChoice, toggleSidebar, diamond}) => {
 		setProductWarranty(!showProductWarranty);
 	};
 
-	console.log(diamond);
-
-	const handleCompleted = (id) => {
-		// Get the current diamond's ID for comparison
-		const jewelryDiamondId = jewelryItem.JewelryId + id;
-
-		dispatch(addOrUpdateCartDesignDiamondItem({diamond}));
-
-		navigate(`/completed-jewelry/${jewelryDiamondId}`);
-	};
+	console.log('diamond', diamond);
 
 	return (
 		<div>
 			<div className="border-tintWhite">
-				<h1 className="text-3xl">
-					{diamond.DiamondShape} {diamond.Carat}ct
-				</h1>
-				{/* <div className="font-semibold my-2">
-					Giao hàng như một viên kim cương rời vào: {infoMetal?.delivery}
-				</div> */}
-				{/* <div className="flex mb-2">
-					<div className="font-semibold text-green cursor-pointer">
-						Giao hàng qua đêm miễn phí
-					</div>
-				</div> */}
+				<h1 className="text-3xl">{diamond?.Title}</h1>
+
 				<div>
 					<div className="flex items-center text-sm mt-5">
 						<p className="p-2" style={{backgroundColor: '#f7f7f7'}}>
-							{diamond.Carat}ct
+							{diamond?.Carat}ct
 						</p>
 						<p className="ml-4 p-2" style={{backgroundColor: '#f7f7f7'}}>
-							{diamond.Color} Color
+							{diamond?.Color} Color
 						</p>
 						<p className="ml-4 p-2" style={{backgroundColor: '#f7f7f7'}}>
-							{diamond.Clarity} Clarity
+							{diamond?.Clarity} Clarity
 						</p>
 						<p className="ml-4 p-2" style={{backgroundColor: '#f7f7f7'}}>
-							{diamond.Cut}
+							{diamond?.Cut}
 						</p>
 					</div>
 				</div>
 			</div>
 
 			<div className="border-y border-tintWhite py-5 my-5">
+				<div className="flex flex-col">
+					<label>Chọn Bảo Hành: </label>
+					<Select
+						// allowClear
+						className="mb-5 mt-2"
+						style={{width: 450}}
+						size="large"
+						value={
+							warrantyDiamondSelected?.warranty?.MappedName?.replace(/_/g, ' ') ||
+							warrantyDiamondSelected?.MappedName?.replace(/_/g, ' ')
+						}
+						placeholder="Chọn bảo hành kim cương"
+						onChange={handleChangeWarranty}
+					>
+						{warrantyDiamond &&
+							warrantyDiamond?.map((warranty, i) => (
+								<Select.Option
+									key={i}
+									value={JSON.stringify({
+										warranty,
+									})}
+								>
+									{warranty?.MappedName?.replace(/_/g, ' ')}
+								</Select.Option>
+							))}
+					</Select>
+				</div>
+
 				<div className="flex items-center">
 					<p className="font-semibold pl-2 text-2xl">{formatPrice(diamond.Price)}</p>
 					<div className="text-sm pl-2">(Giá Kim Cương)</div>
@@ -107,23 +113,14 @@ export const InformationRight = ({diamondChoice, toggleSidebar, diamond}) => {
 			</div>
 
 			<div className="flex justify-between items-center mt-5">
-				{diamondChoice.length > 0 ? (
-					<Button
-						type="text"
-						className="border py-7 px-14 font-bold text-lg bg-primary rounded hover:bg-second w-full"
-						onClick={toggleSidebar}
-					>
-						CHỌN VIÊN KIM CƯƠNG NÀY
-					</Button>
-				) : (
-					<Button
-						type="text"
-						className="border py-7 px-14 font-bold text-lg bg-primary rounded hover:bg-second w-full"
-						onClick={() => handleCompleted(diamond.DiamondId)}
-					>
-						CHỌN VIÊN KIM CƯƠNG NÀY
-					</Button>
-				)}
+				<Button
+					type="text"
+					className="border py-7 px-14 font-bold text-lg bg-primary rounded hover:bg-second w-full uppercase"
+					// onClick={toggleSidebar}
+					onClick={handleAddToCart}
+				>
+					{diamondId ? 'Cập Nhật Đơn Hàng' : 'Thêm Vào giỏ hàng'}
+				</Button>
 			</div>
 
 			<div className="my-10">
@@ -154,7 +151,7 @@ export const InformationRight = ({diamondChoice, toggleSidebar, diamond}) => {
 				</div>
 			</div>
 
-			<div className="border-y">
+			<div className="border-t">
 				<div className="border-b pb-4 my-4 cursor-pointer" onClick={handleDetailOpen}>
 					<div className="flex justify-between">
 						<div className="text-black m-4 px-4 rounded-lg focus:outline-none font-semibold">
@@ -170,7 +167,10 @@ export const InformationRight = ({diamondChoice, toggleSidebar, diamond}) => {
 						}`}
 					>
 						<div className="flex justify-between px-4 py-2">
-							<span>{infoMetal.detailProduct}</span>
+							<span>
+								Viên kim cương {diamond?.DiamondShape} {diamond?.Carat}ct này chỉ
+								được bán tại Cửa hàng Kim cương.
+							</span>
 						</div>
 					</div>
 				</div>
@@ -194,31 +194,6 @@ export const InformationRight = ({diamondChoice, toggleSidebar, diamond}) => {
 								Đây là báo cáo ghi nhận các đặc điểm cụ thể của viên kim cương, do
 								GIA cấp, một trong những tổ chức được kính trọng nhất trong ngành
 								kim cương.
-							</span>
-						</div>
-					</div>
-				</div>
-
-				<div className="my-4 cursor-pointer" onClick={handleWarrantyOpen}>
-					<div className="flex justify-between">
-						<div className="text-black m-4 px-4 rounded-lg focus:outline-none font-semibold">
-							Chương trình nâng cấp kim cương trọn đời
-						</div>
-						<div className="m-4 px-4 rounded-lg focus:outline-none">
-							{showProductWarranty ? <MinusOutlined /> : <PlusOutlined />}
-						</div>
-					</div>
-					<div
-						className={`transition-max-height duration-500 ease-in-out overflow-hidden ${
-							showProductWarranty ? 'max-h-screen' : 'max-h-0'
-						}`}
-					>
-						<div className="flex justify-between px-4 py-2">
-							<span>
-								Diamond Shop rất vui mừng cung cấp chương trình nâng cấp kim cương
-								trọn đời cho tất cả các viên kim cương được chứng nhận. Gọi cho
-								Chuyên gia Tư vấn Kim cương & Trang sức tại số 012345678 để biết
-								thêm thông tin.
 							</span>
 						</div>
 					</div>

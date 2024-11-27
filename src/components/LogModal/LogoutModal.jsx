@@ -5,12 +5,12 @@ import {Button, Modal} from 'antd';
 const LogoutModal = ({visible, onConfirm, onCancel}) => {
 	return (
 		<Modal
-			title="Confirm Logout"
+			title="Đăng Xuất"
 			visible={visible}
 			onCancel={onCancel}
 			footer={[
 				<Button key="back" onClick={onCancel}>
-					Cancel
+					Hủy
 				</Button>,
 				<Button key="submit" danger onClick={onConfirm}>
 					Đăng xuất

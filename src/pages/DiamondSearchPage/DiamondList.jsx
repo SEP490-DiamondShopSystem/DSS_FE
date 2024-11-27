@@ -1,41 +1,32 @@
 import React, {useEffect, useState} from 'react';
 
-import {
-	AppstoreOutlined,
-	HeartFilled,
-	HeartOutlined,
-	UnorderedListOutlined,
-} from '@ant-design/icons';
+import {AppstoreOutlined, UnorderedListOutlined} from '@ant-design/icons';
 import {Image} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
-import diamondImg from '../../assets/img-diamond.png';
-import {GetAllDiamondSelector, LoadingDiamondSelector} from '../../redux/selectors';
-import {getAllDiamond} from '../../redux/slices/diamondSlice';
 import {useNavigate} from 'react-router-dom';
+import diamondImg from '../../assets/img-diamond.png';
 import {FilterDiamond} from '../../components/Filter/Filter';
-import BannerShape from '../../components/Banner/BannerShape';
+import Loading from '../../components/Loading';
+import {LoadingDiamondSelector} from '../../redux/selectors';
+import {formatPrice} from '../../utils';
 
-import InfiniteScroll from 'react-infinite-scroll-component';
-import ReactLoading from 'react-loading';
-
-export const DiamondList = ({diamond, diamondList, setDiamond}) => {
+export const DiamondList = ({
+	diamond,
+	filters,
+	setFilters,
+	handleReset,
+	filterLimits,
+	diamondForFilter,
+	findShape,
+	diamondList,
+	jewelryModel,
+}) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
 	const loading = useSelector(LoadingDiamondSelector);
 
 	const [changeGrid, setChangeGrid] = useState(false);
-	const [like, setLike] = useState({});
-	const [filters, setFilters] = useState({
-		shape: '',
-		price: {minPrice: 0, maxPrice: 1000},
-		carat: {minCarat: 0.5, maxCarat: 30.0},
-		color: {minColor: 0, maxColor: 7},
-		clarity: {minClarity: 0, maxClarity: 7},
-		cut: {minCut: 0, maxCut: 3},
-	});
-	const [hasMore, setHasMore] = useState(true);
-	const [visibleDiamonds, setVisibleDiamonds] = useState([]);
 	const [diamondChoice, setDiamondChoice] = useState(localStorage.getItem('diamondChoice') || '');
 	const [diamondNatural, setDiamondNatural] = useState();
 
@@ -56,44 +47,14 @@ export const DiamondList = ({diamond, diamondList, setDiamond}) => {
 		if (diamond) {
 			const filteredDiamonds = diamond.filter((diamondItem) => !diamondItem.IsLabDiamond);
 			setDiamondNatural(filteredDiamonds);
-			// setVisibleDiamonds(filteredDiamonds?.slice(0, 10)); // Optional for pagination
 		}
-	}, []);
-
-	const loadMoreData = () => {
-		if (visibleDiamonds.length >= diamond.length) {
-			setHasMore(false);
-			return;
-		}
-
-		const nextData = diamond?.slice(visibleDiamonds.length, visibleDiamonds.length + 3);
-		setVisibleDiamonds([...visibleDiamonds, ...nextData]);
-	};
+	}, [diamond]);
 
 	const handleGridClick = () => {
 		setChangeGrid(true);
 	};
 	const handleListClick = () => {
 		setChangeGrid(false);
-	};
-
-	const handleHeartClick = (id) => {
-		setLike((prevLike) => ({
-			...prevLike,
-			[id]: !prevLike[id],
-		}));
-	};
-
-	const handleReset = () => {
-		localStorage.removeItem('selected');
-		setFilters({
-			shape: '',
-			price: {minPrice: 0, maxPrice: 1000},
-			carat: {minCarat: 0.5, maxCarat: 30.0},
-			color: {minColor: 0, maxColor: 7},
-			clarity: {minClarity: 0, maxClarity: 7},
-			cut: {minCut: 0, maxCut: 3},
-		});
 	};
 
 	const handleDiamondChoiceClick = (id) => {
@@ -106,143 +67,195 @@ export const DiamondList = ({diamond, diamondList, setDiamond}) => {
 		navigate(`/diamond-detail/${id}`);
 	};
 
-	// if (!diamondList) return <div>Loading....</div>;
-
 	return (
 		<div>
-			<FilterDiamond setFilters={setFilters} filters={filters} handleReset={handleReset} />
+			<FilterDiamond
+				setFilters={setFilters}
+				filters={filters}
+				handleReset={handleReset}
+				filterLimits={filterLimits}
+				diamondForFilter={diamondForFilter}
+				findShape={findShape}
+			/>
 
 			{loading ? (
-				<div className="flex items-center justify-center my-10">
-					<ReactLoading height={'10%'} width={'10%'} type="spin" color="#dec986" />
-				</div>
+				<Loading />
 			) : (
 				<>
-					<div className="text-2xl flex justify-end mt-10">
-						<p className="p-2">{diamondNatural?.length} Kết quả</p>
-						<div
-							className="md:cursor-pointer mx-10 hover:bg-neutral-300 rounded-xl p-2"
-							onClick={handleListClick}
-						>
-							<UnorderedListOutlined />
-						</div>
-						<div
-							className="md:cursor-pointer hover:bg-neutral-300 rounded-xl p-2"
-							onClick={handleGridClick}
-						>
-							<AppstoreOutlined />
-						</div>
-					</div>
-					{/* 
-					<InfiniteScroll
-						dataLength={visibleDiamonds.length}
-						next={loadMoreData}
-						hasMore={hasMore}
-						loader={<h4>Loading...</h4>}
-					> */}
-					{changeGrid ? (
-						<div className="transition-all duration-300 grid grid-cols-4 gap-10 mb-20 mt-10">
-							{diamondNatural?.map((diamondItem) => (
-								<div
-									key={diamondItem.id}
-									className="shadow-lg bg-white border-2 border-white rounded-lg hover:border-2 hover:border-black cursor-pointer"
-									onClick={
-										diamondChoice.length > 0
-											? () => handleDiamondChoiceClick(diamondItem.Id)
-											: () => handleJewelryChoiceClick(diamondItem.Id)
-									}
-								>
-									<div className="w-80">
-										<div
-											className="flex justify-center mb-5"
-											style={{background: '#b8b7b5'}}
-										>
-											<Image src={diamondImg} alt={diamondItem.title} />
-										</div>
-										<div className="mx-10 my-5">
-											<p>
-												{diamondItem.DiamondShape} {diamondItem.Carat}ct{' '}
-												{diamondItem.Color} Color {diamondItem.Clarity}{' '}
-												Clarity {diamondItem.Cut}
-											</p>
-											<p style={{color: '#707070'}}>
-												{formatPrice(diamondItem.Price)}
-											</p>
-										</div>
-									</div>
-								</div>
-							))}
+					{!Array.isArray(diamondNatural) || diamondNatural.length === 0 ? (
+						<div className="flex items-center justify-center my-10">
+							<p className="text-2xl">Chưa có sản phẩm nào</p>
 						</div>
 					) : (
-						<div className="transition-all duration-300 mb-20 mt-10">
-							{diamondNatural?.map((diamondItem, i) => (
+						<>
+							<div className="text-2xl flex justify-end mt-10">
+								<p className="p-2">{diamondNatural?.length} Kết quả</p>
 								<div
-									key={i + 1}
-									className="shadow-lg bg-white rounded-lg cursor-pointer"
-									onClick={
-										diamondChoice.length > 0
-											? () => handleDiamondChoiceClick(diamondItem.Id)
-											: () => handleJewelryChoiceClick(diamondItem.Id)
-									}
+									className="md:cursor-pointer mx-10 hover:bg-neutral-300 rounded-xl p-2"
+									onClick={handleListClick}
 								>
-									<div className="flex w-full my-10">
+									<UnorderedListOutlined />
+								</div>
+								<div
+									className="md:cursor-pointer hover:bg-neutral-300 rounded-xl p-2"
+									onClick={handleGridClick}
+								>
+									<AppstoreOutlined />
+								</div>
+							</div>
+
+							{changeGrid ? (
+								<div className="transition-all duration-300 grid grid-cols-4 gap-10 mb-20 mt-10">
+									{diamondNatural?.map((diamondItem) => (
 										<div
-											className="flex justify-center w-1/5"
-											style={{background: '#b8b7b5'}}
+											key={diamondItem.Id}
+											className="shadow-lg bg-white border-2 border-white rounded-lg hover:border-2 hover:border-black cursor-pointer"
+											onClick={() =>
+												diamondChoice.length > 0
+													? handleDiamondChoiceClick(diamondItem.Id)
+													: handleJewelryChoiceClick(diamondItem.Id)
+											}
 										>
-											<Image
-												src={diamondImg}
-												alt={
-													diamondItem.IsLabDiamond === true
-														? 'Kim cương nhân tạo'
-														: 'Kim cương tự nhiên'
-												}
-												className="w-full"
-												preview={false}
-											/>
+											<div className="">
+												<div
+													className="flex justify-center mb-5"
+													style={{background: '#b8b7b5'}}
+												>
+													<Image
+														src={
+															diamondItem?.Thumbnail === null
+																? diamondImg
+																: diamondItem.Thumbnail.MediaPath
+														}
+														alt={
+															diamondItem?.Thumbnail?.MediaName ||
+															'Default Image'
+														}
+														className="w-full"
+														preview={false}
+													/>
+												</div>
+												<div className="mx-10 my-5">
+													<p>{diamondItem?.Title}</p>
+													<div className="flex">
+														{diamondItem?.SalePrice !==
+														diamondItem?.TruePrice ? (
+															<div className="flex">
+																<p
+																	style={{color: '#707070'}}
+																	className="line-through"
+																>
+																	{formatPrice(
+																		diamondItem.TruePrice
+																	)}
+																</p>
+																<p className="ml-3">
+																	{formatPrice(
+																		diamondItem.DiscountPrice
+																	)}
+																</p>
+															</div>
+														) : (
+															<div className="">
+																<p>
+																	{formatPrice(
+																		diamondItem.TruePrice
+																	)}
+																</p>
+															</div>
+														)}
+													</div>
+												</div>
+											</div>
 										</div>
-										<div className="flex justify-between items-center w-4/5 ml-5">
-											<p className="text-xl w-1/5 text-center">
-												{diamondItem.DiamondShape || '-'}
+									))}
+								</div>
+							) : (
+								<div className="transition-all duration-300 mb-20 mt-10">
+									{/* Thanh tiêu đề */}
+									<div className="shadow-md bg-gray-100 rounded-lg">
+										<div className="flex justify-between items-center py-3 px-5 bg-primary border">
+											<p className="text-lg font-semibold text-center w-1/6">
+												Hình Ảnh
 											</p>
-											<p className="text-xl w-1/5 text-center">
-												{diamondItem.Carat || '-'}ct
-											</p>
-											<p className="text-xl w-1/5 text-center">
-												{diamondItem.Color || '-'} Color
-											</p>
-											<p className="text-xl w-1/5 text-center">
-												{diamondItem.Clarity || '-'} Clarity
-											</p>
-											<p className="text-xl w-1/5 text-center">
-												{diamondItem.Cut || '-'}
-											</p>
-											<p
-												className="text-xl w-1/5 text-center"
-												style={{color: '#707070'}}
-											>
-												{diamondItem.Price}
-											</p>
-											<p
-												className="text-xl w-1/5 text-center cursor-pointer"
-												onClick={(e) => {
-													e.stopPropagation(); // Ngăn chặn sự kiện onClick khác
-													handleHeartClick(diamondItem.Id);
-												}}
-											>
-												{like[diamondItem.id] ? (
-													<HeartFilled color="#F65252" />
-												) : (
-													<HeartOutlined />
-												)}
-											</p>
+											<div className="w-5/6 flex justify-between items-center">
+												<p className="text-lg font-semibold text-center w-1/5">
+													Shape
+												</p>
+												<p className="text-lg font-semibold text-center w-1/5">
+													Carat
+												</p>
+												<p className="text-lg font-semibold text-center w-1/5">
+													Color
+												</p>
+												<p className="text-lg font-semibold text-center w-1/5">
+													Clarity
+												</p>
+												<p className="text-lg font-semibold text-center w-1/5">
+													Cut
+												</p>
+												<p className="text-lg font-semibold text-center w-1/5">
+													Giá
+												</p>
+											</div>
 										</div>
 									</div>
+
+									{/* Danh sách kim cương */}
+									{diamondNatural?.map((diamondItem) => (
+										<div
+											key={diamondItem.Id}
+											className="shadow-lg bg-white rounded-lg cursor-pointer border-2 border-white hover:border-2 hover:border-black my-10"
+											onClick={() =>
+												diamondChoice.length > 0
+													? handleDiamondChoiceClick(diamondItem.Id)
+													: handleJewelryChoiceClick(diamondItem.Id)
+											}
+										>
+											<div className="flex w-full">
+												<div
+													className="flex justify-center w-1/6"
+													style={{background: '#b8b7b5'}}
+												>
+													<Image
+														src={
+															diamondItem?.Thumbnail === null
+																? diamondImg
+																: diamondItem.Thumbnail.MediaPath
+														}
+														alt={diamondItem.Thumbnail?.MediaName}
+														className=""
+														style={{width: '100%'}}
+														preview={false}
+													/>
+												</div>
+												<div className="flex justify-between items-center w-5/6 ml-5">
+													<p className="text-xl w-1/5 text-center">
+														{diamondItem.DiamondShape || '-'}
+													</p>
+													<p className="text-xl w-1/5 text-center">
+														{diamondItem.Carat || '-'}ct
+													</p>
+													<p className="text-xl w-1/5 text-center">
+														{diamondItem.Color || '-'} Color
+													</p>
+													<p className="text-xl w-1/5 text-center">
+														{diamondItem.Clarity || '-'} Clarity
+													</p>
+													<p className="text-xl w-1/5 text-center">
+														{diamondItem.Cut || '-'}
+													</p>
+													<p className="text-xl w-1/5 text-center">
+														{formatPrice(diamondItem?.TruePrice)}
+													</p>
+												</div>
+											</div>
+										</div>
+									))}
 								</div>
-							))}
-						</div>
+							)}
+						</>
 					)}
-					{/* </InfiniteScroll> */}
 				</>
 			)}
 		</div>

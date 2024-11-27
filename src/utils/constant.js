@@ -8,9 +8,19 @@ import banner_1 from '../assets/diamond-jewelry.png';
 import banner_2 from '../assets/Diamond_rings.png';
 import banner_3 from '../assets/Lab_Grown_Diamonds.png';
 import jewelry from '../assets/jewelry.png';
+import round from '../assets/diamondShapes/round.png';
+import princess from '../assets/diamondShapes/princess.png';
+import pear from '../assets/diamondShapes/pear.png';
+import cushion from '../assets/diamondShapes/cushionSquare.png';
+import emerald from '../assets/diamondShapes/emerald.png';
+import oval from '../assets/diamondShapes/oval.png';
+import radiant from '../assets/diamondShapes/radiant.png';
+import asscher from '../assets/diamondShapes/asscher.png';
+import marquise from '../assets/diamondShapes/marquise.png';
+import heart from '../assets/diamondShapes/heart.png';
 
 export const jewelries = [
-	{logo: basic_diamond, title: 'Diamond Basics', link: '/jewelry/diamond-jewelry'},
+	{logo: basic_diamond, title: 'Diamond Basics', link: '/jewelry-model/search'},
 	{logo: necklaces, title: 'Dây chuyền', link: '/jewelry/design-your-own-necklaces'},
 	{logo: earrings, title: 'Bông tai', link: '/jewelry/design-your-own-earrings'},
 	// { logo: basic_diamond, title: "Bracelets" },
@@ -20,23 +30,23 @@ export const jewelries = [
 export const list = [
 	{
 		icon: faTruck,
-		title: 'Free Delivery',
-		subtitle: 'Orders from all item',
+		title: 'Giao hàng theo tỉnh/thành',
+		subtitle: 'Đơn hàng từ tất cả các mặt hàng',
 	},
 	{
 		icon: faRefresh,
-		title: 'Return & Refund',
-		subtitle: 'Money back guarantee',
+		title: 'Hoàn Tiền',
+		subtitle: 'Đảm bảo hoàn lại tiền',
 	},
 	{
 		icon: faTag,
-		title: 'Discount',
-		subtitle: 'On every order over 40%',
+		title: 'Giảm giá',
+		subtitle: 'Cho mọi đơn hàng giảm trên 20%',
 	},
 	{
 		icon: faHeadphones,
-		title: 'Support 24/7',
-		subtitle: 'Contact us 24 hours a day',
+		title: 'Hỗ Trợ 24/7',
+		subtitle: 'Liên hệ với chúng tôi 24/7',
 	},
 ];
 
@@ -55,491 +65,39 @@ export const Shape = [
 
 export const metalJewelry = ['White Gold', 'Yellow Gold', 'Platinum'];
 
-export const listDiamond = [
-	{
-		img: diamond,
-		title: '1.01 Carat H-VS2 Princess Cut Diamond',
-		price: '$2,720',
-		carat: '1.01',
-		color: 'H',
-		clarity: 'VS2',
-		shipping_time: 'Sep 17',
-		shape: 'Pear',
-		icon: '',
-		cut: '',
-	},
-	{
-		img: diamond,
-		title: '1.01 Carat H-VS2 Princess Cut Diamond',
-		price: '$2,720',
-		carat: '1.01',
-		color: 'H',
-		clarity: 'VS2',
-		shipping_time: 'Sep 17',
-		shape: 'Pear',
-		icon: '',
-		cut: '',
-	},
-	{
-		img: diamond,
-		title: '1.01 Carat H-VS2 Princess Cut Diamond',
-		price: '$2,720',
-		carat: '1.01',
-		color: 'H',
-		clarity: 'VS2',
-		shipping_time: 'Sep 17',
-		shape: 'Pear',
-		icon: '',
-		cut: '',
-	},
-	{
-		img: diamond,
-		title: '1.01 Carat H-VS2 Princess Cut Diamond',
-		price: '$2,720',
-		carat: '1.01',
-		color: 'H',
-		clarity: 'VS2',
-		shipping_time: 'Sep 17',
-		shape: 'Pear',
-		icon: '',
-		cut: '',
-	},
-	{
-		img: diamond,
-		title: '1.01 Carat H-VS2 Princess Cut Diamond',
-		price: '$2,720',
-		carat: '1.01',
-		color: 'H',
-		clarity: 'VS2',
-		shipping_time: 'Sep 17',
-		shape: 'Pear',
-		icon: '',
-		cut: '',
-	},
-	{
-		img: diamond,
-		title: '1.01 Carat H-VS2 Princess Cut Diamond',
-		price: '$2,720',
-		carat: '1.01',
-		color: 'H',
-		clarity: 'VS2',
-		shipping_time: 'Sep 17',
-		shape: 'Pear',
-		icon: '',
-		cut: '',
-	},
-	{
-		img: diamond,
-		title: '1.01 Carat H-VS2 Princess Cut Diamond',
-		price: '$2,720',
-		carat: '1.01',
-		color: 'H',
-		clarity: 'VS2',
-		shipping_time: 'Sep 17',
-		shape: 'Pear',
-		icon: '',
-		cut: '',
-	},
-	{
-		img: diamond,
-		title: '1.01 Carat H-VS2 Princess Cut Diamond',
-		price: '$2,720',
-		carat: '1.01',
-		color: 'H',
-		clarity: 'VS2',
-		shipping_time: 'Sep 17',
-		shape: 'Pear',
-		icon: '',
-		cut: '',
-	},
-	{
-		img: diamond,
-		title: '1.01 Carat H-VS2 Princess Cut Diamond',
-		price: '$2,720',
-		carat: '1.01',
-		color: 'H',
-		clarity: 'VS2',
-		shipping_time: 'Sep 17',
-		shape: 'Pear',
-		icon: '',
-		cut: '',
-	},
-	{
-		img: diamond,
-		title: '1.01 Carat H-VS2 Princess Cut Diamond',
-		price: '$2,720',
-		carat: '1.01',
-		color: 'H',
-		clarity: 'VS2',
-		shipping_time: 'Sep 17',
-		shape: 'Pear',
-		icon: '',
-		cut: '',
-	},
-	{
-		img: diamond,
-		title: '1.01 Carat H-VS2 Princess Cut Diamond',
-		price: '$2,720',
-		carat: '1.01',
-		color: 'H',
-		clarity: 'VS2',
-		shipping_time: 'Sep 17',
-		shape: 'Pear',
-		icon: '',
-		cut: '',
-	},
-	{
-		img: diamond,
-		title: '1.01 Carat H-VS2 Princess Cut Diamond',
-		price: '$2,720',
-		carat: '1.01',
-		color: 'H',
-		clarity: 'VS2',
-		shipping_time: 'Sep 17',
-		shape: 'Pear',
-		icon: '',
-		cut: '',
-	},
-	{
-		img: diamond,
-		title: '1.01 Carat H-VS2 Princess Cut Diamond',
-		price: '$2,720',
-		carat: '1.01',
-		color: 'H',
-		clarity: 'VS2',
-		shipping_time: 'Sep 17',
-		shape: 'Pear',
-		icon: '',
-		cut: '',
-	},
-];
-
 export const marks = {
-	0: 'K',
-	1: 'J',
-	2: 'I',
-	3: 'H',
-	4: 'G',
-	5: 'F',
-	6: 'E',
-	7: 'D',
+	1: 'K',
+	2: 'J',
+	3: 'I',
+	4: 'H',
+	5: 'G',
+	6: 'F',
+	7: 'E',
+	8: 'D',
 };
 export const marksCut = {
-	0: 'Good',
-	1: 'Very Good',
-	2: 'Ideal',
-	3: 'Astor ideal',
+	1: 'Good',
+	2: 'Very Good',
+	3: 'Excelent',
 };
 export const marksClarity = {
-	0: 'SI2',
-	1: 'SI1',
-	2: 'VS2',
-	3: 'VS1',
-	4: 'VVS2',
-	5: 'VVS1',
-	6: 'IF',
-	7: 'FL',
+	1: 'SI2',
+	2: 'SI1',
+	3: 'VS2',
+	4: 'VS1',
+	5: 'VVS2',
+	6: 'VVS1',
+	7: 'IF',
+	8: 'FL',
 };
 
 export const listBanner = [{img: banner_1}, {img: banner_2}, {img: banner_3}];
-
-export const listJewelry = [
-	{
-		img: jewelry,
-		title: 'Classic Four-Prong Solitaire Engagement Ring in 18k White Gold',
-		price: '$600',
-		discountPrice: '$450',
-		rating: 5,
-	},
-	{
-		img: jewelry,
-		title: 'Classic Four-Prong Solitaire Engagement Ring in 18k White Gold',
-		price: '$600',
-		discountPrice: '$450',
-		rating: 5,
-	},
-	{
-		img: jewelry,
-		title: 'Classic Four-Prong Solitaire Engagement Ring in 18k White Gold',
-		price: '$600',
-		discountPrice: '$450',
-		rating: 5,
-	},
-	{
-		img: jewelry,
-		title: 'Classic Four-Prong Solitaire Engagement Ring in 18k White Gold',
-		price: '$600',
-		discountPrice: '$450',
-		rating: 5,
-	},
-	{
-		img: jewelry,
-		title: 'Classic Four-Prong Solitaire Engagement Ring in 18k White Gold',
-		price: '$600',
-		discountPrice: '$450',
-		rating: 5,
-	},
-	{
-		img: jewelry,
-		title: 'Classic Four-Prong Solitaire Engagement Ring in 18k White Gold',
-		price: '$600',
-		discountPrice: '$450',
-		rating: 5,
-	},
-	{
-		img: jewelry,
-		title: 'Classic Four-Prong Solitaire Engagement Ring in 18k White Gold',
-		price: '$600',
-		discountPrice: '$450',
-		rating: 5,
-	},
-	{
-		img: jewelry,
-		title: 'Classic Four-Prong Solitaire Engagement Ring in 18k White Gold',
-		price: '$600',
-		discountPrice: '$450',
-		rating: 5,
-	},
-	{
-		img: jewelry,
-		title: 'Classic Four-Prong Solitaire Engagement Ring in 18k White Gold',
-		price: '$600',
-		discountPrice: '$450',
-		rating: 5,
-	},
-	{
-		img: jewelry,
-		title: 'Classic Four-Prong Solitaire Engagement Ring in 18k White Gold',
-		price: '$600',
-		discountPrice: '$450',
-		rating: 5,
-	},
-	{
-		img: jewelry,
-		title: 'Classic Four-Prong Solitaire Engagement Ring in 18k White Gold',
-		price: '$600',
-		discountPrice: '$450',
-		rating: 5,
-	},
-	{
-		img: jewelry,
-		title: 'Classic Four-Prong Solitaire Engagement Ring in 18k White Gold',
-		price: '$600',
-		discountPrice: '$450',
-		rating: 5,
-	},
-	{
-		img: jewelry,
-		title: 'Classic Four-Prong Solitaire Engagement Ring in 18k White Gold',
-		price: '$600',
-		discountPrice: '$450',
-		rating: 5,
-	},
-	{
-		img: jewelry,
-		title: 'Classic Four-Prong Solitaire Engagement Ring in 18k White Gold',
-		price: '$600',
-		discountPrice: '$450',
-		rating: 5,
-	},
-	{
-		img: jewelry,
-		title: 'Classic Four-Prong Solitaire Engagement Ring in 18k White Gold',
-		price: '$600',
-		discountPrice: '$450',
-		rating: 5,
-	},
-	{
-		img: jewelry,
-		title: 'Classic Four-Prong Solitaire Engagement Ring in 18k White Gold',
-		price: '$600',
-		discountPrice: '$450',
-		rating: 5,
-	},
-	{
-		img: jewelry,
-		title: 'Classic Four-Prong Solitaire Engagement Ring in 18k White Gold',
-		price: '$600',
-		discountPrice: '$450',
-		rating: 5,
-	},
-	{
-		img: jewelry,
-		title: 'Classic Four-Prong Solitaire Engagement Ring in 18k White Gold',
-		price: '$600',
-		discountPrice: '$450',
-		rating: 5,
-	},
-];
 
 export const genderChoice = ['Nam', 'Nữ'];
 
 export const typeChoice = ['Nhẫn', 'Bông tai', 'Dây chuyền'];
 
 export const metalChoice = ['White Gold', 'Yellow Gold', 'Platinum'];
-
-export const initialData = [
-	{
-		id: '1',
-		orderId: '#0dce',
-		orderTime: 'August 19, 2024',
-		product: 'French Pavé Diamond Engagement Ring in 14k White Gold (1/4 ct. tw.)',
-		price: '$1,020',
-		status: 'Completed',
-	},
-	{
-		id: '2',
-		orderId: '#9dvc',
-		orderTime: 'August 19, 2024',
-		product: 'French Pavé Diamond Engagement Ring in 14k White Gold (1/4 ct. tw.)',
-		price: '$1,020',
-		status: 'Pending',
-	},
-	{
-		id: '3',
-		orderId: '#8ska',
-		orderTime: 'August 19, 2024',
-		product: 'French Pavé Diamond Engagement Ring in 14k White Gold (1/4 ct. tw.)',
-		price: '$1,020',
-		status: 'Completed',
-	},
-	{
-		id: '4',
-		orderId: '#1c4b',
-		orderTime: 'September 12, 2024',
-		product: 'Round Diamond Eternity Ring in Platinum (2 ct. tw.)',
-		price: '$2,500',
-		status: 'Pending',
-	},
-	{
-		id: '5',
-		orderId: '#2b9a',
-		orderTime: 'September 11, 2024',
-		product: 'Petite Micropavé Diamond Engagement Ring in 14k White Gold (1/4 ct. tw.)',
-		price: '$1,250',
-		status: 'Processing',
-	},
-	{
-		id: '6',
-		orderId: '#3d4f',
-		orderTime: 'September 10, 2024',
-		product: 'Emerald-Cut Sapphire Ring in Platinum',
-		price: '$5,600',
-		status: 'Completed',
-	},
-	{
-		id: '7',
-		orderId: '#4e7h',
-		orderTime: 'September 9, 2024',
-		product: 'Cushion-Cut Diamond Ring in 14k Rose Gold',
-		price: '$3,400',
-		status: 'Pending',
-	},
-];
-
-export const initialOrderData = [
-	{
-		id: '1',
-		name: 'Round Diamond 3.5 Carat IF',
-		unitPrice: '3,357,000 ₫',
-		quantity: 1,
-		totalPrice: '3,357,000 ₫',
-	},
-	{
-		id: '1',
-		name: 'Round Diamond 3.5 Carat IF',
-		unitPrice: '3,357,000 ₫',
-		quantity: 1,
-		totalPrice: '3,357,000 ₫',
-	},
-	{
-		id: '1',
-		name: 'Round Diamond 3.5 Carat IF',
-		unitPrice: '3,357,000 ₫',
-		quantity: 1,
-		totalPrice: '3,357,000 ₫',
-	},
-];
-
-// export const initialOrderData = {
-// 	items: [
-// 		{
-// 			id: '1',
-// 			name: 'Round Diamond 3.5 Carat IF',
-// 			unitPrice: '3,357,000 ₫',
-// 			quantity: 1,
-// 			totalPrice: '3,357,000 ₫',
-// 		},
-// 		{
-// 			id: '2',
-// 			name: 'Round Diamond 3.5 Carat IF',
-// 			unitPrice: '3,357,000 ₫',
-// 			quantity: 1,
-// 			totalPrice: '3,357,000 ₫',
-// 		},
-// 		{
-// 			id: '3',
-// 			name: 'Round Diamond 3.5 Carat IF',
-// 			unitPrice: '3,357,000 ₫',
-// 			quantity: 1,
-// 			totalPrice: '3,357,000 ₫',
-// 		},
-// 	],
-// 	additionalData: [
-// 		{
-// 			id: '4',
-// 			name: 'Round Diamond 4.0 Carat IF',
-// 			unitPrice: '4,357,000 ₫',
-// 			quantity: 2,
-// 			totalPrice: '8,714,000 ₫',
-// 		},
-// 		{
-// 			id: '5',
-// 			name: 'Round Diamond 5.0 Carat IF',
-// 			unitPrice: '5,357,000 ₫',
-// 			quantity: 3,
-// 			totalPrice: '16,071,000 ₫',
-// 		},
-// 	],
-// };
-
-export const statusTimeLine = [
-	{
-		status: 'ordered',
-		namePrev: 'Order Placed',
-		nameNext: 'Order Placed',
-		date: '23/08/2024 09:30',
-		description: 'Order is placed',
-	},
-	{
-		status: 'payment',
-		namePrev: 'Payment Info Confirmed',
-		nameNext: 'Payment Info Confirmed',
-		date: '23/08/2024 10:30',
-		description: 'Order payment confirmed',
-	},
-	{
-		status: 'shipping',
-		namePrev: 'To Ship',
-		nameNext: 'Order Shipped Out',
-		date: '23/08/2024 11:30',
-		description: 'Shop is preparing goods',
-	},
-	{
-		status: 'received',
-		namePrev: 'To Receive',
-		nameNext: 'Order Received',
-		date: '23/08/2024 12:30',
-		description: 'Shop has shipped the order',
-	},
-	{
-		status: 'completed',
-		namePrev: 'To Complete',
-		nameNext: 'Order Completed',
-		date: '23/08/2024 13:30',
-		description: 'Customer has received the order',
-	},
-];
 
 export const data = {
 	Id: '01809474-69c3-4309-8360-d6eff09d04fc',
@@ -651,15 +209,15 @@ export const enums = {
 		Removed: 2,
 	},
 	OrderStatus: {
-		Pending: 0,
-		Processing: 1,
-		Rejected: 2,
-		Cancelled: 3,
-		Prepared: 4,
-		Delivering: 5,
-		Delivery_Failed: 6,
-		Success: 7,
-		Refused: 8,
+		Pending: 1,
+		Processing: 2,
+		Rejected: 3,
+		Cancelled: 4,
+		Prepared: 5,
+		Delivering: 6,
+		Delivery_Failed: 7,
+		Success: 8,
+		Refused: 9,
 	},
 	PaymentStatus: {
 		PaidAll: 1,
@@ -781,15 +339,215 @@ export const enums = {
 		Car: 1,
 		Plane: 2,
 	},
-	CustomizeDiamondRequestStatus: {
-		Accepted: 1,
-		Rejected: 2,
-		Invalid: 3,
-		Finish: 4,
+	CustomizeRequestStatus: {
+		Chờ_Xử_Lý: 1,
+		Đã_Có_Giá: 2,
+		Đang_Yêu_Cầu: 3,
+		Chấp_Nhận: 4,
+		Shop_Từ_Chối: 5,
+		Customer_Từ_Chối: 6,
+		Customer_Hủy_Đơn: 7,
 	},
 	AccountRoleType: {
 		Customer: 0,
 		Staff: 1,
 		None: -1,
 	},
+	Shapes: {
+		Round: 1,
+		Cushion: 3,
+		Emerald: 4,
+		Oval: 5,
+		Radiant: 6,
+		Asscher: 7,
+		Marquise: 8,
+		Heart: 9,
+		Princess: 2,
+		Pear: 10,
+	},
+	OrderItemStatus: {
+		Pending: 0,
+		Prepared: 1,
+		Done: 2,
+		Removed: 3,
+	},
+};
+
+export const enumMappings = {
+	DiamondOrigin: {1: 'Natural', 2: 'Lab', 3: 'Both'},
+	Operator: {1: 'Equal or Larger', 2: 'Larger'},
+	PriorityLevel: {0: 'Low', 1: 'Medium', 2: 'High'},
+	BackType: {0: 'Push Back', 1: 'Screw Back', 2: 'Secure Lock Back'},
+	ChainType: {0: 'Cable', 1: 'Rope', 2: 'Bead', 3: 'Byzantine', 4: 'Figaro', 5: 'Curb'},
+	ClaspType: {
+		0: 'Spring Ring',
+		1: 'Lobster Claw',
+		2: 'Bayonet',
+		3: 'Barrel',
+		4: 'Open Box',
+		5: 'Toggle',
+		6: 'S Hook',
+		7: 'Magnetic',
+		8: 'Pearl',
+		9: 'Bracelet Catch',
+	},
+	SettingType: {0: 'Prong', 1: 'Bezel', 2: 'Tension', 3: 'Pave', 4: 'Bar', 5: 'Flush'},
+	Clarity: {1: 'S12', 2: 'S11', 3: 'VS2', 4: 'VS1', 5: 'VVS2', 6: 'VVS1', 7: 'IF', 8: 'FL'},
+	Color: {1: 'K', 2: 'J', 3: 'I', 4: 'H', 5: 'G', 6: 'F', 7: 'E', 8: 'D'},
+	Culet: {
+		1: 'None',
+		2: 'Very Small',
+		3: 'Small',
+		4: 'Medium',
+		5: 'Slightly Large',
+		6: 'Large',
+		7: 'Very Large',
+		8: 'Extremely Large',
+	},
+	Cut: {1: 'Good', 2: 'Very Good', 3: 'Excellent', 4: 'No Cut'},
+	Fluorescence: {1: 'None', 2: 'Faint', 3: 'Medium', 4: 'Strong'},
+	Girdle: {
+		1: 'Extremely Thin',
+		2: 'Very Thin',
+		3: 'Thin',
+		4: 'Medium',
+		5: 'Slightly Thick',
+		6: 'Thick',
+		7: 'Very Thick',
+		8: 'Extremely Thick',
+	},
+	Polish: {1: 'Poor', 2: 'Fair', 3: 'Good', 4: 'Very Good', 5: 'Excellent'},
+	Symmetry: {1: 'Poor', 2: 'Fair', 3: 'Good', 4: 'Very Good', 5: 'Excellent'},
+};
+
+export const shapeItems = [
+	{
+		id: 1,
+		image: round,
+		value: 1,
+		shape: 'Round',
+	},
+	{
+		id: 2,
+		image: cushion,
+		shape: 'Cushion',
+		value: 3,
+	},
+	{id: 3, image: emerald, shape: 'Emerald', value: 4},
+	{id: 4, image: oval, shape: 'Oval', value: 5},
+	{id: 5, image: radiant, shape: 'Radiant', value: 6},
+	{id: 6, image: asscher, shape: 'Asscher', value: 7},
+	{id: 7, image: marquise, shape: 'Marquise', value: 8},
+	{id: 8, image: heart, shape: 'Heart', value: 9},
+	{id: 9, image: princess, shape: 'Princess', value: 2},
+	{id: 9, image: pear, shape: 'Pear', value: 10},
+];
+
+export const shapeItemsCustomize = [
+	{
+		id: 1,
+		image: round,
+		value: '1',
+		shape: 'Round',
+	},
+	{
+		id: 2,
+		image: cushion,
+		shape: 'Cushion',
+		value: '3',
+	},
+	{id: 3, image: emerald, shape: 'Emerald', value: '4'},
+	{id: 4, image: oval, shape: 'Oval', value: '5'},
+	{id: 5, image: radiant, shape: 'Radiant', value: '6'},
+	{id: 6, image: asscher, shape: 'Asscher', value: '7'},
+	{id: 7, image: marquise, shape: 'Marquise', value: '8'},
+	{id: 8, image: heart, shape: 'Heart', value: '9'},
+	{id: 9, image: princess, shape: 'Princess', value: '2'},
+	{id: 9, image: pear, shape: 'Pear', value: '10'},
+];
+
+export const Clarity = {
+	S12: 1,
+	S11: 2,
+	VS2: 3,
+	VS1: 4,
+	VVS2: 5,
+	VVS1: 6,
+	IF: 7,
+	FL: 8,
+};
+
+export const Color = {
+	K: 1,
+	J: 2,
+	I: 3,
+	H: 4,
+	G: 5,
+	F: 6,
+	E: 7,
+	D: 8,
+};
+
+export const Culet = {
+	None: 1,
+	Very_Small: 2,
+	Small: 3,
+	Medium: 4,
+	Slightly_Large: 5,
+	Large: 6,
+	Very_Large: 7,
+	Extremely_Large: 8,
+};
+
+export const Cut = {
+	Good: 1,
+	Very_Good: 2,
+	Excellent: 3,
+};
+
+export const Fluorescence = {
+	None: 1,
+	Faint: 2,
+	Medium: 3,
+	Strong: 4,
+};
+
+export const Girdle = {
+	Extremely_Thin: 1,
+	Very_Thin: 2,
+	Thin: 3,
+	Medium: 4,
+	Slightly_Thick: 5,
+	Thick: 6,
+	Very_Thick: 7,
+	Extremely_Thick: 8,
+};
+
+export const Polish = {
+	Poor: 1,
+	Fair: 2,
+	Good: 3,
+	Very_Good: 4,
+	Excellent: 5,
+};
+
+export const Symmetry = {
+	Poor: 1,
+	Fair: 2,
+	Good: 3,
+	Very_Good: 4,
+	Excellent: 5,
+};
+
+export const ShapeName = {
+	Round: '1',
+	Princess: '2',
+	Emerald: '4',
+	Asscher: '7',
+	Marquise: '8',
+	Oval: '5',
+	Radiant: '6',
+	Pear: '10',
+	Heart: '9',
+	Cushion: '3',
 };

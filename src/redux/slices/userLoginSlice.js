@@ -2,7 +2,6 @@ import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {api} from '../../services/api';
 import {setLocalStorage} from '../../utils/localstorage';
 
-// Login Thunk
 export const handleLogin = createAsyncThunk(
 	'userLoginSlice/handleLogin',
 	async ({email, password, isExternalLogin, isStaffLogin}, {rejectWithValue}) => {
@@ -23,13 +22,13 @@ export const handleLogin = createAsyncThunk(
 	}
 );
 
-export const GoogleLogin = createAsyncThunk(
-	'userLoginSlice/GoogleLogin',
-	async ({externalProviderName}, {rejectWithValue}) => {
+export const handleGoogleLogin = createAsyncThunk(
+	'userLoginSlice/handleGoogleLogin',
+	async (credential, {rejectWithValue}) => {
+		console.log('credential', typeof credential);
+
 		try {
-			const data = await api.post(
-				`/Account/Login?externalProviderName=${externalProviderName}`
-			);
+			const data = await api.post(`/Account/Google/Credential`, credential);
 			console.log(data);
 
 			return data;
@@ -40,7 +39,6 @@ export const GoogleLogin = createAsyncThunk(
 	}
 );
 
-// Register Thunk
 export const handleRegister = createAsyncThunk(
 	'userLoginSlice/handleRegister',
 	async ({email, password, fullName, isExternalRegister}, {rejectWithValue}) => {
@@ -59,6 +57,19 @@ export const handleRegister = createAsyncThunk(
 	}
 );
 
+export const handleRefreshToken = createAsyncThunk(
+	'userLoginSlice/handleRefreshToken',
+	async (refreshToken, {rejectWithValue}) => {
+		try {
+			const data = await api.put(`/Account/RefreshToken?refreshToken=${refreshToken}`);
+			return data;
+		} catch (error) {
+			console.error(error);
+			return rejectWithValue(error.payload);
+		}
+	}
+);
+
 export const getUserDetail = createAsyncThunk(
 	'userLoginSlice/getUserDetail',
 	async (id, {rejectWithValue}) => {
@@ -67,7 +78,51 @@ export const getUserDetail = createAsyncThunk(
 			return data;
 		} catch (error) {
 			console.error(error);
-			return rejectWithValue(error);
+			return rejectWithValue(error.payload);
+		}
+	}
+);
+
+export const handleUpdateAccount = createAsyncThunk(
+	'userLoginSlice/handleUpdateAccount',
+	async ({id, changedFullName, changedAddress}, {rejectWithValue}) => {
+		try {
+			const data = await api.put(`/Account/${id}/Profile`, {
+				changedFullName,
+				changedAddress,
+			});
+			return data;
+		} catch (error) {
+			console.error(error);
+			return rejectWithValue(error.payload);
+		}
+	}
+);
+
+export const handleDefaultAccount = createAsyncThunk(
+	'userLoginSlice/handleDefaultAccount',
+	async ({accountId, id}, {rejectWithValue}) => {
+		try {
+			const data = await api.put(`/Account/${accountId}/Profile/SetAddressDefault`, id);
+			return data;
+		} catch (error) {
+			console.error(error);
+			return rejectWithValue(error.payload);
+		}
+	}
+);
+
+export const handleVerifyAccount = createAsyncThunk(
+	'userLoginSlice/handleVerifyAccount',
+	async (id, {rejectWithValue}) => {
+		try {
+			const data = await api.get(`/Account/${id}/Email/SendConfirm`);
+			console.log(data);
+
+			return data;
+		} catch (error) {
+			console.error(error);
+			return rejectWithValue(error.data);
 		}
 	}
 );
@@ -86,9 +141,11 @@ export const userLoginSlice = createSlice({
 		},
 		logout: (state) => {
 			state.userInfo = null;
-			state.userDetail = null;
 			localStorage.removeItem('accessToken');
 			localStorage.removeItem('refreshToken');
+			localStorage.removeItem('userId');
+			localStorage.removeItem('user');
+			localStorage.removeItem('userDetail');
 		},
 	},
 	extraReducers: (builder) => {
@@ -106,27 +163,24 @@ export const userLoginSlice = createSlice({
 			})
 			.addCase(handleLogin.rejected, (state, action) => {
 				state.loading = false;
-				state.error = action.payload; // Lưu lỗi nếu có
+				state.error = action.payload;
 			})
-			.addCase(GoogleLogin.pending, (state) => {
+			.addCase(handleGoogleLogin.pending, (state) => {
 				state.loading = true;
 				state.error = null;
 			})
-			.addCase(GoogleLogin.fulfilled, (state, action) => {
+			.addCase(handleGoogleLogin.fulfilled, (state, action) => {
 				state.loading = false;
 				state.userInfo = action.payload;
 				setLocalStorage('accessToken', action.payload.accessToken);
 				setLocalStorage('refreshToken', action.payload.refreshToken);
 			})
-			.addCase(GoogleLogin.rejected, (state, action) => {
+			.addCase(handleGoogleLogin.rejected, (state, action) => {
 				state.loading = false;
-				state.error = action.payload; // Lưu lỗi nếu có
+				state.error = action.payload;
 			})
-
-			// Register
 			.addCase(handleRegister.pending, (state) => {
 				state.loading = true;
-				state.error = null;
 			})
 			.addCase(handleRegister.fulfilled, (state, action) => {
 				state.loading = false;
@@ -137,14 +191,64 @@ export const userLoginSlice = createSlice({
 				state.loading = false;
 				state.error = action.payload; // Lưu lỗi nếu có
 			})
+			.addCase(handleRefreshToken.pending, (state) => {
+				state.loading = true;
+				state.error = null;
+			})
+			.addCase(handleRefreshToken.fulfilled, (state, action) => {
+				state.loading = false;
+				setLocalStorage('accessToken', action.payload.accessToken);
+			})
+			.addCase(handleRefreshToken.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload;
+			})
 			.addCase(getUserDetail.pending, (state) => {
 				state.loading = true;
+				state.error = null;
 			})
 			.addCase(getUserDetail.fulfilled, (state, action) => {
 				state.loading = false;
 				state.userDetail = action.payload;
+				localStorage.setItem('userDetail', JSON.stringify(action.payload));
 			})
 			.addCase(getUserDetail.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload;
+			})
+			.addCase(handleUpdateAccount.pending, (state) => {
+				state.loading = true;
+				state.error = null;
+			})
+			.addCase(handleUpdateAccount.fulfilled, (state, action) => {
+				state.loading = false;
+				state.userDetail = action.payload;
+				localStorage.setItem('userDetail', JSON.stringify(action.payload));
+			})
+			.addCase(handleUpdateAccount.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload;
+			})
+			.addCase(handleDefaultAccount.pending, (state) => {
+				state.loading = true;
+				state.error = null;
+			})
+			.addCase(handleDefaultAccount.fulfilled, (state, action) => {
+				state.loading = false;
+				state.userDetail = action.payload;
+			})
+			.addCase(handleDefaultAccount.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload;
+			})
+			.addCase(handleVerifyAccount.pending, (state) => {
+				state.loading = true;
+				state.error = null;
+			})
+			.addCase(handleVerifyAccount.fulfilled, (state, action) => {
+				state.loading = false;
+			})
+			.addCase(handleVerifyAccount.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload;
 			});

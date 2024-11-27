@@ -3,7 +3,6 @@ import React from 'react';
 import {Helmet} from 'react-helmet';
 import {BannerRings} from '../../components/Banner/BannerRing-1';
 import {BannerRing2} from '../../components/Banner/BannerRing-2';
-import styles from '../../css/wrapper.module.css';
 import {Image, Space} from 'antd';
 import ringImg from '../../assets/ring_classic.png';
 
@@ -43,7 +42,8 @@ const HomeRingPage = () => {
 
 				<div className="flex justify-center items-center">
 					<div
-						className={`${styles.wrapper} border border-white bg-white rounded-lg items-center my-5`}
+						className={`flex overflow-x-auto text-center mr-2 border border-white bg-white rounded-lg items-center my-5`}
+						style={{maxWidth: 1600}}
 					>
 						{list?.map((item) => (
 							<div
@@ -54,7 +54,7 @@ const HomeRingPage = () => {
 								<Space className="m-auto">
 									<Image className="h-full w-full" src={ringImg} />
 								</Space>
-								<div className={`${styles.item} uppercase h-12 mt-5`}>
+								<div className={`text-center mr-2 uppercase h-12 mt-5`}>
 									{item.name}
 								</div>
 							</div>

@@ -1,17 +1,44 @@
-import React, {useState} from 'react';
+import React from 'react';
 
-import NavbarProfile from '../../components/NavbarProfile';
+import {Button, Form, Input, message} from 'antd';
 import {Helmet} from 'react-helmet';
-import {Button, Form, Input} from 'antd';
+import {useDispatch, useSelector} from 'react-redux';
+import NavbarProfile from '../../components/NavbarProfile';
+import {
+	ErrorPasswordSelector,
+	GetUserDetailSelector,
+	LoadingUserDetailSelector,
+} from '../../redux/selectors';
+import {handleChangePassword} from '../../redux/slices/userSlice';
 
 const ChangePassword = () => {
 	const [form] = Form.useForm();
-	const [loading, setLoading] = useState(false);
+	const dispatch = useDispatch();
+	const userDetail = useSelector(GetUserDetailSelector);
+	const loading = useSelector(LoadingUserDetailSelector);
+	const error = useSelector(ErrorPasswordSelector);
 
 	const handleSubmit = (values) => {
 		console.log('Password changed:', values);
-		form.resetFields();
+		dispatch(
+			handleChangePassword({
+				identityId: userDetail?.IdentityId,
+				oldPassword: values?.oldPassword,
+				newPassword: values?.newPassword,
+			})
+		)
+			.unwrap()
+			.then((data) => {
+				message.success('Thay đổi mật khẩu thành công!');
+				form.resetFields();
+			})
+			.catch((error) => {
+				message.error(error?.detail || 'Có lỗi xảy ra!');
+			});
 	};
+
+	console.log('error', error);
+
 	return (
 		<div>
 			<Helmet>
@@ -21,7 +48,7 @@ const ChangePassword = () => {
 				<div className="mr-20">
 					<NavbarProfile />
 				</div>
-				<div className="font-semibold w-full px-20 py-10 bg-white rounded-lg">
+				<div className="font-semibold w-full px-20 py-10 bg-white rounded-lg shadow-lg">
 					<h2 className="text-2xl mb-6 text-center">Đổi Mật Khẩu</h2>
 					<Form
 						form={form}

@@ -1,71 +1,486 @@
-import React, {useState, useEffect} from 'react';
-import {FaRegAddressBook, FaRegEnvelope, FaPhoneAlt} from 'react-icons/fa';
-import {Form, Input, Button, Radio, message, Select} from 'antd';
-import {useNavigate} from 'react-router-dom';
+import {Button, Form, Input, message, Modal, Radio, Select} from 'antd';
+import React, {useEffect, useMemo, useState} from 'react';
+import {FaPhoneAlt, FaRegAddressBook, FaRegEnvelope} from 'react-icons/fa';
 import {useDispatch, useSelector} from 'react-redux';
-import {fetchDistances} from '../../redux/slices/distanceSlice';
-import {selectDistances, selectLoading, selectError} from '../../redux/selectors';
+import {useLocation, useNavigate} from 'react-router-dom';
+import {
+	CalculateLocationSelector,
+	GetAllDistrictSelector,
+	GetAllPaymentSelector,
+	GetAllWardSelector,
+	GetCartSelector,
+	GetLoadingCustomizeSelector,
+	GetOrderWarrantySelector,
+	GetPromotionAbleSelector,
+	GetUserDetailSelector,
+	LoadingOrderSelector,
+	selectDistances,
+	selectError,
+	selectLoading,
+} from '../../redux/selectors';
+import {handleOrderCustomizeCheckout} from '../../redux/slices/customizeSlice';
+import {
+	fetchDistances,
+	fetchDistrict,
+	fetchWard,
+	handleCalculateLocation,
+} from '../../redux/slices/distanceSlice';
+import {handleCheckoutOrder} from '../../redux/slices/orderSlice';
+import {getAllPayment} from '../../redux/slices/paymentSlice';
+import {checkPromoCart, getAllPromo} from '../../redux/slices/promotionSlice';
+import {convertToVietnamDate, formatPrice} from '../../utils';
+import {enums} from '../../utils/constant';
+import {handleCartValidate} from '../../redux/slices/cartSlice';
+import {getAllWarranty} from '../../redux/slices/warrantySlice';
+import {CheckCircleOutlined} from '@ant-design/icons';
+
+const {Option} = Select;
+
+const getEnumKey = (enumObj, value) => {
+	return enumObj
+		? Object.keys(enumObj)
+				.find((key) => enumObj[key] === value)
+				?.replace('_', ' ')
+		: '';
+};
+
+const mapAttributes = (data, attributes) => {
+	return {
+		Id: data.CartProductId,
+		DiscountId: data.DiscountId,
+		DiscountPercent: data.DiscountPercent,
+		EngravedFont: data.EngravedFont,
+		EngravedText: data.EngravedText,
+		ErrorMessage: data.ErrorMessage,
+		GiftAssignedId: data.GiftAssignedId,
+		IsAvailable: data.IsAvailable,
+		IsGift: data.IsGift,
+		IsHavingDiscount: data.IsHavingDiscount,
+		IsHavingPromotion: data.IsHavingPromotion,
+		IsProduct: data.IsProduct,
+		IsReqirement: data.IsReqirement,
+		IsValid: data.IsValid,
+		JewelryId: data?.Jewelry?.Id,
+		Diamonds: data?.Jewelry?.Diamonds,
+		IsPreset: data?.Jewelry?.IsPreset,
+		IsSold: data?.Jewelry?.IsSold,
+		IsAwaiting: data?.Jewelry?.IsAwaiting,
+		MetalId: data?.Jewelry?.MetalId,
+		MetalName: data?.Jewelry?.Metal?.Name,
+		MetalPrice: data?.Jewelry?.Metal?.Price,
+		Model: data?.Jewelry?.Model,
+		ModelId: data?.Jewelry?.ModelId,
+		JewelryPrice: data?.Jewelry?.TotalPrice,
+		JewelryName: data?.Jewelry?.Name,
+		SerialCode: data?.Jewelry?.SerialCode,
+		ShippingDate: data?.Jewelry?.ShippingDate,
+		SideDiamonds: data?.Jewelry?.SideDiamonds,
+		SizeId: data?.Jewelry?.SizeId,
+		Weight: data?.Jewelry?.Weight,
+		JewelryModel: data.JewelryModel,
+		PromotionId: data.PromotionId,
+		RequirementQualifedId: data.RequirementQualifedId,
+		Carat: data?.Diamond?.Carat || null,
+		CategoryName: data?.Jewelry?.Model?.Category?.Name || null,
+
+		// Using the helper function to map diamond attributes
+		Clarity: getEnumKey(attributes.Clarity, data?.Diamond?.Clarity),
+		Color: getEnumKey(attributes.Color, data?.Diamond?.Color),
+		Culet: getEnumKey(attributes.Culet, data?.Diamond?.Culet),
+		Cut: getEnumKey(attributes.Cut, data?.Diamond?.Cut),
+		Fluorescence: getEnumKey(attributes.Fluorescence, data?.Diamond?.Fluorescence),
+		Girdle: getEnumKey(attributes.Girdle, data?.Diamond?.Girdle),
+		Symmetry: getEnumKey(attributes.Symmetry, data?.Diamond?.Symmetry),
+		Polish: getEnumKey(attributes.Polish, data?.Diamond?.Polish),
+
+		Depth: data?.Diamond?.Depth,
+		Table: data?.Diamond?.Table,
+		Measurement: data?.Diamond?.Measurement,
+		DiamondShapeId: data?.Diamond?.DiamondShapeId,
+		DiamondShape: data?.Diamond?.DiamondShape?.ShapeName,
+		DiscountPrice: data?.Diamond?.DiscountPrice,
+		DiamondTruePrice: data?.Diamond?.TruePrice,
+		DiamondPriceOffset: data?.Diamond?.PriceOffset,
+		Title: data?.Diamond?.Title,
+		IsLabDiamond: data?.IsLabDiamond,
+		DiamondThumbnail: data?.Diamond?.Thumbnail,
+		CriteriaId: data?.Diamond?.DiamondPrice?.CriteriaId,
+	};
+};
 
 const CheckoutPage = () => {
-	const [paymentMethod, setPaymentMethod] = useState(null);
-	const [selectedCity, setSelectedCity] = useState('');
-	const [shippingFee, setShippingFee] = useState(0);
+	const [form] = Form.useForm();
+	const locations = useLocation();
+	const promoId = locations.state?.promoId;
+	const order = locations.state?.order;
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-
-	// Selectors to access distances and loading state
 	const distances = useSelector(selectDistances);
+	const districts = useSelector(GetAllDistrictSelector);
+	const wards = useSelector(GetAllWardSelector);
 	const loading = useSelector(selectLoading);
-	const error = useSelector(selectError);
+	const loadingCheckout = useSelector(LoadingOrderSelector);
+	const loadingCustomize = useSelector(GetLoadingCustomizeSelector);
+	const userDetail = useSelector(GetUserDetailSelector);
+	const cartList = useSelector(GetCartSelector);
+	const paymentList = useSelector(GetAllPaymentSelector);
+	const warrantyList = useSelector(GetOrderWarrantySelector);
+	const promoAble = useSelector(GetPromotionAbleSelector);
+
+	const [warrantiesJewelry, setWarrantiesJewelry] = useState('');
+	const [paymentMethod, setPaymentMethod] = useState(null);
+	const [paymentForm, setPaymentForm] = useState(null);
+	const [shippingFee, setShippingFee] = useState(0);
+	const [promoCustomizeId, setPromoCustomizeId] = useState(null);
+	const [province, setProvince] = useState('');
+	const [district, setDistrict] = useState('');
+	const [ward, setWard] = useState('');
+	const [provinceId, setProvinceId] = useState('');
+	const [wardId, setWardId] = useState('');
+	const [promo, setPromo] = useState('');
+	const [districtId, setDistrictId] = useState('');
+	const [warrantiesJewelrySelected, setWarrantiesJewelrySelected] = useState();
+	const [payment, setPayment] = useState();
+	const [userInfo, setUserInfo] = useState({
+		firstName: userDetail.FirstName || '',
+		lastName: userDetail.LastName || '',
+		email: userDetail.Email || '',
+		phone: '',
+		province: userDetail?.Addresses?.[0]?.Province || '',
+		district: userDetail?.Addresses?.[0]?.District || '',
+		ward: userDetail?.Addresses?.[0]?.Ward || '',
+		address: userDetail?.Addresses?.[0]?.Street || '',
+		note: '',
+	});
+
+	const idCustomize = order?.Id;
+
+	console.log('payment', payment);
+
+	const defaultAddress =
+		userDetail.Addresses.length > 0 &&
+		userDetail?.Addresses?.find((address) => address?.IsDefault === true);
+
+	useEffect(() => {
+		form.setFieldsValue(userInfo);
+	}, [form, userInfo]);
+
+	useEffect(() => {
+		if (userDetail && userDetail.Addresses && userDetail.Addresses.length > 0) {
+			const firstAddress = userDetail.Addresses[0];
+			setUserInfo((prev) => ({
+				...prev,
+				district: defaultAddress?.District || firstAddress?.District || '',
+				province: defaultAddress?.Province || firstAddress?.Province || '',
+				ward: defaultAddress?.Ward || firstAddress?.Ward || '',
+				address: defaultAddress?.Street || firstAddress?.Street || '',
+			}));
+		}
+	}, [userDetail]);
+
+	useEffect(() => {
+		dispatch(getAllWarranty());
+	}, []);
 
 	// Fetch distances on component mount
 	useEffect(() => {
 		dispatch(fetchDistances());
 	}, [dispatch]);
 
-	// Update shipping fee when the selected city changes
 	useEffect(() => {
-		const selectedDistance = distances?.find((distance) => distance.name === selectedCity);
-		if (selectedDistance) {
-			const fee = Math.ceil(selectedDistance.distance_km) * 500; // 500 VND per km
-			setShippingFee(fee);
+		dispatch(getAllPayment());
+	}, [dispatch]);
+
+	useEffect(() => {
+		if (distances) {
+			setProvince(distances);
 		}
-	}, [selectedCity, distances]);
+	}, [distances]);
 
-	// Hàm xử lý gửi form
-	const onFinish = (values) => {
-		console.log('Giá trị Form:', values);
-		message.success('Đặt hàng thành công!');
+	useEffect(() => {
+		if (paymentList) {
+			setPayment(paymentList);
+		}
+	}, [paymentList]);
+
+	useEffect(() => {
+		if (provinceId) dispatch(fetchDistrict(provinceId));
+		if (districtId) dispatch(fetchWard(districtId));
+	}, [dispatch, provinceId, districtId]);
+
+	useEffect(() => {
+		if (districts) {
+			setDistrict(districts);
+		}
+	}, [districts]);
+
+	useEffect(() => {
+		if (wards) {
+			setWard(wards);
+		}
+	}, [wards]);
+
+	useEffect(() => {
+		dispatch(
+			handleCalculateLocation({
+				Province: userInfo?.province,
+				District: userInfo?.district,
+				Ward: userInfo?.ward,
+				Street: userInfo?.address,
+			})
+		);
+	}, [userInfo]);
+
+	useEffect(() => {
+		if (warrantyList) {
+			setWarrantiesJewelry(warrantyList?.Values?.filter((warranty) => warranty?.Type === 2));
+		}
+	}, [warrantyList]);
+
+	useEffect(() => {
+		if (promoAble) {
+			setPromo(promoAble?.Promotions);
+		}
+	}, [promoAble]);
+
+	useEffect(() => {
+		dispatch(getAllPromo());
+	}, []);
+
+	useEffect(() => {
+		if (idCustomize) {
+			const transformedData = {
+				id: Math.floor(1000000 + Math.random() * 9000000).toString(),
+				jewelryId: order?.JewelryId || null,
+				diamondId: order?.DiamondId || null,
+				jewelryModelId: order?.JewelryModelId || null,
+				sizeId: order?.SizeId || null,
+				metalId: order?.MetalId.Value,
+				sideDiamondChoices: [order?.SideDiamondId],
+				engravedText: order?.EngravedText || null,
+				engravedFont: order?.EngravedFont || null,
+				warrantyCode: warrantiesJewelrySelected?.warrantyCode || null,
+				warrantyType: 2,
+			};
+
+			const userAddress = {
+				province: defaultAddress?.Province,
+				district: defaultAddress?.District,
+				ward: defaultAddress?.Ward,
+				street: defaultAddress?.Street,
+			};
+
+			// Kiểm tra nếu userAddress có dữ liệu, nếu không thì không truyền userAddress
+			const actionPayload = {
+				promotionId: promoCustomizeId || null,
+				items: [transformedData],
+				accountId: userDetail?.Id,
+			};
+
+			// Nếu userAddress có dữ liệu, thêm vào payload
+			if (
+				userAddress.province ||
+				userAddress.district ||
+				userAddress.ward ||
+				userAddress.street
+			) {
+				actionPayload.userAddress = userAddress;
+			}
+
+			dispatch(handleCartValidate(actionPayload));
+
+			dispatch(checkPromoCart({items: [transformedData]}));
+		}
+	}, [dispatch, order, userDetail, warrantiesJewelrySelected, promoCustomizeId, defaultAddress]);
+
+	const jewelryOrDiamondProducts = cartList?.Products.filter(
+		(product) => product.Jewelry || product.Diamond
+	);
+
+	const mappedProducts = useMemo(() => {
+		return jewelryOrDiamondProducts?.map((product) => mapAttributes(product, enums));
+	}, [jewelryOrDiamondProducts, enums]);
+
+	const showOrderSuccessModal = () => {
+		Modal.confirm({
+			title: 'Đặt Hàng Thành Công!',
+			icon: <CheckCircleOutlined style={{color: '#52c41a'}} />,
+			content:
+				'Đơn hàng của bạn đã được đặt thành công. Cảm ơn bạn đã mua sắm với chúng tôi!',
+			okText: `${paymentMethod === '2' ? 'Kiểm Tra Đơn Hàng' : 'Thanh Toán Đơn Hàng'}`,
+			cancelText: null,
+			onCancel() {
+				navigate('/');
+			},
+
+			onOk() {
+				if (paymentMethod === '2') {
+					navigate('/my-orders');
+				} else {
+					navigate('/payment');
+				}
+			},
+		});
+	};
+	const onFinish = () => {
+		const orderItemRequestDtos = cartList?.Products?.map((product) => {
+			return {
+				jewelryId: product?.Jewelry?.Id || null,
+				diamondId: product?.Diamond?.Id || null,
+				engravedText: product?.EngravedText || null,
+				engravedFont: product?.EngravedFont || null,
+				warrantyCode: product?.CurrentWarrantyApplied?.Code || null,
+				warrantyType: product?.CurrentWarrantyApplied?.Type || null,
+			};
+		});
+
+		const orderRequestDto = {
+			paymentType: paymentForm,
+			paymentId: paymentMethod,
+			paymentName: 'zalopay',
+			promotionId: promoId || promoCustomizeId,
+			isTransfer: true,
+		};
+
+		const createOrderInfo = {
+			orderRequestDto,
+
+			orderItemRequestDtos,
+		};
+		const billingDetail = {
+			firstName: userInfo?.firstName || null,
+			lastName: userInfo?.lastName || null,
+			phone: userInfo?.phone || null,
+			email: userInfo?.email || null,
+			providence: userInfo?.province || null,
+			district: userInfo?.district || null,
+			ward: userInfo?.ward || null,
+			address: userInfo?.address || null,
+			note: userInfo?.note || null,
+		};
+
+		if (idCustomize) {
+			if (
+				warrantiesJewelrySelected === undefined ||
+				warrantiesJewelrySelected === '' ||
+				warrantiesJewelrySelected === null
+			) {
+				message.warning('Bạn cần phải chọn phiếu bảo hành!');
+				return;
+			}
+			dispatch(
+				handleOrderCustomizeCheckout({
+					customizeRequestId: idCustomize,
+					orderRequestDto: orderRequestDto,
+					billingDetail,
+					warrantyCode: warrantiesJewelrySelected?.warrantyCode,
+					warrantyType: 2,
+				})
+			)
+				.unwrap()
+				.then(() => {
+					showOrderSuccessModal();
+				})
+				.catch((error) => {
+					console.log('error', error);
+
+					message.error(error?.data?.title || error?.title);
+				});
+		} else {
+			dispatch(handleCheckoutOrder({createOrderInfo, billingDetail}))
+				.unwrap()
+				.then(() => {
+					localStorage.removeItem(`cart_${userDetail.Id}`);
+					showOrderSuccessModal();
+				})
+				.catch((error) => {
+					message.error(error?.data?.title || error?.detail);
+				});
+		}
 	};
 
-	const onFinishFailed = (errorInfo) => {
-		console.log('Thất bại:', errorInfo);
-		message.error('Vui lòng kiểm tra các trường trong form và thử lại.');
+	const onChangeWarrantyJewelry = (value) => {
+		if (value !== undefined) {
+			const parseValue = JSON.parse(value);
+			setWarrantiesJewelrySelected(parseValue);
+		} else {
+			console.warn('Giá trị "value" là undefined, không có hành động nào được thực hiện');
+		}
 	};
 
-	// Hàm xử lý thay đổi phương thức thanh toán
+	const handleCityChange = (value) => {
+		const selected = province.find((distance) => distance.Id === value);
+		setUserInfo((prev) => ({
+			...prev,
+			province: selected.Name,
+			district: '',
+			ward: '',
+		}));
+		setProvinceId(selected.Id);
+	};
+
+	const handleDistrictChange = (value) => {
+		const selected = district.find((district) => district.Id === value);
+		setUserInfo((prev) => ({
+			...prev,
+			district: selected.Name,
+			ward: '',
+		}));
+		setDistrictId(selected.Id);
+	};
+
+	const handleWardChange = (value) => {
+		const selected = ward.find((district) => district.Id === value);
+		setUserInfo((prev) => ({
+			...prev,
+			ward: selected.Name,
+		}));
+		setWardId(selected.Id);
+	};
+
 	const handlePaymentMethodChange = (e) => {
 		setPaymentMethod(e.target.value);
 	};
-	// Handle city selection change
-	const handleCityChange = (value) => {
-		setSelectedCity(value);
+
+	const handlePaymentFormChange = (e) => {
+		setPaymentForm(e.target.value);
 	};
+
+	const handleChange = (e) => {
+		const {name, value} = e.target;
+		setUserInfo((prev) => ({
+			...prev,
+			[name]: value,
+		}));
+	};
+
+	const validatePhoneNumber = (rule, value) => {
+		const phoneRegex = /^[0-9]{10}$/; // Regex cho số điện thoại 10 chữ số
+		if (!value || phoneRegex.test(value)) {
+			return Promise.resolve();
+		}
+		return Promise.reject(new Error('Số điện thoại không hợp lệ!'));
+	};
+
+	const handlePromoChange = (value) => {
+		setPromoCustomizeId(value);
+	};
+
 	return (
-		<div className="min-h-screen flex justify-center items-center bg-gray-100">
-			<div className="container mx-auto p-4 flex flex-col md:flex-row md:space-x-6 gap-4 justify-around">
-				{/* Thông tin thanh toán và giao hàng */}
-				<div className="flex-col">
+		<div className="min-h-screen flex justify-center items-center bg-gray-100 mx-40 my-20">
+			<div className="w-full flex">
+				<div className="md:w-3/5">
 					<div className="mb-6">
-						<div className="md:w-2/3 bg-white p-6 rounded-lg shadow-lg transition-shadow duration-300 hover:shadow-2xl">
-							<h2 className="text-2xl font-semibold text-gray-800 mb-6">
+						<div className=" bg-white p-6 rounded-lg shadow-lg transition-shadow duration-300 hover:shadow-2xl">
+							<h2 className="text-2xl font-semibold text-gray-800">
 								Thông tin thanh toán và giao hàng
 							</h2>
 							<Form
 								layout="vertical"
+								form={form}
 								className="space-y-6"
-								onFinish={onFinish}
-								onFinishFailed={onFinishFailed}
+								// onFinish={onFinish}
+								// onFinishFailed={onFinishFailed}
 							>
 								<div className="flex flex-col md:flex-row gap-y-4 md:gap-x-4">
 									<div className="w-full md:w-1/2 p-1">
@@ -73,7 +488,7 @@ const CheckoutPage = () => {
 											label={
 												<>
 													<FaRegAddressBook className="inline-block mr-2" />
-													Tên
+													Họ
 												</>
 											}
 											name="firstName"
@@ -84,7 +499,11 @@ const CheckoutPage = () => {
 												},
 											]}
 										>
-											<Input placeholder="Tên" />
+											<Input
+												placeholder="Tên"
+												name="firstName"
+												onChange={handleChange}
+											/>
 										</Form.Item>
 									</div>
 									<div className="w-full md:w-1/2 p-1">
@@ -92,7 +511,7 @@ const CheckoutPage = () => {
 											label={
 												<>
 													<FaRegAddressBook className="inline-block mr-2" />
-													Họ
+													Tên
 												</>
 											}
 											name="lastName"
@@ -103,66 +522,114 @@ const CheckoutPage = () => {
 												},
 											]}
 										>
-											<Input placeholder="Họ" />
+											<Input
+												placeholder="Họ"
+												name="lastName"
+												onChange={handleChange}
+											/>
 										</Form.Item>
 									</div>
 								</div>
 
-								<div className="flex flex-col md:flex-row md:space-x-4 gap-4">
-									<div className="w-full md:w-1/2 p-1">
-										<Form.Item
-											label="Tỉnh thành"
-											name="city"
-											rules={[
-												{
-													required: true,
-													message: 'Vui lòng nhập thành phố',
-												},
-											]}
-										>
-											<Select
-												placeholder="Chọn tỉnh thành"
-												onChange={handleCityChange}
-											>
-												{distances?.map((distance) => (
-													<Select.Option
-														key={distance.Id}
-														value={distance.name}
-													>
-														{distance.name}
-													</Select.Option>
-												))}
-											</Select>
-										</Form.Item>
-									</div>
-									<div className="w-full md:w-1/2 p-1">
-										<Form.Item
-											label="Quận / Huyện"
-											name="postcode"
-											rules={[
-												{
-													required: true,
-													message: 'Vui lòng nhập mã bưu điện',
-												},
-											]}
-										>
-											<Input placeholder="Mã bưu điện" />
-										</Form.Item>
-									</div>
-								</div>
 								<Form.Item
-									label="Địa chỉ"
-									name="streetAddress"
-									className="p-1"
+									label="Tỉnh thành"
+									name="city"
 									rules={[
 										{
 											required: true,
-											message: 'Vui lòng nhập địa chỉ',
+											message: 'Vui lòng nhập thành phố',
 										},
 									]}
 								>
-									<Input placeholder="Địa chỉ" />
+									<Select
+										placeholder="Chọn tỉnh thành"
+										onChange={handleCityChange}
+										disabled={loading}
+										loading={loading}
+										defaultValue={
+											defaultAddress?.Province ||
+											userInfo.province ||
+											undefined
+										}
+										value={userInfo.province || undefined}
+										notFoundContent="Đang tải"
+									>
+										{province &&
+											province.map((distance) => (
+												<Select.Option
+													key={distance.Id}
+													value={distance.Id}
+												>
+													{distance.Name}
+												</Select.Option>
+											))}
+									</Select>
 								</Form.Item>
+
+								<div className="flex flex-col mb-4">
+									<label className="flex justify-start items-center mb-2">
+										<p className="text-red mr-1">*</p>Quận / Huyện
+									</label>
+									<Select
+										placeholder="Chọn quận/huyện"
+										onChange={handleDistrictChange}
+										disabled={loading}
+										loading={loading}
+										value={userInfo?.district}
+										notFoundContent="Đang tải"
+									>
+										{district &&
+											district?.map((distance) => (
+												<Select.Option
+													key={distance.Id}
+													value={distance.Id}
+												>
+													{distance.Name}
+												</Select.Option>
+											))}
+									</Select>
+								</div>
+
+								<div className="flex flex-col mb-4">
+									<label className="flex justify-start items-center mb-2">
+										<p className="text-red mr-1">*</p>Phường / Xã
+									</label>
+									<Select
+										placeholder="Chọn phường/xã"
+										onChange={handleWardChange}
+										disabled={loading}
+										loading={loading}
+										value={userInfo?.ward}
+										notFoundContent="Đang tải"
+									>
+										{ward &&
+											ward.map((distance) => (
+												<Select.Option
+													key={distance.Id}
+													value={distance.Id}
+												>
+													{distance.Name}
+												</Select.Option>
+											))}
+									</Select>
+								</div>
+
+								<div className="flex flex-col mb-4">
+									<label className="flex justify-start items-center mb-2">
+										<p className="text-red mr-1">*</p>Số Nhà
+									</label>
+									<Input
+										placeholder="Số nhà"
+										name="address"
+										onChange={handleChange}
+										value={userInfo.address}
+									/>
+									<p className="text-red mt-2">
+										* Không nhập lại thông tin Phường/Xã - Quận/Huyện -
+										Tỉnh/Thành vào ô này
+									</p>
+								</div>
+
 								<div className="flex flex-col md:flex-row md:space-x-4 gap-4">
 									<div className="w-full md:w-1/2 p-1">
 										<Form.Item
@@ -176,11 +643,18 @@ const CheckoutPage = () => {
 											rules={[
 												{
 													required: true,
-													message: 'Vui lòng nhập số điện thoại của bạn',
+													message: 'Vui lòng nhập số điện thoại!',
 												},
+												{validator: validatePhoneNumber},
 											]}
 										>
-											<Input placeholder="Điện thoại" />
+											<Input
+												placeholder="Điện thoại"
+												type="tel"
+												maxLength={10}
+												name="phone"
+												onChange={handleChange}
+											/>
 										</Form.Item>
 									</div>
 									<div className="w-full md:w-1/2 p-1">
@@ -188,7 +662,7 @@ const CheckoutPage = () => {
 											label={
 												<>
 													<FaRegEnvelope className="inline-block mr-2" />
-													Địa chỉ Email
+													Email
 												</>
 											}
 											name="email"
@@ -205,239 +679,336 @@ const CheckoutPage = () => {
 									</div>
 								</div>
 
-								<Form.Item
-									label="Ghi chú đơn hàng (tùy chọn)"
-									name="notes"
-									className="p-1"
-								>
-									<Input.TextArea placeholder="Ghi chú đơn hàng" />
+								<Form.Item label="Ghi chú đơn hàng (tùy chọn)" className="p-1">
+									<Input.TextArea
+										placeholder="Ghi chú đơn hàng"
+										name="note"
+										onChange={handleChange}
+									/>
 								</Form.Item>
-								{/* Phương thức thanh toán */}
+
 								<div className="my-6">
-									<div className="md:w-1/3 bg-white p-6 rounded-lg shadow-lg space-y-6 mt-6 md:mt-0 transition-shadow duration-300 hover:shadow-2xl">
+									<div className=" bg-white p-6 rounded-lg shadow-lg space-y-6 mt-6 md:mt-0 transition-shadow duration-300 hover:shadow-2xl">
 										<h2 className="text-2xl font-semibold text-gray-800 mb-6">
-											Phương thức thanh toán
+											Hình thức thanh toán
 										</h2>
-										<Form.Item
-											name="paymentMethod"
-											rules={[
-												{
-													required: true,
-													message: 'Vui lòng chọn phương thức thanh toán',
-												},
-											]}
-											className="py-3"
-										>
+										<div className="py-3">
 											<Radio.Group
 												className="flex flex-col"
-												onChange={handlePaymentMethodChange}
+												onChange={handlePaymentFormChange}
+												name="paymentForm"
+												value={paymentForm}
 											>
 												<Radio
-													value="creditCard"
+													value="1"
 													className="border p-4 rounded-md hover:border-blue-500 transition duration-300 mb-4"
 												>
-													Chuyển Khoản Ngân Hàng
+													Trả Hết
 												</Radio>
 												<Radio
-													value="installments"
+													value="2"
 													className="border p-4 rounded-md hover:border-blue-500 transition duration-300 mb-4"
 												>
-													Thanh Toán Qua ZaloPay
+													Thanh Toán Khi Nhận Hàng
 												</Radio>
 											</Radio.Group>
-										</Form.Item>
-
-										{/* Hiển thị thông tin thẻ nếu 'Chuyển Khoản Ngân Hàng' được chọn */}
-										{paymentMethod === 'creditCard' && (
-											<div className="space-y-4">
-												<Form.Item
-													label="Số thẻ"
-													name="cardNumber"
-													rules={[
-														{
-															required: true,
-															message: 'Vui lòng nhập số thẻ',
-														},
-													]}
-												>
-													<Input placeholder="Số thẻ" />
-												</Form.Item>
-												<Form.Item
-													label="Ngân hàng"
-													name="bankName"
-													rules={[
-														{
-															required: true,
-															message: 'Vui lòng nhập tên ngân hàng',
-														},
-													]}
-												>
-													<Input placeholder="Tên ngân hàng" />
-												</Form.Item>
-												<Form.Item
-													label="Ngày hết hạn"
-													name="expiryDate"
-													rules={[
-														{
-															required: true,
-															message: 'Vui lòng nhập ngày hết hạn',
-														},
-													]}
-												>
-													<Input placeholder="MM/YY" />
-												</Form.Item>
-												<Form.Item
-													label="Mã bảo mật"
-													name="securityCode"
-													rules={[
-														{
-															required: true,
-															message: 'Vui lòng nhập mã bảo mật',
-														},
-													]}
-												>
-													<Input placeholder="CVV" />
-												</Form.Item>
-												<Form.Item
-													label="Tên chủ thẻ"
-													name="cardHolderName"
-													rules={[
-														{
-															required: true,
-															message: 'Vui lòng nhập tên chủ thẻ',
-														},
-													]}
-												>
-													<Input placeholder="Tên chủ thẻ" />
-												</Form.Item>
-											</div>
-										)}
+										</div>
 									</div>
 								</div>
+								{paymentForm && (
+									<div className="my-6">
+										<div className="bg-white p-6 rounded-lg shadow-lg space-y-6 mt-6 md:mt-0 transition-shadow duration-300 hover:shadow-2xl">
+											<h2 className="text-2xl font-semibold text-gray-800 mb-6">
+												Phương thức thanh toán
+											</h2>
+											<div className="py-3">
+												<Radio.Group
+													className="flex flex-col"
+													onChange={handlePaymentMethodChange}
+													name="paymentMethod"
+													value={paymentMethod}
+												>
+													{payment &&
+														payment.map((method) => {
+															const isDisabled =
+																(order?.Jewelry?.SoldPrice >
+																	50000000 ||
+																	cartList?.OrderPrices
+																		?.FinalPrice > 50000000) &&
+																method.MethodName === 'ZALOPAY';
+
+															return (
+																<Radio
+																	value={method.Id}
+																	className="border p-4 rounded-md hover:border-blue-500 transition duration-300 mb-4"
+																	disabled={isDisabled}
+																>
+																	{method?.MappedName}
+																</Radio>
+															);
+														})}
+												</Radio.Group>
+											</div>
+										</div>
+									</div>
+								)}
 							</Form>
 						</div>
 					</div>
 				</div>
 
-				{/* Order Summary */}
-				<div className="md:w-1/3 bg-white p-6 rounded-lg shadow-lg md:mt-0 transition-shadow duration-300 hover:shadow-2xl">
+				<div className="md:w-2/5 bg-white p-6 rounded-lg shadow-lg md:mt-0 transition-shadow duration-300 hover:shadow-2xl">
 					<div className="flex justify-between">
-						<h2 className="text-2xl font-semibold text-gray-800 mb-6">Order Summary</h2>
+						<h2 className="text-2xl font-semibold text-gray-800 mb-6">
+							Tóm tắt đơn hàng
+						</h2>
 						<div className="flex justify-center items-center">
-							<a href="#" className="text-sm text-yellow-500 hover:underline">
-								Sửa giỏ hàng
-							</a>
+							{idCustomize ? (
+								<a
+									href="/request-customize"
+									className="text-sm text-yellow-500 hover:underline"
+								>
+									Về danh sách đơn thiết kế
+								</a>
+							) : (
+								<a href="/cart" className="text-sm text-yellow-500 hover:underline">
+									Về giỏ hàng
+								</a>
+							)}
 						</div>
 					</div>
 					<div className="space-y-6">
-						{/* Item 1: Engagement Ring */}
-						<div className="flex flex-col space-y-2 py-2 border-b border-gray-300">
-							<div className="flex justify-between items-center">
-								<h3 className="text-lg font-semibold text-gray-800">
-									Engagement Ring (Completed)
-								</h3>
-							</div>
-							<div className="flex items-center space-x-4">
-								<img
-									src="/path/to/engagement-ring.jpg"
-									alt="Engagement Ring"
-									className="w-16 h-16 rounded-lg shadow-md"
-								/>
-								<div className="flex flex-col">
-									<span className="text-sm font-medium text-gray-600">
-										French Pavé Diamond Engagement Ring in 14k White Gold
-									</span>
-									<span className="text-sm text-gray-500">Ring Size: 6</span>
-								</div>
-							</div>
-							<div className="flex justify-between text-sm text-gray-700">
-								<span>Giá gốc:</span>
-								<span className="line-through">$1,470</span>
-							</div>
-							<div className="flex justify-between text-sm text-gray-700">
-								<span>Giá đã giảm:</span>
-								<span>$1,102</span>
-							</div>
-						</div>
-
-						{/* Item 2: Loose Diamond */}
-						<div className="flex flex-col space-y-2 py-2 border-b border-gray-300">
-							<div className="flex-col items-center space-x-4">
-								<div className="flex-col">
-									<h3 className="text-lg font-semibold text-gray-800">
-										Loose Diamond
-									</h3>
-								</div>
-								<div className="flex items-center space-x-4">
-									<img
-										src="/path/to/diamond.jpg"
-										alt="Loose Diamond"
-										className="w-16 h-16 rounded-lg shadow-md"
-									/>
-									<div className="flex flex-col">
-										<span className="text-sm font-medium text-gray-600">
-											1.03 Carat H-VS2 Excellent Cut Round Diamond
-										</span>
+						{idCustomize ? (
+							<>
+								<div className="flex mt-4 shadow-xl p-5 rounded-lg" key={order.Id}>
+									<div className="mr-4 flex-shrink-0">
+										<img
+											src="path-to-image"
+											alt={order?.Jewelry?.SerialCode || order?.Title}
+											className="w-32 h-32 object-cover rounded-lg border"
+										/>
+									</div>
+									<div className="flex-1 mx-5">
+										<div>
+											<p className="mb-1 text-gray-800 font-semibold">
+												{order?.Jewelry?.SerialCode}
+											</p>
+											<p className="text-gray-700 text-sm py-2">
+												Giá:
+												<span className="text-gray-900 font-semibold ml-1">
+													{formatPrice(
+														order?.Jewelry?.SoldPrice ||
+															order?.Jewelry?.TotalPrice
+													)}
+												</span>
+											</p>
+										</div>
+										<label>Chọn bảo hành trang sức</label>
+										<Select
+											allowClear
+											className="w-full mt-2 mb-5" // Sử dụng class custom
+											placeholder="Chọn bảo hành trang sức"
+											onChange={onChangeWarrantyJewelry}
+										>
+											{warrantiesJewelry &&
+												warrantiesJewelry?.map((warranty, i) => (
+													<Select.Option
+														key={i}
+														value={JSON.stringify({
+															warrantyCode: warranty.Code,
+															warrantyType: warranty?.Type,
+														})}
+													>
+														{warranty?.Name?.replace(/_/g, ' ')}
+													</Select.Option>
+												))}
+										</Select>
 									</div>
 								</div>
-							</div>
-							<div className="flex justify-between text-sm text-gray-700">
-								<span>Giá gốc:</span>
-								<span className="line-through">$5,000</span>
-							</div>
-							<div className="flex justify-between text-sm text-gray-700">
-								<span>Giá đã giảm:</span>
-								<span>$3,530</span>
-							</div>
-						</div>
+							</>
+						) : (
+							<>
+								{mappedProducts?.map((item, index) => (
+									<div
+										className="flex mt-4 shadow-xl p-5 rounded-lg"
+										key={item.Id}
+									>
+										<div className="mr-4 flex-shrink-0">
+											<img
+												src="path-to-image"
+												alt={item?.SerialCode || item?.Title}
+												className="w-32 h-32 object-cover rounded-lg border"
+											/>
+										</div>
+										<div className="flex-1 mx-5">
+											{/* Kiểm tra và hiển thị thông tin sản phẩm */}
+											{item.JewelryId ? (
+												<div>
+													<p className="mb-1 text-gray-800 font-semibold">
+														{item.SerialCode}
+													</p>
+													<p className="text-gray-700 text-sm py-3">
+														Giá:
+														<span className="text-gray-900 font-semibold ml-1">
+															{formatPrice(item.JewelryPrice)}
+														</span>
+													</p>
+													{item.CategoryName === 'Ring' && (
+														<div className="flex items-center mt-2">
+															<label className="mr-2 text-gray-700">
+																Kích thước nhẫn:
+															</label>
+															<p>{item?.SizeId}</p>
+														</div>
+													)}
+												</div>
+											) : item.Carat ? (
+												<div>
+													<p className="mb-1 text-gray-800 font-semibold">
+														{item?.Title}
+													</p>
+													<p className="text-gray-700 text-sm">
+														Giá:
+														<span className="text-gray-900 font-semibold py-3">
+															{formatPrice(item.DiamondTruePrice)}
+														</span>
+													</p>
+												</div>
+											) : (
+												<p className="text-gray-800">Không có thông tin</p>
+											)}
+										</div>
+									</div>
+								))}
+							</>
+						)}
 
 						<div className="bg-white p-6 rounded-lg shadow-lg space-y-4">
-							{/* Promo Code Section */}
-							<Form.Item label="Promo Code" name="promoCode">
-								<Input
-									placeholder="Enter promo code"
-									className="w-full p-3 border rounded-md"
-								/>
-							</Form.Item>
-
 							{/* Total and Savings Section */}
 							<div className="p-4 border rounded-lg bg-gray-50">
-								<div className="flex justify-between font-semibold text-lg text-gray-800 mb-2">
-									<span>Tổng giá trị đơn hàng:</span>
-									<span>$4,632</span>
-								</div>
-								<div className="flex justify-between text-lg text-gray-800 mb-2">
-									<span>Phí vận chuyển:</span>
-									<span>{shippingFee.toLocaleString()} VND</span>
+								<p className="flex justify-between mb-1">
+									<span className="font-semibold">Giá Gốc</span>{' '}
+									<span>
+										{formatPrice(cartList?.OrderPrices?.DefaultPrice || 0)}
+									</span>
+								</p>
+								<p className="flex justify-between mb-1">
+									<div className="mb-1 flex justify-between w-full">
+										<span className="font-semibold">Phí Vận Chuyển</span>{' '}
+										<span>
+											{formatPrice(cartList?.ShippingPrice?.FinalPrice || 0)}
+										</span>
+									</div>
+								</p>
+								{idCustomize && (
+									<>
+										<label
+											htmlFor="promotions"
+											className="block mb-2 text-gray-700 font-medium"
+										>
+											Khuyến mãi có sẵn
+										</label>
+
+										<Select
+											className="w-full"
+											onChange={handlePromoChange}
+											allowClear
+										>
+											{promo &&
+												promo.map((promotion) => (
+													<Select.Option
+														key={promotion.PromoId}
+														value={promotion.PromoId}
+														disabled={!promotion?.IsApplicable}
+													>
+														<div
+															className={`${
+																promotion?.IsApplicable
+																	? 'text-darkGreen'
+																	: 'text-red'
+															}`}
+														>
+															{promotion.PromotionDto.Description}
+														</div>
+													</Select.Option>
+												))}
+										</Select>
+									</>
+								)}
+
+								<p className="flex justify-between mb-1">
+									<div className="mb-1 flex justify-between w-full">
+										<span className="font-semibold">Giảm Giá</span>{' '}
+										<span>
+											{cartList?.OrderPrices?.DiscountAmountSaved !== 0 &&
+												'-'}
+											{formatPrice(
+												cartList?.OrderPrices?.DiscountAmountSaved || 0
+											)}
+										</span>
+									</div>
+								</p>
+								<p className="flex justify-between">
+									<div className="mb-1 flex justify-between w-full">
+										<span className="font-semibold">Khuyến Mãi</span>{' '}
+										<span>
+											{cartList?.OrderPrices?.PromotionAmountSaved !== 0 &&
+												'-'}
+											{formatPrice(
+												cartList?.OrderPrices?.PromotionAmountSaved || 0
+											)}
+										</span>
+									</div>
+								</p>
+								<p className="flex justify-between mb-1">
+									<div className="mb-1 flex justify-between w-full">
+										<span className="font-semibold">Bảo Hành</span>{' '}
+										<span>
+											{formatPrice(
+												cartList?.OrderPrices?.TotalWarrantyPrice || 0
+											)}
+										</span>
+									</div>
+								</p>
+								<p className="flex justify-between mb-1">
+									<div className="mb-1 flex justify-between w-full">
+										<span className="font-semibold">Khách Hàng Thân Thiết</span>
+
+										<span>
+											{cartList?.OrderPrices?.UserRankDiscountAmount !== 0 &&
+												'-'}
+											{formatPrice(
+												cartList?.OrderPrices?.UserRankDiscountAmount || 0
+											)}
+										</span>
+									</div>
+								</p>
+
+								<div className="flex text-sm text-gray-600 my-2">
+									<span className="mr-2">📅 Thời gian giao hàng</span>
+									{idCustomize ? (
+										<span>Giao hàng sau 7 ngày</span>
+									) : (
+										<span>Giao hàng sau 3 ngày</span>
+									)}
 								</div>
 
-								<div className="text-sm text-gray-600 mb-4">
-									or interest-free installments from $1,544 / mo.
-								</div>
-								<div className="flex items-center space-x-2 text-sm text-gray-600">
-									<span>🚚</span>
-									<span>Free Overnight Shipping, Hassle-Free Returns</span>
-								</div>
-								<div className="flex items-center space-x-2 text-sm text-gray-600">
-									<span>📅</span>
-									<span>
-										Ships by: For an exact shipping date, please select a ring
-										size first.
-									</span>
-								</div>
-								<div className="text-green-600 font-semibold text-base mt-4">
-									Tiết Kiệm $368
+								<div className="flex justify-between items-center font-semibold mt-4 text-lg">
+									<p>Tổng:</p>
+									<p>{formatPrice(cartList?.OrderPrices?.FinalPrice)}</p>
 								</div>
 							</div>
 
 							{/* Order Button Section */}
 							<div className="flex justify-center mt-6 w-full ">
-								<button
+								<Button
 									className="mx-10 px-6 py-2 bg-primary rounded-lg uppercase font-semibold hover:bg-second w-full h-12"
-									onClick={() => navigate(`/invoice`)}
+									onClick={onFinish}
+									loading={loadingCheckout || loadingCustomize}
+									type="text"
 								>
 									Đặt hàng
-								</button>
+								</Button>
 							</div>
 
 							{/* Customer Service Section */}

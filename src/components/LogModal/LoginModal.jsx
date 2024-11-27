@@ -5,7 +5,8 @@ import {jwtDecode} from 'jwt-decode';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import {LoadingUserSelector} from '../../redux/selectors';
-import {GoogleLogin, handleLogin, setUser} from '../../redux/slices/userLoginSlice';
+import {handleGoogleLogin, handleLogin, setUser} from '../../redux/slices/userLoginSlice';
+import {setLocalStorage} from '../../utils/localstorage';
 import {GoogleLoginButton} from '../LoginGoogleButton';
 
 const LoginModal = ({isOpen, onClose}) => {
@@ -25,38 +26,39 @@ const LoginModal = ({isOpen, onClose}) => {
 			isStaffLogin: false,
 		};
 		dispatch(handleLogin(data))
+			.unwrap()
 			.then((res) => {
-				if (res.payload) {
-					const decodedData = jwtDecode(res.payload.accessToken);
-					console.log(decodedData);
-					dispatch(setUser(decodedData));
-					message.success('Đăng nhập thành công!');
-					form.resetFields();
-					onClose();
-
-					navigate('/');
-				} else {
-					message.error(
-						'Đăng nhập không thành công. Vui lòng kiểm tra thông tin đăng nhập của bạn!'
-					);
-				}
+				const decodedData = jwtDecode(res.accessToken);
+				console.log(decodedData);
+				setLocalStorage('user', JSON.stringify(decodedData));
+				setLocalStorage('userId', decodedData.UserId);
+				dispatch(setUser(decodedData));
+				message.success('Đăng nhập thành công!');
+				form.resetFields();
+				onClose();
 			})
 			.catch((error) => {
-				console.error('Login failed:', error);
-				message.error(
-					'Đăng nhập không thành công. Vui lòng kiểm tra thông tin đăng nhập của bạn!'
-				);
+				message.error(error?.data?.title || error?.detail);
 			});
 	};
 
-	const handleGoogleLogin = (response) => {
+	const handleGoogleLoginBtn = (response) => {
 		console.log('Google login response:', response);
-		// dispatch(GoogleLogin({externalProviderName: 'Google'}));
-		const decode = jwtDecode(response.credential);
-		console.log(decode);
 
-		message.success('Đăng nhập Google thành công!');
-		onClose();
+		dispatch(handleGoogleLogin(response?.credential))
+			.unwrap()
+			.then((res) => {
+				const decodedData = jwtDecode(res.accessToken);
+				console.log(decodedData);
+				setLocalStorage('user', JSON.stringify(decodedData));
+				setLocalStorage('userId', decodedData.UserId);
+				dispatch(setUser(decodedData));
+				message.success('Đăng nhập Google thành công!');
+				onClose();
+			})
+			.catch((error) => {
+				message.error(error?.data?.title || error?.detail);
+			});
 	};
 
 	const handleGoogleLoginFailure = (error) => {
@@ -77,14 +79,14 @@ const LoginModal = ({isOpen, onClose}) => {
 				<Form.Item
 					name="email"
 					label="Email"
-					rules={[{required: true, message: 'Hãy nhập email của bạn!', type: 'email'}]}
+					rules={[{required: true, message: 'Vui lòng nhập email!', type: 'email'}]}
 				>
 					<Input placeholder="Email" />
 				</Form.Item>
 				<Form.Item
 					name="password"
 					label="Mật khẩu"
-					rules={[{required: true, message: 'Hãy nhập mật khẩu!'}]}
+					rules={[{required: true, message: 'Vui lòng nhập mật khẩu!'}]}
 				>
 					<Input.Password placeholder="Mật khẩu" />
 				</Form.Item>
@@ -104,7 +106,7 @@ const LoginModal = ({isOpen, onClose}) => {
 					<p className="my-5">hoặc đăng nhập bằng</p>
 					<div className="w-full flex justify-center items-center">
 						<GoogleLoginButton
-							onSuccess={handleGoogleLogin}
+							onSuccess={handleGoogleLoginBtn}
 							onError={handleGoogleLoginFailure}
 						/>
 					</div>

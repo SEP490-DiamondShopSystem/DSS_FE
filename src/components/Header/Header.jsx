@@ -1,111 +1,69 @@
 import React, {useEffect, useState} from 'react';
 
-import {HeartOutlined} from '@ant-design/icons';
-import {faShoppingBag} from '@fortawesome/free-solid-svg-icons';
+import {HeartOutlined, OrderedListOutlined} from '@ant-design/icons';
+import {faListAlt, faPencilRuler, faShoppingBag} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {Badge} from 'antd';
-import {useSelector} from 'react-redux';
-import {Link} from 'react-router-dom';
-import {GetCartFinishSelector, GetCartSelector} from '../../redux/selectors';
+import {useDispatch, useSelector} from 'react-redux';
+import {Link, useNavigate} from 'react-router-dom';
+import {handleCartValidate} from '../../redux/slices/cartSlice';
+import {getUserId} from '../GetUserId';
 import Logo from './../../assets/logo-ex.png';
 import ActionLinks from './ActionLinks';
 import NavLinks from './NavLinks';
 
 export const Header = () => {
-	const cart = useSelector(GetCartSelector);
-	const cartFinish = useSelector(GetCartFinishSelector);
+	const userId = getUserId();
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
-	// const [cartFinish, setCartFinish] = useState(() => {
-	// 	// Lấy cartFinish từ localStorage
-	// 	const storedCartFinish = localStorage.getItem('cartFinish');
-
-	// 	// Parse dữ liệu nếu tồn tại, nếu không thì trả về mảng rỗng
-	// 	try {
-	// 		return storedCartFinish ? JSON.parse(storedCartFinish) : [];
-	// 	} catch (error) {
-	// 		console.error('Error parsing cartFinish from localStorage:', error);
-	// 		return [];
-	// 	}
-	// });
-
-	// const [cart, setCart] = useState(() => {
-	// 	// Lấy cart từ localStorage
-	// 	const storedCart = localStorage.getItem('cart');
-
-	// 	// Parse dữ liệu nếu tồn tại, nếu không thì trả về mảng rỗng
-	// 	try {
-	// 		return storedCart ? JSON.parse(storedCart) : [];
-	// 	} catch (error) {
-	// 		console.error('Error parsing cart from localStorage:', error);
-	// 		return [];
-	// 	}
-	// });
-	const cartTotal = (cart?.length || 0) + (cartFinish?.length || 0);
+	const handleValidate = () => {
+		navigate('/cart');
+	};
 
 	return (
 		<nav className="bg-white">
 			<div className="flex items-center font-semibold justify-around">
-				<a href={'/'}>
+				<Link to={'/'}>
 					<img src={Logo} alt="logo" className="md:cursor-pointer max-h-12" />
-				</a>
+				</Link>
 				<ul className="flex uppercase items-center gap-8">
 					<li>
-						<a href="/" className={`py-7 px-3 inline-block no-underline text-black`}>
+						<Link to="/" className={`py-7 px-3 inline-block no-underline text-black`}>
 							Trang chủ
-						</a>
+						</Link>
 					</li>
 					<NavLinks />
 					<li>
-						<a
-							href="/customize/diamond-jewelry"
-							className={`py-7 px-3 inline-block no-underline text-black`}
-						>
-							Đặt trang sức
-						</a>
-					</li>
-					<li>
-						<a
-							href="/price-list"
-							className={`py-7 px-3 inline-block no-underline text-black`}
-						>
-							Bảng giá
-						</a>
-					</li>
-					<li>
-						<a
-							href="/promotion"
-							className={`py-7 px-3 inline-block no-underline text-black`}
-						>
-							Khuyến mãi
-						</a>
-					</li>
-				</ul>
-				{/* <div>
-					<Search
-						placeholder="Tìm kiếm sản phẩm..."
-						onSearch={(value) => console.log(value)}
-						style={{width: 400}}
-					/>
-				</div> */}
-				<ul className="flex uppercase items-center gap-8">
-					<li>
 						<Link
-							to="/favorite"
-							className="my-7 mx-3 inline-block no-underline text-black"
+							to="/customize/diamond-jewelry"
+							className={`py-7 px-3 inline-block no-underline text-black`}
 						>
-							<HeartOutlined />
+							Thiết Kế Trang Sức
 						</Link>
 					</li>
 					<li>
-						<Badge
-							count={cartTotal}
-							color="#dec986"
-							className="my-7 mx-3 py-2 px-2 inline-block no-underline text-black"
+						<Link
+							to="/promotion"
+							className={`py-7 px-3 inline-block no-underline text-black`}
 						>
-							<Link to="/cart">
-								<FontAwesomeIcon icon={faShoppingBag} />
-							</Link>
-						</Badge>
+							Khuyến mãi
+						</Link>
+					</li>
+				</ul>
+
+				<ul className="flex uppercase items-center gap-8">
+					{/* <li>
+						<button
+							className="my-7 mx-3 inline-block no-underline text-black"
+							onClick={() => navigate('/request-customize')}
+						>
+							<OrderedListOutlined />
+						</button>
+					</li> */}
+					<li>
+						<button onClick={handleValidate}>
+							<FontAwesomeIcon icon={faShoppingBag} />
+						</button>
 					</li>
 					<ActionLinks />
 				</ul>
