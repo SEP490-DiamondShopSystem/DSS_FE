@@ -221,11 +221,11 @@ export const InformationRight = ({
 							</p>
 							{/* <div className="text-sm pl-2">(Giá Sàn)</div> */}
 						</div>
-						<div>
+						{/* <div>
 							<div className="text-xl pt-2 font-semibold">
 								*Mã giảm giá được áp dụng tự động
 							</div>
-						</div>
+						</div> */}
 					</>
 				)}
 			</div>
