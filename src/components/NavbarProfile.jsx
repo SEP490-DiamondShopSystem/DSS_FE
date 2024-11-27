@@ -15,10 +15,10 @@ import {UserInfoSelector} from '../redux/selectors';
 import avatar from '../assets/default-avatar-icon.jpg';
 
 const roleMapping = {
-	1: {text: 'Khách Hàng Bình Thường', color: 'default'},
-	2: {text: 'Khách Hàng Hạng Đồng', color: 'orange'},
-	3: {text: 'Khách Hàng Hạng Bạc', color: 'silver'},
-	4: {text: 'Khách Hàng Hạng Vàng', color: 'gold'},
+	1: {text: 'Thành Viên', color: 'default'},
+	2: {text: 'Thành Viên Đồng', color: 'orange'},
+	3: {text: 'Thành Viên Bạc', color: 'silver'},
+	4: {text: 'Thành Viên Vàng', color: 'gold'},
 };
 
 const NavbarProfile = () => {
@@ -79,11 +79,13 @@ const NavbarProfile = () => {
 			<div className="font-semibold w-full flex justify-center items-center my-5 ">
 				<div className="">
 					<h1 className="text-2xl text-center">{userDetail?.Name}</h1>
-					{highestRank && (
-						<Tag color={roleMapping[highestRank]?.color}>
-							{roleMapping[highestRank]?.text}
-						</Tag>
-					)}
+					<p className="text-2xl text-center">
+						{highestRank && (
+							<Tag color={roleMapping[highestRank]?.color}>
+								{roleMapping[highestRank]?.text}
+							</Tag>
+						)}
+					</p>
 				</div>
 			</div>
 
