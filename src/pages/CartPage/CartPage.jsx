@@ -111,7 +111,7 @@ const CartPage = () => {
 	const [cartValidateProduct, setCartValidateProduct] = useState([]);
 	const [promoId, setPromoId] = useState(null);
 
-	console.log('promoAble', promoAble);
+	console.log('promoId', promoId);
 
 	useEffect(() => {
 		dispatch(getAllPromo());
@@ -163,7 +163,7 @@ const CartPage = () => {
 
 		// Kiểm tra nếu userAddress có dữ liệu, nếu không thì không truyền userAddress
 		const actionPayload = {
-			promotionId: null,
+			promotionId: promoId != undefined ? promoId : null,
 			items: transformedData,
 			accountId: userDetail?.Id,
 		};
@@ -181,7 +181,7 @@ const CartPage = () => {
 		dispatch(handleCartValidate(actionPayload));
 
 		dispatch(checkPromoCart({items: transformedData}));
-	}, []);
+	}, [promoId]);
 
 	const handleViewCart = (jewelryId, diamondId) => {
 		console.log(jewelryId);

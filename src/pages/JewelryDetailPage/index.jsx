@@ -27,15 +27,11 @@ const JewelryDetailPage = () => {
 		{
 			title: 'Chọn Vỏ',
 		},
-		...(jewelry?.MainDiamonds?.length > 0
-			? [{title: 'Chọn Kim Cương'}]
-			: [{title: 'Chọn Trang Sức'}]),
+		...(jewelry?.MainDiamonds?.length > 0 ? [{title: 'Chọn Kim Cương'}] : []),
 		{
 			title: 'Hoàn Thành',
 		},
 	];
-	console.log('idModel', id);
-	console.log('jewelry', jewelry);
 
 	useEffect(() => {
 		dispatch(getJewelryDetail({id}));
