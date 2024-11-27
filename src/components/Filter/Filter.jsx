@@ -111,31 +111,14 @@ export const FilterDiamond = ({filters, setFilters, handleReset, diamondForFilte
 					<Slider
 						range
 						marks={{
-							[filter?.Price?.Min ?? 0]: {label: `${filter?.Price?.Min ?? 0}`}, // Mốc đầu
-							[filter?.Price?.Min +
-							((filter?.Price?.Max ?? 1000) - (filter?.Price?.Min ?? 0)) * 0.25]: {
-								style: {color: '#000', marginTop: '-30px'},
-								label: `${formatPrice(
-									Math.floor(
-										(filter?.Price?.Min ?? 0) +
-											((filter?.Price?.Max ?? 1000) -
-												(filter?.Price?.Min ?? 0)) *
-												0.25
-									)
-								)}`,
-							},
-							[(filter?.Price?.Max + (filter?.Price?.Min ?? 0)) / 2]: {
-								label: `${formatPrice(
-									Math.floor(
-										((filter?.Price?.Max ?? 1000) + (filter?.Price?.Min ?? 0)) /
-											2
-									)
-								)}`,
-							},
-							[filter?.Price?.Max ?? 1000]: `${formatPrice(
-								filter?.Price?.Max ?? 1000
-							)}`, // Mốc cuối
+							0: '0',
+							1000000000: '100M',
+							5000000000: '500M',
+							10000000000: '1000M',
+							15000000000: '15000M',
+							20000000000: '20000M',
 						}}
+						step={null}
 						min={filter?.Price?.Min ?? 0}
 						max={filter?.Price?.Max ?? 1000}
 						value={[
@@ -208,14 +191,8 @@ export const FilterJewelryDiamond = ({
 	const filterLimits = useSelector(GetDiamondFilterSelector);
 
 	const [filter, setFilter] = useState({});
-	const [diamondChoice, setDiamondChoice] = useState(localStorage.getItem('diamondChoice'));
 
 	const filteredShapes = diamondForFilter?.Shapes?.map((shape) => shape?.ShapeId);
-
-	const filteredShapeItems =
-		filteredShapes?.length > 0
-			? shapeItems.filter((item) => filteredShapes.includes(item.value))
-			: [];
 
 	useEffect(() => {
 		dispatch(getDiamondFilter());
@@ -250,32 +227,15 @@ export const FilterJewelryDiamond = ({
 					<Slider
 						range
 						marks={{
-							[filter?.Price?.Min ?? 0]: {label: `${filter?.Price?.Min ?? 0}`}, // Mốc đầu
-							[filter?.Price?.Min +
-							((filter?.Price?.Max ?? 1000) - (filter?.Price?.Min ?? 0)) * 0.25]: {
-								style: {color: '#000', marginTop: '-30px'},
-								label: `${formatPrice(
-									Math.floor(
-										(filter?.Price?.Min ?? 0) +
-											((filter?.Price?.Max ?? 1000) -
-												(filter?.Price?.Min ?? 0)) *
-												0.25
-									)
-								)}`,
-							},
-							[(filter?.Price?.Max + (filter?.Price?.Min ?? 0)) / 2]: {
-								label: `${formatPrice(
-									Math.floor(
-										((filter?.Price?.Max ?? 1000) + (filter?.Price?.Min ?? 0)) /
-											2
-									)
-								)}`,
-							},
-							[filter?.Price?.Max ?? 1000]: `${formatPrice(
-								filter?.Price?.Max ?? 1000
-							)}`, // Mốc cuối
+							0: '0',
+							1000000000: '100M',
+							5000000000: '500M',
+							10000000000: '1000M',
+							15000000000: '15000M',
+							20000000000: '20000M',
 						}}
-						min={filter?.Price?.Min}
+						step={null}
+						min={0}
 						max={filter?.Price?.Max}
 						value={[filters?.price?.minPrice, filters?.price?.maxPrice]}
 						onChange={handlePriceChange}
@@ -321,24 +281,8 @@ export const FilterDiamondCustomize = ({
 		localStorage.setItem('selected', value);
 	};
 
-	const handlePriceChange = (value) => {
-		handleChange('price', {minPrice: value[0], maxPrice: value[1]});
-	};
-
 	const handleCaratChange = (value) => {
 		handleChange('carat', {minCarat: value[0], maxCarat: value[1]});
-	};
-
-	const handleColorChange = (value) => {
-		handleChange('color', {minColor: value[0], maxColor: value[1]});
-	};
-
-	const handleClarityChange = (value) => {
-		handleChange('clarity', {minClarity: value[0], maxClarity: value[1]});
-	};
-
-	const handleCutChange = (value) => {
-		handleChange('cut', {minCut: value[0], maxCut: value[1]});
 	};
 
 	return (
@@ -504,26 +448,14 @@ export const FilterAllJewelry = ({handleFilter, setFilters, filters, handleReset
 					<Slider
 						range
 						marks={{
-							[range[0]]: {label: `${formatPrice(range[0])}`}, // Mốc đầu
-							[range[0] + (range[1] - range[0]) * 0.25]: {
-								style: {color: '#000', marginTop: '-30px'},
-								label: `${formatPrice(
-									Math.floor(range[0] + (range[1] - range[0]) * 0.25)
-								)}`,
-							}, // 25%
-							[range[0] + (range[1] - range[0]) * 0.5]: {
-								label: `${formatPrice(
-									Math.floor(range[0] + (range[1] - range[0]) * 0.5)
-								)}`,
-							}, // 50%
-							[range[0] + (range[1] - range[0]) * 0.75]: {
-								style: {color: '#000', marginTop: '-30px'},
-								label: `${formatPrice(
-									Math.floor(range[0] + (range[1] - range[0]) * 0.75)
-								)}`,
-							}, // 75%
-							[range[1]]: `${formatPrice(range[1])}`, // Mốc cuối
+							0: '0',
+							1000000000: '100M',
+							5000000000: '500M',
+							10000000000: '1000M',
+							15000000000: '15000M',
+							20000000000: '20000M',
 						}}
+						step={null}
 						min={0}
 						max={40000000}
 						defaultValue={range}
@@ -594,26 +526,14 @@ export const FilterJewelry = ({handleFilter, setFilters, filters, handleReset}) 
 					<Slider
 						range
 						marks={{
-							[range[0]]: {label: `${formatPrice(range[0])}`}, // Mốc đầu
-							[range[0] + (range[1] - range[0]) * 0.25]: {
-								style: {color: '#000', marginTop: '-30px'},
-								label: `${formatPrice(
-									Math.floor(range[0] + (range[1] - range[0]) * 0.25)
-								)}`,
-							}, // 25%
-							[range[0] + (range[1] - range[0]) * 0.5]: {
-								label: `${formatPrice(
-									Math.floor(range[0] + (range[1] - range[0]) * 0.5)
-								)}`,
-							}, // 50%
-							[range[0] + (range[1] - range[0]) * 0.75]: {
-								style: {color: '#000', marginTop: '-30px'},
-								label: `${formatPrice(
-									Math.floor(range[0] + (range[1] - range[0]) * 0.75)
-								)}`,
-							}, // 75%
-							[range[1]]: `${formatPrice(range[1])}`, // Mốc cuối
+							0: '0',
+							1000000000: '100M',
+							5000000000: '500M',
+							10000000000: '1000M',
+							15000000000: '15000M',
+							20000000000: '20000M',
 						}}
+						step={null}
 						min={0}
 						max={40000000}
 						defaultValue={range}
@@ -728,7 +648,6 @@ export const FilterDiamondJewelry = ({handleFilter, setFilters, filters, handleR
 			<div className="ml-10 min-w-44">
 				<p className="mb-4">Giá:</p>
 				<div className="flex">
-					<span>{formatPrice(filters?.price?.minPrice)}</span>
 					<Slider
 						range
 						min={0}
@@ -736,8 +655,17 @@ export const FilterDiamondJewelry = ({handleFilter, setFilters, filters, handleR
 						defaultValue={range}
 						onChange={handlePriceChange}
 						className="md:w-64 mx-4"
+						marks={{
+							0: '0',
+
+							5000000: '5M',
+							10000000: '10M',
+							20000000: '20M',
+							30000000: '30M',
+							40000000: '40M',
+						}}
+						step={null}
 					/>
-					<span>{formatPrice(filters?.price?.maxPrice)}</span>
 				</div>
 			</div>
 		</div>
