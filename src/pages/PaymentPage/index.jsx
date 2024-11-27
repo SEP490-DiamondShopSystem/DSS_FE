@@ -1,6 +1,6 @@
 import React, {useMemo, useState} from 'react';
 
-import {Button, Divider, Image, List, QRCode, Typography} from 'antd';
+import {Button, Card, Col, Divider, Image, List, QRCode, Row, Space, Typography} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
 import {formatPrice} from '../../utils';
 import styles from './PaymentPage.module.css';
@@ -8,6 +8,7 @@ import {Popup} from './Popup/Popup';
 import logo from '../../assets/logo-short-ex.png';
 import {GetCartSelector} from '../../redux/selectors';
 import {enums} from '../../utils/constant';
+import {BankOutlined, MessageOutlined, UserOutlined} from '@ant-design/icons';
 
 const {Title} = Typography;
 
@@ -198,43 +199,57 @@ const PaymentPage = () => {
 						</div>
 					</div>
 
-					<div style={{flex: 1.5}}>
-						<div style={{marginBottom: '40px'}}>
-							<Title level={3} style={{textAlign: 'center'}}>
-								Thông Tin Thanh Toán
-							</Title>
-							<div
-								className=" mt-10"
-								style={{
-									display: 'flex',
-									justifyContent: 'space-evenly',
-									textAlign: 'center',
-								}}
-							>
-								<div style={{textAlign: 'center'}}>
-									<QRCode
-										value="https://ant.design/components/qrcode/"
-										icon={logo}
-									/>
-								</div>
-								<div className={styles.transferInfo}>
-									<Title level={4}>Thông tin chuyển khoản ngân hàng:</Title>
-									<p>
-										<b>Ngân Hàng:</b> Vietcombank
-									</p>
-									<p>
-										<b>Số Tài Khoản:</b> 41111111111111
-									</p>
-									<p>
-										<b>Tên Người Nhận:</b> Diamond Shop
-									</p>
-									<p>
-										<b>Tin nhắn:</b> Thanh Toán Đơn Hàng
-									</p>
-								</div>
-							</div>
-						</div>
-					</div>
+					<Card
+						title="Thông Tin Thanh Toán"
+						bordered={false}
+						className={styles.paymentCard}
+						headStyle={{
+							textAlign: 'center',
+							fontSize: '1.5rem',
+							fontWeight: 'bold',
+						}}
+					>
+						<Row gutter={16}>
+							{/* QR Code Section */}
+							<Col span={12} className="text-center">
+								<QRCode
+									value="https://ant.design/components/qrcode/"
+									icon={logo}
+									size={160}
+									className="mx-auto"
+								/>
+								<p style={{marginTop: '10px', fontSize: '0.9rem', color: '#555'}}>
+									Quét mã QR để thanh toán nhanh chóng
+								</p>
+							</Col>
+
+							{/* Bank Transfer Info Section */}
+							<Col span={12}>
+								<Space direction="vertical" size="middle" style={{width: '100%'}}>
+									<div>
+										<BankOutlined className={styles.icon} />
+										<span className={styles.infoLabel}>Ngân Hàng:</span>
+										<span className={styles.infoText}>Vietcombank</span>
+									</div>
+									<div>
+										<UserOutlined className={styles.icon} />
+										<span className={styles.infoLabel}>Tên Người Nhận:</span>
+										<span className={styles.infoText}>Diamond Shop</span>
+									</div>
+									<div>
+										<BankOutlined className={styles.icon} />
+										<span className={styles.infoLabel}>Số Tài Khoản:</span>
+										<span className={styles.infoText}>41111111111111</span>
+									</div>
+									<div>
+										<MessageOutlined className={styles.icon} />
+										<span className={styles.infoLabel}>Tin nhắn:</span>
+										<span className={styles.infoText}>Thanh Toán Đơn Hàng</span>
+									</div>
+								</Space>
+							</Col>
+						</Row>
+					</Card>
 				</div>
 				<div style={{textAlign: 'right', marginTop: '20px', width: '100%'}}>
 					<Button type="text" className="bg-primary" size="large" onClick={handlePayment}>
