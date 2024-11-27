@@ -24,7 +24,7 @@ import {OrderInvoiceModal} from './OrderInvoiceModal';
 
 const orderStatus = [
 	{icon: <OrderedListOutlined />, name: 'Tổng đơn hàng', status: '', order: 1},
-	{icon: <HourglassOutlined />, name: 'Đang xử lí', status: '1', order: 3},
+	{icon: <HourglassOutlined />, name: 'Chờ xử lí', status: '1', order: 3},
 	{icon: <DeliveredProcedureOutlined />, name: 'Đang vận chuyển', status: '6', order: 4},
 	{icon: <CheckCircleOutlined />, name: 'Đã giao', status: '8', order: 10},
 ];
@@ -71,29 +71,31 @@ const MyOrderPage = () => {
 			title: 'Trạng thái',
 			dataIndex: 'status',
 			render: (status) => {
+				console.log('status', status);
+
 				let color = 'red';
 				switch (status) {
-					case 'Success':
+					case 'Thành Công':
 						color = 'green';
 						break;
-					case 'Pending':
+					case 'Chờ Xử Lý':
 						color = 'orange';
 						break;
-					case 'Processing':
+					case 'Đang Xử Lý':
 						color = 'blue';
 						break;
-					case 'Delivering':
+					case 'Đang Giao Hàng':
 						color = 'cyan';
 						break;
-					case 'Prepared':
+					case 'Đã Chuẩn Bị':
 						color = 'purple';
 						break;
-					case 'Cancelled':
-					case 'Rejected':
+					case 'Hủy Đơn':
+					case 'Từ Chối':
 					case 'Refused':
 						color = 'red';
 						break;
-					case 'Delivery Failed':
+					case 'Giao Hàng Thất Bại':
 						color = 'volcano';
 						break;
 					default:

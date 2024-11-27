@@ -25,6 +25,7 @@ export const OrderStatus = ({orderStatus, orderDetail}) => {
 		if (orderLogs) {
 			const index = orderLogs?.findIndex((log) => log?.Status === 4);
 			const indexReject = orderLogs?.findIndex((log) => log?.Status === 3);
+			// const indexFail = orderLogs?.findIndex((log) => log?.Status === 7);
 			setIndexCancelled(index);
 			setIndexRejected(indexReject);
 		}

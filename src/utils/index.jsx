@@ -84,23 +84,22 @@ export function convertToVietnamDate(utcDateString) {
 export const getOrderStatus = (status) => {
 	switch (status) {
 		case 1:
-			return 'Pending';
+			return 'Chờ Xử Lý';
 		case 2:
-			return 'Processing';
+			return 'Đang Xử Lý';
 		case 3:
-			return 'Rejected';
+			return 'Từ Chối';
 		case 4:
-			return 'Cancelled';
+			return 'Hủy Đơn';
 		case 5:
-			return 'Prepared';
+			return 'Đã Chuẩn Bị';
 		case 6:
-			return 'Delivering';
+			return 'Đang Giao Hàng';
 		case 7:
-			return 'Delivery Failed';
+			return 'Giao Hàng Thất Bại';
 		case 8:
-			return 'Success';
-		case 9:
-			return 'Refused';
+			return 'Thành Công';
+
 		default:
 			return 'Unknown';
 	}
