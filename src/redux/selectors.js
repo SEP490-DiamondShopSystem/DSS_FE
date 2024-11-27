@@ -90,3 +90,10 @@ export const ErrorReviewSelector = (state) => state.reviewSlice.error;
 //BLOG
 export const GetAllBlogSelector = (state) => state.blogSlice.blogs;
 export const GetBlogDetailSelector = (state) => state.blogSlice.blogDetail;
+
+// DIAMOND PRICE
+export const getPriceBoardSelector = (state) => state.diamondPriceSlice.priceBoard;
+export const getAllPricesSelector = (state) => state.diamondPriceSlice.prices;
+export const getAllShapesSelector = (state) => state.diamondPriceSlice.shapes;
+export const LoadingDiamondPriceSelector = (state) => state.diamondPriceSlice.loading;
+export const DiamondPriceErrorSelector = (state) => state.diamondPriceSlice.error;
