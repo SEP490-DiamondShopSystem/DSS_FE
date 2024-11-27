@@ -56,6 +56,10 @@ export const InformationRight = ({
 		}
 	}, [reviewList]);
 
+	// useEffect(() => {
+
+	// },[])
+
 	const toggleDetail = () => {
 		setDetail(!showDetail);
 	};
@@ -192,7 +196,7 @@ export const InformationRight = ({
 				)}
 			</div>
 			<div className="border-y border-tintWhite my-5">
-				{diamondJewelry && diamondJewelry.Category === 'Ring' && someSize && (
+				{someSize && (
 					<>
 						<div className="mt-5 flex items-center">
 							<div className="font-semibold">Chọn kích thước:</div>
@@ -230,7 +234,7 @@ export const InformationRight = ({
 				)}
 			</div>
 
-			{size !== null && selectedMetal !== null && diamondJewelry?.Category === 'Ring' && (
+			{size !== null && selectedMetal !== null && (
 				<div className="flex justify-between items-center mt-5">
 					<Button
 						type="text"

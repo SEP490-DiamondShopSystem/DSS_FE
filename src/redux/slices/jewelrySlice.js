@@ -31,8 +31,8 @@ export const getAllJewelryModel = createAsyncThunk(
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.data));
-			return rejectWithValue(error.data);
+			console.log('Error: ', JSON.stringify(error));
+			return rejectWithValue(error);
 		}
 	}
 );
@@ -75,8 +75,8 @@ export const getAllJewelry = createAsyncThunk(
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.data));
-			return rejectWithValue(error.data);
+			console.log('Error: ', JSON.stringify(error));
+			return rejectWithValue(error);
 		}
 	}
 );
@@ -90,8 +90,8 @@ export const getAllJewelryMetal = createAsyncThunk(
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.data));
-			return rejectWithValue(error.data);
+			console.log('Error: ', JSON.stringify(error));
+			return rejectWithValue(error);
 		}
 	}
 );
@@ -105,8 +105,8 @@ export const getAllJewelryModelCategory = createAsyncThunk(
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.data));
-			return rejectWithValue(error.data);
+			console.log('Error: ', JSON.stringify(error));
+			return rejectWithValue(error);
 		}
 	}
 );
@@ -121,8 +121,8 @@ export const getJewelryDetail = createAsyncThunk(
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.data));
-			return rejectWithValue(error.data);
+			console.log('Error: ', JSON.stringify(error));
+			return rejectWithValue(error);
 		}
 	}
 );
@@ -139,8 +139,8 @@ export const getJewelryDetailPreset = createAsyncThunk(
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.data));
-			return rejectWithValue(error.data);
+			console.log('Error: ', JSON.stringify(error));
+			return rejectWithValue(error);
 		}
 	}
 );
@@ -155,8 +155,36 @@ export const getJewelryDetailFile = createAsyncThunk(
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.data));
-			return rejectWithValue(error.data);
+			console.log('Error: ', JSON.stringify(error));
+			return rejectWithValue(error);
+		}
+	}
+);
+
+export const getJewelryNoDiamond = createAsyncThunk(
+	'jewelrySlice/getJewelryNoDiamond',
+	async (params, {rejectWithValue}) => {
+		try {
+			const {ModelId, MetalId, SizeId, SideDiamondOptId} = params;
+			let url = '/Jewelry/Available';
+			const queryParams = new URLSearchParams();
+
+			if (ModelId) queryParams.append('ModelId', ModelId);
+			if (MetalId) queryParams.append('MetalId', MetalId);
+			if (SizeId) queryParams.append('SizeId', SizeId);
+			if (SideDiamondOptId) queryParams.append('SideDiamondOptId', SideDiamondOptId);
+
+			if (queryParams.toString()) {
+				url += `?${queryParams.toString()}`;
+			}
+
+			const response = await api.get(url);
+			console.log(response);
+
+			return response;
+		} catch (error) {
+			console.log('Error: ', JSON.stringify(error));
+			return rejectWithValue(error);
 		}
 	}
 );
@@ -259,6 +287,18 @@ export const jewelrySlice = createSlice({
 				state.jewelryDetailThumbnail = action.payload;
 			})
 			.addCase(getJewelryDetailFile.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload;
+			})
+			.addCase(getJewelryNoDiamond.pending, (state) => {
+				state.loading = true;
+				state.jewelryDetailThumbnail = null;
+			})
+			.addCase(getJewelryNoDiamond.fulfilled, (state, action) => {
+				state.loading = false;
+				state.jewelryDetailThumbnail = action.payload;
+			})
+			.addCase(getJewelryNoDiamond.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload;
 			});
