@@ -190,7 +190,9 @@ export const ChoiceMetal = ({
 										className="bg-primary border"
 										onClick={handleNextStep}
 									>
-										Xác Nhận
+										{diamondJewelry?.MainDiamonds.length === 0
+											? 'Đặt thiết kế'
+											: 'Xác Nhận'}
 									</Button>
 								</div>
 							</div>
@@ -221,7 +223,9 @@ export const ChoiceMetal = ({
 								onClick={handleNextStep}
 								loading={loading}
 							>
-								Đặt thiết kế
+								{diamondJewelry?.MainDiamonds.length === 0
+									? 'Đặt thiết kế'
+									: 'Xác Nhận'}
 							</Button>
 						</div>
 					</div>

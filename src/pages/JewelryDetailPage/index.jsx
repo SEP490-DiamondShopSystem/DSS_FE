@@ -34,8 +34,6 @@ const JewelryDetailPage = () => {
 			title: 'Hoàn Thành',
 		},
 	];
-	console.log('idModel', id);
-	console.log('jewelry', jewelry);
 
 	useEffect(() => {
 		dispatch(getJewelryDetail({id}));

@@ -28,22 +28,27 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 							colorPrimaryHover: '#ffed99',
 						},
 						Table: {
-							rowHoverBg: '#tintWhite',
+							rowHoverBg: '#f3f3f3',
 							headerBg: '#dec986',
+							opacityLoading: '#dec986',
 						},
 						Slider: {
-							trackBg: '#dec986',
-							trackHoverBg: '#ffed99',
-							dotActiveBorderColor: '#dec986',
-							colorPrimary: '#dec986',
+							trackBg: '#dec986', // Màu nền của track slider
+							trackHoverBg: '#ffed99', // Màu nền khi hover
+							dotActiveBorderColor: '#000000', // Màu viền của dot đang active (màu đen)
+							dotBorderColor: '#666666', // Màu viền của dot không active (màu xám)
+							dotActiveColor: '#FF0000', // Màu của dot khi active (đỏ)
+							dotColor: '#00FF00', // Màu của dot khi chưa active (xanh lá cây)
+							colorPrimary: '#dec986', // Màu chính
 						},
+
 						Steps: {
 							colorPrimary: '#dec986',
 							colorIcon: '#dec986',
 							colorFillAlter: '#dec986',
 						},
 						Radio: {
-							colorPrimary: '#dec986', // Màu của radio button khi chọn
+							colorPrimary: '#dec986',
 						},
 					},
 				}}
