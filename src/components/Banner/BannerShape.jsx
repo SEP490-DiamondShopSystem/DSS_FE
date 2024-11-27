@@ -31,35 +31,26 @@ const BannerShape = () => {
 	};
 
 	return (
-		<div className="diamond-banner-container py-10 bg-gray-50 px-4 md:px-10 lg:px-20 mt-8 pt-8">
-			{' '}
-			{/* Added top margin and padding */}
-			<h2 className="text-center text-3xl font-bold m-5 text-gray-800">
+		<div className=" py-10 bg-gray-50 px-4 md:px-10 lg:px-20 mt-8 pt-8">
+			<h2 className="text-center text-2xl md:text-3xl font-bold mb-8 text-gray-800">
 				Khám Phá Thế Giới Kim Cương
-			</h2>{' '}
-			{/* Increased margin-bottom */}
-			<div className="flex justify-around gap-6">
-				{' '}
-				{/* Use gap for consistent spacing */}
+			</h2>
+			<div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
 				{diamondShapes.map((shape) => (
 					<div
 						key={shape.value}
-						className="diamond-shape-box cursor-pointer transition-transform duration-300 transform hover:scale-105"
+						className="cursor-pointer transition-transform duration-300 transform hover:scale-105"
 						onClick={() => handleShapeClick(shape.value)}
 					>
 						<div className="bg-white shadow-md rounded-lg p-6 flex flex-col items-center">
-							{' '}
-							{/* Increased padding inside box */}
-							<div className="shape-image-placeholder h-28 w-28 flex items-center justify-center mb-4">
-								{' '}
-								{/* Increased size and added margin-bottom */}
+							<div className=" h-20 w-20 sm:h-24 sm:w-24 lg:h-28 lg:w-28 flex items-center justify-center mb-4">
 								<img
 									src={shape.image}
 									alt={shape.label}
 									className="w-full h-full object-contain"
 								/>
 							</div>
-							<p className="text-center text-lg font-medium text-gray-700">
+							<p className="text-center text-sm sm:text-base lg:text-lg font-medium text-gray-700">
 								{shape.label}
 							</p>
 						</div>

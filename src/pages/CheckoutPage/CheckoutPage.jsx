@@ -33,6 +33,7 @@ import {enums} from '../../utils/constant';
 import {handleCartValidate} from '../../redux/slices/cartSlice';
 import {getAllWarranty} from '../../redux/slices/warrantySlice';
 import {CheckCircleOutlined} from '@ant-design/icons';
+import {getUserId} from '../../components/GetUserId';
 
 const {Option} = Select;
 
@@ -110,6 +111,7 @@ const mapAttributes = (data, attributes) => {
 
 const CheckoutPage = () => {
 	const [form] = Form.useForm();
+	const userId = getUserId();
 	const locations = useLocation();
 	const promoId = locations.state?.promoId;
 	const order = locations.state?.order;
@@ -122,12 +124,13 @@ const CheckoutPage = () => {
 	const loadingCheckout = useSelector(LoadingOrderSelector);
 	const loadingCustomize = useSelector(GetLoadingCustomizeSelector);
 	const userDetail = useSelector(GetUserDetailSelector);
-	const cartList = useSelector(GetCartSelector);
+	// const cartList = useSelector(GetCartSelector);
 	const paymentList = useSelector(GetAllPaymentSelector);
 	const warrantyList = useSelector(GetOrderWarrantySelector);
 	const promoAble = useSelector(GetPromotionAbleSelector);
 
 	const [warrantiesJewelry, setWarrantiesJewelry] = useState('');
+	const [cartList, setCartList] = useState();
 	const [paymentMethod, setPaymentMethod] = useState(null);
 	const [paymentForm, setPaymentForm] = useState(null);
 	const [shippingFee, setShippingFee] = useState(0);
@@ -155,7 +158,10 @@ const CheckoutPage = () => {
 
 	const idCustomize = order?.Id;
 
+	console.log('cartList', cartList);
+
 	console.log('payment', payment);
+	console.log('shippingFee', shippingFee);
 
 	const defaultAddress =
 		userDetail.Addresses.length > 0 &&
@@ -228,7 +234,11 @@ const CheckoutPage = () => {
 				Ward: userInfo?.ward,
 				Street: userInfo?.address,
 			})
-		);
+		)
+			.unwrap()
+			.then((res) => {
+				setShippingFee(res?.DeliveryFee?.Cost);
+			});
 	}, [userInfo]);
 
 	useEffect(() => {
@@ -264,10 +274,10 @@ const CheckoutPage = () => {
 			};
 
 			const userAddress = {
-				province: defaultAddress?.Province,
-				district: defaultAddress?.District,
-				ward: defaultAddress?.Ward,
-				street: defaultAddress?.Street,
+				province: userInfo?.province || defaultAddress?.Province,
+				district: userInfo?.district || defaultAddress?.District,
+				ward: userInfo?.ward || defaultAddress?.Ward,
+				street: userInfo?.address || defaultAddress?.Street,
 			};
 
 			// Kiểm tra nếu userAddress có dữ liệu, nếu không thì không truyền userAddress
@@ -287,11 +297,81 @@ const CheckoutPage = () => {
 				actionPayload.userAddress = userAddress;
 			}
 
-			dispatch(handleCartValidate(actionPayload));
+			console.log('actionPayload', actionPayload);
+
+			dispatch(handleCartValidate(actionPayload))
+				.unwrap()
+				.then((res) => {
+					setCartList(res);
+				});
 
 			dispatch(checkPromoCart({items: [transformedData]}));
+		} else {
+			const local = JSON.parse(localStorage.getItem(`cart_${userId}`));
+			console.log('local', local);
+
+			const transformedData = local?.map((productId, index) => ({
+				id: Math.floor(1000000 + Math.random() * 9000000).toString(),
+				jewelryId: productId.JewelryId || null,
+				diamondId: productId.DiamondId || null,
+				jewelryModelId: productId.ModelId || null,
+				sizeId: productId?.SizeId || null,
+				metalId: productId?.MetalId,
+				sideDiamondChoices: [],
+				engravedText: productId?.engravedText || null,
+				engravedFont: productId?.engravedFont || null,
+				warrantyCode:
+					productId?.warrantyJewelry?.warranty?.Code ||
+					productId?.warrantyDiamond?.warranty?.Code,
+				warrantyType:
+					productId?.warrantyJewelry?.warranty?.Type ||
+					productId?.warrantyDiamond?.warranty?.Type,
+			}));
+			const defaultAddress = userDetail?.Addresses?.find((address) => address?.IsDefault);
+
+			console.log('defaultAddress', defaultAddress);
+
+			const userAddress = {
+				province: userInfo?.province || defaultAddress?.Province,
+				district: userInfo?.district || defaultAddress?.District,
+				ward: userInfo?.ward || defaultAddress?.Ward,
+				street: userInfo?.address || defaultAddress?.Street,
+			};
+
+			// Kiểm tra nếu userAddress có dữ liệu, nếu không thì không truyền userAddress
+			const actionPayload = {
+				promotionId: promoId != undefined ? promoId : null,
+				items: transformedData,
+				accountId: userDetail?.Id,
+			};
+
+			// Nếu userAddress có dữ liệu, thêm vào payload
+			if (
+				userAddress.province ||
+				userAddress.district ||
+				userAddress.ward ||
+				userAddress.street
+			) {
+				actionPayload.userAddress = userAddress;
+			}
+
+			dispatch(handleCartValidate(actionPayload))
+				.unwrap()
+				.then((res) => {
+					setCartList(res);
+				});
+
+			dispatch(checkPromoCart({items: transformedData}));
 		}
-	}, [dispatch, order, userDetail, warrantiesJewelrySelected, promoCustomizeId, defaultAddress]);
+	}, [
+		dispatch,
+		order,
+		userDetail,
+		warrantiesJewelrySelected,
+		promoCustomizeId,
+		defaultAddress,
+		userInfo,
+	]);
 
 	const jewelryOrDiamondProducts = cartList?.Products.filter(
 		(product) => product.Jewelry || product.Diamond

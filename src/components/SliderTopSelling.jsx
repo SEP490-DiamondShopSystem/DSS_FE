@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Card, Carousel, Rate, Typography} from 'antd';
+import {Card, Carousel, Col, Rate, Row, Typography} from 'antd';
 import {StarFilled} from '@ant-design/icons';
 import {useDispatch, useSelector} from 'react-redux';
 import {getAllJewelryModel} from '../redux/slices/jewelrySlice';
@@ -13,9 +13,25 @@ const SliderTopSelling = () => {
 	const dispatch = useDispatch();
 	const jewelryModelList = useSelector(GetAllJewelryModelSelector);
 
+	const [isMobile, setIsMobile] = useState(false);
 	const [jewelryModel, setJewelryModel] = useState();
 
 	console.log('jewelryModel', jewelryModel);
+
+	const handleResize = () => {
+		if (window.innerWidth <= 768) {
+			setIsMobile(true);
+		} else {
+			setIsMobile(false);
+		}
+	};
+
+	// Add event listener to detect window resize
+	useEffect(() => {
+		window.addEventListener('resize', handleResize);
+		handleResize(); // Check size on initial render
+		return () => window.removeEventListener('resize', handleResize); // Cleanup listener
+	}, []);
 
 	useEffect(() => {
 		dispatch(getAllJewelryModel({page: 2}));
@@ -27,44 +43,90 @@ const SliderTopSelling = () => {
 		}
 	}, [jewelryModelList]);
 
+	const jewelryItems = Array.isArray(jewelryModel) ? jewelryModel.slice(0, 6) : [];
+
 	return (
-		<div style={{padding: '20px'}} className="">
-			<Title level={3} className="text-center">
+		<div className="p-5">
+			<Title level={3} className="text-center mb-5">
 				Trang Sức Nổi Bật
 			</Title>
-			<div className="grid grid-cols-5 gap-4 bg-tintWhite p-5">
-				{Array.isArray(jewelryModel) &&
-					jewelryModel?.slice(0, 5).map((product, index) => (
-						<Card
-							hoverable
-							key={index}
-							style={{width: '100%'}}
-							cover={
-								<img
-									alt={product.Name}
-									src={product.ThumbnailPath || logoJewelry}
-								/>
-							}
-							title={product.Name}
-						>
-							<div className="flex flex-col">
-								<div className="mb-5">
-									<Rate allowHalf defaultValue={product?.StarRating} disabled />
+
+			{isMobile ? (
+				// Carousel (Slider) for smaller screens
+				<Carousel autoplay dots draggable className="w-full">
+					{jewelryItems.map((product, index) => (
+						<div key={index} className="p-2">
+							<Card
+								hoverable
+								className="w-full"
+								cover={
+									<img
+										alt={product.Name}
+										src={product.Thumbnail || '/default-image.png'}
+										className="h-48 object-cover"
+									/>
+								}
+								title={product.Name}
+							>
+								<div className="flex flex-col">
+									<div className="mb-4">
+										<Rate
+											allowHalf
+											defaultValue={product?.StarRating}
+											disabled
+										/>
+									</div>
+									<div>
+										<Text strong>{formatPrice(product.MinPrice)}</Text> -{' '}
+										<Text strong>{formatPrice(product.MaxPrice)}</Text>
+									</div>
 								</div>
-								<div>
-									<Text strong>{formatPrice(product.MinPrice)}</Text> -{' '}
-									<Text strong>{formatPrice(product.MaxPrice)}</Text>
-								</div>
-							</div>
-							<div style={{marginTop: '10px'}}>
-								{/* Uncomment nếu cần sử dụng */}
-								{/* <Text>
-									<StarRating rating={product?.StarRating} />
-								</Text> */}
-							</div>
-						</Card>
+							</Card>
+						</div>
 					))}
-			</div>
+				</Carousel>
+			) : (
+				// Grid for larger screens
+				<Row gutter={[16, 24]} className="bg-tintWhite p-5">
+					{jewelryItems.map((product, index) => (
+						<Col
+							key={index}
+							xs={24} // Mobile view
+							sm={12} // Tablet view
+							md={8} // Medium screens
+							lg={6} // Large screens
+							xl={4} // Extra large screens
+						>
+							<Card
+								hoverable
+								className="w-full"
+								cover={
+									<img
+										alt={product.Name}
+										src={product.Thumbnail || '/default-image.png'}
+										className="h-48 object-cover"
+									/>
+								}
+								title={product.Name}
+							>
+								<div className="flex flex-col">
+									<div className="mb-4">
+										<Rate
+											allowHalf
+											defaultValue={product?.StarRating}
+											disabled
+										/>
+									</div>
+									<div>
+										<Text strong>{formatPrice(product.MinPrice)}</Text> -{' '}
+										<Text strong>{formatPrice(product.MaxPrice)}</Text>
+									</div>
+								</div>
+							</Card>
+						</Col>
+					))}
+				</Row>
+			)}
 		</div>
 	);
 };

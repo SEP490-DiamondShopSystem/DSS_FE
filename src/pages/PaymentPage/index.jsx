@@ -223,7 +223,7 @@ const PaymentPage = () => {
 										<b>Ngân Hàng:</b> Vietcombank
 									</p>
 									<p>
-										<b>Số Tài Khoản:</b> 123456789
+										<b>Số Tài Khoản:</b> 41111111111111
 									</p>
 									<p>
 										<b>Tên Người Nhận:</b> Diamond Shop
