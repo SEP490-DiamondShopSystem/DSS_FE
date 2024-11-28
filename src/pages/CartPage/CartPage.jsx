@@ -343,9 +343,9 @@ const CartPage = () => {
 												<p className="text-gray-800">Không có thông tin</p>
 											)}
 										</div>
-										<div className="flex items-center justify-end space-y-2 text-sm">
+										<Space className=" text-sm">
 											<Button
-												className="cursor-pointer w-auto hover:text-black text-primary text-xl px-3 mr-2"
+												className="cursor-pointerpx-3 mr-2"
 												onClick={() => {
 													if (item.JewelryId) {
 														handleViewCart(item.JewelryId, null);
@@ -364,7 +364,7 @@ const CartPage = () => {
 											>
 												<DeleteOutlined />
 											</Button>
-										</div>
+										</Space>
 										{item.IsValid === false && (
 											<div className="absolute right-2 bottom-2 text-red font-semibold">
 												<p>Hàng Không Còn</p>

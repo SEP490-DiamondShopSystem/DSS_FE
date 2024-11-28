@@ -11,3 +11,33 @@
 	padding: 40px;
 	margin-top: 60px;
 }
+
+.paymentCard {
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+	border-radius: 10px;
+	padding: 20px;
+	background-color: #ffffff;
+}
+
+.qrCode {
+	border: 2px solid #e5e5e5;
+	border-radius: 8px;
+	padding: 10px;
+}
+
+.icon {
+	margin-right: 8px;
+	color: #1890ff;
+	font-size: 1.2rem;
+}
+
+.infoLabel {
+	font-weight: 600;
+	margin-right: 10px;
+	color: #333;
+}
+
+.infoText {
+	font-weight: 400;
+	color: #555;
+}

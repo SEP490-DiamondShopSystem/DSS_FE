@@ -1,22 +1,23 @@
 import React, {useEffect, useState} from 'react';
-
 import {useDispatch, useSelector} from 'react-redux';
 import {GetAllBlogSelector} from '../../redux/selectors';
 import {getAllBlog} from '../../redux/slices/blogSlice';
-import {Button, Card, Typography} from 'antd';
+import {Button, Card, Carousel, Col, Row, Typography} from 'antd';
 import {ArrowRightOutlined} from '@ant-design/icons';
 import {useNavigate} from 'react-router-dom';
+import {useMediaQuery} from '@mui/material';
 
 const {Title} = Typography;
 
 const BlogPage = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-
 	const blogList = useSelector(GetAllBlogSelector);
-
 	const [blogs, setBlogs] = useState();
 	const [visibleCount, setVisibleCount] = useState(3);
+
+	// Media query to check screen size
+	const isMobile = useMediaQuery('(max-width: 768px)'); // Adjust the value based on your screen size
 
 	useEffect(() => {
 		dispatch(getAllBlog());
@@ -37,52 +38,130 @@ const BlogPage = () => {
 	};
 
 	return (
-		<div className="">
-			<div className=" p-4">
-				<Title level={3} className="text-center mt-5">
-					Bài Viết
-				</Title>
-				<div className="grid grid-cols-3 sm:grid-cols-2 md:grid-cols-3 gap-4 bg-tintWhite p-5">
+		<div style={{padding: '16px'}}>
+			<Title level={3} style={{textAlign: 'center', marginTop: '20px'}}>
+				Bài Viết
+			</Title>
+
+			{/* Carousel for small screens (hidden on larger screens) */}
+			{isMobile ? (
+				<div className="lg:hidden">
+					<Carousel autoplay>
+						{Array.isArray(blogs) &&
+							blogs.slice(0, visibleCount).map((item, index) => (
+								<div key={index}>
+									<Card
+										hoverable
+										cover={
+											<img
+												alt={item.Title}
+												src={
+													item?.Thumbnail?.MediaPath ||
+													'https://via.placeholder.com/200x200'
+												}
+												style={{
+													height: '160px',
+													objectFit: 'cover',
+													width: '100%',
+													borderRadius: '8px',
+												}}
+											/>
+										}
+										style={{
+											borderRadius: '8px',
+											boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+											display: 'flex',
+											flexDirection: 'column',
+										}}
+									>
+										<Card.Meta
+											title={item.Title}
+											style={{marginBottom: '16px'}}
+										/>
+										<Button
+											type="primary"
+											style={{
+												marginTop: 'auto',
+												backgroundColor: '#6a4ffc',
+												borderColor: '#6a4ffc',
+												color: '#fff',
+											}}
+											icon={<ArrowRightOutlined />}
+											onClick={() => handleView(item?.Id)}
+										>
+											Đọc tiếp
+										</Button>
+									</Card>
+								</div>
+							))}
+					</Carousel>
+				</div>
+			) : (
+				// Grid view for larger screens (hidden on small screens)
+				<Row gutter={[16, 16]} justify="center" style={{marginTop: '20px'}}>
 					{Array.isArray(blogs) &&
 						blogs.slice(0, visibleCount).map((item, index) => (
-							<Card
-								key={index}
-								hoverable
-								cover={
-									<img
-										alt="example"
-										src={
-											item?.Thumbnail?.MediaPath ||
-											'https://via.placeholder.com/200x20'
-										}
-									/>
-								}
-								className="rounded-lg shadow-md"
-							>
-								<Card.Meta title={item.Title} />
-								<Button
-									type="primary"
-									className="mt-4 bg-purple-500 text-white hover:bg-purple-700"
-									icon={<ArrowRightOutlined />}
-									onClick={() => handleView(item?.Id)}
+							<Col xs={24} sm={12} md={8} key={index}>
+								<Card
+									hoverable
+									cover={
+										<img
+											alt={item.Title}
+											src={
+												item?.Thumbnail?.MediaPath ||
+												'https://via.placeholder.com/200x200'
+											}
+											style={{
+												height: '160px',
+												objectFit: 'cover',
+												width: '100%',
+												borderRadius: '8px',
+											}}
+										/>
+									}
+									style={{
+										borderRadius: '8px',
+										boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+										display: 'flex',
+										flexDirection: 'column',
+									}}
 								>
-									Đọc tiếp
-								</Button>
-							</Card>
+									<Card.Meta title={item.Title} style={{marginBottom: '16px'}} />
+									<Button
+										type="primary"
+										style={{
+											marginTop: 'auto',
+											backgroundColor: '#6a4ffc',
+											borderColor: '#6a4ffc',
+											color: '#fff',
+										}}
+										icon={<ArrowRightOutlined />}
+										onClick={() => handleView(item?.Id)}
+									>
+										Đọc tiếp
+									</Button>
+								</Card>
+							</Col>
 						))}
-				</div>
-				<div className="flex justify-center mt-6">
-					{Array.isArray(blogs) && visibleCount < blogs.length && (
-						<Button
-							type="primary"
-							className="bg-purple-500 text-white hover:bg-purple-700 px-8"
-							icon={<ArrowRightOutlined />}
-							onClick={handleShowMore}
-						>
-							Xem thêm
-						</Button>
-					)}
-				</div>
+				</Row>
+			)}
+
+			{/* Show More Button */}
+			<div style={{textAlign: 'center', marginTop: '24px'}}>
+				{Array.isArray(blogs) && visibleCount < blogs.length && (
+					<Button
+						type="primary"
+						style={{
+							backgroundColor: '#6a4ffc',
+							borderColor: '#6a4ffc',
+							color: '#fff',
+						}}
+						icon={<ArrowRightOutlined />}
+						onClick={handleShowMore}
+					>
+						Xem thêm
+					</Button>
+				)}
 			</div>
 		</div>
 	);
