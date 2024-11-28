@@ -2,14 +2,12 @@ import React from 'react';
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {Helmet} from 'react-helmet';
+import SliderTopSelling from '../../components/SliderTopSelling';
+import {list} from '../../utils/constant';
+import BlogPage from '../BlogPage/BlogPage';
 import {BannerDiamond} from './../../components/Banner/Banner';
 import {BannerJewelry} from './../../components/Banner/BannerJewelry-1';
 import BannerShape from './../../components/Banner/BannerShape';
-import {list} from '../../utils/constant';
-import BlogPage from '../BlogPage/BlogPage';
-import {BannerEarrings2} from '../../components/Banner/BannerEarrings-2';
-import {BannerNecklace2} from '../../components/Banner/BannerNecklace2';
-import SliderTopSelling from '../../components/SliderTopSelling';
 
 const HomePage = () => {
 	return (
@@ -20,10 +18,10 @@ const HomePage = () => {
 
 			<BannerDiamond />
 
-			<div className="grid grid-cols-4 divide-x py-10 bg-tintWhite">
+			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 divide-x py-10 bg-tintWhite">
 				{list.map((list, i) => (
-					<div key={i} className="">
-						<div className="text-center mr-5">
+					<div key={i} className="px-4 py-6">
+						<div className="text-center mb-4">
 							<FontAwesomeIcon
 								icon={list.icon}
 								color="#dec986"
@@ -34,11 +32,12 @@ const HomePage = () => {
 							<h1 className="text-center uppercase font-semibold text-xl">
 								{list.title}
 							</h1>
-							<h2 className="text-center ">{list.subtitle}</h2>
+							<h2 className="text-center">{list.subtitle}</h2>
 						</div>
 					</div>
 				))}
 			</div>
+
 			<BannerShape />
 
 			<div className="my-10">

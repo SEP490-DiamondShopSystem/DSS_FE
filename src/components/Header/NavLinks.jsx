@@ -1,14 +1,11 @@
 import React from 'react';
-
 import {DownOutlined} from '@ant-design/icons';
-import {Image} from 'antd';
-import {Link, useNavigate} from 'react-router-dom';
+import {Popover, Image} from 'antd';
+import {Link} from 'react-router-dom';
 import Logo from '../../assets/logo-short-ex.png';
 import {getUserId} from '../GetUserId';
 
 const NavLinks = () => {
-	const navigate = useNavigate();
-
 	const links = [
 		{
 			name: 'Sản Phẩm',
@@ -52,17 +49,11 @@ const NavLinks = () => {
 			sublinks: [
 				{
 					Head: 'Bảng Giá Kim Cương Chính',
-					sublink: [
-						{name: 'Kim Cương Chính', link: '/price-list/main', value: '1'},
-						
-					],
+					sublink: [{name: 'Kim Cương Chính', link: '/price-list/main', value: '1'}],
 				},
 				{
 					Head: 'Bảng Giá Kim Cương Tấm',
-					sublink: [
-						{name: 'Kim Cương Tấm', link: '/price-list/side'},
-						
-					],
+					sublink: [{name: 'Kim Cương Tấm', link: '/price-list/side'}],
 				},
 			],
 		},
@@ -96,114 +87,57 @@ const NavLinks = () => {
 		}
 	};
 
+	const renderPopoverContent = (sublinks) => (
+		<div className="z-50 rounded-lg shadow-xl flex p-3.5">
+			<div className={`grid ${sublinks.length > 1 ? 'grid-cols-2' : 'grid-cols-1'} gap-10`}>
+				{sublinks.map((mySubLink, j) => (
+					<div key={j}>
+						<h1 className="text-lg font-semibold">{mySubLink.Head}</h1>
+						<ul>
+							{mySubLink.sublink.map((sl, k) => (
+								<li
+									key={k}
+									className="text-sm text-gray-600 my-2.5 md:cursor-pointer"
+								>
+									<Link
+										to={sl.link}
+										className="hover:text-primary font-normal normal-case"
+										onClick={() => {
+											if (mySubLink.Head === 'Mua Kim Cương Theo Hình Dạng') {
+												handleClick(sl.value, null, null, null);
+											} else if (sl.name === 'Trang Sức') {
+												handleClick(null, null, null, sl.name);
+											} else if (sl.name === 'Kim Cương') {
+												handleClick(null, null, sl.name, null);
+											}
+										}}
+									>
+										{sl.name}
+									</Link>
+								</li>
+							))}
+						</ul>
+					</div>
+				))}
+			</div>
+		</div>
+	);
+
 	return (
 		<>
 			{links.map((link, i) => (
-				<div key={i}>
-					<div className="px-3 text-left group">
-						<h1 className="py-7 no-underline text-black">
+				<div key={i} className="px-3 text-left">
+					<Popover
+						content={renderPopoverContent(link.sublinks)}
+						title={link.name}
+						trigger="hover"
+						placement="bottom"
+						className="group"
+					>
+						<h1 className="py-7 no-underline text-black cursor-pointer">
 							{link.name} <DownOutlined />
 						</h1>
-						{link.submenu && (
-							<div>
-								<div className="absolute z-50 top-20 hidden group-hover:block hover:block">
-									<div className="py-2">
-										<div className="w-4 h-4 left-3 absolute mt-1 bg-white rotate-45 shadow-xl"></div>
-									</div>
-
-									<div className="bg-white z-50 rounded-lg shadow-xl flex">
-										<div
-											className={`p-3.5 ${
-												link.col === 3
-													? 'grid grid-cols-3 gap-10'
-													: 'grid grid-cols-2 gap-10'
-											}`}
-										>
-											{link.sublinks.map((mySubLink, j) => (
-												<div key={j}>
-													<h1 className="text-lg font-semibold">
-														{mySubLink.Head}
-													</h1>
-													<ul>
-														{mySubLink.sublink.map((sl, k) => (
-															<li
-																className="text-sm text-gray-600 my-2.5 md:cursor-pointer"
-																key={k}
-															>
-																<Link
-																	to={sl.link}
-																	className="hover:text-primary font-normal normal-case"
-																	onClick={() => {
-																		if (
-																			mySubLink.Head ===
-																			'Mua Kim Cương Theo Hình Dạng'
-																		) {
-																			handleClick(
-																				sl.value,
-																				null,
-																				null,
-																				null
-																			);
-																		}
-																		// else if (
-																		// 	mySubLink.Head ===
-																		// 	'Thiết Kế Trang Sức Của Bạn'
-																		// ) {
-																		// 	handleClick(
-																		// 		null,
-																		// 		sl.name,
-																		// 		null,
-																		// 		null
-																		// 	);
-																		// }
-																		else if (
-																			sl.name === 'Trang Sức'
-																		) {
-																			handleClick(
-																				null,
-																				null,
-																				null,
-																				sl.name
-																			);
-																		} else if (
-																			sl.name === 'Kim Cương'
-																		) {
-																			handleClick(
-																				null,
-																				null,
-																				sl.name,
-																				null
-																			);
-																		}
-																	}}
-																>
-																	{sl.name}
-																</Link>
-															</li>
-														))}
-													</ul>
-												</div>
-											))}
-										</div>
-										<div className="flex justify-center items-center p-4 flex-col mx-20">
-											<Image
-												src={Logo}
-												alt="Logo"
-												className="max-h-40 max-w-40"
-												preview={false}
-											/>
-											<a
-												href={link.link}
-												className="normal-case md:cursor-pointer hover:text-primary"
-											>
-												{link.mess}
-											</a>
-										</div>
-									</div>
-								</div>
-							</div>
-						)}
-					</div>
+					</Popover>
 				</div>
 			))}
 		</>

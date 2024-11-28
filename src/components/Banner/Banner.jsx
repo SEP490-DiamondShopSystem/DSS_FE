@@ -9,6 +9,7 @@ import img4 from '../../assets/leftBackgroundSlide/4.png';
 import img5 from '../../assets/leftBackgroundSlide/5.avif';
 import img6 from '../../assets/leftBackgroundSlide/6.jpg';
 import {getUserId} from '../GetUserId';
+import {Row, Col, Button} from 'antd'; // Importing Ant Design components
 
 export const BannerDiamond = () => {
 	const navigate = useNavigate();
@@ -58,7 +59,7 @@ export const BannerDiamond = () => {
 			{/* Background image slideshow with fade transition */}
 			<div className={`slideshow-image ${fadeState}`}>
 				<img
-					className="w-full object-fit"
+					className="w-full object-cover"
 					style={{maxHeight: 700}}
 					src={images[currentImageIndex]}
 					alt="Banner Slide"
@@ -72,34 +73,37 @@ export const BannerDiamond = () => {
 					background: 'linear-gradient(to left, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0))',
 				}}
 			>
-				<div
-					className="text-end mr-52 p-8"
-					style={{
-						maxWidth: 550,
-					}}
-				>
-					<h2 className="text-xl font-bold mb-4">
-						GIẢM GIÁ ĐẾN 40% TRANG SỨC, 25% NHẪN CƯỚI
-					</h2>
-					<h2 className="text-3xl font-bold mb-4">Chúc mừng cửa hàng khai trương!</h2>
-					<p className="mb-4">
-						Khám phá những tính năng tuyệt vời và nội dung phù hợp dành riêng cho bạn.
-					</p>
-					<div className="flex items-center justify-end">
-						<button
-							className="mr-10 px-6 py-2 bg-primary rounded-lg uppercase font-semibold hover:bg-second w-full h-12"
-							onClick={handleDiamondShopClick}
-						>
-							Mua Kim Cương
-						</button>
-						<button
-							className="px-6 py-2 bg-primary rounded-lg uppercase font-semibold hover:bg-second w-full h-12"
-							onClick={handleJewelryShopClick}
-						>
-							Mua Trang Sức
-						</button>
-					</div>
-				</div>
+				<Row className="w-full" justify="end" align="middle">
+					<Col xs={24} sm={18} md={12} lg={8} xl={6}>
+						{/* Make the content visible only on medium and larger screens */}
+						<div className="text-end p-8 max-w-lg hidden md:block">
+							<h2 className="text-xl font-bold mb-4">
+								GIẢM GIÁ ĐẾN 40% TRANG SỨC, 25% NHẪN CƯỚI
+							</h2>
+							<h2 className="text-3xl font-bold mb-4">
+								Chúc mừng cửa hàng khai trương!
+							</h2>
+							<p className="mb-4">
+								Khám phá những tính năng tuyệt vời và nội dung phù hợp dành riêng
+								cho bạn.
+							</p>
+							<div className="flex flex-col sm:flex-row justify-end">
+								<Button
+									className="mr-0 sm:mr-10 mb-4 sm:mb-0 px-6 py-2 bg-primary rounded-lg uppercase font-semibold hover:bg-second w-full sm:w-auto h-12"
+									onClick={handleDiamondShopClick}
+								>
+									Mua Kim Cương
+								</Button>
+								<Button
+									className="px-6 py-2 bg-primary rounded-lg uppercase font-semibold hover:bg-second w-full sm:w-auto h-12"
+									onClick={handleJewelryShopClick}
+								>
+									Mua Trang Sức
+								</Button>
+							</div>
+						</div>
+					</Col>
+				</Row>
 			</div>
 		</div>
 	);
