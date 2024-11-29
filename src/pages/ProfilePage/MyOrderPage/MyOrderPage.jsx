@@ -196,15 +196,15 @@ const MyOrderPage = () => {
 			<Helmet>
 				<title>Đơn Hàng Của Tôi</title>
 			</Helmet>
-			<div className="flex items-center font-medium justify-between mt-10">
+			<div className="flex sm:flex-wrap items-center font-medium justify-center sm:justify-between mt-10 gap-5">
 				{orderStatus.map((statusItem) => (
 					<div
 						key={statusItem.status}
-						className={`flex items-center justify-around shadow-xl py-3 px-12 ${
+						className={`flex flex-col sm:flex-row items-center justify-around shadow-xl py-3 px-6 sm:px-12 border-gray-300 hover:border-black w-full sm:w-auto ${
 							status === statusItem.status ? 'bg-primary' : 'bg-white'
 						} rounded-lg cursor-pointer border ${
 							status === statusItem.status ? 'border-black' : 'border-white'
-						} hover:border-black`}
+						} hover:border-black mb-5 sm:mb-0`}
 						onClick={() => handleStatusClick(statusItem.status)}
 					>
 						<div className="p-3 w-20">{statusItem.icon}</div>
@@ -212,6 +212,7 @@ const MyOrderPage = () => {
 					</div>
 				))}
 			</div>
+
 			<div className="font-semibold w-full py-10 bg-white rounded-lg">
 				<Table
 					dataSource={dataSource}

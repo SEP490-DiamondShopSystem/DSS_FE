@@ -325,10 +325,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 				></div>
 			)}
 			{openDetail && (
-				<div
-					className="fixed top-1/2 right-1/2 bg-white transform transition-transform duration-300 ease-in-out z-50 translate-x-1/2 -translate-y-1/2 p-10"
-					style={{width: '95%', maxHeight: '80vh', overflowY: 'auto'}}
-				>
+				<div className="fixed top-1/2 right-1/2 bg-white transform transition-transform duration-300 ease-in-out z-50 translate-x-1/2 -translate-y-1/2 p-10 w-[95%] max-h-[80vh] overflow-y-auto">
 					{loading ? (
 						<Loading />
 					) : (

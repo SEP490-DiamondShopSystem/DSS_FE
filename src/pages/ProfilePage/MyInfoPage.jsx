@@ -88,7 +88,9 @@ const MyInfoPage = () => {
 	}, [provinces]);
 
 	useEffect(() => {
-		dispatch(fetchDistrict(newAddress?.Province?.Id));
+		if (newAddress?.Province?.Id) {
+			dispatch(fetchDistrict(newAddress?.Province?.Id));
+		}
 	}, [dispatch, newAddress]);
 
 	useEffect(() => {
@@ -98,7 +100,9 @@ const MyInfoPage = () => {
 	}, [districts]);
 
 	useEffect(() => {
-		dispatch(fetchWard(newAddress?.District?.Id));
+		if (newAddress?.District?.Id) {
+			dispatch(fetchWard(newAddress?.District?.Id));
+		}
 	}, [dispatch, newAddress]);
 
 	useEffect(() => {
@@ -445,10 +449,6 @@ const MyInfoPage = () => {
 					<div className="w-full max-w-4xl mx-auto p-6 mt-8">
 						<h3 className="text-2xl font-bold mb-4">Danh sách địa chỉ</h3>
 						<div className="flex justify-between items-center mb-4">
-							{/* Show Save and Cancel buttons when editing */}
-
-							{/* Show Add Address button only in editing mode */}
-
 							<Button icon={<PlusOutlined />} onClick={showModal}>
 								Thêm Địa Chỉ
 							</Button>

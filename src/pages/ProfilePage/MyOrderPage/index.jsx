@@ -18,10 +18,10 @@ const OrderPage = () => {
 				<title>Đơn Hàng Của Tôi</title>
 			</Helmet>
 			<div className="my-20 min-h-96 flex z-50">
-				<div className="mr-20">
+				<div className="lg:mr-20 mb-10 lg:mb-0">
 					<NavbarProfile />
 				</div>
-				<div className="font-semibold w-full px-20 py-10 bg-white rounded-lg shadow-lg">
+				<div className="font-semibold w-full px-5 md:px-10 lg:px-20 py-10 bg-white rounded-lg lg:shadow-lg">
 					<MyOrderPage />
 				</div>
 			</div>
