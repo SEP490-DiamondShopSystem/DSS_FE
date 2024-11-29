@@ -1,11 +1,26 @@
-import React from 'react';
-import {DownOutlined} from '@ant-design/icons';
+import React, {useState, useEffect} from 'react';
+import {DownOutlined, RightOutlined} from '@ant-design/icons';
 import {Popover, Image} from 'antd';
 import {Link} from 'react-router-dom';
 import Logo from '../../assets/logo-short-ex.png';
 import {getUserId} from '../GetUserId';
 
 const NavLinks = () => {
+	const [openMenus, setOpenMenus] = useState({});
+	const [isMobile, setIsMobile] = useState(false);
+	// Detect viewport size and update `isMobile`
+	useEffect(() => {
+		const handleResize = () => {
+			setIsMobile(window.innerWidth < 768); // Mobile if width < 768px
+		};
+
+		handleResize(); // Initial check
+		window.addEventListener('resize', handleResize);
+
+		return () => {
+			window.removeEventListener('resize', handleResize);
+		};
+	}, []);
 	const links = [
 		{
 			name: 'Sản Phẩm',
@@ -87,6 +102,66 @@ const NavLinks = () => {
 		}
 	};
 
+	const renderMobileSublinks = (link, linkIndex) => (
+		<div className="bg-white">
+			{link.sublinks.map((sublink, j) => (
+				<div key={j} className="border-b">
+					<div
+						className="flex justify-between items-center p-3 cursor-pointer"
+						onClick={() => {
+							// Use a unique key for this submenu
+							toggleMenu(`submenu_${linkIndex}_${j}`);
+						}}
+					>
+						<h2 className="font-semibold">{sublink.Head}</h2>
+						{sublink.sublink.length > 1 && (
+							<RightOutlined
+								className={`transition-transform duration-300 ${
+									openMenus[`submenu_${linkIndex}_${j}`] ? 'rotate-90' : ''
+								}`}
+							/>
+						)}
+					</div>
+					{/* Render sublinks if the submenu is open */}
+					{openMenus[`submenu_${linkIndex}_${j}`] && (
+						<ul className="pl-4 pb-2">
+							{sublink.sublink.map((sl, k) => (
+								<li
+									key={k}
+									className="text-sm text-gray-600 my-2.5 md:cursor-pointer"
+								>
+									<Link
+										to={sl.link}
+										className="hover:text-primary font-normal normal-case"
+										onClick={() => {
+											// Handle clicks for navigation or additional state changes
+											if (sublink.Head === 'Mua Kim Cương Theo Hình Dạng') {
+												handleClick(sl.value, null, null, null);
+											} else if (sl.name === 'Trang Sức') {
+												handleClick(null, null, null, sl.name);
+											} else if (sl.name === 'Kim Cương') {
+												handleClick(null, null, sl.name, null);
+											}
+										}}
+									>
+										{sl.name}
+									</Link>
+								</li>
+							))}
+						</ul>
+					)}
+				</div>
+			))}
+		</div>
+	);
+
+	const toggleMenu = (key) => {
+		setOpenMenus((prev) => ({
+			...prev,
+			[key]: !prev[key], // Toggle only the specified menu
+		}));
+	};
+
 	const renderPopoverContent = (sublinks) => (
 		<div className="z-50 rounded-lg shadow-xl flex p-3.5">
 			<div className={`grid ${sublinks.length > 1 ? 'grid-cols-2' : 'grid-cols-1'} gap-10`}>
@@ -126,18 +201,37 @@ const NavLinks = () => {
 	return (
 		<>
 			{links.map((link, i) => (
-				<div key={i} className="px-3 text-left">
-					<Popover
-						content={renderPopoverContent(link.sublinks)}
-						title={link.name}
-						trigger="hover"
-						placement="bottom"
-						className="group"
-					>
-						<h1 className="py-7 no-underline text-black cursor-pointer">
-							{link.name} <DownOutlined />
-						</h1>
-					</Popover>
+				<div key={i} className="relative">
+					{!isMobile ? (
+						<Popover
+							content={renderPopoverContent(link.sublinks)}
+							title={link.name}
+							trigger="hover"
+							placement="bottom"
+							className="group"
+						>
+							{/* Desktop View */}
+							<h1 className="py-7 no-underline text-black cursor-pointer">
+								{link.name} <DownOutlined />
+							</h1>
+						</Popover>
+					) : (
+						<div className="md:hidden">
+							{/* Mobile View */}
+							<div
+								className="flex justify-between items-center py-3 cursor-pointer"
+								onClick={() => toggleMenu(i)}
+							>
+								<h1 className="text-black">{link.name}</h1>
+								<DownOutlined
+									className={`transition-transform duration-300 ${
+										openMenus[i] ? 'rotate-180' : ''
+									}`}
+								/>
+							</div>
+							{openMenus[i] && renderMobileSublinks(link, i)}
+						</div>
+					)}
 				</div>
 			))}
 		</>

@@ -12,8 +12,11 @@ function App() {
 		// <section className="font-body">
 		<BrowserRouter>
 			<Header />
-			<AppRouters />
-			<ToastContainer limit={3} />
+			<div style={{paddingTop: '7rem'}}>
+				<AppRouters />
+
+				<ToastContainer limit={3} />
+			</div>
 			<Footer />
 		</BrowserRouter>
 		// </section>
