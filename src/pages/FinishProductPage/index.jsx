@@ -27,19 +27,13 @@ const FinishProductPage = () => {
 		JSON.parse(localStorage.getItem(`diamond_${userId}`)) || ''
 	);
 
-	console.log('diamondDetail', diamondDetail);
-	console.log('jewelryDetail', jewelryDetail);
-	console.log('jewelry', jewelry);
-
 	useEffect(() => {
-		dispatch(getJewelryDetailPreset(id));
+		dispatch(getJewelryDetailPreset(id))
+			.unwrap()
+			.then((res) => {
+				setJewelry(res);
+			});
 	}, []);
-
-	useEffect(() => {
-		if (jewelryDetailPreset) {
-			setJewelry(jewelryDetailPreset);
-		}
-	}, [jewelryDetailPreset]);
 
 	const hideLoginModal = () => setIsLoginModalVisible(false);
 

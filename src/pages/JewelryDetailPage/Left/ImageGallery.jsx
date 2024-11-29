@@ -4,22 +4,21 @@ export const ImageGallery = ({diamondJewelry, selectedMetal}) => {
 	const [currentImageIndex, setCurrentImageIndex] = useState(0);
 	const [images, setImages] = useState([]);
 
-	// Get images from the selected metal's MetalGroup
-	const metalGroupImages = selectedMetal
-		? diamondJewelry?.MetalGroups?.find((group) => group.MetalId === selectedMetal.Id)
-				?.Images || []
-		: diamondJewelry?.MetalGroups?.[0]?.Images || [];
-
-	// Extract image paths
+	// Effect to update images based on selected metal
 	useEffect(() => {
+		const metalGroupImages = selectedMetal
+			? diamondJewelry?.MetalGroups?.find((group) => group.MetalId === selectedMetal.Id)
+					?.Images || []
+			: diamondJewelry?.MetalGroups?.[0]?.Images || [];
+
 		const imagePaths = metalGroupImages.map((image) => image.MediaPath);
 		setImages(imagePaths);
 
-		// Set the first image as default when images are fetched
+		// Reset index when images change
 		if (imagePaths.length > 0) {
-			setCurrentImageIndex(0); // Reset index to the first image
+			setCurrentImageIndex(0);
 		}
-	}, [metalGroupImages]);
+	}, [diamondJewelry, selectedMetal]); // Only re-run when these props change
 
 	// Automatically change the image every 3 seconds
 	useEffect(() => {
@@ -59,13 +58,9 @@ export const ImageGallery = ({diamondJewelry, selectedMetal}) => {
 					images.map((image, index) => (
 						<div
 							key={index}
-							className={`
-                            cursor-pointer 
-                            border 
-                            rounded-lg 
-                            hover:border-second
-                            ${index === currentImageIndex ? 'border-black' : 'border-gray-300'}
-                        `}
+							className={`cursor-pointer border rounded-lg hover:border-second ${
+								index === currentImageIndex ? 'border-black' : 'border-gray-300'
+							}`}
 							onClick={() => handleImageClick(index)}
 						>
 							<img

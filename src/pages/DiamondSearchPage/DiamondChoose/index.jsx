@@ -19,14 +19,10 @@ import {useLocation} from 'react-router-dom';
 
 const DiamondChoosePage = () => {
 	const dispatch = useDispatch();
-	const diamondList = useSelector(GetAllDiamondSelector);
-	const filterLimits = useSelector(GetDiamondFilterSelector);
 	const jewelryList = useSelector(GetAllJewelrySelector);
-	const userId = getUserId();
 	const location = useLocation();
 	const jewelryModel = location.state.jewelryModel;
 
-	const [changeDiamond, setChangeDiamond] = useState(true);
 	const [pageSize, setPageSize] = useState(100);
 	const [start, setStart] = useState(0);
 	const [filters, setFilters] = useState({
@@ -49,20 +45,6 @@ const DiamondChoosePage = () => {
 		},
 	];
 
-	// useEffect(() => {
-	// 	if (filterLimits) {
-	// 		setFilters({
-	// 			price: {minPrice: filterLimits?.Price?.Min, maxPrice: filterLimits?.Price?.Max},
-	// 		});
-	// 	}
-	// }, [filterLimits]);
-
-	useEffect(() => {
-		if (jewelryList) {
-			setDiamond(jewelryList?.Values);
-		}
-	}, [jewelryList]);
-
 	useEffect(() => {
 		dispatch(getDiamondFilter());
 	}, []);
@@ -79,7 +61,11 @@ const DiamondChoosePage = () => {
 				MinPrice: filters?.price?.minPrice,
 				MaxPrice: filters?.price?.maxPrice,
 			})
-		);
+		)
+			.unwrap()
+			.then((res) => {
+				setDiamond(res?.Values);
+			});
 	}, 500);
 
 	useEffect(() => {
@@ -98,14 +84,6 @@ const DiamondChoosePage = () => {
 	const diamondForFilter = getDiamondForFilter(selectedIndex);
 
 	const findShape = diamondForFilter?.Shapes?.find((shape) => shape?.ShapeId === filters?.shape);
-
-	const getShapeFromLocalStorage = () => {
-		try {
-			return JSON.parse(localStorage.getItem('selected')) || '';
-		} catch (error) {
-			return ''; // Giá trị mặc định nếu không phải là JSON hợp lệ
-		}
-	};
 
 	console.log('jewelryModel', jewelryModel);
 	console.log('diamondForFilter', diamondForFilter);
@@ -133,50 +111,17 @@ const DiamondChoosePage = () => {
 					className="bg-white p-4 rounded-full my-10"
 				/>
 			)}
-			{/* {jewelryModel?.MainDiamonds?.length > 0 && (
-				<div className="divide-x flex items-center justify-center my-5">
-					<button
-						className={`px-4 py-2 w-32 ${
-							changeDiamond ? 'bg-primary' : 'bg-tintWhite'
-						} rounded-s-lg`}
-						onClick={() => setChangeDiamond(true)}
-					>
-						Tự nhiên
-					</button>
-					<button
-						className={`px-4 py-2 w-32 ${
-							!changeDiamond ? 'bg-primary' : 'bg-tintWhite'
-						} rounded-e-lg`}
-						onClick={() => setChangeDiamond(false)}
-					>
-						Nhân tạo
-					</button>
-				</div>
-			)} */}
 
 			{jewelryModel?.MainDiamonds?.length > 0 ? (
-				<>
-					<DiamondList
-						filters={filters}
-						setFilters={setFilters}
-						handleReset={handleReset}
-						diamondForFilter={diamondForFilter}
-						findShape={findShape}
-						jewelryModel={jewelryModel}
-						diamondList={diamond}
-					/>
-					{/* ) : (
-						<DiamondLabList
-							filters={filters}
-							setFilters={setFilters}
-							handleReset={handleReset}
-							diamondForFilter={diamondForFilter}
-							findShape={findShape}
-							diamondList={diamond}
-							jewelryModel={jewelryModel}
-						/>
-					)} */}
-				</>
+				<DiamondList
+					filters={filters}
+					setFilters={setFilters}
+					handleReset={handleReset}
+					diamondForFilter={diamondForFilter}
+					findShape={findShape}
+					jewelryModel={jewelryModel}
+					diamondList={diamond}
+				/>
 			) : (
 				<JewelryList
 					filters={filters}

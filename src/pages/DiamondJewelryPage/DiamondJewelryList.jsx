@@ -38,8 +38,18 @@ export const DiamondJewelryList = () => {
 				IsRhodiumFinished: filters?.IsRhodiumFinished,
 				IsEngravable: filters?.IsEngravable,
 			})
-		);
+		)
+			.unwrap()
+			.then((res) => {
+				setJewelries(res?.Values);
+			});
 	}, 500);
+
+	useEffect(() => {
+		fetchJewelryData();
+
+		return () => fetchJewelryData.cancel();
+	}, [filters]);
 
 	useEffect(() => {
 		const saved = localStorage.getItem('jewelry');
@@ -51,15 +61,9 @@ export const DiamondJewelryList = () => {
 		}
 	}, []);
 
-	useEffect(() => {
-		fetchJewelryData();
-
-		return () => fetchJewelryData.cancel();
-	}, [filters]);
-
-	useEffect(() => {
-		if (jewelryList) setJewelries(jewelryList.Values);
-	}, [jewelryList]);
+	// useEffect(() => {
+	// 	if (jewelryList) setJewelries(jewelryList.Values);
+	// }, [jewelryList]);
 
 	const handleReset = () => {
 		localStorage.removeItem('jewelry');
@@ -112,7 +116,9 @@ export const DiamondJewelryList = () => {
 												style={{background: '#b8b7b5'}}
 											>
 												<Image
-													src={jewelry?.Thumbnail?.MediaPath|| jewelryImg}
+													src={
+														jewelry?.Thumbnail?.MediaPath || jewelryImg
+													}
 													alt={jewelry?.Thumbnail?.MediaName}
 													className=""
 													preview={false}

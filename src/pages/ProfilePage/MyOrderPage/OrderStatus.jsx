@@ -3,7 +3,7 @@ import {Steps} from 'antd';
 import {GetOrderLogsSelector} from '../../../redux/selectors';
 import {useSelector} from 'react-redux';
 
-export const OrderStatus = ({orderStatus, orderDetail}) => {
+export const OrderStatus = ({orderStatus, order}) => {
 	const orderLogList = useSelector(GetOrderLogsSelector);
 
 	const [currentStep, setCurrentStep] = useState(0);
@@ -11,9 +11,10 @@ export const OrderStatus = ({orderStatus, orderDetail}) => {
 	const [indexCancelled, setIndexCancelled] = useState(0);
 	const [indexRejected, setIndexRejected] = useState(0);
 
-	console.log('orderDetail', orderDetail);
 	console.log('indexCancelled', indexCancelled);
 	console.log('indexRejected', indexRejected);
+	console.log('orderLogs', orderLogs);
+	console.log('currentStep', currentStep);
 
 	useEffect(() => {
 		if (orderLogList) {
@@ -29,7 +30,7 @@ export const OrderStatus = ({orderStatus, orderDetail}) => {
 			setIndexCancelled(index);
 			setIndexRejected(indexReject);
 		}
-	}, [orderLogList, orderLogs, orderDetail]);
+	}, [orderLogList, orderLogs, order]);
 
 	useEffect(() => {
 		const getOrderStatus = (status) => {
@@ -88,9 +89,9 @@ export const OrderStatus = ({orderStatus, orderDetail}) => {
 				currentStep === 0
 					? 'Đơn hàng đang chờ xác nhận từ shop.'
 					: orderStatus === 3 && indexRejected === 1
-					? `Đơn hàng đã bị từ chối. Lý Do: ${orderDetail?.CancelledReason}`
+					? `Đơn hàng đã bị từ chối. Lý Do: ${order?.CancelledReason}`
 					: orderStatus === 4 && indexCancelled === 1
-					? `Đơn hàng đã bị hủy. Lý Do: ${orderDetail?.CancelledReason}`
+					? `Đơn hàng đã bị hủy. Lý Do: ${order?.CancelledReason}`
 					: 'Đơn hàng đã xác nhận.',
 		},
 		// Step 1: Chuẩn Bị Hàng
@@ -107,9 +108,9 @@ export const OrderStatus = ({orderStatus, orderDetail}) => {
 				currentStep === 1
 					? 'Shop đang chuẩn bị hàng cho đơn hàng.'
 					: orderStatus === 3 && indexRejected === 2
-					? `Đơn hàng đã bị từ chối. Lý Do: ${orderDetail?.CancelledReason}`
+					? `Đơn hàng đã bị từ chối. Lý Do: ${order?.CancelledReason}`
 					: orderStatus === 4 && indexCancelled === 2
-					? `Đơn hàng đã bị hủy. Lý Do: ${orderDetail?.CancelledReason}`
+					? `Đơn hàng đã bị hủy. Lý Do: ${order?.CancelledReason}`
 					: 'Shop đã chuẩn bị hàng cho đơn hàng.',
 		},
 		// Step 2: Đang Vận Chuyển
@@ -124,7 +125,7 @@ export const OrderStatus = ({orderStatus, orderDetail}) => {
 				currentStep === 2
 					? 'Đơn hàng đang được vận chuyển.'
 					: orderStatus === 4 && indexCancelled === 3
-					? `Đơn hàng đã bị hủy. Lý Do: ${orderDetail?.CancelledReason}`
+					? `Đơn hàng đã bị hủy. Lý Do: ${order?.CancelledReason}`
 					: 'Đã Vận Chuyển',
 		},
 		// Step 3: Giao Hàng
@@ -134,12 +135,16 @@ export const OrderStatus = ({orderStatus, orderDetail}) => {
 					? 'Giao hàng Thất Bại'
 					: currentStep === 7
 					? 'Đang Giao Hàng'
+					: orderStatus === 4 && indexCancelled === 14
+					? 'Đã Hủy'
 					: 'Đã Nhận Hàng',
 			description:
 				currentStep === 6 && orderStatus === 7
 					? 'Giao đơn hàng thất bại.'
 					: currentStep === 7
 					? 'Đơn hàng đang được giao.'
+					: orderStatus === 4 && indexCancelled === 14
+					? `Đơn hàng đã bị hủy. Lý Do: ${order?.CancelledReason}`
 					: 'Đơn hàng đã hoàn thành.',
 		},
 		// Step 4: Hoàn Thành
@@ -196,6 +201,12 @@ export const OrderStatus = ({orderStatus, orderDetail}) => {
 		steps[1].status = 'finish'; // Chờ Xử Lí
 		steps[2].status = 'error'; // Đang Vận Chuyển
 		steps[3].status = 'wait'; // Giao Hàng
+		steps[4].status = 'wait'; // Hoàn Thành
+	} else if (currentStep === 3 && orderStatus === 4 && indexCancelled === 14) {
+		steps[0].status = 'finish'; //Đã Hủy
+		steps[1].status = 'finish'; // Chờ Xử Lí
+		steps[2].status = 'finish'; // Đang Vận Chuyển
+		steps[3].status = 'error'; // Giao Hàng
 		steps[4].status = 'wait'; // Hoàn Thành
 	} else if (currentStep === 4) {
 		steps[0].status = 'finish'; // Đã Hủy hoặc Đã Xác Nhận

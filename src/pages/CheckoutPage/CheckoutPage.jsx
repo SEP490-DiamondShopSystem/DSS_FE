@@ -1,23 +1,23 @@
+import {CheckCircleOutlined} from '@ant-design/icons';
 import {Button, Form, Input, message, Modal, Radio, Select} from 'antd';
 import React, {useEffect, useMemo, useState} from 'react';
 import {FaPhoneAlt, FaRegAddressBook, FaRegEnvelope} from 'react-icons/fa';
 import {useDispatch, useSelector} from 'react-redux';
 import {useLocation, useNavigate} from 'react-router-dom';
+import {getUserId} from '../../components/GetUserId';
 import {
-	CalculateLocationSelector,
 	GetAllDistrictSelector,
 	GetAllPaymentSelector,
 	GetAllWardSelector,
-	GetCartSelector,
 	GetLoadingCustomizeSelector,
 	GetOrderWarrantySelector,
 	GetPromotionAbleSelector,
 	GetUserDetailSelector,
 	LoadingOrderSelector,
 	selectDistances,
-	selectError,
 	selectLoading,
 } from '../../redux/selectors';
+import {handleCartValidate} from '../../redux/slices/cartSlice';
 import {handleOrderCustomizeCheckout} from '../../redux/slices/customizeSlice';
 import {
 	fetchDistances,
@@ -28,12 +28,9 @@ import {
 import {handleCheckoutOrder} from '../../redux/slices/orderSlice';
 import {getAllPayment} from '../../redux/slices/paymentSlice';
 import {checkPromoCart, getAllPromo} from '../../redux/slices/promotionSlice';
-import {convertToVietnamDate, formatPrice} from '../../utils';
-import {enums} from '../../utils/constant';
-import {handleCartValidate} from '../../redux/slices/cartSlice';
 import {getAllWarranty} from '../../redux/slices/warrantySlice';
-import {CheckCircleOutlined} from '@ant-design/icons';
-import {getUserId} from '../../components/GetUserId';
+import {formatPrice} from '../../utils';
+import {enums} from '../../utils/constant';
 
 const {Option} = Select;
 
@@ -158,11 +155,6 @@ const CheckoutPage = () => {
 
 	const idCustomize = order?.Id;
 
-	console.log('cartList', cartList);
-
-	console.log('payment', payment);
-	console.log('shippingFee', shippingFee);
-
 	const defaultAddress =
 		userDetail.Addresses.length > 0 &&
 		userDetail?.Addresses?.find((address) => address?.IsDefault === true);
@@ -188,7 +180,6 @@ const CheckoutPage = () => {
 		dispatch(getAllWarranty());
 	}, []);
 
-	// Fetch distances on component mount
 	useEffect(() => {
 		dispatch(fetchDistances());
 	}, [dispatch]);
@@ -226,20 +217,20 @@ const CheckoutPage = () => {
 		}
 	}, [wards]);
 
-	useEffect(() => {
-		dispatch(
-			handleCalculateLocation({
-				Province: userInfo?.province,
-				District: userInfo?.district,
-				Ward: userInfo?.ward,
-				Street: userInfo?.address,
-			})
-		)
-			.unwrap()
-			.then((res) => {
-				setShippingFee(res?.DeliveryFee?.Cost);
-			});
-	}, [userInfo]);
+	// useEffect(() => {
+	// 	dispatch(
+	// 		handleCalculateLocation({
+	// 			Province: userInfo?.province,
+	// 			District: userInfo?.district,
+	// 			Ward: userInfo?.ward,
+	// 			Street: userInfo?.address,
+	// 		})
+	// 	)
+	// 		.unwrap()
+	// 		.then((res) => {
+	// 			setShippingFee(res?.DeliveryFee?.Cost);
+	// 		});
+	// }, [userInfo]);
 
 	useEffect(() => {
 		if (warrantyList) {
