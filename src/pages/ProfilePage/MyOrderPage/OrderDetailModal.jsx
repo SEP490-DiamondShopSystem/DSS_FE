@@ -202,14 +202,16 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 		if (selectedOrder?.orderId) {
 			dispatch(getOrderLog(selectedOrder.orderId));
 
-			dispatch(getOrderFiles(selectedOrder.orderId))
-				.unwrap()
-				.then((res) => {
-					setOrderInvoice(res);
-				})
-				.catch((error) => {
-					// message.error(error.title || error.data.title);
-				});
+			if (order?.Status === 8) {
+				dispatch(getOrderFiles(selectedOrder.orderId))
+					.unwrap()
+					.then((res) => {
+						setOrderInvoice(res);
+					})
+					.catch((error) => {
+						// message.error(error.title || error.data.title);
+					});
+			}
 
 			dispatch(getUserOrderDetail(selectedOrder.orderId))
 				.unwrap()
