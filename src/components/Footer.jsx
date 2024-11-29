@@ -45,10 +45,10 @@ export const Footer = () => {
 					<Col xs={24} sm={12} md={6}>
 						<h2 className="font-bold text-xl">Giới Thiệu Về Cửa Hàng</h2>
 						<ul className="mt-4 text-gray-700">
-							<li className="m-2">Trả Hàng Miễn Phí</li>
 							<li className="m-2">Giao Hàng An Toàn</li>
 							<li className="m-2">Hộp Và Thiệp Miễn Phí</li>
 							<li className="m-2">Bảo Hành Trang Sức</li>
+							<li className="m-2">Bảo Hành Kim Cương</li>
 						</ul>
 					</Col>
 
@@ -56,11 +56,9 @@ export const Footer = () => {
 					<Col xs={24} sm={12} md={6}>
 						<h2 className="font-bold text-xl">Chính Sách Liên Quan</h2>
 						<ul className="mt-4 text-gray-700">
-							<li className="m-2">Chính Sách Đổi Trả</li>
 							<li className="m-2">Chính Sách Giao Hàng</li>
 							<li className="m-2">Chính Sách Bảo Hành</li>
 							<li className="m-2">Điều Khoản Sử Dụng</li>
-							<li className="m-2">Chính Sách Bảo Mật</li>
 							<li className="m-2">Cam Kết Về Vỏ Trang Sức</li>
 							<li className="m-2">Cam Kết Về Kim Cương</li>
 						</ul>

@@ -51,6 +51,7 @@ export const AppRouters = () => {
 				<Route path="/jewelry/design-your-own-earrings" element={<HomeEarringPage />} />
 				<Route path="/jewelry/design-your-own-necklaces" element={<HomeNecklacePage />} />
 				<Route path="/jewelry/design-your-own-rings" element={<HomeRingPage />} />
+				<Route path="/jewelry/design-your-own-rings" element={<HomeRingPage />} />
 				<Route
 					path="/jewelry/design-your-own-rings/setting/all"
 					element={<RingSearchPage />}
@@ -75,14 +76,8 @@ export const AppRouters = () => {
 					path="/jewelry/design-your-own-earrings/setting/:id"
 					element={<ProductDetailPage />}
 				/>
-				<Route
-					path="/price-list/main"
-					element={<MainDiamondPricePage />}
-				/>
-				<Route
-					path="/price-list/side"
-					element={<SideDiamondPricePage/>}
-				/>
+				<Route path="/price-list/main" element={<MainDiamondPricePage />} />
+				<Route path="/price-list/side" element={<SideDiamondPricePage />} />
 				<Route path="/jewelry/setting/:id" element={<ProductDetailPage />} />
 				<Route path="/jewelry-model/search" element={<DiamondJewelryPage />} />
 				<Route path="/jewelry-model/search/:id" element={<JewelryDetailPage />} />
