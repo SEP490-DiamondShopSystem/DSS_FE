@@ -34,18 +34,16 @@ const JewelryDetailPage = () => {
 	];
 
 	useEffect(() => {
-		dispatch(getJewelryDetail({id}));
+		console.log('chạy ở đây');
+
+		dispatch(getJewelryDetail({id}))
+			.unwrap()
+			.then((res) => {
+				setJewelry(res);
+				setSelectedMetal(res?.Metals?.[0] || null);
+				setSelectedSideDiamond(res?.SideDiamonds?.[0] || null);
+			});
 	}, []);
-
-	useEffect(() => {
-		if (jewelryDetail) {
-			setJewelry(jewelryDetail);
-
-			setSelectedMetal(jewelryDetail?.Metals?.[0] || null);
-
-			setSelectedSideDiamond(jewelryDetail?.SideDiamonds?.[0] || null);
-		}
-	}, [jewelryDetail]);
 
 	const hideLoginModal = () => setIsLoginModalVisible(false);
 

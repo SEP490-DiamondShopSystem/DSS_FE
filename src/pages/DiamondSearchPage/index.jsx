@@ -79,7 +79,6 @@ const mapAttributes = (data, attributes) => {
 
 const DiamondSearchPage = () => {
 	const dispatch = useDispatch();
-	const diamondList = useSelector(GetAllDiamondSelector);
 	const filterLimits = useSelector(GetDiamondFilterSelector);
 	const userId = getUserId();
 
@@ -95,6 +94,7 @@ const DiamondSearchPage = () => {
 	const [start, setStart] = useState(0);
 	const [filters, setFilters] = useState({});
 	const [selectedIndex, setSelectedIndex] = useState(0);
+	const [diamondList, setDiamondList] = useState();
 
 	console.log('filters', filters);
 
@@ -158,7 +158,11 @@ const DiamondSearchPage = () => {
 				caratTo: filters?.carat?.maxCarat,
 				isLab: !changeDiamond,
 			})
-		);
+		)
+			.unwrap()
+			.then((res) => {
+				setDiamondList(res);
+			});
 	}, 500);
 
 	useEffect(() => {

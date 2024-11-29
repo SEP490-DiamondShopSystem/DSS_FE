@@ -36,16 +36,13 @@ import {formatPrice, getOrderItemStatusTag} from '../../../utils';
 import {OrderStatus} from './OrderStatus';
 import {TransactionDetails} from './TransactionList';
 import {OrderLog} from './OrderLog';
+import {OrderPayment} from './OrderPayment';
 
 const {Text, Title} = Typography;
 
 export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder}) => {
 	const dispatch = useDispatch();
-	const orderDetail = useSelector(GetAllOrderDetailSelector);
 	const loading = useSelector(LoadingOrderSelector);
-	const orderLogList = useSelector(GetOrderLogsSelector);
-	const statusOrder = useSelector(GetStatusOrderSelector);
-	const orderInvoice = useSelector(GetOrderInvoiceSelector);
 	const reviewDetail = useSelector(ReviewSelector);
 
 	const [isCancelModalVisible, setIsCancelModalVisible] = useState(false);
@@ -59,6 +56,8 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 	const [orderLog, setOrderLog] = useState();
 	const [reviewContent, setReviewContent] = useState(null);
 	const [imageFiles, setImageFiles] = useState([]);
+	const [orderInvoice, setOrderInvoice] = useState();
+	const [statusOrder, setStatusOrder] = useState();
 
 	const data = order?.Items?.map((item, i) => ({
 		key: i,
@@ -123,8 +122,8 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 			),
 		},
 
-		...(orderDetail?.Status === 8 &&
-		orderDetail.Items?.some((item) => item.Jewelry && item.Jewelry.Review === null)
+		...(order?.Status === 8 &&
+		order.Items?.some((item) => item.Jewelry && item.Jewelry.Review === null)
 			? [
 					{
 						title: 'Đánh Giá',
@@ -150,7 +149,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 						},
 					},
 			  ]
-			: orderDetail?.Status === 8 && orderDetail?.Items?.some((item) => item.Jewelry !== null) // Nếu Jewelry tồn tại
+			: order?.Status === 8 && order?.Items?.some((item) => item.Jewelry !== null) // Nếu Jewelry tồn tại
 			? [
 					{
 						title: 'Đánh Giá',
@@ -202,25 +201,29 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 	useEffect(() => {
 		if (selectedOrder?.orderId) {
 			dispatch(getOrderLog(selectedOrder.orderId));
-			dispatch(getOrderFiles(selectedOrder.orderId));
-			dispatch(getUserOrderDetail(selectedOrder.orderId));
+
+			dispatch(getOrderFiles(selectedOrder.orderId))
+				.unwrap()
+				.then((res) => {
+					setOrderInvoice(res);
+				})
+				.catch((error) => {
+					// message.error(error.title || error.data.title);
+				});
+
+			dispatch(getUserOrderDetail(selectedOrder.orderId))
+				.unwrap()
+				.then((res) => {
+					setOrder(res);
+					setTransaction(res?.Transactions);
+					setOrderLog(res?.Logs);
+					setStatusOrder(res?.Status);
+				})
+				.catch((error) => {
+					message.error(error.title || error.data.title);
+				});
 		}
 	}, [selectedOrder, dispatch, statusOrder, reviewDetail]);
-
-	useEffect(() => {
-		if (orderDetail) {
-			setOrder(orderDetail);
-		}
-	}, [orderDetail]);
-
-	console.log('selectedOrder', selectedOrder);
-
-	useEffect(() => {
-		if (orderDetail) {
-			setTransaction(orderDetail?.Transactions);
-			setOrderLog(orderDetail?.Logs);
-		}
-	}, [orderDetail, selectedOrder]);
 
 	const showModal = (review) => {
 		setReviewContent(review);
@@ -352,10 +355,14 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 								<h2 className="text-2xl font-semibold">Địa chỉ giao hàng</h2>
 								<p>{order?.ShippingAddress}</p>
 							</div>
-							<OrderStatus orderStatus={statusOrder} orderDetail={order} />
+							<OrderStatus orderStatus={statusOrder} order={order} />
 							<div className="w-full flex">
 								<div className="w-2/3">
-									<TransactionDetails transactions={transaction} />
+									{order?.Status === 1 ? (
+										<OrderPayment order={order} />
+									) : (
+										<TransactionDetails transactions={transaction} />
+									)}
 								</div>
 								<div className="w-1/3">
 									<OrderLog orderLogs={orderLog} />

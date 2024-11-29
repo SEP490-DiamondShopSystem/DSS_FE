@@ -33,7 +33,6 @@ const MyOrderPage = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
-	const orderList = useSelector(GetAllOrderSelector);
 	const loading = useSelector(LoadingOrderSelector);
 
 	const [dataSource, setDataSource] = useState([]);
@@ -43,6 +42,7 @@ const MyOrderPage = () => {
 	const [currentPage, setCurrentPage] = useState(1);
 	const [pageSize, setPageSize] = useState(5);
 	const [status, setStatus] = useState('');
+	const [orderList, setOrderList] = useState();
 
 	const columns = [
 		{
@@ -125,7 +125,7 @@ const MyOrderPage = () => {
 							<EyeFilled />
 						</Button>
 					</Tooltip>
-					{record.status === 'Pending' && record.paymentMethodId === '2' && (
+					{/* {record.status === 'Chờ Xử Lý' && record.paymentMethodId === '2' && (
 						<Tooltip title={'Thanh Toán'}>
 							<Button
 								type="text"
@@ -135,7 +135,7 @@ const MyOrderPage = () => {
 								<TransactionOutlined />
 							</Button>
 						</Tooltip>
-					)}
+					)} */}
 				</>
 			),
 		},
@@ -150,17 +150,6 @@ const MyOrderPage = () => {
 		setOpenInvoice(!openInvoice);
 	};
 
-	const toggleTransactionModal = (id) => {
-		dispatch(getUserOrderTransaction(id))
-			.unwrap()
-			.then((res) => {
-				window.open(res?.PaymentUrl, '_blank');
-			})
-			.catch((error) => {
-				message.error(error?.data?.title || error?.title);
-			});
-	};
-
 	useEffect(() => {
 		dispatch(
 			getUserOrder({
@@ -168,7 +157,12 @@ const MyOrderPage = () => {
 				start: currentPage,
 				Status: status,
 			})
-		);
+		)
+			.unwrap()
+			.then((res) => {
+				setOrderList(res);
+				console.log('res', res);
+			});
 	}, [pageSize, currentPage, status]);
 
 	useEffect(() => {
@@ -176,7 +170,7 @@ const MyOrderPage = () => {
 			const formattedOrders = orderList?.Values?.map((order) => ({
 				orderId: order?.Id,
 				orderCode: order?.OrderCode,
-				paymentMethodId: order?.PaymentMethod?.Id,
+				paymentMethodId: order?.PaymentMethodId,
 				paymentMethodName: order?.PaymentMethod?.MappedName,
 				orderTime: order.CreatedDate,
 				price: formatPrice(order.TotalPrice),
