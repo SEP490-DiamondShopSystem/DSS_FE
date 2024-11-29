@@ -442,7 +442,8 @@ const CartPage = () => {
 							<div className="mb-1 flex justify-between w-full">
 								<span className="font-semibold">Khuyến Mãi</span>{' '}
 								<span>
-									{cartList?.OrderPrices?.DiscountAmountSaved !== 0 && '-'}
+									{cartList?.OrderPrices?.DiscountAmountSaved !== Number(0) &&
+										'-'}
 									{formatPrice(cartList?.OrderPrices?.PromotionAmountSaved || 0)}
 								</span>
 							</div>

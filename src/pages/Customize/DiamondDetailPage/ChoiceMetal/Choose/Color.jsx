@@ -16,48 +16,6 @@ import {marks} from '../../../../../utils/constant';
 
 export const Color = ({setStep, customizeDiamond, setCustomizeDiamond}) => {
 	const [colorSelected, setColorSelected] = useState('K');
-	const colorItems = [
-		{
-			id: 1,
-			value: 1,
-			color: 'K',
-		},
-		{
-			id: 2,
-			value: 2,
-			color: 'J',
-		},
-		{
-			id: 3,
-			value: 3,
-			color: 'I',
-		},
-		{
-			id: 4,
-			value: 4,
-			color: 'H',
-		},
-		{
-			id: 5,
-			value: 5,
-			color: 'G',
-		},
-		{
-			id: 6,
-			value: 6,
-			color: 'F',
-		},
-		{
-			id: 7,
-			value: 7,
-			color: 'E',
-		},
-		{
-			id: 8,
-			value: 8,
-			color: 'D',
-		},
-	];
 
 	const handleColorChange = (value) => {
 		setCustomizeDiamond((prev) => ({
