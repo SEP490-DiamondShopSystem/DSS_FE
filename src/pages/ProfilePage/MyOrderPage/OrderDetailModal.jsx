@@ -202,14 +202,16 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 		if (selectedOrder?.orderId) {
 			dispatch(getOrderLog(selectedOrder.orderId));
 
-			dispatch(getOrderFiles(selectedOrder.orderId))
-				.unwrap()
-				.then((res) => {
-					setOrderInvoice(res);
-				})
-				.catch((error) => {
-					// message.error(error.title || error.data.title);
-				});
+			if (order?.Status === 8) {
+				dispatch(getOrderFiles(selectedOrder.orderId))
+					.unwrap()
+					.then((res) => {
+						setOrderInvoice(res);
+					})
+					.catch((error) => {
+						// message.error(error.title || error.data.title);
+					});
+			}
 
 			dispatch(getUserOrderDetail(selectedOrder.orderId))
 				.unwrap()
@@ -325,10 +327,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 				></div>
 			)}
 			{openDetail && (
-				<div
-					className="fixed top-1/2 right-1/2 bg-white transform transition-transform duration-300 ease-in-out z-50 translate-x-1/2 -translate-y-1/2 p-10"
-					style={{width: '95%', maxHeight: '80vh', overflowY: 'auto'}}
-				>
+				<div className="fixed top-1/2 right-1/2 bg-white transform transition-transform duration-300 ease-in-out z-50 translate-x-1/2 -translate-y-1/2 p-10 w-[95%] max-h-[80vh] overflow-y-auto">
 					{loading ? (
 						<Loading />
 					) : (
