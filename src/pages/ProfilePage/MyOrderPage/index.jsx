@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import NavbarProfile from '../../../components/NavbarProfile';
 import {LoadingOrderSelector} from '../../../redux/selectors';
 import {Helmet} from 'react-helmet';
@@ -10,7 +10,16 @@ import RequestCustomize from '../../RequestCustomize';
 const {Option} = Select;
 
 const OrderPage = () => {
-	const loading = useSelector(LoadingOrderSelector);
+	const [isLgScreen, setIsLgScreen] = useState(window.innerWidth >= 1024);
+
+	useEffect(() => {
+		const handleResize = () => {
+			setIsLgScreen(window.innerWidth >= 1024);
+		};
+
+		window.addEventListener('resize', handleResize);
+		return () => window.removeEventListener('resize', handleResize);
+	}, []);
 
 	return (
 		<div>
@@ -18,10 +27,12 @@ const OrderPage = () => {
 				<title>Đơn Hàng Của Tôi</title>
 			</Helmet>
 			<div className="my-20 min-h-96 flex z-50">
-				<div className="mr-20">
-					<NavbarProfile />
-				</div>
-				<div className="font-semibold w-full px-20 py-10 bg-white rounded-lg shadow-lg">
+				{isLgScreen && (
+					<div className="lg:mr-20 mb-10 lg:mb-0">
+						<NavbarProfile />
+					</div>
+				)}
+				<div className="font-semibold w-full px-5 md:px-10 lg:px-20 py-10 bg-white rounded-lg lg:shadow-lg">
 					<MyOrderPage />
 				</div>
 			</div>

@@ -24,6 +24,20 @@ export const handleChangePassword = createAsyncThunk(
 		}
 	}
 );
+export const getAccountRank = createAsyncThunk(
+	'userSlice/getAccountRank',
+	async (_, {rejectWithValue}) => {
+		try {
+			const data = await api.get(`/Configuration/AccountRule`);
+			console.log(data);
+
+			return data;
+		} catch (error) {
+			console.error(error);
+			return rejectWithValue(error);
+		}
+	}
+);
 
 export const userSlice = createSlice({
 	name: 'userSlice',
