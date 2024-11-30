@@ -81,9 +81,9 @@ export const DiamondList = ({
 							</div>
 
 							<div className="transition-all duration-300 mt-10">
-								{/* <Divider /> */}
+								{/* Table Header */}
 								<div className="shadow-md bg-gray-100 rounded-lg">
-									<div className="flex justify-between items-center py-3 px-5 bg-primary border">
+									<div className="justify-between items-center py-3 px-5 bg-primary border hidden lg:flex">
 										<p className="text-lg font-semibold text-center w-1/6">
 											Hình Ảnh
 										</p>
@@ -112,6 +112,8 @@ export const DiamondList = ({
 										</div>
 									</div>
 								</div>
+
+								{/* Diamond List */}
 								{diamondList?.length > 0 ? (
 									diamondList.map((item, index) => (
 										<div
@@ -119,12 +121,12 @@ export const DiamondList = ({
 											className="shadow-lg bg-white rounded-lg cursor-pointer border-2 border-white hover:border-2 hover:border-black my-10"
 											onClick={() => handleClick(item?.Id)}
 										>
-											{item.Diamonds.map((diamond) => (
-												<div className="flex w-full">
-													<div
-														className="justify-center w-1/6"
-														style={{background: '#b8b7b5'}}
-													>
+											{item.Diamonds.map((diamond, idx) => (
+												<div
+													key={idx}
+													className="flex flex-col md:flex-row md:items-center w-full p-3"
+												>
+													<div className="flex justify-center w-full sm:w-1/6 mb-3 sm:mb-0">
 														<Image
 															src={
 																diamond?.Thumbnail?.MediaPath &&
@@ -133,35 +135,33 @@ export const DiamondList = ({
 																	: diamondImg
 															}
 															alt={diamond?.Title || 'Diamond'}
-															// className="w-16"
-															style={{width: '80%'}}
 															className="mx-auto"
 															preview={false}
 														/>
 													</div>
-													<div className="flex justify-between items-center w-5/6 ml-5">
-														<p className="text-xl w-1/6 text-center">
+													<div className="flex flex-col md:flex-row w-full sm:w-5/6 sm:ml-5">
+														<p className="text-xl w-full sm:w-1/6 text-center mb-2 sm:mb-0">
 															{diamond?.DiamondShape?.ShapeName ||
 																'-'}
 														</p>
-														<p className="text-xl w-1/6 text-center">
+														<p className="text-xl w-full sm:w-1/6 text-center mb-2 sm:mb-0">
 															{diamond?.Carat || '-'}ct
 														</p>
-														<p className="text-xl w-1/6 text-center">
+														<p className="text-xl w-full sm:w-1/6 text-center mb-2 sm:mb-0">
 															{getLabelFromCode(
 																diamond?.Color,
 																Color
 															) || '-'}{' '}
 															Color
 														</p>
-														<p className="text-xl w-1/6 text-center">
+														<p className="text-xl w-full sm:w-1/6 text-center mb-2 sm:mb-0">
 															{getLabelFromCode(
 																diamond?.Clarity,
 																Clarity
 															) || '-'}{' '}
 															Clarity
 														</p>
-														<p className="text-xl w-1/6 text-center">
+														<p className="text-xl w-full sm:w-1/6 text-center mb-2 sm:mb-0">
 															{getLabelFromCode(
 																diamond?.Cut,
 																Cut
@@ -169,7 +169,7 @@ export const DiamondList = ({
 														</p>
 														{diamond?.SalePrice ===
 														diamond?.TruePrice ? (
-															<div className=" w-1/6 text-center">
+															<div className="w-full sm:w-1/6 text-center mb-2 sm:mb-0">
 																<p>
 																	{formatPrice(
 																		diamond?.SalePrice
@@ -177,7 +177,7 @@ export const DiamondList = ({
 																</p>
 															</div>
 														) : (
-															<div className=" w-1/6 text-center">
+															<div className="w-full sm:w-1/6 text-center mb-2 sm:mb-0">
 																<p>
 																	{formatPrice(
 																		diamond?.TruePrice
@@ -190,7 +190,7 @@ export const DiamondList = ({
 																</p>
 															</div>
 														)}
-														<p className=" w-1/6 text-center">
+														<p className="w-full sm:w-1/6 text-center">
 															{diamond?.IsLabDiamond
 																? 'Nhân Tạo'
 																: 'Tự Nhiên'}

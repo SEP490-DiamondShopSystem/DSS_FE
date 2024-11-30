@@ -217,21 +217,6 @@ const CheckoutPage = () => {
 		}
 	}, [wards]);
 
-	// useEffect(() => {
-	// 	dispatch(
-	// 		handleCalculateLocation({
-	// 			Province: userInfo?.province,
-	// 			District: userInfo?.district,
-	// 			Ward: userInfo?.ward,
-	// 			Street: userInfo?.address,
-	// 		})
-	// 	)
-	// 		.unwrap()
-	// 		.then((res) => {
-	// 			setShippingFee(res?.DeliveryFee?.Cost);
-	// 		});
-	// }, [userInfo]);
-
 	useEffect(() => {
 		if (warrantyList) {
 			setWarrantiesJewelry(warrantyList?.Values?.filter((warranty) => warranty?.Type === 2));
@@ -538,11 +523,11 @@ const CheckoutPage = () => {
 	};
 
 	return (
-		<div className="min-h-screen flex justify-center items-center bg-gray-100 mx-40 my-20">
-			<div className="w-full flex">
-				<div className="md:w-3/5">
+		<div className="min-h-screen flex justify-center items-center bg-gray-100 md:mx-40 my-20">
+			<div className="w-full flex flex-col md:flex-row">
+				<div className="md:w-3/5 w-full">
 					<div className="mb-6">
-						<div className=" bg-white p-6 rounded-lg shadow-lg transition-shadow duration-300 hover:shadow-2xl">
+						<div className="bg-white p-6 rounded-lg shadow-lg transition-shadow duration-300 hover:shadow-2xl">
 							<h2 className="text-2xl font-semibold text-gray-800">
 								Thông tin thanh toán và giao hàng
 							</h2>
@@ -759,7 +744,7 @@ const CheckoutPage = () => {
 								</Form.Item>
 
 								<div className="my-6">
-									<div className=" bg-white p-6 rounded-lg shadow-lg space-y-6 mt-6 md:mt-0 transition-shadow duration-300 hover:shadow-2xl">
+									<div className="bg-white p-6 rounded-lg shadow-lg space-y-6 mt-6 md:mt-0 transition-shadow duration-300 hover:shadow-2xl">
 										<h2 className="text-2xl font-semibold text-gray-800 mb-6">
 											Hình thức thanh toán
 										</h2>

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import { faShoppingBag, faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
+import {faShoppingBag, faBars, faTimes} from '@fortawesome/free-solid-svg-icons';
 import {Link, useNavigate} from 'react-router-dom';
 import Logo from './../../assets/logo-ex.png';
 import NavLinks from './NavLinks';
@@ -8,7 +8,7 @@ import ActionLinks from './ActionLinks';
 
 export const Header = () => {
 	const navigate = useNavigate();
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
 	const handleValidate = () => {
 		navigate('/cart');
@@ -17,9 +17,9 @@ export const Header = () => {
 		setIsMobileMenuOpen(!isMobileMenuOpen);
 	};
 	return (
-		<nav className="bg-white shadow-md fixed top-0 right-0 left-0 z-50">
+		<nav className="bg-white shadow-md z-50 fixed top-0 left-0 right-0 sm:fixed lg:static">
 			<div className="container mx-auto px-4 sm:px-6 lg:px-8">
-				<div className="flex items-center justify-between py-4">
+				<div className="flex items-center justify-between py-4 uppercase font-semibold">
 					{/* Logo */}
 					<Link to={'/'}>
 						<img src={Logo} alt="logo" className="h-10 md:h-12 cursor-pointer" />
@@ -57,8 +57,8 @@ export const Header = () => {
 							<FontAwesomeIcon icon={faShoppingBag} className="text-lg md:text-xl" />
 						</button>
 						<div className="hidden lg:flex items-center">
-                            <ActionLinks />
-                        </div>
+							<ActionLinks />
+						</div>
 
 						{/* Mobile Menu Toggle */}
 						<button
@@ -75,7 +75,7 @@ export const Header = () => {
 
 				{/* Mobile Menu */}
 				{isMobileMenuOpen && (
-					<div className="lg:hidden absolute left-0 right-0 bg-white shadow-lg">
+					<div className="lg:hidden absolute left-0 right-0 bg-white shadow-lg uppercase font-semibold">
 						<div className="px-4 pt-2 pb-4 space-y-2">
 							<Link
 								to="/"
@@ -89,7 +89,7 @@ export const Header = () => {
 							</div>
 							<Link
 								to="/customize/diamond-jewelry"
-								className="block py-2 text-base no-underline text-black hover:bg-gray-100"
+								className="py-2 text-base no-underline text-black hover:bg-gray-100 hidden"
 								onClick={toggleMobileMenu}
 							>
 								Thiết Kế Trang Sức

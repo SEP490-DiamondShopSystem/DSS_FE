@@ -26,8 +26,8 @@ export const OrderPayment = ({order}) => {
 			{order?.PaymentMethodId === '1' && (
 				<div className="w-full">
 					<h3 className="text-xl font-semibold mb-4">Chuyển khoản ngân hàng</h3>
-					<div className="space-y-2 flex items-center justify-between">
-						<div>
+					<div className="space-y-4 sm:space-y-0 sm:flex sm:items-center sm:justify-between">
+						<div className="text-sm sm:text-base">
 							<p>
 								<strong className="text-gray-700">Tên ngân hàng:</strong>{' '}
 								{order.bankName || 'Ngân hàng Ví Dụ'}
@@ -46,7 +46,7 @@ export const OrderPayment = ({order}) => {
 									'Vui lòng ghi mã đơn hàng vào nội dung chuyển khoản.'}
 							</p>
 						</div>
-						<div className="ml-10">
+						<div className="mt-4 sm:mt-0 sm:ml-10 flex justify-center">
 							<QRCode
 								value={order.qrCode || 'https://example.com'}
 								size={150}

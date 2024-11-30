@@ -130,8 +130,8 @@ const NavLinks = () => {
 									key={k}
 									className="text-sm text-gray-600 my-2.5 md:cursor-pointer"
 								>
-									<Link
-										to={sl.link}
+									<a
+										href={sl.link}
 										className="hover:text-primary font-normal normal-case"
 										onClick={() => {
 											// Handle clicks for navigation or additional state changes
@@ -145,7 +145,7 @@ const NavLinks = () => {
 										}}
 									>
 										{sl.name}
-									</Link>
+									</a>
 								</li>
 							))}
 						</ul>
@@ -174,8 +174,8 @@ const NavLinks = () => {
 									key={k}
 									className="text-sm text-gray-600 my-2.5 md:cursor-pointer"
 								>
-									<Link
-										to={sl.link}
+									<a
+										href={sl.link}
 										className="hover:text-primary font-normal normal-case"
 										onClick={() => {
 											if (mySubLink.Head === 'Mua Kim Cương Theo Hình Dạng') {
@@ -188,7 +188,7 @@ const NavLinks = () => {
 										}}
 									>
 										{sl.name}
-									</Link>
+									</a>
 								</li>
 							))}
 						</ul>
@@ -205,7 +205,6 @@ const NavLinks = () => {
 					{!isMobile ? (
 						<Popover
 							content={renderPopoverContent(link.sublinks)}
-							title={link.name}
 							trigger="hover"
 							placement="bottom"
 							className="group"

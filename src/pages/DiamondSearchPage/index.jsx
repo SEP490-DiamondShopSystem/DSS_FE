@@ -115,11 +115,13 @@ const DiamondSearchPage = () => {
 
 	const getShapeFromLocalStorage = () => {
 		try {
-			return JSON.parse(localStorage.getItem('selected')) || '';
+			return Number(JSON.parse(localStorage.getItem('selected'))) || '';
 		} catch (error) {
 			return '';
 		}
 	};
+
+	console.log('getShapeFromLocalStorage', getShapeFromLocalStorage());
 
 	useEffect(() => {
 		if (filterLimits) {
@@ -173,7 +175,6 @@ const DiamondSearchPage = () => {
 
 	useEffect(() => {
 		if (diamondList && enums) {
-			// Map diamond attributes to more readable values
 			const mappedData = diamondList?.Values?.map((diamond) => mapAttributes(diamond, enums));
 			setMappedDiamonds(mappedData);
 		}
@@ -192,7 +193,7 @@ const DiamondSearchPage = () => {
 	};
 
 	return (
-		<div className="mx-32">
+		<div className="px-4 md:px-32">
 			{jewelryModel && Object.keys(jewelryModel).length > 0 && (
 				<Steps
 					current={1}
@@ -203,9 +204,10 @@ const DiamondSearchPage = () => {
 				/>
 			)}
 
+			{/* Search section */}
 			<div className="flex justify-center mt-20 mb-10">
-				<div className="flex flex-col items-center justify-center" style={{width: 600}}>
-					<h1 className="mb-5 font-semibold text-2xl">Tìm Kiếm Kim Cương</h1>
+				<div className="flex flex-col items-center justify-center w-full sm:w-3/4 md:w-1/2 lg:w-1/3">
+					<h1 className="mb-5 font-semibold text-2xl text-center">Tìm Kiếm Kim Cương</h1>
 					<p className="text-center">
 						Sử dụng tính năng tìm kiếm kim cương của chúng tôi để tìm những viên kim
 						cương rời được chứng nhận bởi GIA, không có xung đột và có chất lượng cao
@@ -217,26 +219,27 @@ const DiamondSearchPage = () => {
 				</div>
 			</div>
 
-			<div className="divide-x flex items-center justify-center my-5">
+			{/* Toggle buttons for diamond selection */}
+			<div className="flex items-center justify-center my-5 space-x-2">
 				<button
-					className={`px-4 py-2 w-32 ${
+					className={`px-4 py-2 w-full sm:w-32 ${
 						changeDiamond ? 'bg-primary' : 'bg-tintWhite'
-					} rounded-s-lg`}
+					} rounded-l-lg sm:rounded-lg`}
 					onClick={() => setChangeDiamond(true)}
 				>
 					Tự nhiên
 				</button>
 				<button
-					className={`px-4 py-2 w-32 ${
+					className={`px-4 py-2 w-full sm:w-32 ${
 						!changeDiamond ? 'bg-primary' : 'bg-tintWhite'
-					} rounded-e-lg`}
+					} rounded-r-lg sm:rounded-lg`}
 					onClick={() => setChangeDiamond(false)}
 				>
 					Nhân tạo
 				</button>
 			</div>
 
-			{/* Use the mapped diamond data */}
+			{/* Display Diamond List based on selection */}
 			{changeDiamond ? (
 				<DiamondList
 					diamond={mappedDiamonds}

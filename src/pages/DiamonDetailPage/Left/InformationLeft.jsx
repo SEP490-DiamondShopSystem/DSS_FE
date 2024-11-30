@@ -24,6 +24,8 @@ import {
 	cutGood,
 	cutVeryGood,
 } from '../../../utils/image';
+import girdle from '../../../assets/advanceDiamond/Girdle .jpeg';
+import culet from '../../../assets/advanceDiamond/Culet.jpg';
 
 export const InformationLeft = ({diamond, diamondId}) => {
 	const dispatch = useDispatch();
@@ -299,6 +301,56 @@ export const InformationLeft = ({diamond, diamondId}) => {
 		</div>
 	);
 
+	const textSymmetry = <span>Độ đối xứng</span>;
+	const contentSymmetry = (
+		<div style={{width: 300, textAlign: 'justify'}}>
+			<p>
+				Độ chính xác và sự sắp xếp thẳng hàng của các mặt cắt trên viên kim cương và ảnh
+				hưởng của chúng đến độ sáng lấp lánh của viên đá.
+			</p>
+		</div>
+	);
+
+	const textGirdle = <span>Viền cạnh kim cương</span>;
+	const contentGirdle = (
+		<div style={{width: 300, textAlign: 'justify'}}>
+			<div className="flex items-center justify-center">
+				<Image src={girdle} preview={false} />
+			</div>
+			<p>
+				Độ chính xác và sự sắp xếp thẳng hàng của các mặt cắt trên viên kim cương và ảnh
+				hưởng của chúng đến độ sáng lấp lánh của viên đá.
+			</p>
+		</div>
+	);
+
+	const textCulet = <span>Chóp đáy kim cương</span>;
+	const contentCulet = (
+		<div style={{width: 300, textAlign: 'justify'}}>
+			<div className="flex items-center justify-center">
+				<Image src={culet} preview={false} />
+			</div>
+			<p>
+				Độ chính xác và sự sắp xếp thẳng hàng của các mặt cắt trên viên kim cương và ảnh
+				hưởng của chúng đến độ sáng lấp lánh của viên đá.
+			</p>
+		</div>
+	);
+
+	const textPolish = <span>Độ bóng</span>;
+
+	const contentPolish = (
+		<div style={{width: 300, textAlign: 'justify'}}>
+			<p>
+				Tình trạng tổng thể của các bề mặt đã được mài của viên kim cương hoàn thiện, bao
+				gồm độ mịn của các mặt cắt, có vết xước nào từ bánh mài hay không, và mức độ sắc nét
+				của các cạnh mỗi mặt cắt. Các vết từ quá trình mài thường gần như không thể thấy
+				bằng mắt thường, nhưng độ mài bóng tốt là điều cần thiết để tối ưu hóa hiệu suất
+				phản chiếu ánh sáng.
+			</p>
+		</div>
+	);
+
 	return (
 		<>
 			<div className="bg-gray-50 w-full mt-10 ">
@@ -333,39 +385,45 @@ export const InformationLeft = ({diamond, diamondId}) => {
 				</div>
 				<div className="flex justify-between px-4 border-b border-tintWhite py-2">
 					<span className="text-gray-600">Cut</span>
-					<span className="text-gray-800 flex items-center">
-						{diamond.Cut}{' '}
+					<div className="flex items-center">
+						<span className="text-gray-800 flex items-center mr-2">{diamond.Cut} </span>{' '}
 						<Popover placement="topLeft" title={textCut} content={contentCut}>
 							<InfoCircleFilled />
 						</Popover>
-					</span>
+					</div>
 				</div>
 				<div className="flex justify-between px-4 border-b border-tintWhite py-2">
 					<span className="text-gray-600">Color</span>
-					<span className="text-gray-800 flex items-center">
-						{diamond.Color}{' '}
+					<div className="flex items-center">
+						<span className="text-gray-800 flex items-center mr-2">
+							{diamond.Color}{' '}
+						</span>
 						<Popover placement="topLeft" title={textColor} content={contentColor}>
 							<InfoCircleFilled />
 						</Popover>
-					</span>
+					</div>
 				</div>
 				<div className="flex justify-between px-4 border-b border-tintWhite py-2">
 					<span className="text-gray-600">Clarity</span>
-					<span className="text-gray-800 flex items-center">
-						{diamond.Clarity}{' '}
+					<div className="flex items-center">
+						<span className="text-gray-800 flex items-center mr-2">
+							{diamond.Clarity}{' '}
+						</span>
 						<Popover placement="topLeft" title={textClarity} content={contentClarity}>
 							<InfoCircleFilled />
 						</Popover>
-					</span>
+					</div>
 				</div>
 				<div className="flex justify-between px-4 border-b border-tintWhite py-2">
 					<span className="text-gray-600">Trọng lượng Carat</span>
-					<span className="text-gray-800 flex items-center">
-						{diamond.Carat}{' '}
+					<div className="flex items-center">
+						<span className="text-gray-800 flex items-center mr-2">
+							{diamond.Carat}{' '}
+						</span>
 						<Popover placement="topLeft" title={text} content={content}>
 							<InfoCircleFilled />
 						</Popover>
-					</span>
+					</div>
 				</div>
 				<div className="flex justify-between px-4 border-b border-tintWhite py-2">
 					<span className="text-gray-600">Fluorescence</span>
@@ -391,15 +449,43 @@ export const InformationLeft = ({diamond, diamondId}) => {
 					</div>
 					<div className="flex justify-between px-4 border-b border-tintWhite py-2">
 						<span className="text-gray-600">Polish</span>
-						<span className="text-gray-800">{diamond.Polish}</span>
+						<div>
+							<span className="text-gray-800 mr-2">{diamond.Polish}</span>
+							<Popover placement="topLeft" title={textPolish} content={contentPolish}>
+								<InfoCircleFilled />
+							</Popover>
+						</div>
 					</div>
 					<div className="flex justify-between px-4 border-b border-tintWhite py-2">
 						<span className="text-gray-600">Symmetry</span>
-						<span className="text-gray-800">{diamond.Symmetry}</span>
+						<div>
+							<span className="text-gray-800 mr-2">{diamond.Symmetry}</span>
+							<Popover
+								placement="topLeft"
+								title={textSymmetry}
+								content={contentSymmetry}
+							>
+								<InfoCircleFilled />
+							</Popover>
+						</div>
 					</div>
 					<div className="flex justify-between px-4 border-b border-tintWhite py-2">
 						<span className="text-gray-600">Girdle</span>
-						<span className="text-gray-800">{diamond.Girdle}</span>
+						<div>
+							<span className="text-gray-800 mr-2">{diamond.Girdle}</span>
+							<Popover placement="topLeft" title={textGirdle} content={contentGirdle}>
+								<InfoCircleFilled />
+							</Popover>
+						</div>
+					</div>
+					<div className="flex justify-between px-4 border-b border-tintWhite py-2">
+						<span className="text-gray-600">Girdle</span>
+						<div>
+							<span className="text-gray-800 mr-2">{diamond.Culet}</span>
+							<Popover placement="topLeft" title={textCulet} content={contentCulet}>
+								<InfoCircleFilled />
+							</Popover>
+						</div>
 					</div>
 					<div className="flex justify-between px-4 py-2">
 						<span className="text-gray-600">Kích thước</span>

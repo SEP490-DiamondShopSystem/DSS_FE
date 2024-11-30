@@ -85,9 +85,6 @@ const DiamondChoosePage = () => {
 
 	const findShape = diamondForFilter?.Shapes?.find((shape) => shape?.ShapeId === filters?.shape);
 
-	console.log('jewelryModel', jewelryModel);
-	console.log('diamondForFilter', diamondForFilter);
-
 	const handleReset = () => {
 		localStorage.removeItem('selected');
 		setFilters({
@@ -101,7 +98,7 @@ const DiamondChoosePage = () => {
 	};
 
 	return (
-		<div className="mx-32">
+		<div className="mx-4 md:mx-8 lg:mx-32">
 			{jewelryModel && Object.keys(jewelryModel).length > 0 && (
 				<Steps
 					current={1}

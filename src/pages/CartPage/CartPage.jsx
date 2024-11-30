@@ -256,9 +256,8 @@ const CartPage = () => {
 	};
 
 	return (
-		<div className="flex justify-between p-8 bg-gray-50 min-h-screen mx-32 my-20">
+		<div className="mt-5 p-8 bg-gray-50 min-h-screen mx-5 md:mx-16 lg:mx-32 my-10 flex flex-col md:flex-row">
 			{/* Left Segment: Engagement Ring, Loose Diamond, Promotions */}
-
 			<div className="md:w-2/3 flex-1 lg:mr-8 space-y-8 shadow-lg bg-white rounded-lg">
 				{mappedProducts?.length > 0 ? (
 					<div className="bg-white p-6 mx-5 my-5 border rounded-lg shadow-md">
@@ -269,17 +268,17 @@ const CartPage = () => {
 							<>
 								{mappedProducts.map((item, index) => (
 									<div
-										className="relative flex mt-4 shadow-xl p-5 rounded-lg"
+										className="relative flex flex-col md:flex-row mt-4 shadow-xl p-5 rounded-lg"
 										key={item.Id}
 									>
-										<div className="mr-4 flex-shrink-0">
+										<div className="mr-4 flex-shrink-0 w-full sm:w-32 md:w-32 lg:w-32">
 											<img
 												src="path-to-image"
 												alt={item?.JewelryName || 'Loose Diamond'}
-												className="w-32 h-32 object-cover rounded-lg border"
+												className="w-full h-32 object-cover rounded-lg border"
 											/>
 										</div>
-										<div className="flex-1 mx-5">
+										<div className="flex-1 mx-5 mt-4 sm:mt-0">
 											{item.JewelryId ? (
 												<div>
 													<p className="mb-1 text-gray-800 font-semibold">
@@ -323,7 +322,6 @@ const CartPage = () => {
 															{formatPrice(item.DiamondTruePrice)}
 														</span>
 													</p>
-
 													<p className="text-gray-700 text-sm">
 														Bảo hành:
 														<span className="text-gray-900 font-semibold mx-3">
@@ -343,33 +341,35 @@ const CartPage = () => {
 												<p className="text-gray-800">Không có thông tin</p>
 											)}
 										</div>
-										<Space className=" text-sm">
-											<Button
-												className="cursor-pointerpx-3 mr-2"
-												onClick={() => {
-													if (item.JewelryId) {
-														handleViewCart(item.JewelryId, null);
-													} else if (item.DiamondId !== undefined) {
-														handleViewCart(null, item.DiamondId);
-													}
-												}}
-											>
-												<EyeOutlined />
-											</Button>
-											<Button
-												loading={loading}
-												danger
-												className="cursor-pointer px-3"
-												onClick={() => handleRemoveCart(index)}
-											>
-												<DeleteOutlined />
-											</Button>
-										</Space>
-										{item.IsValid === false && (
-											<div className="absolute right-2 bottom-2 text-red font-semibold">
-												<p>Hàng Không Còn</p>
-											</div>
-										)}
+										<div className="flex flex-col justify-between md:flex-row items-center">
+											<Space className="text-sm mb-2 md:mb-0">
+												<Button
+													className="cursor-pointer px-3 mr-2"
+													onClick={() => {
+														if (item.JewelryId) {
+															handleViewCart(item.JewelryId, null);
+														} else if (item.DiamondId !== undefined) {
+															handleViewCart(null, item.DiamondId);
+														}
+													}}
+												>
+													<EyeOutlined />
+												</Button>
+												<Button
+													loading={loading}
+													danger
+													className="cursor-pointer px-3"
+													onClick={() => handleRemoveCart(index)}
+												>
+													<DeleteOutlined />
+												</Button>
+											</Space>
+											{item.IsValid === false && (
+												<div className="absolute right-2 bottom-2 text-red font-semibold">
+													<p>Hàng Không Còn</p>
+												</div>
+											)}
+										</div>
 									</div>
 								))}
 							</>
@@ -416,7 +416,8 @@ const CartPage = () => {
 				</div>
 			</div>
 
-			<div className="md:w-1/3 lg:mt-0 flex-shrink-0 w-full lg:w-1/3 p-6 mx-5 shadow-lg bg-white rounded-lg lg:sticky lg:top-8">
+			{/* Right Segment: Price Summary */}
+			<div className="md:w-1/3 lg:mt-0 flex-shrink-0 w-full lg:w-1/3 p-6 md:mx-5 shadow-lg bg-white rounded-lg lg:sticky lg:top-8">
 				<div className="bg-white p-4 mx-5 my-5 rounded-lg shadow-lg space-y-6">
 					<div className="space-y-4">
 						<p className="flex justify-between mb-1">
