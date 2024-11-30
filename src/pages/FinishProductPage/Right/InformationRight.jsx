@@ -81,9 +81,6 @@ export const InformationRight = ({
 	const [engravedText, setEngravedText] = useState(null);
 	const [engravedFont, setEngravedFont] = useState(null);
 
-	console.log('warrantiesJewelry', warrantiesJewelry);
-	console.log('warrantiesJewelrySelected', warrantiesJewelrySelected);
-
 	useEffect(() => {
 		if (warrantiesJewelry) {
 			setWarrantiesJewelrySelected(warrantiesJewelry[0]);
@@ -242,6 +239,8 @@ export const InformationRight = ({
 		</div>
 	);
 
+	console.log('jewelry', jewelry);
+
 	return (
 		<div>
 			<div className="border-tintWhite">
@@ -263,16 +262,21 @@ export const InformationRight = ({
 					<div className="mt-5">
 						{jewelry &&
 							jewelry?.Diamonds?.map((diamond) => (
-								<div className="flex justify-between mb-2">
-									<div className="flex">
-										<div className="">
+								<div className="flex flex-wrap justify-between mb-2">
+									<div className="flex w-full sm:w-auto">
+										<div className="mr-3">
 											<DiamondIcon />
 										</div>
-										<div>
+										<div className="flex-1">
 											<div className="ml-5">
-												<p style={{width: 400}}>{diamond?.Title}</p>
+												<p
+													className="text-ellipsis overflow-hidden"
+													// style={{maxWidth: 350}}
+												>
+													{diamond?.Title}
+												</p>
 												<p className="text-gray">
-													SKU: {diamond?.Criteria}
+													SKU: {diamond?.SerialCode}
 												</p>
 												<p className="text-xl font-semibold">
 													{formatPrice(diamond?.TruePrice)}
@@ -284,78 +288,47 @@ export const InformationRight = ({
 								</div>
 							))}
 
-						<div className="flex justify-between mb-2">
-							<div className="flex">
-								<div>
-									<div className="ml-5">
-										{/* {jewelry?.Category?.Name === 'Ring' && (
-											<div className="flex items-center">
-												<p className="mr-3">Kích Cỡ Hiện Tại:</p>
-
-												<Select
-													value={sizeChange || jewelry?.SizeId}
-													style={{width: 120}}
-													size="middle"
-													onChange={handleChange}
-												>
-													{jewelryDetail?.filteredGroups?.[0]
-														?.SizeGroups &&
-														jewelryDetail.filteredGroups[0].SizeGroups.map(
-															(size, i) =>
-																size?.IsInStock === true && (
-																	<Option
-																		key={size?.Size}
-																		value={size?.Size}
-																	>
-																		<p className="font-semibold mr-2">
-																			{size?.Size}
-																		</p>
-																	</Option>
-																)
-														)}
-												</Select>
-											</div>
-										)} */}
-										<div className="flex flex-col">
-											<label>Chọn Bảo Hành: </label>
-											<Select
-												size="large"
-												style={{width: 450}}
-												className="w-96 mt-2 mb-5"
-												placeholder="Chọn bảo hành trang sức"
-												onChange={onChangeWarrantyJewelry}
-												value={
-													warrantiesJewelrySelected?.warranty?.MappedName?.replace(
-														/_/g,
-														' '
-													) ||
-													warrantiesJewelrySelected?.MappedName?.replace(
-														/_/g,
-														' '
-													)
-												}
-											>
-												{warrantiesJewelry &&
-													warrantiesJewelry?.map((warranty, i) => (
-														<Select.Option
-															key={i}
-															value={JSON.stringify({
-																warranty,
-															})}
-														>
-															{warranty?.MappedName?.replace(
-																/_/g,
-																' '
-															)}
-														</Select.Option>
-													))}
-											</Select>
-										</div>
+						{/* Warranty Selection */}
+						<div className="flex flex-wrap justify-between mb-2">
+							<div className="flex w-full sm:w-auto">
+								<div className="ml-5 w-full sm:w-auto">
+									<div className="flex flex-col">
+										<label>Chọn Bảo Hành: </label>
+										<Select
+											size="large"
+											style={{width: '100%'}}
+											className="mt-2 mb-5"
+											placeholder="Chọn bảo hành trang sức"
+											onChange={onChangeWarrantyJewelry}
+											value={
+												warrantiesJewelrySelected?.warranty?.MappedName?.replace(
+													/_/g,
+													' '
+												) ||
+												warrantiesJewelrySelected?.MappedName?.replace(
+													/_/g,
+													' '
+												)
+											}
+										>
+											{warrantiesJewelry &&
+												warrantiesJewelry?.map((warranty, i) => (
+													<Select.Option
+														key={i}
+														value={JSON.stringify({
+															warranty,
+														})}
+													>
+														{warranty?.MappedName?.replace(/_/g, ' ')}
+													</Select.Option>
+												))}
+										</Select>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
+
 					{engravedText ? (
 						<>
 							<Popover

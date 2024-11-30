@@ -77,37 +77,32 @@ export const FilterDiamond = ({filters, setFilters, handleReset, diamondForFilte
 	};
 
 	return (
-		<div className="grid grid-cols-3">
-			<div className="ml-10 min-w-44">
+		<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 px-4">
+			{/* Shape Filter */}
+			<div className="ml-4 min-w-44">
 				<p className="mb-4">Hình Dạng:</p>
-				<div className="grid grid-cols-5 gap-10 w-96 mx-auto">
-					<>
-						{shapeItems?.map((item) => (
-							<div
-								className={`flex items-center flex-col border-2 hover:border-2 hover:border-black px-10 ${
-									filters?.shape === item?.value ? 'border-black' : 'border-white'
-								}`}
-								onClick={() => handleShapeChange(item?.value)}
-							>
-								<div className="my-5 mx-10">
-									<Image
-										preview={false}
-										src={item.image}
-										height={30}
-										width={30}
-									/>
-								</div>
-								<p className="font-semibold">{item.shape}</p>
+				<div className="grid grid-cols-3 sm:grid-cols-5 gap-6 w-full mx-auto">
+					{shapeItems?.map((item) => (
+						<div
+							key={item.value}
+							className={`flex items-center flex-col border-2 hover:border-2 hover:border-black px-4 py-2 ${
+								filters?.shape === item?.value ? 'border-black' : 'border-white'
+							}`}
+							onClick={() => handleShapeChange(item?.value)}
+						>
+							<div className="my-5 mx-auto">
+								<Image preview={false} src={item.image} height={30} width={30} />
 							</div>
-						))}
-					</>
+							<p className="font-semibold">{item.shape}</p>
+						</div>
+					))}
 				</div>
 			</div>
 
 			{/* Price Range Slider */}
-			<div className="ml-10 min-w-44">
+			<div className="ml-4 min-w-44">
 				<p className="mb-4">Giá:</p>
-				<div className="">
+				<div className="w-full">
 					<Slider
 						range
 						marks={{
@@ -126,13 +121,13 @@ export const FilterDiamond = ({filters, setFilters, handleReset, diamondForFilte
 							filters?.price?.maxPrice ?? filter?.Price?.Max ?? 1000,
 						]}
 						onChange={handlePriceChange}
-						className="w-3/4 mx-4"
+						className="w-full mx-auto"
 					/>
 				</div>
 			</div>
 
 			{/* Carat Range Slider */}
-			<div className="ml-10 min-w-44">
+			<div className="ml-4 min-w-44">
 				<p className="mb-4">Carat:</p>
 				<Slider
 					range
@@ -141,10 +136,12 @@ export const FilterDiamond = ({filters, setFilters, handleReset, diamondForFilte
 					min={findShape?.CaratFrom || filter?.Carat?.Min}
 					max={findShape?.CaratTo || filter?.Carat?.Max}
 					onChange={handleCaratChange}
+					className="w-full"
 				/>
 			</div>
 
-			<div className="ml-10 min-w-72">
+			{/* Color Range Slider */}
+			<div className="ml-4 min-w-72">
 				<p className="my-4">Color:</p>
 				<Slider
 					range
@@ -153,9 +150,12 @@ export const FilterDiamond = ({filters, setFilters, handleReset, diamondForFilte
 					max={filter?.Color?.Max}
 					value={[filters?.color?.minColor, filters?.color?.maxColor]}
 					onChange={handleColorChange}
+					className="w-full"
 				/>
 			</div>
-			<div className="ml-10 min-w-72">
+
+			{/* Clarity Range Slider */}
+			<div className="ml-4 min-w-72">
 				<p className="my-4">Clarity:</p>
 				<Slider
 					range
@@ -164,9 +164,12 @@ export const FilterDiamond = ({filters, setFilters, handleReset, diamondForFilte
 					max={filter?.Clarity?.Max}
 					value={[filters?.clarity?.minClarity, filters?.clarity?.maxClarity]}
 					onChange={handleClarityChange}
+					className="w-full"
 				/>
 			</div>
-			<div className="ml-10 min-w-72">
+
+			{/* Cut Range Slider */}
+			<div className="ml-4 min-w-72">
 				<p className="my-4">Cut:</p>
 				<Slider
 					range
@@ -175,6 +178,7 @@ export const FilterDiamond = ({filters, setFilters, handleReset, diamondForFilte
 					max={filter?.Cut?.Max}
 					value={[filters?.cut?.minCut, filters?.cut?.maxCut]}
 					onChange={handleCutChange}
+					className="w-full"
 				/>
 			</div>
 		</div>
@@ -617,19 +621,18 @@ export const FilterDiamondJewelry = ({handleFilter, setFilters, filters, handleR
 
 	// Render the filter UI
 	return (
-		<div wrap className="p-4 flex items-center">
+		<div className="p-4 flex flex-wrap items-center md:mr-10">
 			{filterTypes.map((filterType) => {
 				const optionKey = filterTypeMapping[filterType]; // Map to the correct key in filterOptions
 				return (
-					<div className="flex flex-col">
+					<div key={filterType} className="flex flex-col mb-4 sm:mb-0 sm:mr-10">
 						<label className="block text-gray-700 mb-1">{filterType}</label>
 						<Select
-							key={filterType} // Use the filter type as key
 							placeholder={filterType.replace('_', ' ').toUpperCase()} // Display filter type in uppercase
 							allowClear
 							maxTagCount={0}
 							suffixIcon={<DownOutlined />} // Dropdown arrow icon
-							className="h-12 mr-10"
+							className="h-12"
 							style={{width: 190}}
 							onChange={(value) => handleFilterChange(optionKey, value)} // Handle filter change
 							value={filters[optionKey]} // Current selected value for the filter
@@ -645,7 +648,7 @@ export const FilterDiamondJewelry = ({handleFilter, setFilters, filters, handleR
 			})}
 
 			{/* Price Range Slider */}
-			<div className="ml-10 min-w-44">
+			<div className="ml-10 min-w-44 sm:ml-0 sm:mt-4">
 				<p className="mb-4">Giá:</p>
 				<div className="flex">
 					<Slider
@@ -654,10 +657,9 @@ export const FilterDiamondJewelry = ({handleFilter, setFilters, filters, handleR
 						max={40000000}
 						defaultValue={range}
 						onChange={handlePriceChange}
-						className="md:w-64 mx-4"
+						className="w-full sm:w-64 mx-4"
 						marks={{
 							0: '0',
-
 							5000000: '5M',
 							10000000: '10M',
 							20000000: '20M',

@@ -86,15 +86,16 @@ const JewelryDetailPage = () => {
 	);
 
 	return (
-		<div className="mx-32">
-			<Steps items={items} current={0} />
+		<div className="px-4 md:px-32">
+			<Steps items={items} current={0} className="w-full md:w-auto" />
+
 			<div className="flex flex-col md:flex-row bg-white my-10 md:my-20 rounded-lg shadow-lg">
-				<div className="md:w-1/2 p-6">
+				<div className="w-full md:w-1/2 p-4 md:p-6">
 					<ImageGallery diamondJewelry={jewelry} selectedMetal={selectedMetal} />
 					<InformationLeft diamondJewelry={jewelry} selectedMetal={selectedMetal} />
 				</div>
 
-				<div className="md:w-1/2 p-6 ">
+				<div className="w-full md:w-1/2 p-4 md:p-6">
 					<InformationRight
 						diamondJewelry={jewelry}
 						setSelectedMetal={setSelectedMetal}
@@ -109,7 +110,8 @@ const JewelryDetailPage = () => {
 					/>
 				</div>
 			</div>
-			<ProductReviews />
+
+			{/* <ProductReviews /> */}
 			<LoginModal isOpen={isLoginModalVisible} onClose={hideLoginModal} />
 		</div>
 	);
