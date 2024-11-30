@@ -8,11 +8,13 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {Image, Tag} from 'antd';
-import React, {useState} from 'react';
-import {useSelector} from 'react-redux';
+import React, {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import {Link} from 'react-router-dom';
-import {UserInfoSelector} from '../redux/selectors';
+import {GetUserDetailSelector, UserInfoSelector} from '../redux/selectors';
 import avatar from '../assets/default-avatar-icon.jpg';
+import {getAccountRank} from '../redux/slices/userSlice';
+import TierProgressBar from './TierProgressBar';
 
 const roleMapping = {
 	1: {text: 'Thành Viên', color: 'default'},
@@ -22,9 +24,23 @@ const roleMapping = {
 };
 
 const NavbarProfile = () => {
-	const userDetail = useSelector(UserInfoSelector);
+	const dispatch = useDispatch();
+	const userDetail = useSelector(GetUserDetailSelector);
+
+	const [rank, setRank] = useState();
 
 	const [active, setActive] = useState(localStorage.getItem('lastVisitedPage') || 'Profile');
+
+	console.log('rank', rank);
+	console.log('userDetail', userDetail);
+
+	useEffect(() => {
+		dispatch(getAccountRank())
+			.unwrap()
+			.then((res) => {
+				setRank(res);
+			});
+	}, []);
 
 	const handleLinkClick = (name) => {
 		setActive(name);
@@ -59,15 +75,12 @@ const NavbarProfile = () => {
 		},
 	];
 
-	const highestRank = Array.isArray(userDetail?.Roles)
-		? userDetail?.Roles.length > 0
-			? userDetail?.Roles?.reduce((max, role) =>
-					parseInt(role) > parseInt(max) ? role : max
-			  )
-			: null
-		: userDetail?.Roles
-		? userDetail?.Roles
-		: null;
+	const highestRank =
+		Array.isArray(userDetail?.Roles) && userDetail?.Roles.length > 0
+			? userDetail.Roles.reduce((max, role) =>
+					parseInt(role.Id) > parseInt(max.Id) ? role : max
+			  ).Id
+			: null;
 
 	console.log('highestRank', highestRank);
 
@@ -78,17 +91,24 @@ const NavbarProfile = () => {
 			</div>
 			<div className="font-semibold w-full flex justify-center items-center my-5 ">
 				<div className="">
-					<h1 className="text-2xl text-center">{userDetail?.Name}</h1>
-					<p className="text-2xl text-center">
+					<h1 className="text-2xl text-center">
+						{userDetail?.FirstName} {userDetail?.LastName}
+					</h1>
+					<p className="text-2xl text-center mb-5">
 						{highestRank && (
 							<Tag color={roleMapping[highestRank]?.color}>
 								{roleMapping[highestRank]?.text}
 							</Tag>
 						)}
 					</p>
+					<TierProgressBar
+						currentPoints={userDetail?.TotalPoint}
+						bronzePoints={rank?.TotalPointToBronze}
+						silverPoints={rank?.TotalPointToSilver}
+						goldPoints={rank?.TotalPointToGold}
+					/>
 				</div>
-			</div>
-
+			</div>{' '}
 			<nav className="divide-x w-64 bg-white min-h-96 rounded-lg">
 				<ul className="">
 					{links.map((link, index) => (

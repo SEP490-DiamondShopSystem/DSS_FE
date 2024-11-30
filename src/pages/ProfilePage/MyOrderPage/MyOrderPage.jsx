@@ -35,6 +35,7 @@ const MyOrderPage = () => {
 
 	const loading = useSelector(LoadingOrderSelector);
 
+	const [isLgScreen, setIsLgScreen] = useState(window.innerWidth < 768);
 	const [dataSource, setDataSource] = useState([]);
 	const [openDetail, setOpenDetail] = useState(false);
 	const [openInvoice, setOpenInvoice] = useState(false);
@@ -49,13 +50,13 @@ const MyOrderPage = () => {
 			title: 'Mã đặt hàng',
 			dataIndex: 'orderCode',
 			align: 'center',
+			responsive: ['md'],
 		},
 		{
 			title: 'Thời gian đặt hàng',
 			dataIndex: 'orderTime',
 			align: 'center',
 		},
-
 		{
 			title: 'Tổng Giá',
 			dataIndex: 'price',
@@ -64,15 +65,13 @@ const MyOrderPage = () => {
 		{
 			title: 'PT Thanh Toán',
 			dataIndex: 'paymentMethodName',
-
 			align: 'center',
+			responsive: ['md'],
 		},
 		{
 			title: 'Trạng thái',
 			dataIndex: 'status',
 			render: (status) => {
-				console.log('status', status);
-
 				let color = 'red';
 				switch (status) {
 					case 'Thành Công':
@@ -125,30 +124,27 @@ const MyOrderPage = () => {
 							<EyeFilled />
 						</Button>
 					</Tooltip>
-					{/* {record.status === 'Chờ Xử Lý' && record.paymentMethodId === '2' && (
-						<Tooltip title={'Thanh Toán'}>
-							<Button
-								type="text"
-								className="p-2 bg-primary border rounded-lg  transition-colors duration-300"
-								onClick={() => toggleTransactionModal(record.orderId)}
-							>
-								<TransactionOutlined />
-							</Button>
-						</Tooltip>
-					)} */}
 				</>
 			),
 		},
 	];
 
-	const toggleDetailModal = (order) => {
-		setSelectedOrder(order);
-		setOpenDetail(!openDetail);
-	};
+	useEffect(() => {
+		const handleResize = () => {
+			// Debounce logic để giảm tần suất cập nhật trạng thái
+			clearTimeout(window.resizeTimeout);
+			window.resizeTimeout = setTimeout(() => {
+				setIsLgScreen(window.innerWidth < 768);
+			}, 200);
+		};
 
-	const toggleInvoiceModal = () => {
-		setOpenInvoice(!openInvoice);
-	};
+		// Lắng nghe sự kiện thay đổi kích thước màn hình
+		window.addEventListener('resize', handleResize);
+		return () => {
+			// Xóa sự kiện khi component bị unmount
+			window.removeEventListener('resize', handleResize);
+		};
+	}, []);
 
 	useEffect(() => {
 		dispatch(
@@ -190,25 +186,36 @@ const MyOrderPage = () => {
 		setStatus(newStatus);
 		setCurrentPage(1);
 	};
+	const toggleDetailModal = (order) => {
+		setSelectedOrder(order);
+		setOpenDetail(!openDetail);
+	};
+
+	const toggleInvoiceModal = () => {
+		setOpenInvoice(!openInvoice);
+	};
 
 	return (
 		<div>
 			<Helmet>
 				<title>Đơn Hàng Của Tôi</title>
 			</Helmet>
-			<div className="flex sm:flex-wrap items-center font-medium justify-center sm:justify-between mt-10 gap-5">
+			{isLgScreen && <div>Đơn hàng của tôi</div>}
+			<div className="flex flex-wrap items-center font-medium justify-center sm:justify-between mt-10 gap-5">
 				{orderStatus.map((statusItem) => (
 					<div
 						key={statusItem.status}
-						className={`flex flex-col sm:flex-row items-center justify-around shadow-xl py-3 px-6 sm:px-12 border-gray-300 hover:border-black w-full sm:w-auto ${
+						className={`flex flex-col sm:flex-row items-center justify-center sm:justify-around shadow-xl py-2 sm:py-3 px-4 sm:px-12 border-gray-300 hover:border-black w-full sm:w-auto ${
 							status === statusItem.status ? 'bg-primary' : 'bg-white'
 						} rounded-lg cursor-pointer border ${
 							status === statusItem.status ? 'border-black' : 'border-white'
-						} hover:border-black mb-5 sm:mb-0`}
+						} hover:border-black`}
 						onClick={() => handleStatusClick(statusItem.status)}
 					>
-						<div className="p-3 w-20">{statusItem.icon}</div>
-						<div className="ml-5">{statusItem.name}</div>
+						<div className="p-3 w-16 sm:w-20 text-center">{statusItem.icon}</div>
+						<div className="mt-2 sm:mt-0 sm:ml-5 text-sm sm:text-base text-center">
+							{statusItem.name}
+						</div>
 					</div>
 				))}
 			</div>
