@@ -44,8 +44,6 @@ export const FilterDiamond = ({filters, setFilters, handleReset, diamondForFilte
 			[type]: value,
 		}));
 		console.log('value', value);
-
-		localStorage.setItem('selected', value);
 	};
 
 	const handlePriceChange = (value) => {

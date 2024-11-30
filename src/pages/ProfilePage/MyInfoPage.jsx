@@ -58,6 +58,16 @@ const MyInfoPage = () => {
 	});
 	const [addAddress, setAddAddress] = useState([]);
 	const [deletedAddressIds, setDeletedAddressIds] = useState([]);
+	const [isLgScreen, setIsLgScreen] = useState(window.innerWidth >= 1024);
+
+	useEffect(() => {
+		const handleResize = () => {
+			setIsLgScreen(window.innerWidth >= 1024);
+		};
+
+		window.addEventListener('resize', handleResize);
+		return () => window.removeEventListener('resize', handleResize);
+	}, []);
 
 	useEffect(() => {
 		if (userDetail) {
@@ -374,14 +384,16 @@ const MyInfoPage = () => {
 			<Helmet>
 				<title>Hồ Sơ Của Tôi - Diamond Shop</title>
 			</Helmet>
-			<div className="my-20 min-h-96 flex">
-				<div className="mr-20">
-					<NavbarProfile />
-				</div>
-				<div className="font-semibold w-full px-20 py-10 bg-white rounded-lg shadow-lg">
+			<div className="my-20 min-h-96 flex z-50">
+				{isLgScreen && (
+					<div className="lg:mr-20 mb-10 lg:mb-0">
+						<NavbarProfile />
+					</div>
+				)}
+				<div className="font-semibold w-full px-5 py-10 bg-white rounded-lg shadow-lg">
 					<h2 className="text-3xl font-bold mb-8 border-b p-2">Hồ Sơ Của Tôi</h2>
 					<div className="w-full max-w-4xl mx-auto p-6">
-						<div className="grid grid-cols-2 gap-8">
+						<div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
 							<div className="w-full">
 								<label>Họ</label>
 								<Input
@@ -446,6 +458,7 @@ const MyInfoPage = () => {
 							</div>
 						</div>
 					</div>
+
 					<div className="w-full max-w-4xl mx-auto p-6 mt-8">
 						<h3 className="text-2xl font-bold mb-4">Danh sách địa chỉ</h3>
 						<div className="flex justify-between items-center mb-4">
@@ -461,15 +474,16 @@ const MyInfoPage = () => {
 							loading={loading}
 						/>
 					</div>
+
 					{editing ? (
-						<div className="flex justify-end items-center">
-							<Button type="text" className="bg-primary mr-5" onClick={handleSubmit}>
+						<Space className="flex justify-end items-center space-x-3">
+							<Button type="text" className="bg-primary" onClick={handleSubmit}>
 								Lưu
 							</Button>
 							<Button danger onClick={handleCancelEdit}>
 								Hủy
 							</Button>
-						</div>
+						</Space>
 					) : (
 						<div className="flex justify-end items-center">
 							<Button type="text" className="bg-primary" onClick={handleEdit}>

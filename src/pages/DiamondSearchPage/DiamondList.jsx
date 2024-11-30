@@ -30,8 +30,6 @@ export const DiamondList = ({
 	const [diamondChoice, setDiamondChoice] = useState(localStorage.getItem('diamondChoice') || '');
 	const [diamondNatural, setDiamondNatural] = useState();
 
-	console.log('diamondNatural', diamondNatural);
-
 	useEffect(() => {
 		const savedShape = localStorage.getItem('selected');
 		if (savedShape) {
@@ -43,7 +41,6 @@ export const DiamondList = ({
 	}, []);
 
 	useEffect(() => {
-		// Filter diamonds where IsLabDiamond is false
 		if (diamond) {
 			const filteredDiamonds = diamond.filter((diamondItem) => !diamondItem.IsLabDiamond);
 			setDiamondNatural(filteredDiamonds);
@@ -60,11 +57,6 @@ export const DiamondList = ({
 	const handleDiamondChoiceClick = (id) => {
 		navigate(`/diamond-detail/${id}`);
 		console.log(id);
-
-		localStorage.setItem('diamondChoice', 'Kim Cương');
-	};
-	const handleJewelryChoiceClick = (id) => {
-		navigate(`/diamond-detail/${id}`);
 	};
 
 	return (
@@ -119,11 +111,7 @@ export const DiamondList = ({
 										<div
 											key={diamondItem.Id}
 											className="shadow-lg bg-white border border-gray-200 rounded-lg hover:border-black cursor-pointer"
-											onClick={() =>
-												diamondChoice.length > 0
-													? handleDiamondChoiceClick(diamondItem.Id)
-													: handleJewelryChoiceClick(diamondItem.Id)
-											}
+											onClick={() => handleDiamondChoiceClick(diamondItem.Id)}
 										>
 											<div>
 												<div className="flex justify-center bg-gray-300">

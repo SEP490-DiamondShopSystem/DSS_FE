@@ -115,11 +115,13 @@ const DiamondSearchPage = () => {
 
 	const getShapeFromLocalStorage = () => {
 		try {
-			return JSON.parse(localStorage.getItem('selected')) || '';
+			return Number(JSON.parse(localStorage.getItem('selected'))) || '';
 		} catch (error) {
 			return '';
 		}
 	};
+
+	console.log('getShapeFromLocalStorage', getShapeFromLocalStorage());
 
 	useEffect(() => {
 		if (filterLimits) {
@@ -173,7 +175,6 @@ const DiamondSearchPage = () => {
 
 	useEffect(() => {
 		if (diamondList && enums) {
-			// Map diamond attributes to more readable values
 			const mappedData = diamondList?.Values?.map((diamond) => mapAttributes(diamond, enums));
 			setMappedDiamonds(mappedData);
 		}

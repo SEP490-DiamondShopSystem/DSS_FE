@@ -74,7 +74,7 @@ export const BannerDiamond = () => {
 				}}
 			>
 				<Row className="w-full" justify="end" align="middle">
-					<Col xs={24} sm={18} md={12} lg={8} xl={6}>
+					<Col xs={24} sm={18} md={8} lg={8} xl={8}>
 						{/* Make the content visible only on medium and larger screens */}
 						<div className="text-end p-8 max-w-lg hidden md:block">
 							<h2 className="text-xl font-bold mb-4">

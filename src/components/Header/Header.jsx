@@ -19,7 +19,7 @@ export const Header = () => {
 	return (
 		<nav className="bg-white shadow-md z-50 fixed top-0 left-0 right-0 sm:fixed lg:static">
 			<div className="container mx-auto px-4 sm:px-6 lg:px-8">
-				<div className="flex items-center justify-between py-4">
+				<div className="flex items-center justify-between py-4 uppercase font-semibold">
 					{/* Logo */}
 					<Link to={'/'}>
 						<img src={Logo} alt="logo" className="h-10 md:h-12 cursor-pointer" />
@@ -75,7 +75,7 @@ export const Header = () => {
 
 				{/* Mobile Menu */}
 				{isMobileMenuOpen && (
-					<div className="lg:hidden absolute left-0 right-0 bg-white shadow-lg">
+					<div className="lg:hidden absolute left-0 right-0 bg-white shadow-lg uppercase font-semibold">
 						<div className="px-4 pt-2 pb-4 space-y-2">
 							<Link
 								to="/"
@@ -89,7 +89,7 @@ export const Header = () => {
 							</div>
 							<Link
 								to="/customize/diamond-jewelry"
-								className="block py-2 text-base no-underline text-black hover:bg-gray-100"
+								className="py-2 text-base no-underline text-black hover:bg-gray-100 hidden"
 								onClick={toggleMobileMenu}
 							>
 								Thiết Kế Trang Sức

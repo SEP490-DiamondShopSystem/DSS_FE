@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {Button, Form, Input, message} from 'antd';
 import {Helmet} from 'react-helmet';
@@ -46,8 +46,6 @@ const ChangePassword = () => {
 				message.error(error?.detail || 'Có lỗi xảy ra!');
 			});
 	};
-
-	console.log('error', error);
 
 	return (
 		<div>

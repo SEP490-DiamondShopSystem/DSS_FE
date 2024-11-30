@@ -10,16 +10,23 @@ import marquiseImg from '../../assets/diamondShapes/marquise.png';
 import radiantImg from '../../assets/diamondShapes/radiant.png';
 import ovalImg from '../../assets/diamondShapes/oval.png';
 import pearImg from '../../assets/diamondShapes/pear.png';
+import asscherImg from '../../assets/diamondShapes/asscher.png';
+import heartImg from '../../assets/diamondShapes/heart.png';
+import {Typography} from 'antd';
+
+const {Title} = Typography;
 
 const diamondShapes = [
-	{label: 'Round', value: 1, image: roundImg},
-	{label: 'Princess', value: 2, image: princessImg},
-	{label: 'Emerald', value: 4, image: emeraldImg},
-	{label: 'Cushion', value: 3, image: cushionImg},
-	{label: 'Marquise', value: 8, image: marquiseImg},
-	{label: 'Radiant', value: 6, image: radiantImg},
-	{label: 'Oval', value: 5, image: ovalImg},
-	{label: 'Pear', value: 10, image: pearImg},
+	{label: 'Round', value: '1', image: roundImg},
+	{label: 'Princess', value: '2', image: princessImg},
+	{label: 'Emerald', value: '4', image: emeraldImg},
+	{label: 'Cushion', value: '3', image: cushionImg},
+	{label: 'Marquise', value: '8', image: marquiseImg},
+	{label: 'Radiant', value: '6', image: radiantImg},
+	{label: 'Oval', value: '5', image: ovalImg},
+	{label: 'Pear', value: '10', image: pearImg},
+	{label: 'Asscher', value: '7', image: asscherImg},
+	{label: 'Heart', value: '9', image: heartImg},
 ];
 
 const BannerShape = () => {
@@ -32,10 +39,10 @@ const BannerShape = () => {
 
 	return (
 		<div className=" py-10 bg-gray-50 px-4 md:px-10 lg:px-20 mt-8 pt-8">
-			<h2 className="text-center text-2xl md:text-3xl font-bold mb-8 text-gray-800">
+			<Title level={3} align="center">
 				Khám Phá Thế Giới Kim Cương
-			</h2>
-			<div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+			</Title>
+			<div className="grid grid-cols-2 md:grid-cols-5 gap-6">
 				{diamondShapes.map((shape) => (
 					<div
 						key={shape.value}

@@ -115,6 +115,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 			dataIndex: 'itemStatus',
 			key: 'itemStatus',
 			align: 'center',
+			responsive: ['md'],
 			render: (_, record) => (
 				<div className="flex flex-col items-center">
 					<div>{getOrderItemStatusTag(record.itemStatus)}</div>
