@@ -115,6 +115,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 			dataIndex: 'itemStatus',
 			key: 'itemStatus',
 			align: 'center',
+			responsive: ['md'],
 			render: (_, record) => (
 				<div className="flex flex-col items-center">
 					<div>{getOrderItemStatusTag(record.itemStatus)}</div>
@@ -332,38 +333,43 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 						<Loading />
 					) : (
 						<>
-							<div className="flex justify-between items-center">
-								<div>
+							<div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0">
+								<div className="text-center sm:text-left">
 									<Image
 										src={logo}
 										alt="Logo"
 										preview={false}
-										className="max-h-10 max-w-10 mb-2"
+										className="max-h-10 max-w-10 mb-2 mx-auto sm:mx-0"
 									/>
-									<p>Thủ Đức, TP.Hồ Chí Minh, VietNam</p>
+									<p className="text-sm">Thủ Đức, TP.Hồ Chí Minh, VietNam</p>
 								</div>
-								<div className="text-end">
-									<h2 className="uppercase text-2xl font-semibold">
+								<div className="text-center sm:text-right">
+									<h2 className="uppercase text-xl sm:text-2xl font-semibold">
 										Trạng thái đơn hàng
 									</h2>
-									<p>Mã đơn hàng: #{order?.OrderCode}</p>
-									<p>Ngày: {order?.CreatedDate}</p>
+									<p className="text-sm sm:text-base">
+										Mã đơn hàng: #{order?.OrderCode}
+									</p>
+									<p className="text-sm sm:text-base">
+										Ngày: {order?.CreatedDate}
+									</p>
 								</div>
 							</div>
+
 							<div className="mt-5">
 								<h2 className="text-2xl font-semibold">Địa chỉ giao hàng</h2>
 								<p>{order?.ShippingAddress}</p>
 							</div>
 							<OrderStatus orderStatus={statusOrder} order={order} />
-							<div className="w-full flex">
-								<div className="w-2/3">
+							<div className="w-full flex flex-col sm:flex-row gap-4">
+								<div className="w-full sm:w-2/3">
 									{order?.Status === 1 ? (
 										<OrderPayment order={order} />
 									) : (
 										<TransactionDetails transactions={transaction} />
 									)}
 								</div>
-								<div className="w-1/3">
+								<div className="w-full sm:w-1/3">
 									<OrderLog orderLogs={orderLog} />
 								</div>
 							</div>

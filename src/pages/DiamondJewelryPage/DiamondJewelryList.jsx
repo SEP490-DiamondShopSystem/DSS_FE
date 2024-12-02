@@ -99,7 +99,7 @@ export const DiamondJewelryList = () => {
 							<div className="text-2xl flex justify-end mt-10">
 								<p className="p-2">{jewelries.length} Kết quả</p>
 							</div>
-							<div className="transition-all duration-300 grid grid-cols-4 gap-10 mb-20 mt-10">
+							<div className="transition-all duration-300 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 mb-20 mt-10">
 								{jewelries?.map((jewelry, i) => (
 									<div
 										key={i}
@@ -110,7 +110,7 @@ export const DiamondJewelryList = () => {
 											)
 										}
 									>
-										<div className="">
+										<div>
 											<div
 												className="flex justify-center mb-5"
 												style={{background: '#b8b7b5'}}
@@ -120,26 +120,21 @@ export const DiamondJewelryList = () => {
 														jewelry?.Thumbnail?.MediaPath || jewelryImg
 													}
 													alt={jewelry?.Thumbnail?.MediaName}
-													className=""
+													className="w-full h-56 object-cover rounded-t-lg"
 													preview={false}
 												/>
 											</div>
 											<div className="mx-5 my-5">
 												<div className="flex items-center">
-													{/* <p>Model: </p>{' '} */}
-													<p className="">{jewelry.Name}</p>
+													<p className="text-lg font-semibold">
+														{jewelry.Name}
+													</p>
 												</div>
 												<div className="flex items-center mt-2">
-													<p
-													// className="line-through"
-													// style={{color: '#b0b0b0'}}
-													>
+													<p className="text-sm">
 														Giá Vỏ: {formatPrice(jewelry.MinPrice)} -{' '}
 														{formatPrice(jewelry.MaxPrice)}
 													</p>
-													{/* <p className="ml-5 " style={{color: '#707070'}}>
-														{jewelry.discountPrice}
-													</p> */}
 												</div>
 												<div className="flex items-center mt-2">
 													<p className="mr-3">

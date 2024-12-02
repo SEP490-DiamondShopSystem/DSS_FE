@@ -50,15 +50,16 @@ const FinishProductPage = () => {
 	];
 
 	return (
-		<div className="mx-32">
+		<div className="mx-4 md:mx-32">
 			<Steps
 				current={3}
 				labelPlacement="horizontal"
 				items={items}
 				className="bg-white p-4 rounded-full my-10"
 			/>
-
+			{/* Responsive flex container */}
 			<div className="flex flex-col md:flex-row bg-white my-10 md:my-20 rounded-lg shadow-lg">
+				{/* Left side */}
 				<div className="w-full md:w-1/2 p-6">
 					<ImageGallery jewelryDetail={jewelryDetail} jewelry={jewelry} />
 					<InformationLeft
@@ -68,6 +69,7 @@ const FinishProductPage = () => {
 					/>
 				</div>
 
+				{/* Right side */}
 				<div className="w-full md:w-1/2 p-6 md:pr-32">
 					<InformationRight
 						jewelryDetail={jewelryDetail}
@@ -80,6 +82,7 @@ const FinishProductPage = () => {
 					/>
 				</div>
 			</div>
+			{/* Login Modal */}
 			<LoginModal isOpen={isLoginModalVisible} onClose={hideLoginModal} />
 		</div>
 	);

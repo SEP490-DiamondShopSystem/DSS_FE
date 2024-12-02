@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {Button, Form, Input, message} from 'antd';
 import {Helmet} from 'react-helmet';
@@ -17,6 +17,16 @@ const ChangePassword = () => {
 	const userDetail = useSelector(GetUserDetailSelector);
 	const loading = useSelector(LoadingUserDetailSelector);
 	const error = useSelector(ErrorPasswordSelector);
+	const [isLgScreen, setIsLgScreen] = useState(window.innerWidth >= 1024);
+
+	useEffect(() => {
+		const handleResize = () => {
+			setIsLgScreen(window.innerWidth >= 1024);
+		};
+
+		window.addEventListener('resize', handleResize);
+		return () => window.removeEventListener('resize', handleResize);
+	}, []);
 
 	const handleSubmit = (values) => {
 		console.log('Password changed:', values);
@@ -37,19 +47,21 @@ const ChangePassword = () => {
 			});
 	};
 
-	console.log('error', error);
-
 	return (
 		<div>
 			<Helmet>
 				<title>Đổi Mật Khẩu</title>
 			</Helmet>
-			<div className="my-20 min-h-96 flex">
-				<div className="mr-20">
-					<NavbarProfile />
-				</div>
-				<div className="font-semibold w-full px-20 py-10 bg-white rounded-lg shadow-lg">
-					<h2 className="text-2xl mb-6 text-center">Đổi Mật Khẩu</h2>
+			<div className="my-20 min-h-96 flex z-50">
+				{isLgScreen && (
+					<div className="lg:mr-20 mb-10 lg:mb-0">
+						<NavbarProfile />
+					</div>
+				)}
+
+				<div className="font-semibold w-full px-5 sm:px-10 lg:px-20 py-10 bg-white rounded-lg shadow-lg">
+					<h2 className="text-xl sm:text-2xl mb-6 text-center">Đổi Mật Khẩu</h2>
+
 					<Form
 						form={form}
 						layout="vertical"

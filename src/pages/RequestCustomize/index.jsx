@@ -47,6 +47,16 @@ const RequestCustomize = () => {
 	const [status, setStatus] = useState('');
 	const [currentPage, setCurrentPage] = useState(1);
 	const [pageSize, setPageSize] = useState(5);
+	const [isLgScreen, setIsLgScreen] = useState(window.innerWidth >= 1024);
+
+	useEffect(() => {
+		const handleResize = () => {
+			setIsLgScreen(window.innerWidth >= 1024);
+		};
+
+		window.addEventListener('resize', handleResize);
+		return () => window.removeEventListener('resize', handleResize);
+	}, []);
 
 	useEffect(() => {
 		dispatch(
@@ -112,6 +122,12 @@ const RequestCustomize = () => {
 
 	const mainColumns = [
 		{
+			title: 'Mã Yêu Cầu',
+			dataIndex: 'RequestCode',
+			key: 'requestCode',
+			render: (text) => text,
+		},
+		{
 			title: 'Ngày Tạo Đơn',
 			dataIndex: 'CreatedDate',
 			key: 'createdAt',
@@ -121,6 +137,7 @@ const RequestCustomize = () => {
 			title: 'Ngày Hết Hạn',
 			dataIndex: 'ExpiredDate',
 			key: 'expiredDate',
+			responsive: ['md'],
 			render: (text) => text,
 		},
 		{
@@ -128,6 +145,7 @@ const RequestCustomize = () => {
 			dataIndex: 'Note',
 			key: 'Note',
 			render: (text) => text,
+			responsive: ['md'],
 		},
 		{
 			title: 'Trạng Thái',
@@ -159,51 +177,61 @@ const RequestCustomize = () => {
 			<Helmet>
 				<title>Danh Sách Đơn Thiết Kế</title>
 			</Helmet>
-			<div className="my-20 min-h-96 flex">
-				<div className="mr-20">
-					<NavbarProfile />
-				</div>
+			<div className="my-20 min-h-96 flex z-50">
+				{isLgScreen && (
+					<div className="lg:mr-20 mb-10 lg:mb-0">
+						<NavbarProfile />
+					</div>
+				)}
 
-				<div className="font-semibold w-full px-20 py-10 bg-white rounded-lg shadow-lg">
-					<span className="text-2xl font-semibold ">Danh Sách Đơn Thiết Kế Đã Gửi</span>
-					<div className="flex items-center font-medium justify-between mt-10">
+				<div className="font-semibold w-full px-5 sm:px-10 md:px-12 lg:px-20 py-10 bg-white rounded-lg lg:shadow-lg">
+					<span className="text-xl sm:text-2xl font-semibold">
+						Danh Sách Đơn Thiết Kế Đã Gửi
+					</span>
+
+					<div className="flex flex-wrap items-center font-medium justify-between mt-10 gap-5">
 						{orderStatus.map((statusItem) => (
 							<div
 								key={statusItem.status}
-								className={`flex items-center justify-around shadow-xl py-3 px-12 ${
+								className={`flex flex-col sm:flex-row items-center justify-center sm:justify-around shadow-xl py-2 sm:py-3 px-4 sm:px-12 border-gray-300 hover:border-black w-full sm:w-auto ${
 									status === statusItem.status ? 'bg-primary' : 'bg-white'
 								} rounded-lg cursor-pointer border ${
 									status === statusItem.status ? 'border-black' : 'border-white'
 								} hover:border-black`}
 								onClick={() => handleStatusClick(statusItem.status)}
 							>
-								<div className="p-3 w-20">{statusItem.icon}</div>
-								<div className="ml-5">{statusItem.name}</div>
+								<div className="p-2 sm:p-3 w-16 sm:w-20">{statusItem.icon}</div>
+								<div className="ml-3 sm:ml-5 text-sm sm:text-base">
+									{statusItem.name}
+								</div>
 							</div>
 						))}
 					</div>
-					<div>
-						<span className="mr-2">Tìm theo ngày:</span>
+
+					<div className="mt-5 sm:mt-8">
+						<span className="mr-2 text-sm sm:text-base">Tìm theo ngày:</span>
 						<RangePicker
 							format="DD/MM/YYYY"
 							suffixIcon={<CalendarOutlined />}
-							style={{width: '30%'}}
+							style={{width: '100%', maxWidth: '300px'}}
 							className="my-5"
 							onChange={handleDateChange}
 						/>
 					</div>
-					<Table
-						columns={mainColumns}
-						dataSource={dataSource}
-						pagination={{
-							current: currentPage,
-							total: requestList?.TotalPage * pageSize,
-							pageSize: pageSize,
-							onChange: (page) => setCurrentPage(page),
-							// showSizeChanger: true,
-							onShowSizeChange: (current, size) => setPageSize(size),
-						}}
-					/>
+
+					<div className="overflow-x-auto mt-5">
+						<Table
+							columns={mainColumns}
+							dataSource={dataSource}
+							pagination={{
+								current: currentPage,
+								total: requestList?.TotalPage * pageSize,
+								pageSize: pageSize,
+								onChange: (page) => setCurrentPage(page),
+								onShowSizeChange: (current, size) => setPageSize(size),
+							}}
+						/>
+					</div>
 
 					<OrderDetailModal
 						toggleDetailModal={toggleDetailModal}

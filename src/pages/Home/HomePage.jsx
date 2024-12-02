@@ -18,7 +18,7 @@ const HomePage = () => {
 
 			<BannerDiamond />
 
-			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 divide-x py-10 bg-tintWhite">
+			<div className="grid grid-cols-1 md:grid-cols-4 md:divide-x py-10 bg-tintWhite">
 				{list.map((list, i) => (
 					<div key={i} className="px-4 py-6">
 						<div className="text-center mb-4">
@@ -40,7 +40,7 @@ const HomePage = () => {
 
 			<BannerShape />
 
-			<div className="my-10">
+			<div className="my-10 hidden md:block">
 				<BannerJewelry />
 			</div>
 			{/* <BannerEarrings2 /> */}

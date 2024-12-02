@@ -19,7 +19,7 @@ export const DiamondLabList = ({diamond, filters, setFilters, handleReset, diamo
 	const navigate = useNavigate();
 	const loading = useSelector(LoadingDiamondSelector);
 
-	const [changeGrid, setChangeGrid] = useState(false);
+	const [changeGrid, setChangeGrid] = useState(true);
 	const [like, setLike] = useState({});
 	const [hasMore, setHasMore] = useState(true);
 	const [visibleDiamonds, setVisibleDiamonds] = useState([]);
@@ -98,79 +98,94 @@ export const DiamondLabList = ({diamond, filters, setFilters, handleReset, diamo
 						</div>
 					) : (
 						<>
-							<div className="text-2xl flex justify-end mt-10">
+							{/* Results Header */}
+							<div className="text-xl flex justify-between items-center flex-wrap mt-10 px-4">
 								<p className="p-2">{diamondLab?.length} Kết quả</p>
-								<div
-									className="md:cursor-pointer mx-10 hover:bg-neutral-300 rounded-xl p-2"
-									onClick={handleListClick}
-								>
-									<UnorderedListOutlined />
-								</div>
-								<div
-									className="md:cursor-pointer hover:bg-neutral-300 rounded-xl p-2"
-									onClick={handleGridClick}
-								>
-									<AppstoreOutlined />
+								{/* Nút chuyển đổi hiển thị chỉ hiện trên desktop */}
+								<div className="hidden md:flex space-x-4">
+									<div
+										className={`cursor-pointer hover:bg-neutral-300 rounded-xl p-2 ${
+											changeGrid ? 'bg-neutral-200' : ''
+										}`}
+										onClick={handleGridClick}
+									>
+										<AppstoreOutlined />
+									</div>
+									<div
+										className={`cursor-pointer hover:bg-neutral-300 rounded-xl p-2 ${
+											!changeGrid ? 'bg-neutral-200' : ''
+										}`}
+										onClick={handleListClick}
+									>
+										<UnorderedListOutlined />
+									</div>
 								</div>
 							</div>
 
-							{changeGrid ? (
-								<div className="transition-all duration-300 grid grid-cols-4 gap-10 mb-20 mt-10">
+							{/* Hiển thị Grid View */}
+							{changeGrid && (
+								<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 px-4 mb-20 mt-10">
 									{diamondLab?.map((diamondItem) => (
 										<div
 											key={diamondItem.Id}
-											className="shadow-lg bg-white border-2 border-white rounded-lg hover:border-2 hover:border-black cursor-pointer"
+											className="shadow-lg bg-white border border-gray-200 rounded-lg hover:border-black cursor-pointer"
 											onClick={() =>
 												diamondChoice.length > 0
 													? handleDiamondChoiceClick(diamondItem.Id)
 													: handleJewelryChoiceClick(diamondItem.Id)
 											}
 										>
-											<div className="">
-												<div
-													className="flex justify-center mb-5"
-													style={{background: '#b8b7b5'}}
-												>
+											<div>
+												<div className="flex justify-center bg-gray-300">
 													<Image
 														src={
 															diamondItem?.Thumbnail === null
 																? diamondImg
 																: diamondItem.Thumbnail.MediaPath
 														}
-														alt={diamondItem.Name}
+														alt={
+															diamondItem?.Thumbnail?.MediaName ||
+															'Default Image'
+														}
+														className="max-w-full h-auto"
+														preview={false}
 													/>
 												</div>
-												<div className="mx-10 my-5">
-													<p>{diamondItem?.Title}</p>
-													{diamondItem.SalePrice ===
-													diamondItem.TruePrice ? (
-														<div>
+												<div className="p-4">
+													<p className="font-semibold">
+														{diamondItem?.Title}
+													</p>
+													<div className="flex items-center space-x-2 mt-2">
+														{diamondItem?.SalePrice !==
+														diamondItem?.TruePrice ? (
+															<div className="flex items-center">
+																<p className="line-through text-gray-500">
+																	{formatPrice(
+																		diamondItem.TruePrice
+																	)}
+																</p>
+																<p className="text-red-500 ml-2">
+																	{formatPrice(
+																		diamondItem.DiscountPrice
+																	)}
+																</p>
+															</div>
+														) : (
 															<p>
 																{formatPrice(diamondItem.TruePrice)}
 															</p>
-														</div>
-													) : (
-														<div className="flex">
-															<p
-																style={{
-																	color: '#707070',
-																}}
-																className="line-through"
-															>
-																{formatPrice(diamondItem.TruePrice)}
-															</p>
-															<p className="ml-3">
-																{formatPrice(diamondItem.SalePrice)}
-															</p>
-														</div>
-													)}
+														)}
+													</div>
 												</div>
 											</div>
 										</div>
 									))}
 								</div>
-							) : (
-								<div className="transition-all duration-300 mb-20 mt-10">
+							)}
+
+							{/* Hiển thị List View trên desktop */}
+							{!changeGrid && (
+								<div className="hidden md:block mb-20 mt-10 px-4">
 									<div className="shadow-md bg-gray-100 rounded-lg">
 										<div className="flex justify-between items-center py-3 px-5 bg-primary border">
 											<p className="text-lg font-semibold text-center w-1/6">
@@ -198,52 +213,48 @@ export const DiamondLabList = ({diamond, filters, setFilters, handleReset, diamo
 											</div>
 										</div>
 									</div>
+
 									{diamondLab?.map((diamondItem) => (
 										<div
 											key={diamondItem.Id}
-											className="shadow-lg bg-white rounded-lg cursor-pointer border-2 border-white hover:border-2 hover:border-black my-10"
+											className="flex flex-col md:flex-row items-center shadow-lg bg-white rounded-lg cursor-pointer border-2 border-white hover:border-2 hover:border-black my-5"
 											onClick={() =>
 												diamondChoice.length > 0
 													? handleDiamondChoiceClick(diamondItem.Id)
 													: handleJewelryChoiceClick(diamondItem.Id)
 											}
 										>
-											<div className="flex w-full ">
-												<div
-													className="flex justify-center w-1/6"
-													style={{background: '#b8b7b5'}}
-												>
-													<Image
-														src={
-															diamondItem?.Thumbnail === null
-																? diamondImg
-																: diamondItem.Thumbnail.MediaPath
-														}
-														alt={diamondItem.title}
-														className="w-full"
-														preview={false}
-													/>
-												</div>
-												<div className="flex justify-between items-center w-5/6 ml-5">
-													<p className="text-xl w-1/5 text-center">
-														{diamondItem.DiamondShape || '-'}
-													</p>
-													<p className="text-xl w-1/5 text-center">
-														{diamondItem.Carat || '-'}ct
-													</p>
-													<p className="text-xl w-1/5 text-center">
-														{diamondItem.Color || '-'} Color
-													</p>
-													<p className="text-xl w-1/5 text-center">
-														{diamondItem.Clarity || '-'} Clarity
-													</p>
-													<p className="text-xl w-1/5 text-center">
-														{diamondItem.Cut || '-'}
-													</p>
-													<p className="text-xl w-1/5 text-center">
-														{formatPrice(diamondItem?.TruePrice)}
-													</p>
-												</div>
+											<div className="w-full md:w-1/6 bg-gray-300 p-2">
+												<Image
+													src={
+														diamondItem?.Thumbnail === null
+															? diamondImg
+															: diamondItem.Thumbnail.MediaPath
+													}
+													alt={diamondItem?.Thumbnail?.MediaName}
+													className="max-w-full h-auto"
+													preview={false}
+												/>
+											</div>
+											<div className="w-full md:w-5/6 flex flex-col md:flex-row justify-between items-center p-4">
+												<p className="text-sm md:text-lg w-1/5 text-center">
+													{diamondItem.DiamondShape || '-'}
+												</p>
+												<p className="text-sm md:text-lg w-1/5 text-center">
+													{diamondItem.Carat || '-'}ct
+												</p>
+												<p className="text-sm md:text-lg w-1/5 text-center">
+													{diamondItem.Color || '-'} Color
+												</p>
+												<p className="text-sm md:text-lg w-1/5 text-center">
+													{diamondItem.Clarity || '-'} Clarity
+												</p>
+												<p className="text-sm md:text-lg w-1/5 text-center">
+													{diamondItem.Cut || '-'}
+												</p>
+												<p className="text-sm md:text-lg w-1/5 text-center">
+													{formatPrice(diamondItem?.TruePrice)}
+												</p>
 											</div>
 										</div>
 									))}
