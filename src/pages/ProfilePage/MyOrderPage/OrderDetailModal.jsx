@@ -21,6 +21,7 @@ import {
 	GetAllOrderDetailSelector,
 	GetOrderInvoiceSelector,
 	GetOrderLogsSelector,
+	GetOrderTransferSelector,
 	GetStatusOrderSelector,
 	LoadingOrderSelector,
 	ReviewSelector,
@@ -44,6 +45,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 	const dispatch = useDispatch();
 	const loading = useSelector(LoadingOrderSelector);
 	const reviewDetail = useSelector(ReviewSelector);
+	const transfer = useSelector(GetOrderTransferSelector);
 
 	const [isCancelModalVisible, setIsCancelModalVisible] = useState(false);
 	const [isReviewModalVisible, setIsReviewModalVisible] = useState(false);
@@ -226,7 +228,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 					message.error(error.title || error.data.title);
 				});
 		}
-	}, [selectedOrder, dispatch, statusOrder, reviewDetail]);
+	}, [selectedOrder, dispatch, statusOrder, reviewDetail, transfer]);
 
 	const showModal = (review) => {
 		setReviewContent(review);
@@ -317,8 +319,6 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 		}
 	};
 
-	console.log('reviewContent', reviewContent);
-
 	return (
 		<>
 			{openDetail && (
@@ -363,7 +363,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 							<OrderStatus orderStatus={statusOrder} order={order} />
 							<div className="w-full flex flex-col sm:flex-row gap-4">
 								<div className="w-full sm:w-2/3">
-									{order?.Status === 1 ? (
+									{order?.Status === 1 && order?.Transactions?.length === 0 ? (
 										<OrderPayment order={order} />
 									) : (
 										<TransactionDetails transactions={transaction} />

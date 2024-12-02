@@ -8,23 +8,16 @@ export const OrderStatus = ({orderStatus, orderDetail}) => {
 	const stage = orderDetail?.Stage;
 	const order = orderDetail?.Order;
 
-	console.log('currentStep', currentStep);
-	console.log('orderDetail', orderDetail);
-	console.log('stage', stage);
+	// useEffect(() => {
+	// 	// Kiểm tra nếu dữ liệu chưa sẵn sàng
+	// 	if (!orderDetail || !orderStatus) return;
 
-	useEffect(() => {
-		// Kiểm tra nếu dữ liệu chưa sẵn sàng
-		if (!orderDetail || !orderStatus) return;
+	// 	// Lấy danh sách diamond từ orderDetail
+	// 	const haveDiamond = orderDetail.DiamondRequests?.map((diamond) => ({
+	// 		diamondId: diamond.DiamondId,
+	// 	}));
 
-		// Lấy danh sách diamond từ orderDetail
-		const haveDiamond = orderDetail.DiamondRequests?.map((diamond) => ({
-			diamondId: diamond.DiamondId,
-		}));
-
-		console.log('haveDiamond', haveDiamond);
-
-		console.log('Current step updated based on orderStatus:', orderStatus);
-	}, [orderStatus, orderDetail]);
+	// }, [orderStatus, orderDetail]);
 
 	useEffect(() => {
 		const getOrderStatus = (status) => {

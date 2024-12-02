@@ -363,18 +363,14 @@ const CheckoutPage = () => {
 			icon: <CheckCircleOutlined style={{color: '#52c41a'}} />,
 			content:
 				'Đơn hàng của bạn đã được đặt thành công. Cảm ơn bạn đã mua sắm với chúng tôi!',
-			okText: `${paymentMethod === '2' ? 'Kiểm Tra Đơn Hàng' : 'Thanh Toán Đơn Hàng'}`,
+			okText: `Thanh Toán Đơn Hàng`,
 			cancelText: null,
 			onCancel() {
 				navigate('/');
 			},
 
 			onOk() {
-				if (paymentMethod === '2') {
-					navigate('/my-orders');
-				} else {
-					navigate('/payment');
-				}
+				navigate('/my-orders');
 			},
 		});
 	};

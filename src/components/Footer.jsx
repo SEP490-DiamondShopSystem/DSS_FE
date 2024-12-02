@@ -4,6 +4,7 @@ import {faFacebook, faInstagram} from '@fortawesome/free-brands-svg-icons';
 import {faEnvelope, faMapMarkerAlt, faPhoneAlt} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import Logo from '../assets/logo-short-ex.png';
+import {Link} from 'react-router-dom';
 
 export const Footer = () => {
 	return (
@@ -56,7 +57,9 @@ export const Footer = () => {
 					<Col xs={24} sm={12} md={6}>
 						<h2 className="font-bold text-xl">Chính Sách Liên Quan</h2>
 						<ul className="mt-4 text-gray-700">
-							<li className="m-2">Chính Sách Giao Hàng</li>
+							<li className="m-2">
+								<Link to={'/shipping-policy'}>Chính Sách Giao Hàng</Link>
+							</li>
 							<li className="m-2">Chính Sách Bảo Hành</li>
 							<li className="m-2">Điều Khoản Sử Dụng</li>
 							<li className="m-2">Cam Kết Về Vỏ Trang Sức</li>

@@ -17,6 +17,7 @@ import {reviewSlice} from './slices/reviewSlice';
 import {blogSlice} from './slices/blogSlice';
 import {logSlice} from './slices/logSlice';
 import {diamondPriceSlice} from './slices/diamondPriceSlice';
+import {configSlice} from './slices/configSlice';
 
 const rootPersistConfig = {
 	key: 'root',
@@ -40,6 +41,7 @@ const rootReducer = combineReducers({
 	reviewSlice: reviewSlice.reducer,
 	blogSlice: blogSlice.reducer,
 	logSlice: logSlice.reducer,
+	configSlice: configSlice.reducer,
 });
 
 const persistedReducer = persistReducer(rootPersistConfig, rootReducer);
