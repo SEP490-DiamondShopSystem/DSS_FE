@@ -9,7 +9,7 @@ export const TransactionDetails = ({transactions}) => {
 	console.log('transactions', transactions);
 
 	return (
-		<>
+		<div className="">
 			<Title level={3}>Chi tiết giao dịch</Title>
 			<List
 				locale={{
@@ -47,7 +47,9 @@ export const TransactionDetails = ({transactions}) => {
 										<div className="flex flex-col">
 											<Text strong>Ngày thanh toán: </Text>
 											<Text className="font-semibold text-lg">
-												{transaction.PayDate}
+												{transaction.PayDate ||
+													transaction?.VerifiedDate ||
+													transaction?.InitDate}
 											</Text>
 										</div>
 										<div className="flex flex-col">
@@ -89,7 +91,10 @@ export const TransactionDetails = ({transactions}) => {
 											<div className="flex flex-col items-center">
 												<Text strong>Phương thức: </Text>
 												<Tag color="blue" className="font-semibold">
-													{transaction.PayMethod?.MethodName}
+													{(transaction.PayMethod?.MethodName).replace(
+														'_',
+														' '
+													)}
 												</Tag>
 											</div>
 										)}
@@ -144,6 +149,6 @@ export const TransactionDetails = ({transactions}) => {
 					</List.Item>
 				)}
 			/>
-		</>
+		</div>
 	);
 };

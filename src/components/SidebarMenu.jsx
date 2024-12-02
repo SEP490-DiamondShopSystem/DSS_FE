@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 
-const SidebarMenu = () => {
+const SidebarMenu = ({children}) => {
 	const [activeMenu, setActiveMenu] = useState(null);
+	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 	const navigate = useNavigate();
 
 	const menuData = [
@@ -27,43 +28,16 @@ const SidebarMenu = () => {
 			],
 		},
 		{
-			title: 'Thanh Toán',
+			title: 'Chính Sách',
 			items: [
-				{name: 'Ví DiamondPay', path: '/diamondpay'},
-				{name: 'DPayLater', path: '/dpaylater'},
-				{name: 'Diamond Xu', path: '/diamond-xu'},
-				{name: 'Số dư TK Diamond', path: '/diamond-balance'},
-				{name: 'Thuế & Hóa đơn', path: '/tax-invoice'},
-				{name: 'Phương thức thanh toán khác', path: '/other-payment-methods'},
-				{name: 'Ứng dụng DiamondPay', path: '/diamondpay-app'},
-			],
-		},
-		{
-			title: 'Đơn Hàng & Vận Chuyển',
-			items: [
-				{name: 'Đơn hàng', path: '/orders'},
-				{name: 'Đánh giá & Bình luận', path: '/reviews'},
-				{name: 'Thông tin vận chuyển khác', path: '/shipping-info'},
-				{name: 'Phương thức vận chuyển', path: '/shipping-methods'},
-			],
-		},
-		{
-			title: 'Trả Hàng & Hoàn Tiền',
-			items: [
-				{name: 'Gửi yêu cầu', path: '/refund-request'},
-				{name: 'Xử lý yêu cầu', path: '/refund-process'},
-				{name: 'Khiếu nại', path: '/complaints'},
-			],
-		},
-		{
-			title: 'Thông Tin Chung',
-			items: [
-				{name: 'Chính sách Diamond Shop', path: '/policy'},
-				{name: 'Tài khoản Diamond Shop', path: '/diamond-account'},
-				{name: 'Mua sắm an toàn', path: '/safe-shopping'},
-				{name: 'Thư viện thông tin', path: '/info-library'},
-				{name: 'Khác', path: '/others'},
-				{name: 'Hướng dẫn chung', path: '/general-guidance'},
+				{name: 'Chính Sách Thanh Toán', path: '/payment-policy'},
+				{name: 'Chính Sách Giao Hàng', path: '/shipping-policy'},
+				// {name: 'DPayLater', path: '/dpaylater'},
+				// {name: 'Diamond Xu', path: '/diamond-xu'},
+				// {name: 'Số dư TK Diamond', path: '/diamond-balance'},
+				// {name: 'Thuế & Hóa đơn', path: '/tax-invoice'},
+				// {name: 'Phương thức thanh toán khác', path: '/other-payment-methods'},
+				// {name: 'Ứng dụng DiamondPay', path: '/diamondpay-app'},
 			],
 		},
 	];
@@ -74,33 +48,54 @@ const SidebarMenu = () => {
 
 	const handleNavigate = (path) => {
 		navigate(path);
+		setIsMobileMenuOpen(false); // Đóng menu sau khi chọn
 	};
 
 	return (
-		<div className="w-72 p-4 bg-white shadow-md rounded-lg">
-			{menuData.map((menu, index) => (
-				<div key={index} className="mb-4">
-					<button
-						className="w-full text-left font-semibold text-gray-700 hover:text-orange-500 focus:outline-none"
-						onClick={() => toggleMenu(index)}
-					>
-						{menu.title}
-					</button>
-					{activeMenu === index && (
-						<ul className="mt-2 space-y-2">
-							{menu.items.map((item, idx) => (
-								<li
-									key={idx}
-									className="cursor-pointer text-gray-600 hover:text-orange-500"
-									onClick={() => handleNavigate(item.path)}
-								>
-									{item.name}
-								</li>
-							))}
-						</ul>
-					)}
+		<div className="flex">
+			{/* Sidebar */}
+			<nav
+				className={`flex flex-col bg-white w-72 h-screen shadow-md transform transition-transform duration-300 ease-in-out ${
+					isMobileMenuOpen ? 'block' : 'hidden'
+				} md:block`}
+			>
+				<div className="p-4">
+					{menuData.map((menu, index) => (
+						<div key={index} className="mb-4">
+							<button
+								className="w-full text-left font-semibold text-gray-700 hover:text-orange-500 focus:outline-none"
+								onClick={() => toggleMenu(index)}
+							>
+								{menu.title}
+							</button>
+							{activeMenu === index && (
+								<ul className="mt-2 space-y-2">
+									{menu.items.map((item, idx) => (
+										<li
+											key={idx}
+											className="cursor-pointer text-gray-600 hover:text-orange-500"
+											onClick={() => handleNavigate(item.path)}
+										>
+											{item.name}
+										</li>
+									))}
+								</ul>
+							)}
+						</div>
+					))}
 				</div>
-			))}
+			</nav>
+
+			{/* Main Content */}
+			<main className="flex-1 p-4">
+				<button
+					className="p-2 text-white bg-orange-500 rounded-md md:hidden"
+					onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+				>
+					{isMobileMenuOpen ? 'Đóng Menu' : 'Mở Menu'}
+				</button>
+				<div>{children}</div>
+			</main>
 		</div>
 	);
 };
