@@ -49,7 +49,7 @@ const BlogDetail = () => {
 			{blogs?.Tags && (
 				<div className="mt-4">
 					<Title level={4}>Tags:</Title>
-					<div className="flex gap-2">
+					<div className="flex gap-2 flex-wrap">
 						{blogs.Tags.map((tag, index) => (
 							<span
 								key={index}

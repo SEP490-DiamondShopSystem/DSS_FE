@@ -273,8 +273,8 @@ const CartPage = () => {
 									>
 										<div className="mr-4 flex-shrink-0 w-full sm:w-32 md:w-32 lg:w-32">
 											<img
-												src="path-to-image"
-												alt={item?.JewelryName || 'Loose Diamond'}
+												src={item?.Thumbnail?.MediaPath}
+												alt={item?.JewelryName||item?.Title ||item?.Thumbnail?.MediaName}
 												className="w-full h-32 object-cover rounded-lg border"
 											/>
 										</div>
