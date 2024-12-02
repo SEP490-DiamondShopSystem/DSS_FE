@@ -29,17 +29,15 @@ export const ImageGallery = ({jewelry}) => {
 		<div className="container mx-auto">
 			{Array.isArray(images) && images.length > 0 ? (
 				<>
-					{/* Large Image Section */}
-					<div className="relative large-image mb-4">
-						<Image
-							width="100%"
-							height={400}
-							src={currentImage}
-							alt="Large"
-							className="border rounded-lg"
-						/>
+					<div className="relative large-image mb-4 aspect-square">
+						<div className="w-full h-full flex items-center justify-center">
+							<Image
+								src={currentImage}
+								alt="Large"
+								className="w-24 h-20 object-cover rounded-lg"
+							/>
+						</div>
 					</div>
-
 					{/* Thumbnails Section */}
 					<div className="thumbnail-container flex justify-start space-x-4">
 						{images.map((image, index) => (
@@ -54,8 +52,8 @@ export const ImageGallery = ({jewelry}) => {
 									preview={false}
 									src={image}
 									alt={`Thumbnail ${index + 1}`}
-									className="rounded-lg"
-								/>
+									className="w-24 h-20 object-cover rounded-lg"
+									/>
 							</div>
 						))}
 					</div>

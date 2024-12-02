@@ -83,8 +83,11 @@ export const InformationRight = ({
 					<Select
 						// allowClear
 						className="mb-5 mt-2"
-						style={{width: 450}}
-						size="large"
+						style={{
+							width: 300,
+							textOverflow: 'ellipsis',
+						}}
+						size="small"
 						value={
 							warrantyDiamondSelected?.warranty?.MappedName?.replace(/_/g, ' ') ||
 							warrantyDiamondSelected?.MappedName?.replace(/_/g, ' ')
