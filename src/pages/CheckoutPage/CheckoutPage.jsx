@@ -708,6 +708,7 @@ const CheckoutPage = () => {
 									<Input
 										placeholder="Số nhà"
 										name="address"
+										disabled={isAtShop}
 										onChange={handleChange}
 										value={userInfo.address}
 									/>
