@@ -60,6 +60,7 @@ export const GetOrderLogsSelector = (state) => state.orderSlice.orderLogs;
 export const GetOrderChildLogsSelector = (state) => state.logSlice.orderChildLogList;
 export const GetOrderInvoiceSelector = (state) => state.orderSlice.orderInvoice;
 export const ErrorOrderSelector = (state) => state.orderSlice.error;
+export const GetOrderTransferSelector = (state) => state.paymentSlice.transfer;
 
 //CUSTOMIZE
 export const GetLoadingCustomizeSelector = (state) => state.customizeSlice.loading;

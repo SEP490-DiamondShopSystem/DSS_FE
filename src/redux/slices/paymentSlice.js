@@ -14,12 +14,84 @@ export const getAllPayment = createAsyncThunk(
 	}
 );
 
+export const handleAddTransfer = createAsyncThunk(
+	'paymentSlice/handleAddTransfer',
+	async (body, {rejectWithValue}) => {
+		try {
+			const {OrderId, Evidence} = body;
+			console.log('Evidence', Evidence);
+
+			const formData = new FormData();
+			formData.append('OrderId', OrderId);
+
+			// Kiểm tra và thêm tệp nếu nó tồn tại
+			if (Evidence && Evidence.length > 0) {
+				const file = Evidence[0]?.originFileObj; // Lấy file đầu tiên từ Evidence
+				if (file) {
+					formData.append('Evidence', file);
+				} else {
+					console.warn('No valid file found in Evidence');
+				}
+			}
+
+			const response = await api.post(`/Order/AddTransfer`, formData, {
+				headers: {
+					'Content-Type': 'multipart/form-data',
+				},
+			});
+
+			return response;
+		} catch (error) {
+			console.log('Error: ', JSON.stringify(error));
+			return rejectWithValue(error);
+		}
+	}
+);
+
+export const handleChangeTransfer = createAsyncThunk(
+	'paymentSlice/handleChangeTransfer',
+	async (body, {rejectWithValue}) => {
+		try {
+			const {TransactionId, Evidence} = body;
+			console.log('Evidence', Evidence);
+
+			const formData = new FormData();
+
+			// Kiểm tra và thêm tệp nếu nó tồn tại
+			if (Evidence && Evidence.length > 0) {
+				const file = Evidence[0]?.originFileObj; // Lấy file đầu tiên từ Evidence
+				if (file) {
+					formData.append('Evidence', file);
+				} else {
+					console.warn('No valid file found in Evidence');
+				}
+			}
+
+			const response = await api.put(
+				`/Order/ChangeEvidence?TransactionId=${TransactionId}`,
+				formData,
+				{
+					headers: {
+						'Content-Type': 'multipart/form-data',
+					},
+				}
+			);
+
+			return response;
+		} catch (error) {
+			console.log('Error: ', JSON.stringify(error));
+			return rejectWithValue(error);
+		}
+	}
+);
+
 export const paymentSlice = createSlice({
 	name: 'paymentSlice',
 	initialState: {
 		payment: null,
 		loading: false,
 		error: null,
+		transfer: null,
 	},
 	reducers: {},
 	extraReducers: (builder) => {
@@ -34,6 +106,28 @@ export const paymentSlice = createSlice({
 				state.payment = action.payload;
 			})
 			.addCase(getAllPayment.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload;
+			})
+			.addCase(handleAddTransfer.pending, (state) => {
+				state.loading = true;
+			})
+			.addCase(handleAddTransfer.fulfilled, (state, action) => {
+				state.loading = false;
+				state.transfer = action.payload;
+			})
+			.addCase(handleAddTransfer.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload;
+			})
+			.addCase(handleChangeTransfer.pending, (state) => {
+				state.loading = true;
+			})
+			.addCase(handleChangeTransfer.fulfilled, (state, action) => {
+				state.loading = false;
+				state.transfer = action.payload;
+			})
+			.addCase(handleChangeTransfer.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload;
 			});

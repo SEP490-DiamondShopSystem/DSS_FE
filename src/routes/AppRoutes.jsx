@@ -40,6 +40,9 @@ import PromotionPage from '../pages/PromotionPage/PromotionPage';
 import RequestCustomize from '../pages/RequestCustomize';
 import MainDiamondPricePage from '../pages/DiamondPricePage/MainDiamondPricePage';
 import SideDiamondPricePage from '../pages/DiamondPricePage/SideDiamondPricePage';
+import PaymentPolicy from '../pages/PortalPage/PaymentPolicy';
+import SidebarMenu from '../components/SidebarMenu';
+import ShippingPolicy from '../pages/PortalPage/DeliveryPolicy';
 
 export const AppRouters = () => {
 	return (
@@ -88,6 +91,26 @@ export const AppRouters = () => {
 				<Route path="/diamond-choose/search" element={<DiamondChoosePage />} />
 				<Route path="/jewelry-choose/search" element={<DiamondChoosePage />} />
 				<Route path="/blog/:id" element={<BlogDetail />} />
+				<Route
+					path="/payment-policy"
+					element={
+						<>
+							<SidebarMenu>
+								<PaymentPolicy />
+							</SidebarMenu>
+						</>
+					}
+				/>
+				<Route
+					path="/shipping-policy"
+					element={
+						<>
+							<SidebarMenu>
+								<ShippingPolicy />
+							</SidebarMenu>
+						</>
+					}
+				/>
 
 				{/* Private routes */}
 				<Route
