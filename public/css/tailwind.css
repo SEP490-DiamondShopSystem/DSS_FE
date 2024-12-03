@@ -3329,3 +3329,9 @@ video {
 	padding-top: 0.5rem /* 8px */;
 	padding-bottom: 0.5rem /* 8px */;
 }
+
+@media (min-width: 640px) {
+	.sm\:justify-around {
+		justify-content: space-around;
+	}
+}
