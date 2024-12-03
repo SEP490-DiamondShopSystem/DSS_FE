@@ -169,7 +169,7 @@ const CheckoutPage = () => {
 				province: shopLocation.OriginalProvince,
 				district: shopLocation.OrignalDistrict,
 				ward: shopLocation.OrignalWard,
-				address: `${shopLocation.OrignalRoad}, ${shopLocation.OriginalLocationName}`,
+				address: `${shopLocation.OrignalRoad}`,
 			}));
 		} else if (!isAtShop) {
 			// Reset address to default or user's primary address
@@ -618,27 +618,21 @@ const CheckoutPage = () => {
 										Nhận hàng tại cửa hàng
 									</Checkbox>
 								</Form.Item>
-								<Form.Item
-									label="Tỉnh thành"
-									name="city"
-									rules={[
-										{
-											required: !isAtShop,
-											message: 'Vui lòng nhập thành phố',
-										},
-									]}
-								>
+								<div className="flex flex-col mb-4">
+									<label className="flex justify-start items-center mb-2">
+										<p className="text-red mr-1">*</p>Tỉnh/ Thành Phố
+									</label>
 									<Select
 										placeholder="Chọn tỉnh thành"
 										onChange={handleCityChange}
 										disabled={loading || isAtShop}
 										loading={loading}
-										defaultValue={
-											defaultAddress?.Province ||
-											userInfo.province ||
-											undefined
-										}
-										value={userInfo.province || undefined}
+										// defaultValue={
+										// 	userInfo?.province ||
+										// 	defaultAddress?.Province ||
+										// 	undefined
+										// }
+										value={userInfo.province}
 										notFoundContent="Đang tải"
 									>
 										{province &&
@@ -651,7 +645,7 @@ const CheckoutPage = () => {
 												</Select.Option>
 											))}
 									</Select>
-								</Form.Item>
+								</div>
 
 								<div className="flex flex-col mb-4">
 									<label className="flex justify-start items-center mb-2">
