@@ -100,8 +100,8 @@ export const ProductList = () => {
 										style={{background: '#b8b7b5'}}
 									>
 										<Image
-											src={jewelry.ThumbnailPath || jewelryImg}
-											alt={jewelry.Name}
+											src={jewelry.Thumbnail?.MediaPath || jewelryImg}
+											alt={jewelry.Thumbnail?.Name}
 											className=""
 											preview={false}
 										/>

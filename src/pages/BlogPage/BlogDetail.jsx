@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {getBlogDetail} from '../../redux/slices/blogSlice';
 import {useParams} from 'react-router-dom';
 import {GetBlogDetailSelector} from '../../redux/selectors';
-
+import parse from 'html-react-parser';
 const {Title, Paragraph} = Typography;
 
 const BlogDetail = () => {
@@ -25,7 +25,7 @@ const BlogDetail = () => {
 	}, [blogDetail]);
 
 	return (
-		<div className="p-4 max-w-4xl my-5 mx-20">
+		<div className="p-4 max-w-4xl my-5">
 			{blogs?.Title && (
 				<Title className="text-center" level={2}>
 					{blogs.Title}
@@ -44,14 +44,12 @@ const BlogDetail = () => {
 				</div>
 			)}
 
-			{blogs?.Content && (
-				<div className="my-5" dangerouslySetInnerHTML={{__html: blogs.Content}}></div>
-			)}
+			{blogs?.Content && <div className="blog-content my-5">{parse(blogs.Content)}</div>}
 
 			{blogs?.Tags && (
 				<div className="mt-4">
 					<Title level={4}>Tags:</Title>
-					<div className="flex gap-2">
+					<div className="flex gap-2 flex-wrap">
 						{blogs.Tags.map((tag, index) => (
 							<span
 								key={index}

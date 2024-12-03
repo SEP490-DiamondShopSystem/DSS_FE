@@ -6,10 +6,11 @@ import {getAllJewelryModel} from '../redux/slices/jewelrySlice';
 import {GetAllJewelryModelSelector} from '../redux/selectors';
 import logoJewelry from '../assets/ring_classic.png';
 import {formatPrice, StarRating} from '../utils';
-
+import {useNavigate} from 'react-router-dom';
 const {Text, Title} = Typography;
 
 const SliderTopSelling = () => {
+	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const jewelryModelList = useSelector(GetAllJewelryModelSelector);
 
@@ -44,7 +45,9 @@ const SliderTopSelling = () => {
 	}, [jewelryModelList]);
 
 	const jewelryItems = Array.isArray(jewelryModel) ? jewelryModel.slice(0, 6) : [];
-
+	const onProductClick = (JewelryModelId) => {
+		navigate(`/jewelry-model/search/${JewelryModelId}`);
+	};
 	return (
 		<div className="p-5">
 			<Title level={3} className="text-center mb-5">
@@ -62,11 +65,12 @@ const SliderTopSelling = () => {
 								cover={
 									<img
 										alt={product.Name}
-										src={product.Thumbnail || '/default-image.png'}
+										src={product?.Thumbnail?.MediaPath || '/default-image.png'}
 										className="h-48 object-cover"
 									/>
 								}
 								title={product.Name}
+								onClick={() => onProductClick(product.JewelryModelId)}
 							>
 								<div className="flex flex-col">
 									<div className="mb-4">
@@ -103,11 +107,12 @@ const SliderTopSelling = () => {
 								cover={
 									<img
 										alt={product.Name}
-										src={product.Thumbnail || '/default-image.png'}
+										src={product?.Thumbnail?.MediaPath || '/default-image.png'}
 										className="h-48 object-cover"
 									/>
 								}
 								title={product.Name}
+								onClick={() => onProductClick(product.JewelryModelId)}
 							>
 								<div className="flex flex-col">
 									<div className="mb-4">

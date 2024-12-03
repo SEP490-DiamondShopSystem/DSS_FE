@@ -95,7 +95,7 @@ export const TransactionDetails = ({transactions, order}) => {
 										// direction="horizontal"
 										// size="large"
 										style={{width: '100%'}}
-										className="grid grid-cols-3 gap-5"
+										className="flex flex-col gap-5"
 									>
 										{/* <div className="flex flex-col">
 											<Text strong>Mã giao dịch: </Text>
@@ -103,8 +103,8 @@ export const TransactionDetails = ({transactions, order}) => {
 												{transaction.AppTransactionCode}
 											</Text>
 										</div> */}
-										<div className="flex flex-col">
-											<Text strong>Mô tả giao dịch: </Text>
+										<div className="flex bg-primary flex-col px-2 border rounded-lg">
+											{/* <Text strong>Mô tả giao dịch: </Text> */}
 											<Text className="font-semibold text-lg">
 												{transaction.Description}
 											</Text>
@@ -120,7 +120,7 @@ export const TransactionDetails = ({transactions, order}) => {
 										</div>
 										<div className="flex flex-col">
 											<Text strong>Số tiền giao dịch: </Text>
-											<Text className="font-semibold text-lg">
+											<Text className="font-bold text-lg text-darkGreen">
 												{formatPrice(transaction.TransactionAmount)}
 											</Text>
 										</div>

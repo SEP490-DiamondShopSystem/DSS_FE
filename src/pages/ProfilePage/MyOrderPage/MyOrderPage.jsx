@@ -113,6 +113,7 @@ const MyOrderPage = () => {
 		},
 		{
 			dataIndex: 'action',
+			responsive: ['md'],
 			render: (_, record) => (
 				<>
 					<Tooltip title={'Chi Tiết'}>
@@ -235,6 +236,7 @@ const MyOrderPage = () => {
 					className="custom-table-header"
 					rowKey="orderId"
 					loading={loading}
+					onRow={(record) => ({onClick: () => toggleDetailModal(record)})}
 				/>
 			</div>
 

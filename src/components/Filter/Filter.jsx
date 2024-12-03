@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 
-import {DownOutlined, ReloadOutlined} from '@ant-design/icons';
+import {DownOutlined, ReloadOutlined, UpOutlined} from '@ant-design/icons';
 import {Button, Image, Input, Select, Slider} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
 import {
@@ -23,6 +23,10 @@ import {
 import {formatPrice} from '../../utils';
 
 export const FilterDiamond = ({filters, setFilters, handleReset, diamondForFilter, findShape}) => {
+	const [collapsed, setCollapsed] = useState(false); // State to toggle collapse
+	const toggleCollapse = () => {
+		setCollapsed((prev) => !prev);
+	};
 	const dispatch = useDispatch();
 	const filterLimits = useSelector(GetDiamondFilterSelector);
 
@@ -75,110 +79,134 @@ export const FilterDiamond = ({filters, setFilters, handleReset, diamondForFilte
 	};
 
 	return (
-		<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 px-4">
-			{/* Shape Filter */}
-			<div className="ml-4 min-w-44">
-				<p className="mb-4">Hình Dạng:</p>
-				<div className="grid grid-cols-3 sm:grid-cols-5 gap-6 w-full mx-auto">
-					{shapeItems?.map((item) => (
-						<div
-							key={item.value}
-							className={`flex items-center flex-col border-2 hover:border-2 hover:border-black px-4 py-2 ${
-								filters?.shape === item?.value ? 'border-black' : 'border-white'
-							}`}
-							onClick={() => handleShapeChange(item?.value)}
-						>
-							<div className="my-5 mx-auto">
-								<Image preview={false} src={item.image} height={30} width={30} />
-							</div>
-							<p className="font-semibold">{item.shape}</p>
+		<div className="filter-container p-4">
+			{/* Toggle Button */}
+			<div className="flex items-center justify-between mb-4">
+				<h2 className="text-lg font-semibold">Lọc</h2>
+				<Button
+					type="text"
+					icon={collapsed ? <DownOutlined /> : <UpOutlined />}
+					onClick={toggleCollapse}
+				>
+					{collapsed ? 'Mở' : 'Đóng'}
+				</Button>
+			</div>
+
+			{/* Filters Content */}
+			{!collapsed && (
+				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 px-4">
+					{/* Shape Filter */}
+					<div className="ml-4 min-w-44">
+						<p className="mb-4">Hình Dạng:</p>
+						<div className="grid grid-cols-3 sm:grid-cols-5 gap-6 w-full mx-auto">
+							{shapeItems?.map((item) => (
+								<div
+									key={item.value}
+									className={`flex items-center flex-col border-2 hover:border-2 hover:border-black px-4 py-2 ${
+										filters?.shape === item?.value
+											? 'border-black'
+											: 'border-white'
+									}`}
+									onClick={() => handleShapeChange(item?.value)}
+								>
+									<div className="my-5 mx-auto">
+										<Image
+											preview={false}
+											src={item.image}
+											height={30}
+											width={30}
+										/>
+									</div>
+									<p className="font-semibold">{item.shape}</p>
+								</div>
+							))}
 						</div>
-					))}
+					</div>
+
+					{/* Price Range Slider */}
+					<div className="ml-4 min-w-44">
+						<p className="mb-4">Giá:</p>
+						<div className="w-full">
+							<Slider
+								range
+								marks={{
+									0: '0',
+									1000000000: '100M',
+									5000000000: '500M',
+									10000000000: '1000M',
+									15000000000: '15000M',
+									20000000000: '20000M',
+								}}
+								step={null}
+								min={filter?.Price?.Min ?? 0}
+								max={filter?.Price?.Max ?? 1000}
+								value={[
+									filters?.price?.minPrice ?? filter?.Price?.Min ?? 0,
+									filters?.price?.maxPrice ?? filter?.Price?.Max ?? 1000,
+								]}
+								onChange={handlePriceChange}
+								className="w-full mx-auto"
+							/>
+						</div>
+					</div>
+
+					{/* Carat Range Slider */}
+					<div className="ml-4 min-w-44">
+						<p className="mb-4">Carat:</p>
+						<Slider
+							range
+							value={[filters?.carat?.minCarat, filters?.carat?.maxCarat]}
+							step={0.1}
+							min={findShape?.CaratFrom || filter?.Carat?.Min}
+							max={findShape?.CaratTo || filter?.Carat?.Max}
+							onChange={handleCaratChange}
+							className="w-full"
+						/>
+					</div>
+
+					{/* Color Range Slider */}
+					<div className="ml-4 min-w-72">
+						<p className="my-4">Color:</p>
+						<Slider
+							range
+							marks={marks}
+							min={filter?.Color?.Min}
+							max={filter?.Color?.Max}
+							value={[filters?.color?.minColor, filters?.color?.maxColor]}
+							onChange={handleColorChange}
+							className="w-full"
+						/>
+					</div>
+
+					{/* Clarity Range Slider */}
+					<div className="ml-4 min-w-72">
+						<p className="my-4">Clarity:</p>
+						<Slider
+							range
+							marks={marksClarity}
+							min={filter?.Clarity?.Min}
+							max={filter?.Clarity?.Max}
+							value={[filters?.clarity?.minClarity, filters?.clarity?.maxClarity]}
+							onChange={handleClarityChange}
+							className="w-full"
+						/>
+					</div>
+
+					{/* Cut Range Slider */}
+					<div className="ml-4 min-w-72">
+						<p className="my-4">Cut:</p>
+						<Slider
+							range
+							marks={marksCut}
+							min={filter?.Cut?.Min}
+							max={filter?.Cut?.Max}
+							value={[filters?.cut?.minCut, filters?.cut?.maxCut]}
+							onChange={handleCutChange}
+							className="w-full"
+						/>
+					</div>
 				</div>
-			</div>
-
-			{/* Price Range Slider */}
-			<div className="ml-4 min-w-44">
-				<p className="mb-4">Giá:</p>
-				<div className="w-full">
-					<Slider
-						range
-						marks={{
-							0: '0',
-							1000000000: '100M',
-							5000000000: '500M',
-							10000000000: '1000M',
-							15000000000: '15000M',
-							20000000000: '20000M',
-						}}
-						step={null}
-						min={filter?.Price?.Min ?? 0}
-						max={filter?.Price?.Max ?? 1000}
-						value={[
-							filters?.price?.minPrice ?? filter?.Price?.Min ?? 0,
-							filters?.price?.maxPrice ?? filter?.Price?.Max ?? 1000,
-						]}
-						onChange={handlePriceChange}
-						className="w-full mx-auto"
-					/>
-				</div>
-			</div>
-
-			{/* Carat Range Slider */}
-			<div className="ml-4 min-w-44">
-				<p className="mb-4">Carat:</p>
-				<Slider
-					range
-					value={[filters?.carat?.minCarat, filters?.carat?.maxCarat]}
-					step={0.1}
-					min={findShape?.CaratFrom || filter?.Carat?.Min}
-					max={findShape?.CaratTo || filter?.Carat?.Max}
-					onChange={handleCaratChange}
-					className="w-full"
-				/>
-			</div>
-
-			{/* Color Range Slider */}
-			<div className="ml-4 min-w-72">
-				<p className="my-4">Color:</p>
-				<Slider
-					range
-					marks={marks}
-					min={filter?.Color?.Min}
-					max={filter?.Color?.Max}
-					value={[filters?.color?.minColor, filters?.color?.maxColor]}
-					onChange={handleColorChange}
-					className="w-full"
-				/>
-			</div>
-
-			{/* Clarity Range Slider */}
-			<div className="ml-4 min-w-72">
-				<p className="my-4">Clarity:</p>
-				<Slider
-					range
-					marks={marksClarity}
-					min={filter?.Clarity?.Min}
-					max={filter?.Clarity?.Max}
-					value={[filters?.clarity?.minClarity, filters?.clarity?.maxClarity]}
-					onChange={handleClarityChange}
-					className="w-full"
-				/>
-			</div>
-
-			{/* Cut Range Slider */}
-			<div className="ml-4 min-w-72">
-				<p className="my-4">Cut:</p>
-				<Slider
-					range
-					marks={marksCut}
-					min={filter?.Cut?.Min}
-					max={filter?.Cut?.Max}
-					value={[filters?.cut?.minCut, filters?.cut?.maxCut]}
-					onChange={handleCutChange}
-					className="w-full"
-				/>
-			</div>
+			)}
 		</div>
 	);
 };
@@ -325,71 +353,17 @@ export const FilterDiamondCustomize = ({
 									Math.floor((maxCarat + (minCarat ?? 0)) / 2)
 								)}`,
 							},
-							[maxCarat]: `${formatPrice(maxCarat)}`, // Mốc cuối
+							[maxCarat]: `${formatPrice(maxCarat)}`,
 						}}
 						value={[filters.carat.minCarat, filters.carat.maxCarat]}
 						step={0.1}
-						min={minCarat} // Use minCarat from props
-						max={maxCarat} // Use maxCarat from props
+						min={minCarat}
+						max={maxCarat}
 						onChange={handleCaratChange}
 					/>
 				</div>
 			</div>
-			<div className="flex items-center mt-4">
-				{/* Price Range Slider */}
-				{/* <div className="ml-10 min-w-44">
-					<p className="mb-4">Giá:</p>
-					<Slider
-						range
-						value={[filters.price.minPrice, filters.price.maxPrice]}
-						min={0}
-						max={1000}
-						onChange={handlePriceChange}
-					/>
-				</div> */}
-
-				{/* Carat Range Slider */}
-			</div>
-			{/* <div className="flex items-center mt-4">
-				<div className="ml-10 min-w-72">
-					<p className="my-4">Color:</p>
-					<Slider
-						range
-						marks={marks}
-						min={1}
-						max={8}
-						value={[filters.color.minColor, filters.color.maxColor]}
-						onChange={handleColorChange}
-					/>
-				</div>
-				<div className="ml-10 min-w-72">
-					<p className="my-4">Clarity:</p>
-					<Slider
-						range
-						marks={marksClarity}
-						min={1}
-						max={8}
-						value={[filters.clarity.minClarity, filters.clarity.maxClarity]}
-						onChange={handleClarityChange}
-					/>
-				</div>
-				<div className="ml-10 min-w-72">
-					<p className="my-4">Cut:</p>
-					<Slider
-						range
-						marks={marksCut}
-						min={1}
-						max={3}
-						value={[filters.cut.minCut, filters.cut.maxCut]}
-						onChange={handleCutChange}
-					/>
-				</div>
-			</div> */}
-			{/* <div className="ml-8 mt-6">
-				<Button onClick={handleReset} danger>
-					<ReloadOutlined />
-				</Button>
-			</div> */}
+			<div className="flex items-center mt-4"></div>
 		</div>
 	);
 };
