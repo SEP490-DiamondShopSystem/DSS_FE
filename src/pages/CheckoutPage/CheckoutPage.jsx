@@ -1,5 +1,5 @@
 import {CheckCircleOutlined} from '@ant-design/icons';
-import {Button, Form, Input, message, Modal, Radio, Select} from 'antd';
+import {Button, Form, Input, message, Modal, Radio, Select, Checkbox} from 'antd';
 import React, {useEffect, useMemo, useState} from 'react';
 import {FaPhoneAlt, FaRegAddressBook, FaRegEnvelope} from 'react-icons/fa';
 import {useDispatch, useSelector} from 'react-redux';
@@ -16,6 +16,7 @@ import {
 	LoadingOrderSelector,
 	selectDistances,
 	selectLoading,
+	GetShopLocationSelector,
 } from '../../redux/selectors';
 import {handleCartValidate} from '../../redux/slices/cartSlice';
 import {handleOrderCustomizeCheckout} from '../../redux/slices/customizeSlice';
@@ -25,6 +26,7 @@ import {
 	fetchWard,
 	handleCalculateLocation,
 } from '../../redux/slices/distanceSlice';
+import {getShopLocation} from '../../redux/slices/locationSlice';
 import {handleCheckoutOrder} from '../../redux/slices/orderSlice';
 import {getAllPayment} from '../../redux/slices/paymentSlice';
 import {checkPromoCart, getAllPromo} from '../../redux/slices/promotionSlice';
@@ -141,6 +143,8 @@ const CheckoutPage = () => {
 	const [districtId, setDistrictId] = useState('');
 	const [warrantiesJewelrySelected, setWarrantiesJewelrySelected] = useState();
 	const [payment, setPayment] = useState();
+	const [isAtShop, setIsAtShop] = useState(false);
+	const shopLocation = useSelector(GetShopLocationSelector);
 	const [userInfo, setUserInfo] = useState({
 		firstName: userDetail.FirstName || '',
 		lastName: userDetail.LastName || '',
@@ -154,18 +158,40 @@ const CheckoutPage = () => {
 	});
 
 	const idCustomize = order?.Id;
-
-	const defaultAddress =
-		userDetail.Addresses.length > 0 &&
-		userDetail?.Addresses?.find((address) => address?.IsDefault === true);
-
 	useEffect(() => {
 		form.setFieldsValue(userInfo);
 	}, [form, userInfo]);
-
+	useEffect(() => {
+		if (isAtShop && shopLocation) {
+			// Auto-fill with shop location when pickup is selected
+			setUserInfo((prev) => ({
+				...prev,
+				province: shopLocation.OriginalProvince,
+				district: shopLocation.OrignalDistrict,
+				ward: shopLocation.OrignalWard,
+				address: `${shopLocation.OrignalRoad}, ${shopLocation.OriginalLocationName}`,
+			}));
+		} else if (!isAtShop) {
+			// Reset address to default or user's primary address
+			const defaultAddress = userDetail.Addresses.find(
+				(address) => address?.IsDefault === true
+			);
+			setUserInfo((prev) => ({
+				...prev,
+				province: defaultAddress?.Province || userDetail.Addresses[0]?.Province || '',
+				district: defaultAddress?.District || userDetail.Addresses[0]?.District || '',
+				ward: defaultAddress?.Ward || userDetail.Addresses[0]?.Ward || '',
+				address: defaultAddress?.Street || userDetail.Addresses[0]?.Street || '',
+			}));
+		}
+	}, [isAtShop, shopLocation]);
+	const defaultAddress =
+		userDetail.Addresses.length > 0 &&
+		userDetail?.Addresses?.find((address) => address?.IsDefault === true);
 	useEffect(() => {
 		if (userDetail && userDetail.Addresses && userDetail.Addresses.length > 0) {
 			const firstAddress = userDetail.Addresses[0];
+
 			setUserInfo((prev) => ({
 				...prev,
 				district: defaultAddress?.District || firstAddress?.District || '',
@@ -179,7 +205,9 @@ const CheckoutPage = () => {
 	useEffect(() => {
 		dispatch(getAllWarranty());
 	}, []);
-
+	useEffect(() => {
+		dispatch(getShopLocation());
+	}, []);
 	useEffect(() => {
 		dispatch(fetchDistances());
 	}, [dispatch]);
@@ -387,6 +415,7 @@ const CheckoutPage = () => {
 		});
 
 		const orderRequestDto = {
+			isAtShop: isAtShop, // Use the new state here
 			paymentType: paymentForm,
 			paymentId: paymentMethod,
 			paymentName: 'zalopay',
@@ -396,7 +425,6 @@ const CheckoutPage = () => {
 
 		const createOrderInfo = {
 			orderRequestDto,
-
 			orderItemRequestDtos,
 		};
 		const billingDetail = {
@@ -582,13 +610,20 @@ const CheckoutPage = () => {
 										</Form.Item>
 									</div>
 								</div>
-
+								<Form.Item className="mt-4">
+									<Checkbox
+										checked={isAtShop}
+										onChange={(e) => setIsAtShop(e.target.checked)}
+									>
+										Nhận hàng tại cửa hàng
+									</Checkbox>
+								</Form.Item>
 								<Form.Item
 									label="Tỉnh thành"
 									name="city"
 									rules={[
 										{
-											required: true,
+											required: !isAtShop,
 											message: 'Vui lòng nhập thành phố',
 										},
 									]}
@@ -596,7 +631,7 @@ const CheckoutPage = () => {
 									<Select
 										placeholder="Chọn tỉnh thành"
 										onChange={handleCityChange}
-										disabled={loading}
+										disabled={loading || isAtShop}
 										loading={loading}
 										defaultValue={
 											defaultAddress?.Province ||
@@ -625,7 +660,7 @@ const CheckoutPage = () => {
 									<Select
 										placeholder="Chọn quận/huyện"
 										onChange={handleDistrictChange}
-										disabled={loading}
+										disabled={loading || isAtShop}
 										loading={loading}
 										value={userInfo?.district}
 										notFoundContent="Đang tải"
@@ -649,7 +684,7 @@ const CheckoutPage = () => {
 									<Select
 										placeholder="Chọn phường/xã"
 										onChange={handleWardChange}
-										disabled={loading}
+										disabled={loading || isAtShop}
 										loading={loading}
 										value={userInfo?.ward}
 										notFoundContent="Đang tải"
