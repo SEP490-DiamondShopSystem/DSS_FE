@@ -60,6 +60,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 	const [imageFiles, setImageFiles] = useState([]);
 	const [orderInvoice, setOrderInvoice] = useState();
 	const [statusOrder, setStatusOrder] = useState();
+	const [cancelled, setCancelled] = useState();
 
 	const data = order?.Items?.map((item, i) => ({
 		key: i,
@@ -228,7 +229,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 					message.error(error.title || error.data.title);
 				});
 		}
-	}, [selectedOrder, dispatch, statusOrder, reviewDetail, transfer]);
+	}, [selectedOrder, dispatch, statusOrder, reviewDetail, transfer, cancelled]);
 
 	const showModal = (review) => {
 		setReviewContent(review);
@@ -272,8 +273,9 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 	const submitCancelOrder = (values) => {
 		dispatch(handleOrderCancel({orderId: order.Id, reason: values.reason}))
 			.unwrap()
-			.then(() => {
+			.then((res) => {
 				message.success('Hủy đơn thành công!');
+				setCancelled(res);
 			})
 			.catch((error) => {
 				message.error(error?.data?.title || error?.detail);
@@ -366,7 +368,10 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 									{order?.Status === 1 && order?.Transactions?.length === 0 ? (
 										<OrderPayment order={order} />
 									) : (
-										<TransactionDetails transactions={transaction} />
+										<TransactionDetails
+											transactions={transaction}
+											order={order}
+										/>
 									)}
 								</div>
 								<div className="w-full sm:w-1/3">

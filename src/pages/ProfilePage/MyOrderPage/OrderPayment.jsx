@@ -6,12 +6,10 @@ import {LoadingPaymentSelector} from '../../../redux/selectors';
 import {handleAddTransfer} from '../../../redux/slices/paymentSlice';
 import {getUserOrderTransaction} from '../../../redux/slices/orderSlice';
 
-export const OrderPayment = ({order}) => {
+export const OrderPayment = ({order, setTransfer}) => {
 	const dispatch = useDispatch();
 	const loading = useSelector(LoadingPaymentSelector);
 	// const
-
-	console.log('order', order);
 
 	const [fileList, setFileList] = useState([]);
 
@@ -75,15 +73,15 @@ export const OrderPayment = ({order}) => {
 						<div className="text-sm sm:text-base">
 							<p>
 								<strong className="text-gray-700">Tên ngân hàng:</strong>{' '}
-								{order.bankName || 'Ngân hàng Ví Dụ'}
+								{order.bankName || 'VIETCOMBANK'}
 							</p>
 							<p>
 								<strong className="text-gray-700">Số tài khoản:</strong>{' '}
-								{order.accountNumber || '1234567890'}
+								{order.accountNumber || '0701000439554'}
 							</p>
 							<p>
 								<strong className="text-gray-700">Tên người nhận:</strong>{' '}
-								{order.accountHolder || 'Nguyễn Văn A'}
+								{order.accountHolder || 'PHAM XUAN HUY'}
 							</p>
 							<p>
 								<strong className="text-gray-700">Ghi chú:</strong>{' '}
