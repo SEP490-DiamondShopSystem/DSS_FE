@@ -1,71 +1,107 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {message, Typography, Card, Divider} from 'antd';
+import {fetchLocationRule, fetchOrderRule} from '../../redux/slices/configSlice';
+import {selectIsLoading, selectConfigError} from '../../redux/selectors';
+
+const {Title, Text} = Typography;
 
 const ShippingPolicy = () => {
+	const dispatch = useDispatch();
+	const [locationRule, setLocationRule] = useState(null);
+	const [orderRule, setOrderRule] = useState(null);
+	const isLoading = useSelector(selectIsLoading);
+	const error = useSelector(selectConfigError);
+
+	useEffect(() => {
+		const fetchDeliveryData = async () => {
+			try {
+				const [location, order] = await Promise.all([
+					dispatch(fetchLocationRule()).unwrap(),
+					dispatch(fetchOrderRule()).unwrap(),
+				]);
+
+				setLocationRule(location || {});
+				setOrderRule(order || {});
+			} catch (error) {
+				message.error('Failed to fetch delivery configuration data.');
+				console.error('Fetch error:', error);
+			}
+		};
+		fetchDeliveryData();
+	}, [dispatch]);
+
+	if (isLoading)
+		return (
+			<div className="flex justify-center items-center h-screen">
+				<p className="text-lg text-gray-600">Đang tải...</p>
+			</div>
+		);
+
+	if (error)
+		return (
+			<div className="text-center mt-10">
+				<p className="text-lg text-red-500">Lỗi tải điều khoản giao hàng: {error}</p>
+			</div>
+		);
+
 	return (
-		<div className="px-6 py-8 md:px-12 md:py-16">
-			{/* Breadcrumb */}
+		<div className="p-6 max-w-3xl mx-auto bg-white shadow-lg rounded-lg">
+			<Title level={2} className="text-center mb-6 text-indigo-700">
+				Chính Sách Giao Hàng
+			</Title>
 
-			{/* Title */}
-			<h1 className="text-center text-2xl md:text-3xl font-bold mb-8">
-				CHÍNH SÁCH GIAO HÀNG
-			</h1>
+			<Card className="mb-6">
+				<div className="mb-8">
+					<Title level={4} className="text-gray-700 mb-2">
+						Nội thành TP. Hồ Chí Minh
+					</Title>
+					<Text className="block text-gray-600 mb-2">Miễn phí giao hàng</Text>
+					<Text className="block text-gray-600">
+						Với đơn hàng đặt cọc nhận tại cửa hàng, khách hàng vui lòng nhận trong{' '}
+						<span className="text-indigo-600">
+							{orderRule?.DaysWaitForCustomerToPay || 'X'}
+						</span>{' '}
+						ngày kể từ lúc đơn hàng đã được chuẩn bị xong.
+					</Text>
+				</div>
 
-			{/* Nội thành TP.HCM */}
-			<section className="mb-8">
-				<h2 className="text-xl font-semibold mb-4">1. Nội thành TP. Hồ Chí Minh</h2>
-				<ul className="list-disc ml-5 space-y-2">
-					<li>Miễn phí giao hàng, kiểm tra, thanh toán.</li>
-					<li>
-						Đối với hàng thiết kế theo yêu cầu, quý khách vui lòng chuyển khoản trước
-						<strong> 5.000.000 (năm triệu đồng)</strong>, giao tận nơi thanh toán số
-						tiền còn lại.
-					</li>
-					<li>
-						Thời gian nhận hàng trong vòng <strong>12 tiếng</strong> từ khi nhân viên
-						Diamond Shop gọi xác nhận đơn hàng. (Nếu quý khách đặt sau 20h thì đơn hàng
-						sẽ được xử lý vào sáng hôm sau).
-					</li>
-				</ul>
-			</section>
+				<Divider />
 
-			{/* Các thành phố khác */}
-			<section className="mb-8">
-				<h2 className="text-xl font-semibold mb-4">2. Các thành phố khác</h2>
-				<ul className="list-disc ml-5 space-y-2">
-					<li>
-						Miễn phí giao hàng với các hóa đơn trên{' '}
-						<strong>10.000.000 (mười triệu đồng)</strong>.
-					</li>
-					<li>
-						Quý khách chuyển khoản trước <strong>10%</strong>, nhân viên của Diamond
-						Shop sẽ giao tận nơi và thanh toán, không gửi hàng theo chính sách gói đảm
-						bảo.
-					</li>
-					<li>
-						Thời gian nhận hàng trong vòng <strong>72 tiếng</strong> (tùy khu vực).
-					</li>
-				</ul>
-			</section>
+				<div className="mb-8">
+					<Title level={4} className="text-gray-700 mb-2">
+						Các thành phố khác
+					</Title>
+					<Text className="block text-gray-600 mb-2">
+						Cước phí giao hàng sẽ được tính dựa theo địa chỉ nhận hàng.
+					</Text>
+					<Text className="block text-gray-600">
+						Thời gian nhận hàng có thể chậm hơn dự kiến.
+					</Text>
+				</div>
 
-			{/* Hình thức thanh toán */}
-			<section className="mb-8">
-				<h2 className="text-xl font-semibold mb-4">3. Hình thức thanh toán</h2>
-				<ul className="list-disc ml-5 space-y-2">
-					<li>Trả bằng tiền mặt khi nhân viên Diamond Shop giao tận nơi.</li>
-					<li>
-						Thanh toán qua số tài khoản:{' '}
-						<strong>999 111 8888 Nguyễn Thị Ngọc Dung (Vietcombank)</strong>.
-					</li>
-					<li>Để lại thông tin: [HỌ VÀ TÊN] | [SĐT] | [MÓN HÀNG].</li>
-					<li>Nếu khách hàng trả bằng USD sẽ tính theo thời điểm giao hàng.</li>
-				</ul>
-			</section>
+				<Divider />
 
-			{/* Lưu ý */}
-			<p className="text-yellow-500 text-sm mb-6">
-				<strong>Lưu ý:</strong> Quý khách có thể không nhận sản phẩm khi không hài lòng với
-				sản phẩm của chúng tôi do lỗi kỹ thuật hoặc sai mẫu khách hàng đã chọn.
-			</p>
+				<div>
+					<Title level={4} className="text-gray-700 mb-2">
+						Yêu cầu giao lại
+					</Title>
+					<Text className="block text-gray-600 mb-2">
+						Khách hàng được quyền yêu cầu giao lại cho mỗi đơn hàng{' '}
+						<strong>
+							tối đa{' '}
+							<span className="text-indigo-600">
+								{orderRule?.MaxRedelivery || 'X'}
+							</span>{' '}
+						</strong>
+						lần yêu cầu giao lại.
+					</Text>
+					<Text className="block text-gray-600">
+						Nếu vượt số lần yêu cầu mà đơn hàng vẫn giao thất bại, đơn hàng sẽ được tính
+						như khách hàng đã hủy đơn.
+					</Text>
+				</div>
+			</Card>
 		</div>
 	);
 };

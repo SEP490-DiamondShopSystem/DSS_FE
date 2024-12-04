@@ -44,6 +44,8 @@ import PaymentPolicy from '../pages/PortalPage/PaymentPolicy';
 import SidebarMenu from '../components/SidebarMenu';
 import ShippingPolicy from '../pages/PortalPage/DeliveryPolicy';
 import TermOfServices from '../components/TermOfServices';
+import ShoppingGuide from '../pages/PortalPage/ShoppingGuide';
+import WarrantyPolicyPage from '../pages/PortalPage/WarrantyPolicy';
 export const AppRouters = () => {
 	return (
 		<>
@@ -59,7 +61,7 @@ export const AppRouters = () => {
 					path="/jewelry/design-your-own-rings/setting/all"
 					element={<RingSearchPage />}
 				/>
-				<Route path="/terms" element={<TermOfServices />} />
+
 				<Route
 					path="/jewelry/design-your-own-necklaces/setting/all"
 					element={<NecklaceSearchPage />}
@@ -112,7 +114,36 @@ export const AppRouters = () => {
 						</>
 					}
 				/>
-
+				<Route
+					path="/terms"
+					element={
+						<>
+							<SidebarMenu>
+								<TermOfServices />
+							</SidebarMenu>
+						</>
+					}
+				/>
+				<Route
+					path="/guide"
+					element={
+						<>
+							<SidebarMenu>
+								<ShoppingGuide />
+							</SidebarMenu>
+						</>
+					}
+				/>
+				<Route
+					path="/warranty"
+					element={
+						<>
+							<SidebarMenu>
+								<WarrantyPolicyPage />
+							</SidebarMenu>
+						</>
+					}
+				/>
 				{/* Private routes */}
 				<Route
 					path="/cart"

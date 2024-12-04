@@ -49,10 +49,10 @@ export const Footer = () => {
 							<li className="m-2">Giao Hàng An Toàn</li>
 							<li className="m-2">Hộp Và Thiệp Miễn Phí</li>
 							<li className="m-2">
-								<Link to={'/terms'}>Bảo Hành Trang Sức</Link>
+								<Link to={'/warranty'}>Bảo Hành Trang Sức</Link>
 							</li>
 							<li className="m-2">
-								<Link to={'/terms'}>Bảo Hành Kim Cương</Link>
+								<Link to={'/warranty'}>Bảo Hành Kim Cương</Link>
 							</li>
 						</ul>
 					</Col>
@@ -65,11 +65,12 @@ export const Footer = () => {
 								<Link to={'/shipping-policy'}>Chính Sách Giao Hàng</Link>
 							</li>
 							<li className="m-2">
-								<Link to={'/terms'}>Chính Sách Bảo Hành</Link>
+								<Link to={'/payment-policy'}>Chính Sách Thanh Toán</Link>
 							</li>
 							<li className="m-2">
-								<Link to={'/terms'}>Điều Khoản Sử Dụng</Link>
+								<Link to={'/warranty'}>Chính Sách Bảo Hành</Link>
 							</li>
+
 							<li className="m-2">Cam Kết Về Vỏ Trang Sức</li>
 							<li className="m-2">Cam Kết Về Kim Cương</li>
 						</ul>
