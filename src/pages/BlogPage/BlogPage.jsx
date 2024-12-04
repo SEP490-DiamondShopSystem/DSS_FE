@@ -2,8 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {GetAllBlogSelector} from '../../redux/selectors';
 import {getAllBlog} from '../../redux/slices/blogSlice';
-import {Button, Card, Carousel, Col, Row, Typography} from 'antd';
-import {ArrowRightOutlined} from '@ant-design/icons';
+import {Button, Card, Carousel, Col, Row, Typography, Tag} from 'antd';
+import {ArrowRightOutlined, TagsOutlined} from '@ant-design/icons';
 import {useNavigate} from 'react-router-dom';
 import {useMediaQuery} from '@mui/material';
 
@@ -78,10 +78,20 @@ const BlogPage = () => {
 											title={item.Title}
 											style={{marginBottom: '16px'}}
 										/>
+										{item?.Tags && (
+											<div className="flex flex-wrap items-center gap-2 ">
+												<TagsOutlined className="text-gray-500" />
+												{item.Tags.map((tag, index) => (
+													<Tag key={index} color="processing">
+														{tag}
+													</Tag>
+												))}
+											</div>
+										)}
 										<Button
 											type="primary"
 											style={{
-												marginTop: 'auto',
+												marginTop: '2rem',
 												backgroundColor: '#6a4ffc',
 												borderColor: '#6a4ffc',
 												color: '#fff',
@@ -127,10 +137,20 @@ const BlogPage = () => {
 									}}
 								>
 									<Card.Meta title={item.Title} style={{marginBottom: '16px'}} />
+									{item?.Tags && (
+										<div className="flex flex-wrap items-center gap-2 mb-3">
+											<TagsOutlined className="text-gray-500" />
+											{item.Tags.map((tag, index) => (
+												<Tag key={index} color="processing">
+													{tag}
+												</Tag>
+											))}
+										</div>
+									)}
 									<Button
 										type="primary"
 										style={{
-											marginTop: 'auto',
+											marginTop: '2rem',
 											backgroundColor: '#6a4ffc',
 											borderColor: '#6a4ffc',
 											color: '#fff',

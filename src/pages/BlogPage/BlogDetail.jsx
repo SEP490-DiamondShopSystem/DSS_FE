@@ -1,22 +1,37 @@
-import {Image, Typography} from 'antd';
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {getBlogDetail} from '../../redux/slices/blogSlice';
 import {useParams} from 'react-router-dom';
 import {GetBlogDetailSelector} from '../../redux/selectors';
-import parse from 'html-react-parser';
-const {Title, Paragraph} = Typography;
+import {Typography, Image, Card, Tag, Skeleton, Divider} from 'antd';
+import {CalendarOutlined, TagsOutlined} from '@ant-design/icons';
+import DOMPurify from 'dompurify';
+import 'quill/dist/quill.snow.css';
+
+const {Title, Paragraph, Text} = Typography;
 
 const BlogDetail = () => {
 	const {id} = useParams();
 	const dispatch = useDispatch();
 	const blogDetail = useSelector(GetBlogDetailSelector);
 
-	const [blogs, setBlogs] = useState();
+	const [blogs, setBlogs] = useState(null);
+	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
-		dispatch(getBlogDetail(id));
-	}, [id]);
+		const fetchBlogDetail = async () => {
+			try {
+				setLoading(true);
+				await dispatch(getBlogDetail(id));
+			} catch (error) {
+				console.error('Error fetching blog details:', error);
+			} finally {
+				setLoading(false);
+			}
+		};
+
+		fetchBlogDetail();
+	}, [id, dispatch]);
 
 	useEffect(() => {
 		if (blogDetail) {
@@ -24,53 +39,100 @@ const BlogDetail = () => {
 		}
 	}, [blogDetail]);
 
-	return (
-		<div className="p-4 max-w-4xl my-5">
-			{blogs?.Title && (
-				<Title className="text-center" level={2}>
-					{blogs.Title}
-				</Title>
-			)}
+	const sanitizeContent = (content) => {
+		return DOMPurify.sanitize(content, {
+			ALLOWED_TAGS: [
+				'p',
+				'strong',
+				'em',
+				'u',
+				'h1',
+				'h2',
+				'h3',
+				'h4',
+				'h5',
+				'h6',
+				'ul',
+				'ol',
+				'li',
+				'a',
+				'img',
+				'blockquote',
+				'code',
+			],
+			ALLOWED_ATTR: ['href', 'src', 'alt', 'class'],
+		});
+	};
 
-			{blogs?.Thumbnail?.MediaPath && (
-				<div className="flex justify-center items-center">
+	if (loading) {
+		return (
+			<div className="p-4 max-w-4xl mx-auto">
+				<Skeleton active paragraph={{rows: 4}} />
+			</div>
+		);
+	}
+
+	if (!blogs) {
+		return (
+			<div className="p-4 max-w-4xl mx-auto text-center">
+				<Text type="secondary">No blog details found</Text>
+			</div>
+		);
+	}
+
+	return (
+		<Card
+			className="max-w-4xl mx-auto my-6 shadow-lg rounded-xl"
+			cover={
+				blogs?.Thumbnail?.MediaPath && (
 					<Image
 						preview={false}
-						height={400}
 						src={blogs.Thumbnail.MediaPath}
 						alt={blogs.Title}
-						className="w-full h-auto rounded-lg mb-4"
+						className="w-auto max-h-40 object-cover rounded-t-xl" // Updated classes
 					/>
-				</div>
-			)}
+				)
+			}
+		>
+			<Typography>
+				<Title level={2} className="text-center text-gray-800 mb-4 tracking-tight">
+					{blogs.Title}
+				</Title>
 
-			{blogs?.Content && <div className="blog-content my-5">{parse(blogs.Content)}</div>}
+				{blogs?.Content && (
+					<div
+						className="ql-editor blog-content mb-6 prose max-w-none"
+						dangerouslySetInnerHTML={{
+							__html: sanitizeContent(blogs.Content),
+						}}
+					/>
+				)}
 
-			{blogs?.Tags && (
-				<div className="mt-4">
-					<Title level={4}>Tags:</Title>
-					<div className="flex gap-2 flex-wrap">
-						{blogs.Tags.map((tag, index) => (
-							<span
-								key={index}
-								className="bg-gray-200 text-gray-800 px-2 py-1 rounded"
-							>
-								{tag}
-							</span>
-						))}
-					</div>
-				</div>
-			)}
+				<Divider />
 
-			{blogs?.CreatedDate && (
-				<div className="mt-4">
-					<Paragraph>
-						<strong>Ngày tạo: </strong>
-						{new Date(blogs.CreatedDate).toLocaleDateString('vi-VN')}
-					</Paragraph>
+				<div className="flex flex-wrap justify-between items-center">
+					{blogs?.Tags && (
+						<div className="flex flex-wrap items-center gap-2">
+							<TagsOutlined className="text-gray-500" />
+							{blogs.Tags.map((tag, index) => (
+								<Tag key={index} color="processing">
+									{tag}
+								</Tag>
+							))}
+						</div>
+					)}
+
+					{blogs?.CreatedDate && (
+						<div className="flex items-center gap-2 text-gray-600">
+							<CalendarOutlined />
+							<Text type="secondary">
+								{new Date(blogs.CreatedDate).toLocaleDateString('vi-VN')}
+							</Text>
+						</div>
+					)}
 				</div>
-			)}
-		</div>
+			</Typography>
+		</Card>
 	);
 };
 
