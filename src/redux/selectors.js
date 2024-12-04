@@ -98,3 +98,7 @@ export const getAllPricesSelector = (state) => state.diamondPriceSlice.prices;
 export const getAllShapesSelector = (state) => state.diamondPriceSlice.shapes;
 export const LoadingDiamondPriceSelector = (state) => state.diamondPriceSlice.loading;
 export const DiamondPriceErrorSelector = (state) => state.diamondPriceSlice.error;
+//SHOP LOCATION
+export const LoadingLocationSelector = (state) => state.locationSlice.loading;
+export const GetShopLocationSelector = (state) => state.locationSlice.shopLocation;
+export const ErrorLocationSelector = (state) => state.locationSlice.error;
