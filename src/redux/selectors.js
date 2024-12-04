@@ -102,3 +102,13 @@ export const DiamondPriceErrorSelector = (state) => state.diamondPriceSlice.erro
 export const LoadingLocationSelector = (state) => state.locationSlice.loading;
 export const GetShopLocationSelector = (state) => state.locationSlice.shopLocation;
 export const ErrorLocationSelector = (state) => state.locationSlice.error;
+//CONFIG
+export const selectDiamondRule = (state) => state?.configSlice?.diamondRule;
+export const selectFrontendDisplayRule = (state) => state?.configSlice?.frontendDisplayRule;
+export const selectPromotionRule = (state) => state?.configSlice?.promotionRule;
+export const selectLocationRule = (state) => state?.configSlice?.locationRule;
+export const selectOrderRule = (state) => state?.configSlice?.orderRule;
+export const selectOrderPaymentRule = (state) => state?.configSlice?.orderPaymentRule;
+export const selectShopBankAccountRule = (state) => state?.configSlice?.shopBankAccountRule;
+export const selectIsLoading = (state) => state?.configSlice?.loading;
+export const selectConfigError = (state) => state?.configSlice?.error;

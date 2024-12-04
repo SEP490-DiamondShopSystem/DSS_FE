@@ -48,8 +48,12 @@ export const Footer = () => {
 						<ul className="mt-4 text-gray-700">
 							<li className="m-2">Giao Hàng An Toàn</li>
 							<li className="m-2">Hộp Và Thiệp Miễn Phí</li>
-							<li className="m-2">Bảo Hành Trang Sức</li>
-							<li className="m-2">Bảo Hành Kim Cương</li>
+							<li className="m-2">
+								<Link to={'/terms'}>Bảo Hành Trang Sức</Link>
+							</li>
+							<li className="m-2">
+								<Link to={'/terms'}>Bảo Hành Kim Cương</Link>
+							</li>
 						</ul>
 					</Col>
 
@@ -60,8 +64,12 @@ export const Footer = () => {
 							<li className="m-2">
 								<Link to={'/shipping-policy'}>Chính Sách Giao Hàng</Link>
 							</li>
-							<li className="m-2">Chính Sách Bảo Hành</li>
-							<li className="m-2">Điều Khoản Sử Dụng</li>
+							<li className="m-2">
+								<Link to={'/terms'}>Chính Sách Bảo Hành</Link>
+							</li>
+							<li className="m-2">
+								<Link to={'/terms'}>Điều Khoản Sử Dụng</Link>
+							</li>
 							<li className="m-2">Cam Kết Về Vỏ Trang Sức</li>
 							<li className="m-2">Cam Kết Về Kim Cương</li>
 						</ul>

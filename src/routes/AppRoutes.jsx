@@ -43,7 +43,7 @@ import SideDiamondPricePage from '../pages/DiamondPricePage/SideDiamondPricePage
 import PaymentPolicy from '../pages/PortalPage/PaymentPolicy';
 import SidebarMenu from '../components/SidebarMenu';
 import ShippingPolicy from '../pages/PortalPage/DeliveryPolicy';
-
+import TermOfServices from '../components/TermOfServices';
 export const AppRouters = () => {
 	return (
 		<>
@@ -59,6 +59,7 @@ export const AppRouters = () => {
 					path="/jewelry/design-your-own-rings/setting/all"
 					element={<RingSearchPage />}
 				/>
+				<Route path="/terms" element={<TermOfServices />} />
 				<Route
 					path="/jewelry/design-your-own-necklaces/setting/all"
 					element={<NecklaceSearchPage />}
