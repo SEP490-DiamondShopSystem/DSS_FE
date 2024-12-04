@@ -33,7 +33,7 @@ const SidebarMenu = ({children}) => {
 				{name: 'Chính Sách Thanh Toán', path: '/payment-policy'},
 				{name: 'Chính Sách Giao Hàng', path: '/shipping-policy'},
 				{name: 'Chính Sách Bảo Hành', path: '/warranty'},
-
+				{name: 'Chính Sách Thành Viên', path: '/member-policy'},
 				// {name: 'DPayLater', path: '/dpaylater'},
 				// {name: 'Diamond Xu', path: '/diamond-xu'},
 				// {name: 'Số dư TK Diamond', path: '/diamond-balance'},

@@ -46,6 +46,7 @@ import ShippingPolicy from '../pages/PortalPage/DeliveryPolicy';
 import TermOfServices from '../components/TermOfServices';
 import ShoppingGuide from '../pages/PortalPage/ShoppingGuide';
 import WarrantyPolicyPage from '../pages/PortalPage/WarrantyPolicy';
+import LoyalCustomerPolicyPage from '../pages/PortalPage/CustomerPolicy';
 export const AppRouters = () => {
 	return (
 		<>
@@ -120,6 +121,16 @@ export const AppRouters = () => {
 						<>
 							<SidebarMenu>
 								<TermOfServices />
+							</SidebarMenu>
+						</>
+					}
+				/>
+				<Route
+					path="/member-policy"
+					element={
+						<>
+							<SidebarMenu>
+								<LoyalCustomerPolicyPage />
 							</SidebarMenu>
 						</>
 					}
