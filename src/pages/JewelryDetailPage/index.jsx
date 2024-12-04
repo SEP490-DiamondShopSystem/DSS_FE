@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
 import LoginModal from '../../components/LogModal/LoginModal';
 import {GetJewelryDetailSelector} from '../../redux/selectors';
-import {getJewelryDetail} from '../../redux/slices/jewelrySlice';
+import {getJewelryDetail, getJewelryNoDiamond} from '../../redux/slices/jewelrySlice';
 import {ImageGallery} from './Left/ImageGallery';
 import {InformationLeft} from './Left/InformationLeft';
 import {InformationRight} from './Right/InformationRight';
@@ -15,13 +15,12 @@ const JewelryDetailPage = () => {
 	const {id} = useParams();
 	const dispatch = useDispatch();
 
-	const jewelryDetail = useSelector(GetJewelryDetailSelector);
-
 	const [size, setSize] = useState(null);
 	const [jewelry, setJewelry] = useState();
 	const [selectedMetal, setSelectedMetal] = useState(null);
 	const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
 	const [selectedSideDiamond, setSelectedSideDiamond] = useState();
+	const [jewelrySelected, setJewelrySelected] = useState();
 
 	const items = [
 		{
@@ -42,6 +41,23 @@ const JewelryDetailPage = () => {
 				setSelectedSideDiamond(res?.SideDiamonds?.[0] || null);
 			});
 	}, []);
+
+	useEffect(() => {
+		if (size) {
+			dispatch(
+				getJewelryNoDiamond({
+					ModelId: id,
+					MetalId: selectedMetal?.Id,
+					SizeId: size,
+					SideDiamondOptId: selectedSideDiamond.Id,
+				})
+			)
+				.unwrap()
+				.then((res) => {
+					setJewelrySelected(res);
+				});
+		}
+	}, [selectedMetal, id, size, selectedSideDiamond]);
 
 	const hideLoginModal = () => setIsLoginModalVisible(false);
 
@@ -105,6 +121,7 @@ const JewelryDetailPage = () => {
 						selectedSideDiamond={selectedSideDiamond}
 						filteredGroups={filteredGroups}
 						id={id}
+						jewelrySelected={jewelrySelected}
 					/>
 				</div>
 			</div>

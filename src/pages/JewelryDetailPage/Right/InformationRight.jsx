@@ -27,6 +27,7 @@ export const InformationRight = ({
 	selectedSideDiamond,
 	filteredGroups,
 	id,
+	jewelrySelected,
 }) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
@@ -39,7 +40,6 @@ export const InformationRight = ({
 	const [reviewLength, setReviewLength] = useState(null);
 	const [reviews, setReviews] = useState(null);
 	const [orderBy, setOrderBy] = useState(false);
-	const [jewelrySelected, setJewelrySelected] = useState();
 
 	useEffect(() => {
 		dispatch(
@@ -57,26 +57,6 @@ export const InformationRight = ({
 			setReviews(reviewList?.Values);
 		}
 	}, [reviewList]);
-
-	console.log('id', id);
-	console.log('selectedSideDiamond', selectedSideDiamond);
-	console.log('selectedMetal', selectedMetal);
-	console.log('size', size);
-
-	// useEffect(() => {
-	// 	dispatch(
-	// 		getJewelryNoDiamond({
-	// 			ModelId: id,
-	// 			MetalId: selectedMetal?.Id,
-	// 			SizeId: size,
-	// 			SideDiamondOptId: selectedSideDiamond,
-	// 		})
-	// 	)
-	// 		.unwrap()
-	// 		.then((res) => {
-	// 			setJewelrySelected(res);
-	// 		});
-	// }, [selectedMetal, id, size, selectedSideDiamond]);
 
 	const toggleDetail = () => {
 		setDetail(!showDetail);
@@ -128,7 +108,7 @@ export const InformationRight = ({
 			navigate(`/diamond-choose/search`, {state: {jewelryModel}});
 		} else {
 			// navigate(`/jewelry-choose/search`, {state: {jewelryModel}});
-			navigate(`/jewelry-choose/search`, {state: {jewelryModel}});
+			navigate(`/completed-jewelry/${jewelrySelected}`);
 		}
 	};
 
