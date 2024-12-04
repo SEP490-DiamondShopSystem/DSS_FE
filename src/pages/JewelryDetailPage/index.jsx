@@ -34,8 +34,6 @@ const JewelryDetailPage = () => {
 	];
 
 	useEffect(() => {
-		console.log('chạy ở đây');
-
 		dispatch(getJewelryDetail({id}))
 			.unwrap()
 			.then((res) => {
@@ -86,7 +84,7 @@ const JewelryDetailPage = () => {
 	);
 
 	return (
-		<div className="px-4 md:px-32">
+		<div className="px-4 md:px-32 md:mt-10">
 			<Steps items={items} current={0} className="w-full md:w-auto" />
 
 			<div className="flex flex-col md:flex-row bg-white my-10 md:my-20 rounded-lg shadow-lg">

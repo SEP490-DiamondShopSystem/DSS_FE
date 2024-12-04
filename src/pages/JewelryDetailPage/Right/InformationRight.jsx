@@ -12,6 +12,7 @@ import {convertToVietnamDate, formatPrice, Rating} from '../../../utils';
 import JewelryPopup from '../Popup/ProductReviews';
 import {getAllJewelryModelReview} from '../../../redux/slices/reviewSlice';
 import ProductReviews from '../Popup/ProductReviews';
+import {getJewelryNoDiamond} from '../../../redux/slices/jewelrySlice';
 
 const {Option} = Select;
 
@@ -38,6 +39,7 @@ export const InformationRight = ({
 	const [reviewLength, setReviewLength] = useState(null);
 	const [reviews, setReviews] = useState(null);
 	const [orderBy, setOrderBy] = useState(false);
+	const [jewelrySelected, setJewelrySelected] = useState();
 
 	useEffect(() => {
 		dispatch(
@@ -56,9 +58,25 @@ export const InformationRight = ({
 		}
 	}, [reviewList]);
 
-	// useEffect(() => {
+	console.log('id', id);
+	console.log('selectedSideDiamond', selectedSideDiamond);
+	console.log('selectedMetal', selectedMetal);
+	console.log('size', size);
 
-	// },[])
+	// useEffect(() => {
+	// 	dispatch(
+	// 		getJewelryNoDiamond({
+	// 			ModelId: id,
+	// 			MetalId: selectedMetal?.Id,
+	// 			SizeId: size,
+	// 			SideDiamondOptId: selectedSideDiamond,
+	// 		})
+	// 	)
+	// 		.unwrap()
+	// 		.then((res) => {
+	// 			setJewelrySelected(res);
+	// 		});
+	// }, [selectedMetal, id, size, selectedSideDiamond]);
 
 	const toggleDetail = () => {
 		setDetail(!showDetail);
@@ -109,6 +127,7 @@ export const InformationRight = ({
 		if (diamondJewelry?.MainDiamonds?.length > 0) {
 			navigate(`/diamond-choose/search`, {state: {jewelryModel}});
 		} else {
+			// navigate(`/jewelry-choose/search`, {state: {jewelryModel}});
 			navigate(`/jewelry-choose/search`, {state: {jewelryModel}});
 		}
 	};
