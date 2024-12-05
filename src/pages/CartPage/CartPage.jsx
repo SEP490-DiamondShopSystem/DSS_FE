@@ -58,6 +58,7 @@ const mapAttributes = (data, attributes) => {
 		SerialCode: data?.Jewelry?.SerialCode,
 		ShippingDate: data?.Jewelry?.ShippingDate,
 		SideDiamonds: data?.Jewelry?.SideDiamonds,
+		JewelryThumbnail: data?.Jewelry?.Model?.Thumbnail?.MediaPath,
 		SizeId: data?.Jewelry?.SizeId,
 		Weight: data?.Jewelry?.Weight,
 		JewelryModel: data.JewelryModel,
@@ -89,7 +90,7 @@ const mapAttributes = (data, attributes) => {
 		Title: data?.Diamond?.Title,
 		DiamondPriceOffset: data?.Diamond?.PriceOffset,
 		IsLabDiamond: data?.IsLabDiamond,
-		DiamondThumbnail: data?.Diamond?.Thumbnail,
+		DiamondThumbnail: data?.Diamond?.Thumbnail?.MediaPath,
 		CriteriaId: data?.Diamond?.DiamondPrice?.CriteriaId,
 	};
 };
@@ -273,8 +274,14 @@ const CartPage = () => {
 									>
 										<div className="mr-4 flex-shrink-0 w-full sm:w-32 md:w-32 lg:w-32">
 											<img
-												src={item?.Thumbnail?.MediaPath}
-												alt={item?.JewelryName||item?.Title ||item?.Thumbnail?.MediaName}
+												src={
+													item?.DiamondThumbnail || item?.JewelryThumbnail
+												}
+												alt={
+													item?.DiamondThumbnail ||
+													item?.Title ||
+													item?.Thumbnail?.MediaName
+												}
 												className="w-full h-32 object-cover rounded-lg border"
 											/>
 										</div>

@@ -1,17 +1,26 @@
 import {InboxOutlined} from '@ant-design/icons';
 import {Button, Modal, QRCode, Upload, message} from 'antd';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {LoadingPaymentSelector} from '../../../redux/selectors';
-import {handleAddTransfer} from '../../../redux/slices/paymentSlice';
+import {fetchShopBankAccountRule} from '../../../redux/slices/configSlice';
 import {getUserOrderTransaction} from '../../../redux/slices/orderSlice';
+import {handleAddTransfer} from '../../../redux/slices/paymentSlice';
 
 export const OrderPayment = ({order, setTransfer}) => {
 	const dispatch = useDispatch();
 	const loading = useSelector(LoadingPaymentSelector);
-	// const
+	const [ruleBank, setRuleBank] = useState();
 
 	const [fileList, setFileList] = useState([]);
+
+	useEffect(() => {
+		dispatch(fetchShopBankAccountRule())
+			.unwrap()
+			.then((res) => {
+				setRuleBank(res);
+			});
+	}, []);
 
 	const handleFileChange = ({file, fileList}) => {
 		// Chỉ giữ lại file mới nhất, không thêm file vào danh sách cũ
@@ -65,28 +74,23 @@ export const OrderPayment = ({order, setTransfer}) => {
 			{order?.PaymentMethodId === '1' && (
 				<div className="w-full">
 					<h3 className="text-xl font-semibold mb-4">Chuyển khoản ngân hàng</h3>
-					<p className="mb-4 text-gray-600">
-						Phương Thức Thanh Toán:{' '}
-						{order?.PaymentType === 1 ? 'Trả Hết' : 'Thanh Toán Khi Nhận Hàng'}
-					</p>
 					<div className="space-y-4 sm:space-y-0 sm:flex sm:items-center sm:justify-between">
 						<div className="text-sm sm:text-base">
 							<p>
 								<strong className="text-gray-700">Tên ngân hàng:</strong>{' '}
-								{order.bankName || 'VIETCOMBANK'}
+								{ruleBank?.BankName || 'VIETCOMBANK'}
 							</p>
 							<p>
 								<strong className="text-gray-700">Số tài khoản:</strong>{' '}
-								{order.accountNumber || '0701000439554'}
+								{ruleBank?.AccountNumber || '0701000439554'}
 							</p>
 							<p>
 								<strong className="text-gray-700">Tên người nhận:</strong>{' '}
-								{order.accountHolder || 'PHAM XUAN HUY'}
+								{ruleBank?.AccountName || 'PHAM XUAN HUY'}
 							</p>
 							<p>
 								<strong className="text-gray-700">Ghi chú:</strong>{' '}
-								{order.transferNote ||
-									'Vui lòng ghi mã đơn hàng vào nội dung chuyển khoản.'}
+								{'Vui lòng ghi mã đơn hàng vào nội dung chuyển khoản.'}
 							</p>
 						</div>
 						<div className="mt-4 sm:mt-0 sm:ml-10 flex justify-center">
@@ -140,10 +144,6 @@ export const OrderPayment = ({order, setTransfer}) => {
 			{order?.PaymentMethodId === '2' && (
 				<div className="zalopay-payment">
 					<h3 className="text-xl font-semibold mb-4">Thanh toán qua ZaloPay</h3>
-					<p className="mb-4 text-gray-600">
-						Phương Thức Thanh Toán:{' '}
-						{order?.PaymentType === 1 ? 'Trả Hết' : 'Thanh Toán Khi Nhận Hàng'}
-					</p>
 					<p className="mb-4 text-gray-600">
 						Bấm nút bên dưới để chuyển đến cổng thanh toán ZaloPay:
 					</p>

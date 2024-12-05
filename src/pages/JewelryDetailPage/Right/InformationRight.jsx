@@ -233,7 +233,7 @@ export const InformationRight = ({
 				)}
 			</div>
 
-			{size !== null && selectedMetal !== null && (
+			{size !== null && selectedMetal !== null && jewelrySelected && (
 				<div className="flex justify-between items-center mt-5">
 					<Button
 						type="text"

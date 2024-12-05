@@ -454,7 +454,7 @@ const MyInfoPage = () => {
 							</div>
 							<div className="w-full">
 								<label>Số Điện Thoại</label>
-								<Input value={userInfo.phone} disabled />
+								<Input value={userInfo.phone} disabled={!editing} />
 							</div>
 						</div>
 					</div>

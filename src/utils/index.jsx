@@ -108,15 +108,15 @@ export const getOrderStatus = (status) => {
 export const getOrderPaymentStatus = (status) => {
 	switch (status) {
 		case 1:
-			return 'Paid All';
+			return 'Chờ xác thực';
 		case 2:
-			return 'Deposited';
+			return 'Trả góp';
 		case 3:
-			return 'Refunding';
+			return 'Trả hết';
 		case 4:
-			return 'Refunded';
+			return 'Đang chờ hoàn tiền';
 		case 5:
-			return 'Pending';
+			return 'Đã hoàn tiền';
 		case 6:
 
 		default:
