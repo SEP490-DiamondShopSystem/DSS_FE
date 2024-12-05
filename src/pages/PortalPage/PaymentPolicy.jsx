@@ -1,7 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {message, Typography, Card} from 'antd';
-import {fetchOrderRulePayment, fetchOrderRule} from '../../redux/slices/configSlice';
+import {
+	fetchOrderRulePayment,
+	fetchOrderRule,
+	fetchShopBankAccountRule,
+} from '../../redux/slices/configSlice';
 import {selectIsLoading, selectConfigError} from '../../redux/selectors';
 
 const {Title, Text} = Typography;
@@ -10,6 +14,7 @@ const PaymentPolicyPage = () => {
 	const dispatch = useDispatch();
 	const [paymentRule, setPaymentRule] = useState(null);
 	const [orderRule, setOrderRule] = useState(null);
+	const [bankRule, setBankRule] = useState(null);
 
 	const isLoading = useSelector(selectIsLoading);
 	const error = useSelector(selectConfigError);
@@ -17,12 +22,14 @@ const PaymentPolicyPage = () => {
 	useEffect(() => {
 		const fetchPaymentData = async () => {
 			try {
-				const [payment, order] = await Promise.all([
+				const [payment, order, bank] = await Promise.all([
 					dispatch(fetchOrderRulePayment()).unwrap(),
 					dispatch(fetchOrderRule()).unwrap(),
+					dispatch(fetchShopBankAccountRule()).unwrap(),
 				]);
 				setPaymentRule(payment || {});
 				setOrderRule(order || {});
+				setBankRule(bank || {});
 			} catch (error) {
 				message.error('Failed to fetch payment configuration data.');
 				console.error('Fetch error:', error);
@@ -101,6 +108,17 @@ const PaymentPolicyPage = () => {
 					<Title level={4} className="text-gray-700 mb-2">
 						3. Thanh Toán Chuyển Khoản Ngân Hàng
 					</Title>
+					<Text className="block text-gray-600 mb-2">
+						Khách hàng thanh toán chuyển khoản qua số tài khoản{' '}
+						<strong>
+							{' '}
+							{bankRule?.AccountNumber} {bankRule?.AccountName}
+							{'('} {bankRule?.BankName}
+							{')'}
+						</strong>
+						<br />
+						Để lại thông tin: [HỌ VÀ TÊN] [ SĐT] [MÓN HÀNG].
+					</Text>
 					<Text className="block text-gray-600 mb-2">
 						Khách hàng phải chuyển <strong>MỘT</strong> giao dịch duy nhất và đúng số
 						tiền với yêu cầu thanh toán.
