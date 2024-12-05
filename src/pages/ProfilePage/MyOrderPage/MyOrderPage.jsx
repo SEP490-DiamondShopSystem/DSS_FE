@@ -266,7 +266,7 @@ const MyOrderPage = () => {
 						onClick={() => handleStatusClick(statusItem.status)}
 					>
 						<div className="p-3 w-16 sm:w-20 text-center">{statusItem.icon}</div>
-						<div className="mt-2 sm:mt-0 sm:ml-5 text-sm sm:text-base text-center">
+						<div className="sm:mt-0 sm:ml-5 text-sm sm:text-base text-center">
 							{statusItem.name}
 						</div>
 					</div>

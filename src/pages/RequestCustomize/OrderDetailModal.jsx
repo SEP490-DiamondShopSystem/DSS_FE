@@ -433,7 +433,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 								>
 									Thanh Toán
 								</Button>
-								<Button danger className="text-white" onClick={handleCancelOrder}>
+								<Button danger className="" onClick={handleCancelOrder}>
 									Hủy Đơn
 								</Button>
 							</Space>

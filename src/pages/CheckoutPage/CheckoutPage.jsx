@@ -152,7 +152,7 @@ const CheckoutPage = () => {
 		firstName: userDetail.FirstName || '',
 		lastName: userDetail.LastName || '',
 		email: userDetail.Email || '',
-		phone: '',
+		phone: userDetail.PhoneNumber,
 		province: userDetail?.Addresses?.[0]?.Province || '',
 		district: userDetail?.Addresses?.[0]?.District || '',
 		ward: userDetail?.Addresses?.[0]?.Ward || '',
@@ -272,6 +272,9 @@ const CheckoutPage = () => {
 	useEffect(() => {
 		dispatch(getAllPromo());
 	}, []);
+
+	console.log('cartList', cartList);
+	console.log('orderRule', orderRule);
 
 	useEffect(() => {
 		if (idCustomize) {
@@ -754,6 +757,7 @@ const CheckoutPage = () => {
 												maxLength={10}
 												name="phone"
 												onChange={handleChange}
+												disabled={userDetail.PhoneNumber}
 											/>
 										</Form.Item>
 									</div>
@@ -774,7 +778,10 @@ const CheckoutPage = () => {
 												},
 											]}
 										>
-											<Input placeholder="Email" />
+											<Input
+												placeholder="Email"
+												disabled={userDetail.Email}
+											/>
 										</Form.Item>
 									</div>
 								</div>
@@ -887,7 +894,7 @@ const CheckoutPage = () => {
 								<div className="flex mt-4 shadow-xl p-5 rounded-lg" key={order.Id}>
 									<div className="mr-4 flex-shrink-0">
 										<img
-											src="path-to-image"
+											src={order?.JewelryThumbnail}
 											alt={order?.Jewelry?.SerialCode || order?.Title}
 											className="w-32 h-32 object-cover rounded-lg border"
 										/>
