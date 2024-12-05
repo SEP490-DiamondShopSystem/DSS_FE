@@ -85,7 +85,7 @@ export const TransactionDetails = ({transactions, order}) => {
 										Thông tin giao dịch
 									</Title>
 									<div className="transaction-info">
-										<div className="mb-3">
+										<div className="mb-5 mt-2">
 											<Text strong className="block">
 												Mô tả giao dịch:
 											</Text>
@@ -93,21 +93,23 @@ export const TransactionDetails = ({transactions, order}) => {
 												{transaction.Description}
 											</Text>
 										</div>
-										<div className="mb-3">
+										<div className="mb-5">
 											<Text strong className="block">
 												Ngày giao dịch:
 											</Text>
 											<Text className="text-lg">{transaction.InitDate}</Text>
 										</div>
-										<div className="mb-3">
+										<div className="mb-5">
 											<Text strong className="block">
 												Ngày xác nhận:
 											</Text>
 											<Text className="text-lg">
-												{transaction.VerifiedDate}
+												{transaction.VerifiedDate
+													? transaction.VerifiedDate
+													: 'Giao dịch chưa được xác nhận'}
 											</Text>
 										</div>
-										<div className="mb-3">
+										<div className="mb-5">
 											<Text strong className="block">
 												Số tiền giao dịch:
 											</Text>
@@ -116,7 +118,7 @@ export const TransactionDetails = ({transactions, order}) => {
 											</Text>
 										</div>
 										{transaction.FineAmount !== 0 && (
-											<div className="mb-3">
+											<div className="mb-5">
 												<Text strong className="block">
 													Số tiền phạt (nếu có):
 												</Text>
@@ -187,7 +189,7 @@ export const TransactionDetails = ({transactions, order}) => {
 												<Image
 													src={transaction.Evidence.MediaPath}
 													alt="Chứng từ"
-													className="rounded-lg border shadow-md w-full md:w-[300px]"
+													className="rounded-lg border shadow-md w-full md:w-[100px]"
 												/>
 												{order?.Status === 1 && (
 													<>
@@ -211,6 +213,7 @@ export const TransactionDetails = ({transactions, order}) => {
 																	handleCompleted(transaction.Id)
 																}
 																loading={loading}
+																disabled={fileList?.length === 0}
 															>
 																Gửi
 															</Button>

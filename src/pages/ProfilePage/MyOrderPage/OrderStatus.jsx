@@ -12,6 +12,7 @@ export const OrderStatus = ({orderStatus, order}) => {
 	const [indexRejected, setIndexRejected] = useState(0);
 
 	console.log('indexCancelled', indexCancelled);
+	console.log('indexRejected', indexRejected);
 	console.log('currentStep', currentStep);
 
 	useEffect(() => {
@@ -114,16 +115,24 @@ export const OrderStatus = ({orderStatus, order}) => {
 		// Step 2: Đang Vận Chuyển
 		{
 			title:
-				currentStep === 2
+				currentStep === 2 && orderStatus === 6
 					? 'Đang Vận Chuyển'
 					: orderStatus === 4 && indexCancelled === 3
 					? 'Đã Hủy'
+					: orderStatus === 3 && indexRejected === 8
+					? 'Đã Bị Từ Chối'
+					: orderStatus === 3 && indexRejected === 7
+					? 'Đã Bị Từ Chối'
 					: 'Đã Vận Chuyển',
 			description:
-				currentStep === 2
+				currentStep === 2 && orderStatus === 6
 					? 'Đơn hàng đang được vận chuyển.'
 					: orderStatus === 4 && indexCancelled === 3
 					? `Đơn hàng đã bị hủy. Lý Do: ${order?.CancelledReason}`
+					: indexRejected === 8
+					? `Đơn hàng đã bị từ chối. Lý Do: ${order?.CancelledReason}`
+					: indexRejected === 7
+					? `Đơn hàng đã bị từ chối. Lý Do: ${order?.CancelledReason}`
 					: 'Đã Vận Chuyển',
 		},
 		// Step 3: Giao Hàng
@@ -133,10 +142,10 @@ export const OrderStatus = ({orderStatus, order}) => {
 					? 'Giao hàng Thất Bại'
 					: currentStep === 7
 					? 'Đang Giao Hàng'
-					: orderStatus === 4 && indexCancelled === 13
+					: indexCancelled === 13 || indexCancelled === 5
 					? 'Đã Hủy'
-					: orderStatus === 4 && indexCancelled === 5
-					? 'Đã Hủy'
+					: indexRejected === 20
+					? 'Đã Từ Cối'
 					: 'Đã Nhận Hàng',
 			description:
 				currentStep === 6 && orderStatus === 7
@@ -147,6 +156,8 @@ export const OrderStatus = ({orderStatus, order}) => {
 					? `Đơn hàng đã bị hủy. Lý Do: ${order?.CancelledReason}`
 					: orderStatus === 4 && indexCancelled === 5
 					? `Đơn hàng đã bị hủy. Lý Do: ${order?.CancelledReason}`
+					: indexRejected === 20
+					? `Đơn hàng đã bị từ chối. Lý Do: ${order?.CancelledReason}`
 					: 'Đơn hàng đã hoàn thành.',
 		},
 		// Step 4: Hoàn Thành
@@ -186,6 +197,18 @@ export const OrderStatus = ({orderStatus, order}) => {
 		steps[2].status = 'wait';
 		steps[3].status = 'wait';
 		steps[4].status = 'wait';
+	} else if (currentStep === 2 && orderStatus === 3 && indexRejected === 8) {
+		steps[0].status = 'finish';
+		steps[1].status = 'finish';
+		steps[2].status = 'error';
+		steps[3].status = 'wait';
+		steps[4].status = 'wait';
+	} else if (currentStep === 2 && orderStatus === 3 && indexRejected === 7) {
+		steps[0].status = 'finish';
+		steps[1].status = 'finish';
+		steps[2].status = 'error';
+		steps[3].status = 'wait';
+		steps[4].status = 'wait';
 	} else if (currentStep === 3 && orderStatus === 4 && indexCancelled === 1) {
 		steps[0].status = 'error';
 		steps[1].status = 'wait';
@@ -211,6 +234,12 @@ export const OrderStatus = ({orderStatus, order}) => {
 		steps[3].status = 'error';
 		steps[4].status = 'wait';
 	} else if (currentStep === 3 && orderStatus === 4 && indexCancelled === 13) {
+		steps[0].status = 'finish';
+		steps[1].status = 'finish';
+		steps[2].status = 'finish';
+		steps[3].status = 'error';
+		steps[4].status = 'wait';
+	} else if (currentStep === 3 && indexRejected === 20) {
 		steps[0].status = 'finish';
 		steps[1].status = 'finish';
 		steps[2].status = 'finish';

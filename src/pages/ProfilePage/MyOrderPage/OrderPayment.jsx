@@ -69,6 +69,8 @@ export const OrderPayment = ({order, setTransfer}) => {
 		return <div className="text-center text-gray-500">Không có dữ liệu đơn hàng.</div>;
 	}
 
+	console.log('fileList', fileList);
+
 	return (
 		<div className="p-6 bg-white rounded-lg shadow-md max-w-lg mx-auto">
 			{order?.PaymentMethodId === '1' && (
@@ -133,6 +135,7 @@ export const OrderPayment = ({order, setTransfer}) => {
 								className="px-10 py-2 bg-primary"
 								onClick={handleCompleted}
 								loading={loading}
+								disabled={fileList?.length === 0}
 							>
 								Gửi
 							</Button>
@@ -144,9 +147,9 @@ export const OrderPayment = ({order, setTransfer}) => {
 			{order?.PaymentMethodId === '2' && (
 				<div className="zalopay-payment">
 					<h3 className="text-xl font-semibold mb-4">Thanh toán qua ZaloPay</h3>
-					<p className="mb-4 text-gray-600">
+					<span className="mb-4 text-gray-600">
 						Bấm nút bên dưới để chuyển đến cổng thanh toán ZaloPay:
-					</p>
+					</span>
 					<button
 						onClick={handleZaloPay}
 						className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-md shadow hover:bg-blue-700 transition"
