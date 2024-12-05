@@ -7,7 +7,7 @@ import {
 	OrderedListOutlined,
 	TransactionOutlined,
 } from '@ant-design/icons';
-import {Button, message, Table, Tag, Tooltip} from 'antd';
+import {Button, message, Modal, Table, Tag, Tooltip} from 'antd';
 import React, {useEffect, useState} from 'react';
 import {Helmet} from 'react-helmet';
 import {useDispatch, useSelector} from 'react-redux';
@@ -46,6 +46,17 @@ const MyOrderPage = () => {
 	const [pageSize, setPageSize] = useState(5);
 	const [status, setStatus] = useState('');
 	const [orderList, setOrderList] = useState();
+	const [isResponsive, setIsResponsive] = useState(window.innerWidth <= 768);
+
+	useEffect(() => {
+		const handleResize = () => {
+			setIsResponsive(window.innerWidth <= 768);
+		};
+		window.addEventListener('resize', handleResize);
+		return () => {
+			window.removeEventListener('resize', handleResize);
+		};
+	}, []);
 
 	const columns = [
 		{
@@ -133,6 +144,17 @@ const MyOrderPage = () => {
 							<EyeFilled />
 						</Button>
 					</Tooltip>
+					{record?.paymentStatus === 1 && record?.Transactions?.length === 0 && (
+						<Tooltip title={'Thanh Toán'}>
+							<Button
+								type="text"
+								className="p-2 border border-primary rounded-lg hover:bg-primary hover:text-white transition-colors duration-300 mr-2"
+								onClick={() => handleTransaction(record)}
+							>
+								<TransactionOutlined />
+							</Button>
+						</Tooltip>
+					)}
 				</>
 			),
 		},
@@ -181,7 +203,8 @@ const MyOrderPage = () => {
 				orderTime: order.CreatedDate,
 				price: formatPrice(order.TotalPrice),
 				status: getOrderStatus(order.Status),
-				paymentStatus: getOrderPaymentStatus(order.PaymentStatus),
+				paymentStatus: order.PaymentStatus,
+				Transactions: order.Transactions,
 				products: order.Items.map((item) => ({
 					productId: item.Id,
 					productName: item.Name,
@@ -205,6 +228,26 @@ const MyOrderPage = () => {
 		setOpenInvoice(!openInvoice);
 	};
 
+	console.log('orderList', orderList);
+
+	const handleTransaction = (order) => {
+		console.log('order', order);
+
+		if (order?.paymentMethodId === '2') {
+			dispatch(getUserOrderTransaction(order?.orderId))
+				.unwrap()
+				.then((res) => {
+					window.open(res?.PaymentUrl, '_blank');
+				})
+				.catch((error) => {
+					message.error(error?.detail || error?.title);
+				});
+		} else {
+			Modal.confirm({
+				title: 'Vui lòng vào đơn hàng để thanh toán',
+			});
+		}
+	};
 	return (
 		<div>
 			<Helmet>
@@ -223,7 +266,7 @@ const MyOrderPage = () => {
 						onClick={() => handleStatusClick(statusItem.status)}
 					>
 						<div className="p-3 w-16 sm:w-20 text-center">{statusItem.icon}</div>
-						<div className="mt-2 sm:mt-0 sm:ml-5 text-sm sm:text-base text-center">
+						<div className="sm:mt-0 sm:ml-5 text-sm sm:text-base text-center">
 							{statusItem.name}
 						</div>
 					</div>
@@ -245,7 +288,11 @@ const MyOrderPage = () => {
 					className="custom-table-header"
 					rowKey="orderId"
 					loading={loading}
-					onRow={(record) => ({onClick: () => toggleDetailModal(record)})}
+					onRow={
+						isResponsive
+							? (record) => ({onClick: () => toggleDetailModal(record)})
+							: undefined
+					}
 				/>
 			</div>
 

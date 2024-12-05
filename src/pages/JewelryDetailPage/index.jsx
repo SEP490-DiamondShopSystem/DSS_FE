@@ -49,7 +49,7 @@ const JewelryDetailPage = () => {
 					ModelId: id,
 					MetalId: selectedMetal?.Id,
 					SizeId: size,
-					SideDiamondOptId: selectedSideDiamond.Id,
+					SideDiamondOptId: selectedSideDiamond?.Id,
 				})
 			)
 				.unwrap()

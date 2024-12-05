@@ -3355,3 +3355,9 @@ video {
 .mt-7 {
 	margin-top: 1.75rem /* 28px */;
 }
+
+@media (min-width: 768px) {
+	.md\:w-\[100px\] {
+		width: 100px;
+	}
+}

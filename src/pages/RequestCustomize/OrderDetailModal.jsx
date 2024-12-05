@@ -398,7 +398,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 						<h1 className="text-xl font-semibold">Chi tiết đơn thiết kế</h1>
 						{orderStatus === 1 && (
 							<Space>
-								<Button danger className="text-white" onClick={handleCancelOrder}>
+								<Button danger className="" onClick={handleCancelOrder}>
 									Hủy Đơn
 								</Button>
 							</Space>
@@ -407,19 +407,19 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 							<Space>
 								<Button
 									type="text"
-									className="bg-primary text-white"
+									className="bg-primary "
 									onClick={handleProceedConfirmation}
 								>
 									Đồng Ý Đơn
 								</Button>
-								<Button danger className="text-white" onClick={handleRejectOrder}>
+								<Button danger className="" onClick={handleRejectOrder}>
 									Từ Chối Đơn
 								</Button>
 							</Space>
 						)}
 						{orderStatus === 3 && (
 							<Space>
-								<Button danger className="text-white" onClick={handleCancelOrder}>
+								<Button danger className="" onClick={handleCancelOrder}>
 									Hủy Đơn
 								</Button>
 							</Space>
@@ -433,7 +433,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 								>
 									Thanh Toán
 								</Button>
-								<Button danger className="text-white" onClick={handleCancelOrder}>
+								<Button danger className="" onClick={handleCancelOrder}>
 									Hủy Đơn
 								</Button>
 							</Space>

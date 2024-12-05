@@ -396,11 +396,11 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 								</div>
 							</div>
 
-							<div className="flex justify-between">
+							<div className="flex justify-between mt-10">
 								<Title level={3} className="text-xl font-semibold">
 									Chi tiết đơn hàng
 								</Title>
-								{statusOrder === 1 && (
+								{/* {statusOrder === 1 && (
 									<Button
 										type="text"
 										className="bg-red text-white"
@@ -408,7 +408,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 									>
 										Hủy Đơn
 									</Button>
-								)}
+								)} */}
 								{statusOrder === 2 && (
 									<Button
 										type="text"
