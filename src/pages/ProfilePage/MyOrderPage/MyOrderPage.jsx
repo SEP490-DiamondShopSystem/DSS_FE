@@ -1,5 +1,6 @@
 import {
 	CheckCircleOutlined,
+	CloseCircleFilled,
 	DeliveredProcedureOutlined,
 	EyeFilled,
 	HourglassOutlined,
@@ -27,6 +28,7 @@ const orderStatus = [
 	{icon: <HourglassOutlined />, name: 'Chờ xử lí', status: '1', order: 3},
 	{icon: <DeliveredProcedureOutlined />, name: 'Đang vận chuyển', status: '6', order: 4},
 	{icon: <CheckCircleOutlined />, name: 'Đã giao', status: '8', order: 10},
+	{icon: <CloseCircleFilled />, name: 'Đã hủy', status: '4', order: 10},
 ];
 
 const MyOrderPage = () => {
@@ -61,6 +63,12 @@ const MyOrderPage = () => {
 			title: 'Tổng Giá',
 			dataIndex: 'price',
 			align: 'center',
+		},
+		{
+			title: 'HT Giao Hàng',
+			dataIndex: 'deliveryMethod',
+			align: 'center',
+			responsive: ['md'],
 		},
 		{
 			title: 'PT Thanh Toán',
@@ -168,6 +176,7 @@ const MyOrderPage = () => {
 				orderId: order?.Id,
 				orderCode: order?.OrderCode,
 				paymentMethodId: order?.PaymentMethodId,
+				deliveryMethod: order?.IsCollectAtShop ? 'Nhận tại cửa hàng' : 'Giao hàng tận nơi',
 				paymentMethodName: order?.PaymentMethod?.MappedName,
 				orderTime: order.CreatedDate,
 				price: formatPrice(order.TotalPrice),

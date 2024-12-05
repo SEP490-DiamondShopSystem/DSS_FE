@@ -12,6 +12,7 @@ import {convertToVietnamDate, formatPrice, Rating} from '../../../utils';
 import JewelryPopup from '../Popup/ProductReviews';
 import {getAllJewelryModelReview} from '../../../redux/slices/reviewSlice';
 import ProductReviews from '../Popup/ProductReviews';
+import {getJewelryNoDiamond} from '../../../redux/slices/jewelrySlice';
 
 const {Option} = Select;
 
@@ -26,6 +27,7 @@ export const InformationRight = ({
 	selectedSideDiamond,
 	filteredGroups,
 	id,
+	jewelrySelected,
 }) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
@@ -55,10 +57,6 @@ export const InformationRight = ({
 			setReviews(reviewList?.Values);
 		}
 	}, [reviewList]);
-
-	// useEffect(() => {
-
-	// },[])
 
 	const toggleDetail = () => {
 		setDetail(!showDetail);
@@ -109,7 +107,8 @@ export const InformationRight = ({
 		if (diamondJewelry?.MainDiamonds?.length > 0) {
 			navigate(`/diamond-choose/search`, {state: {jewelryModel}});
 		} else {
-			navigate(`/jewelry-choose/search`, {state: {jewelryModel}});
+			// navigate(`/jewelry-choose/search`, {state: {jewelryModel}});
+			navigate(`/completed-jewelry/${jewelrySelected}`);
 		}
 	};
 

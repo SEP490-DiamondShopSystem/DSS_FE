@@ -27,6 +27,8 @@ const FinishProductPage = () => {
 		JSON.parse(localStorage.getItem(`diamond_${userId}`)) || ''
 	);
 
+	console.log('jewelry', jewelry);
+
 	useEffect(() => {
 		dispatch(getJewelryDetailPreset(id))
 			.unwrap()
@@ -39,11 +41,9 @@ const FinishProductPage = () => {
 
 	const items = [
 		{
-			title: `Chọn Vỏ`,
+			title: 'Chọn Vỏ',
 		},
-		{
-			title: 'Chọn Kim Cương',
-		},
+		...(jewelry?.Diamonds?.length > 0 ? [{title: 'Chọn Kim Cương'}] : []),
 		{
 			title: 'Hoàn Thành',
 		},

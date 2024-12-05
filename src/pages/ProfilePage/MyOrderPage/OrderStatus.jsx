@@ -11,6 +11,9 @@ export const OrderStatus = ({orderStatus, order}) => {
 	const [indexCancelled, setIndexCancelled] = useState(0);
 	const [indexRejected, setIndexRejected] = useState(0);
 
+	console.log('indexCancelled', indexCancelled);
+	console.log('currentStep', currentStep);
+
 	useEffect(() => {
 		if (orderLogList) {
 			setOrderLogs(orderLogList);
@@ -94,7 +97,7 @@ export const OrderStatus = ({orderStatus, order}) => {
 			title:
 				currentStep === 1
 					? 'Đang Chuẩn Bị Đơn Hàng'
-					: orderStatus === 3 && indexRejected === 1
+					: orderStatus === 3 && indexRejected === 2
 					? 'Đã Bị Từ Chối'
 					: orderStatus === 4 && indexCancelled === 2
 					? 'Đã Hủy'
@@ -130,7 +133,9 @@ export const OrderStatus = ({orderStatus, order}) => {
 					? 'Giao hàng Thất Bại'
 					: currentStep === 7
 					? 'Đang Giao Hàng'
-					: orderStatus === 4 && indexCancelled === 14
+					: orderStatus === 4 && indexCancelled === 13
+					? 'Đã Hủy'
+					: orderStatus === 4 && indexCancelled === 5
 					? 'Đã Hủy'
 					: 'Đã Nhận Hàng',
 			description:
@@ -138,7 +143,9 @@ export const OrderStatus = ({orderStatus, order}) => {
 					? 'Giao đơn hàng thất bại.'
 					: currentStep === 7
 					? 'Đơn hàng đang được giao.'
-					: orderStatus === 4 && indexCancelled === 14
+					: orderStatus === 4 && indexCancelled === 13
+					? `Đơn hàng đã bị hủy. Lý Do: ${order?.CancelledReason}`
+					: orderStatus === 4 && indexCancelled === 5
 					? `Đơn hàng đã bị hủy. Lý Do: ${order?.CancelledReason}`
 					: 'Đơn hàng đã hoàn thành.',
 		},
@@ -150,89 +157,95 @@ export const OrderStatus = ({orderStatus, order}) => {
 	];
 
 	if (currentStep === 0) {
-		steps[0].status = 'process'; // Chờ Shop Xác Nhận
-		steps[1].status = 'wait'; // Chờ Xử Lí
-		steps[2].status = 'wait'; // Đang Vận Chuyển
-		steps[3].status = 'wait'; // Giao Hàng
-		steps[4].status = 'wait'; // Hoàn Thành
+		steps[0].status = 'process';
+		steps[1].status = 'wait';
+		steps[2].status = 'wait';
+		steps[3].status = 'wait';
+		steps[4].status = 'wait';
 	} else if (currentStep === 1) {
-		steps[0].status = 'finish'; //Đã Từ Chối
-		steps[1].status = 'process'; // Chờ Xử Lí
-		steps[2].status = 'wait'; // Đang Vận Chuyển
-		steps[3].status = 'wait'; // Giao Hàng
-		steps[4].status = 'wait'; // Hoàn Thành
+		steps[0].status = 'finish';
+		steps[1].status = 'process';
+		steps[2].status = 'wait';
+		steps[3].status = 'wait';
+		steps[4].status = 'wait';
 	} else if (currentStep === 2 && orderStatus === 3 && indexRejected === 1) {
-		steps[0].status = 'error'; // Đã Xác Nhận
-		steps[1].status = 'wait'; // Đã Xử Lí
-		steps[2].status = 'wait'; // Đang Vận Chuyển
-		steps[3].status = 'wait'; // Giao Hàng
-		steps[4].status = 'wait'; // Hoàn Thành
+		steps[0].status = 'error';
+		steps[1].status = 'wait';
+		steps[2].status = 'wait';
+		steps[3].status = 'wait';
+		steps[4].status = 'wait';
 	} else if (currentStep === 2 && orderStatus === 3 && indexRejected === 2) {
-		steps[0].status = 'finish'; // Đã Xác Nhận
-		steps[1].status = 'error'; // Đã Xử Lí
-		steps[2].status = 'wait'; // Đang Vận Chuyển
-		steps[3].status = 'wait'; // Giao Hàng
-		steps[4].status = 'wait'; // Hoàn Thành
+		steps[0].status = 'finish';
+		steps[1].status = 'error';
+		steps[2].status = 'wait';
+		steps[3].status = 'wait';
+		steps[4].status = 'wait';
 	} else if (currentStep === 2 && orderStatus === 3 && indexRejected === 2) {
-		steps[0].status = 'finish'; // Đã Xác Nhận
-		steps[1].status = 'error'; // Đã Xử Lí
-		steps[2].status = 'wait'; // Đang Vận Chuyển
-		steps[3].status = 'wait'; // Giao Hàng
-		steps[4].status = 'wait'; // Hoàn Thành
+		steps[0].status = 'finish';
+		steps[1].status = 'error';
+		steps[2].status = 'wait';
+		steps[3].status = 'wait';
+		steps[4].status = 'wait';
 	} else if (currentStep === 3 && orderStatus === 4 && indexCancelled === 1) {
-		steps[0].status = 'error'; //Đã Hủy
-		steps[1].status = 'wait'; // Chờ Xử Lí
-		steps[2].status = 'wait'; // Đang Vận Chuyển
-		steps[3].status = 'wait'; // Giao Hàng
-		steps[4].status = 'wait'; // Hoàn Thành
+		steps[0].status = 'error';
+		steps[1].status = 'wait';
+		steps[2].status = 'wait';
+		steps[3].status = 'wait';
+		steps[4].status = 'wait';
 	} else if (currentStep === 3 && orderStatus === 4 && indexCancelled === 2) {
-		steps[0].status = 'finish'; //Đã Hủy
-		steps[1].status = 'error'; // Chờ Xử Lí
-		steps[2].status = 'wait'; // Đang Vận Chuyển
-		steps[3].status = 'wait'; // Giao Hàng
-		steps[4].status = 'wait'; // Hoàn Thành
+		steps[0].status = 'finish';
+		steps[1].status = 'error';
+		steps[2].status = 'wait';
+		steps[3].status = 'wait';
+		steps[4].status = 'wait';
 	} else if (currentStep === 3 && orderStatus === 4 && indexCancelled === 3) {
-		steps[0].status = 'finish'; //Đã Hủy
-		steps[1].status = 'finish'; // Chờ Xử Lí
-		steps[2].status = 'error'; // Đang Vận Chuyển
-		steps[3].status = 'wait'; // Giao Hàng
-		steps[4].status = 'wait'; // Hoàn Thành
-	} else if (currentStep === 3 && orderStatus === 4 && indexCancelled === 14) {
-		steps[0].status = 'finish'; //Đã Hủy
-		steps[1].status = 'finish'; // Chờ Xử Lí
-		steps[2].status = 'finish'; // Đang Vận Chuyển
-		steps[3].status = 'error'; // Giao Hàng
-		steps[4].status = 'wait'; // Hoàn Thành
+		steps[0].status = 'finish';
+		steps[1].status = 'finish';
+		steps[2].status = 'error';
+		steps[3].status = 'wait';
+		steps[4].status = 'wait';
+	} else if (currentStep === 3 && orderStatus === 4 && indexCancelled === 5) {
+		steps[0].status = 'finish';
+		steps[1].status = 'finish';
+		steps[2].status = 'finish';
+		steps[3].status = 'error';
+		steps[4].status = 'wait';
+	} else if (currentStep === 3 && orderStatus === 4 && indexCancelled === 13) {
+		steps[0].status = 'finish';
+		steps[1].status = 'finish';
+		steps[2].status = 'finish';
+		steps[3].status = 'error';
+		steps[4].status = 'wait';
 	} else if (currentStep === 4) {
-		steps[0].status = 'finish'; // Đã Hủy hoặc Đã Xác Nhận
-		steps[1].status = 'finish'; // Đã Hủy hoặc Đã Xử Lí
-		steps[2].status = 'process'; // Đang Vận Chuyển
-		steps[3].status = 'wait'; // Giao Hàng
-		steps[4].status = 'wait'; // Hoàn Thành
+		steps[0].status = 'finish';
+		steps[1].status = 'finish';
+		steps[2].status = 'process';
+		steps[3].status = 'wait';
+		steps[4].status = 'wait';
 	} else if (currentStep === 5) {
-		steps[0].status = 'finish'; // Đã Xác Nhận
-		steps[1].status = 'finish'; // Đã Xử Lí
-		steps[2].status = 'finish'; // Đang Vận Chuyển
-		steps[3].status = 'process'; // Giao Hàng
-		steps[4].status = 'wait'; // Hoàn Thành
+		steps[0].status = 'finish';
+		steps[1].status = 'finish';
+		steps[2].status = 'finish';
+		steps[3].status = 'process';
+		steps[4].status = 'wait';
 	} else if (currentStep === 6 && orderStatus === 7) {
-		steps[0].status = 'finish'; // Đã Xác Nhận
-		steps[1].status = 'finish'; // Đã Xử Lí
-		steps[2].status = 'finish'; // Đã Vận Chuyển
-		steps[3].status = 'error'; // Giao Hàng Thất Bại
-		steps[4].status = 'wait'; // Hoàn Thành
+		steps[0].status = 'finish';
+		steps[1].status = 'finish';
+		steps[2].status = 'finish';
+		steps[3].status = 'error';
+		steps[4].status = 'wait';
 	} else if (currentStep === 7) {
-		steps[0].status = 'finish'; // Đã Xác Nhận
-		steps[1].status = 'finish'; // Đã Xử Lí
-		steps[2].status = 'finish'; // Đã Vận Chuyển
-		steps[3].status = 'finish'; // Giao Hàng
-		steps[4].status = 'finish'; // Hoàn Thành
+		steps[0].status = 'finish';
+		steps[1].status = 'finish';
+		steps[2].status = 'finish';
+		steps[3].status = 'finish';
+		steps[4].status = 'finish';
 	} else if (currentStep === 8) {
-		steps[0].status = 'finish'; // Đã Xác Nhận
-		steps[1].status = 'finish'; // Đã Xử Lí
-		steps[2].status = 'finish'; // Đã Vận Chuyển
-		steps[3].status = 'finish'; // Đã Nhận Hàng
-		steps[4].status = 'finish'; // Hoàn Thành
+		steps[0].status = 'finish';
+		steps[1].status = 'finish';
+		steps[2].status = 'finish';
+		steps[3].status = 'finish';
+		steps[4].status = 'finish';
 	}
 
 	return (

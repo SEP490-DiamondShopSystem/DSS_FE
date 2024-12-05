@@ -1,8 +1,10 @@
-import {Button, Image, Modal, Timeline} from 'antd';
+import {Button, Image, Modal, Timeline, Typography} from 'antd';
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {GetOrderChildLogsSelector} from '../../../redux/selectors';
 import {getProcessingDetail} from '../../../redux/slices/logSlice';
+
+const {Title} = Typography;
 
 export const OrderLog = ({orderLogs}) => {
 	const dispatch = useDispatch();
@@ -37,13 +39,22 @@ export const OrderLog = ({orderLogs}) => {
 
 	return (
 		<div>
-			<h3>Trạng Thái Đơn Hàng</h3>
-			<Timeline className="mt-10">
+			<Title level={3} className="">
+				Trạng Thái Đơn Hàng
+			</Title>
+			<Timeline className="p-6 bg-white rounded-lg shadow-md max-w-lg mx-auto mt-7">
 				{orderLogs
 					?.slice()
 					?.reverse()
 					?.map((log) => (
-						<Timeline.Item key={log.Id} color={log?.Status === 4 ? 'red' : 'blue'}>
+						<Timeline.Item
+							key={log.Id}
+							color={
+								log?.Status === 4 || log?.Status === 3 || log?.Status === 7
+									? 'red'
+									: 'blue'
+							}
+						>
 							<div>
 								<p>{log.Message}</p>
 								<p>{log.CreatedDate}</p>
