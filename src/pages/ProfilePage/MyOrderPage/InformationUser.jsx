@@ -7,7 +7,7 @@ const InformationUser = ({order}) => {
 	}
 
 	const {
-		Account: {FirstName, LastName, Email, TotalPoint},
+		Account: {FirstName, LastName, Email, TotalPoint, PhoneNumber},
 		ExpectedDate,
 		CancelledDate,
 		CancelledReason,
@@ -35,7 +35,7 @@ const InformationUser = ({order}) => {
 				<strong>Email:</strong> {Email}
 			</div>
 			<div className="mb-2">
-				<strong>Số Điện Thoại:</strong> {TotalPoint}
+				<strong>Số Điện Thoại:</strong> {PhoneNumber}
 			</div>
 			<div className="mb-2">
 				<strong>Ngày Giao Hàng Dự Kiến:</strong> {ExpectedDate}

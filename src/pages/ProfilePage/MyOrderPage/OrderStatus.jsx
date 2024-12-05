@@ -144,19 +144,17 @@ export const OrderStatus = ({orderStatus, order}) => {
 					? 'Đang Giao Hàng'
 					: indexCancelled === 13 || indexCancelled === 5
 					? 'Đã Hủy'
-					: indexRejected === 20
-					? 'Đã Từ Cối'
+					: indexRejected === 20 || indexRejected === 5
+					? 'Đã Từ Chối'
 					: 'Đã Nhận Hàng',
 			description:
 				currentStep === 6 && orderStatus === 7
 					? 'Giao đơn hàng thất bại.'
 					: currentStep === 7
 					? 'Đơn hàng đang được giao.'
-					: orderStatus === 4 && indexCancelled === 13
+					: indexCancelled === 13 || indexCancelled === 5
 					? `Đơn hàng đã bị hủy. Lý Do: ${order?.CancelledReason}`
-					: orderStatus === 4 && indexCancelled === 5
-					? `Đơn hàng đã bị hủy. Lý Do: ${order?.CancelledReason}`
-					: indexRejected === 20
+					: indexRejected === 20 || indexRejected === 5
 					? `Đơn hàng đã bị từ chối. Lý Do: ${order?.CancelledReason}`
 					: 'Đơn hàng đã hoàn thành.',
 		},
@@ -240,6 +238,12 @@ export const OrderStatus = ({orderStatus, order}) => {
 		steps[3].status = 'error';
 		steps[4].status = 'wait';
 	} else if (currentStep === 3 && indexRejected === 20) {
+		steps[0].status = 'finish';
+		steps[1].status = 'finish';
+		steps[2].status = 'finish';
+		steps[3].status = 'error';
+		steps[4].status = 'wait';
+	} else if (currentStep === 3 && indexRejected === 5) {
 		steps[0].status = 'finish';
 		steps[1].status = 'finish';
 		steps[2].status = 'finish';
