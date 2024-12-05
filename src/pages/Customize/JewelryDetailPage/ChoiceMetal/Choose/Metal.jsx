@@ -44,7 +44,7 @@ export const Metal = ({
 											<div className="mr-10">
 												<p className="font-semibold">{metal?.Name}</p>
 											</div>
-											<p className="">{formatPrice(metal?.Price)}</p>
+											<p className="">{formatPrice(metal?.Price)} / gram</p>
 										</div>
 									</div>
 								</Radio>
@@ -68,7 +68,7 @@ export const Metal = ({
 									<Radio value={diamond?.Id}>
 										<div className="">
 											<div className="m-5">
-												<p className="">{diamond?.CaratWeight} ct</p>
+												<p className="">{diamond?.CaratWeight} ct / {diamond?.Quantity} viên</p>
 											</div>
 										</div>
 									</Radio>
@@ -92,7 +92,7 @@ export const Metal = ({
 									style={{width: 1000}}
 								>
 									<div className="flex items-center justify-between  m-5">
-										<p className="">{metal?.SizeId}</p>
+										<p className="">{metal?.SizeId}mm</p>
 									</div>
 									{/* <p className="font-semibold">{formatPrice(metal.Price)}</p> */}
 								</div>
