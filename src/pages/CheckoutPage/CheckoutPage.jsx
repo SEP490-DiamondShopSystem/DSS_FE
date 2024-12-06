@@ -33,6 +33,7 @@ import {checkPromoCart, getAllPromo} from '../../redux/slices/promotionSlice';
 import {getAllWarranty} from '../../redux/slices/warrantySlice';
 import {formatPrice} from '../../utils';
 import {enums} from '../../utils/constant';
+import {getConfigOrder} from '../../redux/slices/configSlice';
 
 const {Option} = Select;
 
@@ -82,6 +83,7 @@ const mapAttributes = (data, attributes) => {
 		RequirementQualifedId: data.RequirementQualifedId,
 		Carat: data?.Diamond?.Carat || null,
 		CategoryName: data?.Jewelry?.Model?.Category?.Name || null,
+		JewelryThumbnail: data?.Jewelry?.Model?.Thumbnail?.MediaPath,
 
 		// Using the helper function to map diamond attributes
 		Clarity: getEnumKey(attributes.Clarity, data?.Diamond?.Clarity),
@@ -103,8 +105,9 @@ const mapAttributes = (data, attributes) => {
 		DiamondPriceOffset: data?.Diamond?.PriceOffset,
 		Title: data?.Diamond?.Title,
 		IsLabDiamond: data?.IsLabDiamond,
-		DiamondThumbnail: data?.Diamond?.Thumbnail,
 		CriteriaId: data?.Diamond?.DiamondPrice?.CriteriaId,
+		DiamondThumbnail: data?.Diamond?.Thumbnail?.MediaPath,
+		SerialCodeDiamond: data?.Diamond?.SerialCode,
 	};
 };
 
@@ -123,10 +126,10 @@ const CheckoutPage = () => {
 	const loadingCheckout = useSelector(LoadingOrderSelector);
 	const loadingCustomize = useSelector(GetLoadingCustomizeSelector);
 	const userDetail = useSelector(GetUserDetailSelector);
-	// const cartList = useSelector(GetCartSelector);
 	const paymentList = useSelector(GetAllPaymentSelector);
 	const warrantyList = useSelector(GetOrderWarrantySelector);
 	const promoAble = useSelector(GetPromotionAbleSelector);
+	const shopLocation = useSelector(GetShopLocationSelector);
 
 	const [warrantiesJewelry, setWarrantiesJewelry] = useState('');
 	const [cartList, setCartList] = useState();
@@ -144,12 +147,12 @@ const CheckoutPage = () => {
 	const [warrantiesJewelrySelected, setWarrantiesJewelrySelected] = useState();
 	const [payment, setPayment] = useState();
 	const [isAtShop, setIsAtShop] = useState(false);
-	const shopLocation = useSelector(GetShopLocationSelector);
+	const [orderRule, setOrderRule] = useState();
 	const [userInfo, setUserInfo] = useState({
 		firstName: userDetail.FirstName || '',
 		lastName: userDetail.LastName || '',
 		email: userDetail.Email || '',
-		phone: '',
+		phone: userDetail.PhoneNumber,
 		province: userDetail?.Addresses?.[0]?.Province || '',
 		district: userDetail?.Addresses?.[0]?.District || '',
 		ward: userDetail?.Addresses?.[0]?.Ward || '',
@@ -161,6 +164,13 @@ const CheckoutPage = () => {
 	useEffect(() => {
 		form.setFieldsValue(userInfo);
 	}, [form, userInfo]);
+
+	useEffect(() => {
+		if (cartList?.OrderPrices?.FinalPrice && orderRule?.MaxOrderAmountForDelivery) {
+			setIsAtShop(cartList.OrderPrices.FinalPrice >= orderRule.MaxOrderAmountForDelivery);
+		}
+	}, [cartList, orderRule]);
+
 	useEffect(() => {
 		if (isAtShop && shopLocation) {
 			// Auto-fill with shop location when pickup is selected
@@ -205,9 +215,11 @@ const CheckoutPage = () => {
 	useEffect(() => {
 		dispatch(getAllWarranty());
 	}, []);
+
 	useEffect(() => {
 		dispatch(getShopLocation());
 	}, []);
+
 	useEffect(() => {
 		dispatch(fetchDistances());
 	}, [dispatch]);
@@ -260,6 +272,9 @@ const CheckoutPage = () => {
 	useEffect(() => {
 		dispatch(getAllPromo());
 	}, []);
+
+	console.log('cartList', cartList);
+	console.log('orderRule', orderRule);
 
 	useEffect(() => {
 		if (idCustomize) {
@@ -377,6 +392,14 @@ const CheckoutPage = () => {
 		userInfo,
 	]);
 
+	useEffect(() => {
+		dispatch(getConfigOrder())
+			.unwrap()
+			.then((res) => {
+				setOrderRule(res);
+			});
+	}, []);
+
 	const jewelryOrDiamondProducts = cartList?.Products.filter(
 		(product) => product.Jewelry || product.Diamond
 	);
@@ -392,7 +415,7 @@ const CheckoutPage = () => {
 			content:
 				'Đơn hàng của bạn đã được đặt thành công. Cảm ơn bạn đã mua sắm với chúng tôi!',
 			okText: `Thanh Toán Đơn Hàng`,
-			cancelText: null,
+			cancelText: 'Về Trang Chủ',
 			onCancel() {
 				navigate('/');
 			},
@@ -555,13 +578,7 @@ const CheckoutPage = () => {
 							<h2 className="text-2xl font-semibold text-gray-800">
 								Thông tin thanh toán và giao hàng
 							</h2>
-							<Form
-								layout="vertical"
-								form={form}
-								className="space-y-6"
-								// onFinish={onFinish}
-								// onFinishFailed={onFinishFailed}
-							>
+							<Form layout="vertical" form={form} className="space-y-6">
 								<div className="flex flex-col md:flex-row gap-y-4 md:gap-x-4">
 									<div className="w-full md:w-1/2 p-1">
 										<Form.Item
@@ -614,6 +631,10 @@ const CheckoutPage = () => {
 									<Checkbox
 										checked={isAtShop}
 										onChange={(e) => setIsAtShop(e.target.checked)}
+										disabled={
+											cartList?.OrderPrices?.FinalPrice >=
+											orderRule?.MaxOrderAmountForDelivery
+										}
 									>
 										Nhận hàng tại cửa hàng
 									</Checkbox>
@@ -736,6 +757,7 @@ const CheckoutPage = () => {
 												maxLength={10}
 												name="phone"
 												onChange={handleChange}
+												disabled={userDetail.PhoneNumber}
 											/>
 										</Form.Item>
 									</div>
@@ -756,7 +778,10 @@ const CheckoutPage = () => {
 												},
 											]}
 										>
-											<Input placeholder="Email" />
+											<Input
+												placeholder="Email"
+												disabled={userDetail.Email}
+											/>
 										</Form.Item>
 									</div>
 								</div>
@@ -784,6 +809,10 @@ const CheckoutPage = () => {
 												<Radio
 													value="1"
 													className="border p-4 rounded-md hover:border-blue-500 transition duration-300 mb-4"
+													disabled={
+														cartList?.OrderPrices?.FinalPrice >
+														orderRule?.MaxOrderAmountForFullPayment
+													}
 												>
 													Trả Hết
 												</Radio>
@@ -865,7 +894,7 @@ const CheckoutPage = () => {
 								<div className="flex mt-4 shadow-xl p-5 rounded-lg" key={order.Id}>
 									<div className="mr-4 flex-shrink-0">
 										<img
-											src="path-to-image"
+											src={order?.JewelryThumbnail}
 											alt={order?.Jewelry?.SerialCode || order?.Title}
 											className="w-32 h-32 object-cover rounded-lg border"
 										/>
@@ -917,8 +946,9 @@ const CheckoutPage = () => {
 									>
 										<div className="mr-4 flex-shrink-0">
 											<img
-												src="path-to-image"
-												alt={item?.SerialCode || item?.Title}
+												src={
+													item?.DiamondThumbnail || item?.JewelryThumbnail
+												}
 												className="w-32 h-32 object-cover rounded-lg border"
 											/>
 										</div>
@@ -929,7 +959,7 @@ const CheckoutPage = () => {
 													<p className="mb-1 text-gray-800 font-semibold">
 														{item.SerialCode}
 													</p>
-													<p className="text-gray-700 text-sm py-3">
+													<p className="text-gray-700 text-sm mr-1">
 														Giá:
 														<span className="text-gray-900 font-semibold ml-1">
 															{formatPrice(item.JewelryPrice)}
@@ -949,10 +979,16 @@ const CheckoutPage = () => {
 													<p className="mb-1 text-gray-800 font-semibold">
 														{item?.Title}
 													</p>
-													<p className="text-gray-700 text-sm">
+													<p className="text-gray-700 text-sm mr-1">
 														Giá:
 														<span className="text-gray-900 font-semibold py-3">
 															{formatPrice(item.DiamondTruePrice)}
+														</span>
+													</p>
+													<p className="text-gray-700 text-sm mr-1">
+														SKU:
+														<span className="text-gray-900 font-semibold py-3">
+															{item.SerialCodeDiamond}
 														</span>
 													</p>
 												</div>

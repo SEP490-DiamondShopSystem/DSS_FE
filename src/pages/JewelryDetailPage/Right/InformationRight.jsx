@@ -12,6 +12,7 @@ import {convertToVietnamDate, formatPrice, Rating} from '../../../utils';
 import JewelryPopup from '../Popup/ProductReviews';
 import {getAllJewelryModelReview} from '../../../redux/slices/reviewSlice';
 import ProductReviews from '../Popup/ProductReviews';
+import {getJewelryNoDiamond} from '../../../redux/slices/jewelrySlice';
 
 const {Option} = Select;
 
@@ -26,6 +27,7 @@ export const InformationRight = ({
 	selectedSideDiamond,
 	filteredGroups,
 	id,
+	jewelrySelected,
 }) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
@@ -55,10 +57,6 @@ export const InformationRight = ({
 			setReviews(reviewList?.Values);
 		}
 	}, [reviewList]);
-
-	// useEffect(() => {
-
-	// },[])
 
 	const toggleDetail = () => {
 		setDetail(!showDetail);
@@ -109,7 +107,8 @@ export const InformationRight = ({
 		if (diamondJewelry?.MainDiamonds?.length > 0) {
 			navigate(`/diamond-choose/search`, {state: {jewelryModel}});
 		} else {
-			navigate(`/jewelry-choose/search`, {state: {jewelryModel}});
+			// navigate(`/jewelry-choose/search`, {state: {jewelryModel}});
+			navigate(`/completed-jewelry/${jewelrySelected}`);
 		}
 	};
 
@@ -218,12 +217,11 @@ export const InformationRight = ({
 								<p className="text-red ml-5">* Vui lòng chọn kích thước!</p>
 							</div>
 						</div>
-						<div className="flex items-center mt-2">
+						<div className="flex items-center mt-5">
 							<p className="text-2xl mr-2 font-semibold">Giá Sàn:</p>
-							<p className="font-semibold text-2xl my-2">
+							<p className="font-semibold text-2xl ">
 								{formatPrice(findSizePrice?.Price || 0)}
 							</p>
-							{/* <div className="text-sm pl-2">(Giá Sàn)</div> */}
 						</div>
 						{/* <div>
 							<div className="text-xl pt-2 font-semibold">
@@ -234,7 +232,7 @@ export const InformationRight = ({
 				)}
 			</div>
 
-			{size !== null && selectedMetal !== null && (
+			{size !== null && selectedMetal !== null && jewelrySelected && (
 				<div className="flex justify-between items-center mt-5">
 					<Button
 						type="text"

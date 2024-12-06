@@ -128,11 +128,11 @@ const NavLinks = () => {
 							{sublink.sublink.map((sl, k) => (
 								<li
 									key={k}
-									className="text-sm text-gray-600 my-2.5 md:cursor-pointer"
+									className="text-sm text-gray-600 my-2.5 md:cursor-pointer "
 								>
 									<a
 										href={sl.link}
-										className="hover:text-primary font-normal normal-case"
+										className="hover:text-primary font-normal normal-case "
 										onClick={() => {
 											// Handle clicks for navigation or additional state changes
 											if (sublink.Head === 'Mua Kim Cương Theo Hình Dạng') {
@@ -176,7 +176,7 @@ const NavLinks = () => {
 								>
 									<a
 										href={sl.link}
-										className="hover:text-primary font-normal normal-case"
+										className="hover:text-primary normal-case"
 										onClick={() => {
 											if (mySubLink.Head === 'Mua Kim Cương Theo Hình Dạng') {
 												handleClick(sl.value, null, null, null);
@@ -210,7 +210,7 @@ const NavLinks = () => {
 							className="group"
 						>
 							{/* Desktop View */}
-							<h1 className="py-7 no-underline text-black cursor-pointer">
+							<h1 className=" text-black cursor-pointer font-semibold">
 								{link.name} <DownOutlined />
 							</h1>
 						</Popover>

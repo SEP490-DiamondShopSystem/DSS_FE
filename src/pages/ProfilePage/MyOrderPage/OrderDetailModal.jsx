@@ -38,6 +38,7 @@ import {OrderStatus} from './OrderStatus';
 import {TransactionDetails} from './TransactionList';
 import {OrderLog} from './OrderLog';
 import {OrderPayment} from './OrderPayment';
+import InformationUser from './InformationUser';
 
 const {Text, Title} = Typography;
 
@@ -62,6 +63,8 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 	const [statusOrder, setStatusOrder] = useState();
 	const [cancelled, setCancelled] = useState();
 
+	console.log('order ', order);
+
 	const data = order?.Items?.map((item, i) => ({
 		key: i,
 		orderDate: order?.CreatedDate || 'N/A',
@@ -85,6 +88,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 		UserRankAmountSaved: order?.UserRankAmountSaved,
 		Review: item?.Jewelry?.Review,
 		itemStatus: item?.Status,
+		IsCollectAtShop: order?.IsCollectAtShopp ? 'Nhận tại cửa hàng' : 'Giao hàng tận nơi',
 	}));
 
 	const columns = [
@@ -112,6 +116,12 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 					<div>{record.price}</div>
 				</div>
 			),
+		},
+		{
+			title: 'HT Giao Hàng',
+			dataIndex: 'IsCollectAtShop',
+			key: 'IsCollectAtShop',
+			align: 'center',
 		},
 		{
 			title: 'Trạng Thái',
@@ -330,7 +340,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 				></div>
 			)}
 			{openDetail && (
-				<div className="fixed top-1/2 right-1/2 bg-white transform transition-transform duration-300 ease-in-out z-50 translate-x-1/2 -translate-y-1/2 p-10 w-[95%] max-h-[80vh] overflow-y-auto">
+				<div className="fixed top-1/2 right-1/2 bg-tintWhite transform transition-transform duration-300 ease-in-out z-50 translate-x-1/2 -translate-y-1/2 p-10 w-[95%] max-h-[80vh] overflow-y-auto">
 					{loading ? (
 						<Loading />
 					) : (
@@ -362,7 +372,14 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 								<h2 className="text-2xl font-semibold">Địa chỉ giao hàng</h2>
 								<p>{order?.ShippingAddress}</p>
 							</div>
+
 							<OrderStatus orderStatus={statusOrder} order={order} />
+							<div className="my-5">
+								<Title level={3} className="mb-4">
+									Thông Tin Khách Hàng
+								</Title>
+								<InformationUser order={order} />
+							</div>
 							<div className="w-full flex flex-col sm:flex-row gap-4">
 								<div className="w-full sm:w-2/3">
 									{order?.Status === 1 && order?.Transactions?.length === 0 ? (
@@ -379,11 +396,11 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 								</div>
 							</div>
 
-							<div className="flex justify-between">
+							<div className="flex justify-between mt-10">
 								<Title level={3} className="text-xl font-semibold">
 									Chi tiết đơn hàng
 								</Title>
-								{statusOrder === 1 && (
+								{/* {statusOrder === 1 && (
 									<Button
 										type="text"
 										className="bg-red text-white"
@@ -391,7 +408,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 									>
 										Hủy Đơn
 									</Button>
-								)}
+								)} */}
 								{statusOrder === 2 && (
 									<Button
 										type="text"
@@ -402,6 +419,15 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 									</Button>
 								)}
 								{statusOrder === 5 && (
+									<Button
+										type="text"
+										className="bg-red text-white"
+										onClick={handleCancelOrder}
+									>
+										Hủy Đơn
+									</Button>
+								)}
+								{statusOrder === 7 && (
 									<Button
 										type="text"
 										className="bg-red text-white"

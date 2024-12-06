@@ -5,7 +5,7 @@ export const getConfigOrder = createAsyncThunk(
 	'configSlice/getConfigOrder',
 	async (_, {rejectWithValue}) => {
 		try {
-			const data = await api.get(`/Configuration/AccountRule`);
+			const data = await api.get(`/Configuration/OrderRule`);
 			console.log(data);
 
 			return data;
@@ -15,6 +15,7 @@ export const getConfigOrder = createAsyncThunk(
 		}
 	}
 );
+
 export const fetchDiamondRule = createAsyncThunk(
 	'config/fetchDiamondRule',
 	async (_, {rejectWithValue}) => {
