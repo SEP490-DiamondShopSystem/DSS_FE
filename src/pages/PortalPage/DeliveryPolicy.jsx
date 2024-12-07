@@ -56,7 +56,6 @@ const ShippingPolicy = () => {
 					<Title level={4} className="text-gray-700 mb-2">
 						Nội thành TP. Hồ Chí Minh
 					</Title>
-					<Text className="block text-gray-600 mb-2">Miễn phí giao hàng</Text>
 					<Text className="block text-gray-600">
 						Với đơn hàng đặt cọc nhận tại cửa hàng, khách hàng vui lòng nhận trong{' '}
 						<span className="text-indigo-600">

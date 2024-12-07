@@ -23,6 +23,7 @@ const InformationUser = ({order}) => {
 		3: {label: 'Đã trả hết', color: 'green'},
 		4: {label: 'Chờ hoàn tiền', color: 'volcano'},
 		5: {label: 'Đã hoàn tiền', color: 'magenta'},
+		6: {label: 'Không hoàn tiền', color: 'red'},
 	};
 	const status = paymentStatusMap[PaymentStatus] || {};
 
@@ -50,7 +51,7 @@ const InformationUser = ({order}) => {
 			</div>
 			<div className="mb-2">
 				<strong>Trạng thái đơn hàng:</strong>{' '}
-				<Tag color={status.color}>{status.label.toUpperCase() || 'Không xác định'}</Tag>
+				<Tag color={status.color}>{status?.label?.toUpperCase() || 'Không xác định'}</Tag>
 			</div>
 			{Status === 3 && (
 				<>

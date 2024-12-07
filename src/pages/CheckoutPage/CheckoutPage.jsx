@@ -166,10 +166,17 @@ const CheckoutPage = () => {
 	}, [form, userInfo]);
 
 	useEffect(() => {
-		if (cartList?.OrderPrices?.FinalPrice && orderRule?.MaxOrderAmountForDelivery) {
-			setIsAtShop(cartList.OrderPrices.FinalPrice >= orderRule.MaxOrderAmountForDelivery);
+		if (
+			cartList?.OrderPrices?.FinalPrice != null &&
+			orderRule?.MaxOrderAmountForDelivery != null
+		) {
+			const isEligibleForShop =
+				cartList.OrderPrices.FinalPrice >= orderRule.MaxOrderAmountForDelivery;
+			setIsAtShop(isEligibleForShop);
 		}
-	}, [cartList, orderRule]);
+	}, [orderRule]);
+
+	console.log('isAtShop', isAtShop);
 
 	useEffect(() => {
 		if (isAtShop && shopLocation) {
@@ -273,9 +280,6 @@ const CheckoutPage = () => {
 		dispatch(getAllPromo());
 	}, []);
 
-	console.log('cartList', cartList);
-	console.log('orderRule', orderRule);
-
 	useEffect(() => {
 		if (idCustomize) {
 			const transformedData = {
@@ -347,8 +351,6 @@ const CheckoutPage = () => {
 					productId?.warrantyDiamond?.warranty?.Type,
 			}));
 			const defaultAddress = userDetail?.Addresses?.find((address) => address?.IsDefault);
-
-			console.log('defaultAddress', defaultAddress);
 
 			const userAddress = {
 				province: userInfo?.province || defaultAddress?.Province,
@@ -627,7 +629,7 @@ const CheckoutPage = () => {
 										</Form.Item>
 									</div>
 								</div>
-								<Form.Item className="mt-4">
+								<div className="mt-4">
 									<Checkbox
 										checked={isAtShop}
 										onChange={(e) => setIsAtShop(e.target.checked)}
@@ -638,7 +640,7 @@ const CheckoutPage = () => {
 									>
 										Nhận hàng tại cửa hàng
 									</Checkbox>
-								</Form.Item>
+								</div>
 								<div className="flex flex-col mb-4">
 									<label className="flex justify-start items-center mb-2">
 										<p className="text-red mr-1">*</p>Tỉnh/ Thành Phố
@@ -901,10 +903,10 @@ const CheckoutPage = () => {
 									</div>
 									<div className="flex-1 mx-5">
 										<div>
-											<p className="mb-1 text-gray-800 font-semibold">
+											<div className="mb-1 text-gray-800 font-semibold">
 												{order?.Jewelry?.SerialCode}
-											</p>
-											<p className="text-gray-700 text-sm py-2">
+											</div>
+											<div className="text-gray-700 text-sm py-2">
 												Giá:
 												<span className="text-gray-900 font-semibold ml-1">
 													{formatPrice(
@@ -912,7 +914,7 @@ const CheckoutPage = () => {
 															order?.Jewelry?.TotalPrice
 													)}
 												</span>
-											</p>
+											</div>
 										</div>
 										<label>Chọn bảo hành trang sức</label>
 										<Select
@@ -956,15 +958,15 @@ const CheckoutPage = () => {
 											{/* Kiểm tra và hiển thị thông tin sản phẩm */}
 											{item.JewelryId ? (
 												<div>
-													<p className="mb-1 text-gray-800 font-semibold">
+													<div className="mb-1 text-gray-800 font-semibold">
 														{item.SerialCode}
-													</p>
-													<p className="text-gray-700 text-sm mr-1">
+													</div>
+													<div className="text-gray-700 text-sm mr-1">
 														Giá:
 														<span className="text-gray-900 font-semibold ml-1">
 															{formatPrice(item.JewelryPrice)}
 														</span>
-													</p>
+													</div>
 													{item.CategoryName === 'Ring' && (
 														<div className="flex items-center mt-2">
 															<label className="mr-2 text-gray-700">
@@ -976,24 +978,26 @@ const CheckoutPage = () => {
 												</div>
 											) : item.Carat ? (
 												<div>
-													<p className="mb-1 text-gray-800 font-semibold">
+													<div className="mb-1 text-gray-800 font-semibold">
 														{item?.Title}
-													</p>
-													<p className="text-gray-700 text-sm mr-1">
+													</div>
+													<div className="text-gray-700 text-sm mr-1">
 														Giá:
 														<span className="text-gray-900 font-semibold py-3">
 															{formatPrice(item.DiamondTruePrice)}
 														</span>
-													</p>
-													<p className="text-gray-700 text-sm mr-1">
+													</div>
+													<div className="text-gray-700 text-sm mr-1">
 														SKU:
 														<span className="text-gray-900 font-semibold py-3">
 															{item.SerialCodeDiamond}
 														</span>
-													</p>
+													</div>
 												</div>
 											) : (
-												<p className="text-gray-800">Không có thông tin</p>
+												<div className="text-gray-800">
+													Không có thông tin
+												</div>
 											)}
 										</div>
 									</div>
@@ -1004,20 +1008,20 @@ const CheckoutPage = () => {
 						<div className="bg-white p-6 rounded-lg shadow-lg space-y-4">
 							{/* Total and Savings Section */}
 							<div className="p-4 border rounded-lg bg-gray-50">
-								<p className="flex justify-between mb-1">
+								<div className="flex justify-between mb-1">
 									<span className="font-semibold">Giá Gốc</span>{' '}
 									<span>
 										{formatPrice(cartList?.OrderPrices?.DefaultPrice || 0)}
 									</span>
-								</p>
-								<p className="flex justify-between mb-1">
+								</div>
+								<div className="flex justify-between mb-1">
 									<div className="mb-1 flex justify-between w-full">
 										<span className="font-semibold">Phí Vận Chuyển</span>{' '}
 										<span>
 											{formatPrice(cartList?.ShippingPrice?.FinalPrice || 0)}
 										</span>
 									</div>
-								</p>
+								</div>
 								{idCustomize && (
 									<>
 										<label
@@ -1054,7 +1058,7 @@ const CheckoutPage = () => {
 									</>
 								)}
 
-								<p className="flex justify-between mb-1">
+								<div className="flex justify-between mb-1">
 									<div className="mb-1 flex justify-between w-full">
 										<span className="font-semibold">Giảm Giá</span>{' '}
 										<span>
@@ -1065,8 +1069,8 @@ const CheckoutPage = () => {
 											)}
 										</span>
 									</div>
-								</p>
-								<p className="flex justify-between">
+								</div>
+								<div className="flex justify-between">
 									<div className="mb-1 flex justify-between w-full">
 										<span className="font-semibold">Khuyến Mãi</span>{' '}
 										<span>
@@ -1077,8 +1081,8 @@ const CheckoutPage = () => {
 											)}
 										</span>
 									</div>
-								</p>
-								<p className="flex justify-between mb-1">
+								</div>
+								<div className="flex justify-between mb-1">
 									<div className="mb-1 flex justify-between w-full">
 										<span className="font-semibold">Bảo Hành</span>{' '}
 										<span>
@@ -1087,8 +1091,8 @@ const CheckoutPage = () => {
 											)}
 										</span>
 									</div>
-								</p>
-								<p className="flex justify-between mb-1">
+								</div>
+								<div className="flex justify-between mb-1">
 									<div className="mb-1 flex justify-between w-full">
 										<span className="font-semibold">Khách Hàng Thân Thiết</span>
 
@@ -1100,7 +1104,7 @@ const CheckoutPage = () => {
 											)}
 										</span>
 									</div>
-								</p>
+								</div>
 
 								<div className="flex text-sm text-gray-600 my-2">
 									<span className="mr-2">📅 Thời gian giao hàng</span>

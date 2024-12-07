@@ -427,17 +427,17 @@ const CartPage = () => {
 			<div className="md:w-1/3 lg:mt-0 flex-shrink-0 w-full lg:w-1/3 p-6 md:mx-5 shadow-lg bg-white rounded-lg lg:sticky lg:top-8">
 				<div className="bg-white p-4 mx-5 my-5 rounded-lg shadow-lg space-y-6">
 					<div className="space-y-4">
-						<p className="flex justify-between mb-1">
+						<div className="flex justify-between mb-1">
 							<span className="font-semibold">Giá Gốc</span>{' '}
 							<span>{formatPrice(cartList?.OrderPrices?.DefaultPrice || 0)}</span>
-						</p>
-						<p className="flex justify-between mb-1">
+						</div>
+						<div className="flex justify-between mb-1">
 							<div className="mb-1 flex justify-between w-full">
 								<span className="font-semibold">Phí Vận Chuyển</span>{' '}
 								<span>{formatPrice(cartList?.ShippingPrice?.FinalPrice || 0)}</span>
 							</div>
-						</p>
-						<p className="flex justify-between mb-1">
+						</div>
+						<div className="flex justify-between mb-1">
 							<div className="mb-1 flex justify-between w-full">
 								<span className="font-semibold">Giảm Giá</span>{' '}
 								<span>
@@ -445,8 +445,8 @@ const CartPage = () => {
 									{formatPrice(cartList?.OrderPrices?.DiscountAmountSaved || 0)}
 								</span>
 							</div>
-						</p>
-						<p className="flex justify-between">
+						</div>
+						<div className="flex justify-between">
 							<div className="mb-1 flex justify-between w-full">
 								<span className="font-semibold">Khuyến Mãi</span>{' '}
 								<span>
@@ -455,16 +455,16 @@ const CartPage = () => {
 									{formatPrice(cartList?.OrderPrices?.PromotionAmountSaved || 0)}
 								</span>
 							</div>
-						</p>
-						<p className="flex justify-between mb-1">
+						</div>
+						<div className="flex justify-between mb-1">
 							<div className="mb-1 flex justify-between w-full">
 								<span className="font-semibold">Bảo Hành</span>{' '}
 								<span>
 									{formatPrice(cartList?.OrderPrices?.TotalWarrantyPrice || 0)}
 								</span>
 							</div>
-						</p>
-						<p className="flex justify-between mb-1">
+						</div>
+						<div className="flex justify-between mb-1">
 							<div className="mb-1 flex justify-between w-full">
 								<span className="font-semibold">Khách Hàng Thân Thiết</span>
 
@@ -475,7 +475,7 @@ const CartPage = () => {
 									)}
 								</span>
 							</div>
-						</p>
+						</div>
 						<Divider />
 						<p className="flex justify-between text-gray-900 font-semibold">
 							<span>Tổng Giá</span>{' '}

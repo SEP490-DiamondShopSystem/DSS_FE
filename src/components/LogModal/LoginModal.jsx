@@ -38,7 +38,7 @@ const LoginModal = ({isOpen, onClose}) => {
 				onClose();
 			})
 			.catch((error) => {
-				message.error(error?.data?.title || error?.detail);
+				message.error(error?.detail);
 			});
 	};
 
@@ -57,7 +57,7 @@ const LoginModal = ({isOpen, onClose}) => {
 				onClose();
 			})
 			.catch((error) => {
-				message.error(error?.data?.title || error?.detail);
+				message.error(error?.detail);
 			});
 	};
 

@@ -7,6 +7,7 @@ import {
 	fetchShopBankAccountRule,
 } from '../../redux/slices/configSlice';
 import {selectIsLoading, selectConfigError} from '../../redux/selectors';
+import Loading from '../../components/Loading';
 
 const {Title, Text} = Typography;
 
@@ -43,12 +44,7 @@ const PaymentPolicyPage = () => {
 		}
 		return value;
 	};
-	if (isLoading)
-		return (
-			<div className="flex justify-center items-center h-screen">
-				<p className="text-lg text-gray-600">Đang tải...</p>
-			</div>
-		);
+	if (isLoading) return <Loading />;
 
 	if (error)
 		return (

@@ -70,9 +70,9 @@ export const Footer = () => {
 							<li className="m-2">
 								<Link to={'/warranty'}>Chính Sách Bảo Hành</Link>
 							</li>
-
-							<li className="m-2">Cam Kết Về Vỏ Trang Sức</li>
-							<li className="m-2">Cam Kết Về Kim Cương</li>
+							<li className="m-2">
+								<Link to={'/member-policy'}>Chính Sách Thành Viên</Link>
+							</li>
 						</ul>
 					</Col>
 
