@@ -232,7 +232,6 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 				.unwrap()
 				.then((res) => {
 					setOrder(res);
-
 					setOrderLog(res?.Logs);
 					setStatusOrder(res?.Status);
 				})
@@ -250,7 +249,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 					setTransaction(res?.Transactions);
 				});
 		}
-	}, [selectedOrder?.orderId]);
+	}, [selectedOrder?.orderId, transfer]);
 
 	const showModal = (review) => {
 		setReviewContent(review);
