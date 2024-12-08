@@ -114,26 +114,31 @@ export const InformationLeft = ({jewelryDetail, diamondDetail, jewelry, diamond,
 
 	useEffect(() => {
 		if (mappedDiamond.length > 0) {
-		  const diamondIds = mappedDiamond.map((diamond) => diamond.DiamondId);
-		  
-		  // Prevent multiple fetches for the same set of diamond IDs
-		  const uniqueDiamondIds = [...new Set(diamondIds)];
-		  
-		  if (uniqueDiamondIds.length > 0) {
-			dispatch(fetchDiamondFiles(uniqueDiamondIds)).then((response) => {
-			  if (response.payload) {
-				console.log('Fetched Certificates:', response);
-				setCertificates(response.payload.Certificates);
-			  } else {
-				console.log('No certificates found for diamond IDs:', uniqueDiamondIds);
-			  }
-			}).catch((error) => {
-			  console.error('Error fetching diamond files:', error);
-			});
-		  }
+			const diamondIds = mappedDiamond.map((diamond) => diamond.DiamondId);
+	
+			// Fetch certificates for each diamond ID sequentially
+			const fetchCertificatesForDiamonds = async () => {
+				try {
+					const certificateMap = {};
+					
+					for (const diamondId of diamondIds) {
+						const response = await dispatch(fetchDiamondFiles(diamondId));
+						
+						if (response.payload && response.payload.Certificates) {
+							certificateMap[diamondId] = response.payload.Certificates[0];
+						}
+					}
+	
+					setCertificates(certificateMap);
+				} catch (error) {
+					console.error('Error fetching diamond files:', error);
+				}
+			};
+	
+			fetchCertificatesForDiamonds();
 		}
-	  }, [jewelry?.Diamonds, dispatch]); // Change dependency to a more stable reference
-	  
+	}, [jewelry?.Diamonds, dispatch]);
+
 	const text = <span>Carat (ct.)</span>;
 
 	const content = (
@@ -445,22 +450,17 @@ export const InformationLeft = ({jewelryDetail, diamondDetail, jewelry, diamond,
 						<div className="flex justify-between px-4 border-b border-tintWhite py-2">
 							<span className="text-gray">Giấy chứng nhận</span>
 							<div>
-								{certificates.length > 0 ? (
-									certificates.map((certificate, index) => (
-										<div
-											key={index}
-											className="flex items-center space-x-2 mb-2"
-										>
-											<a
-												href={certificate.MediaPath}
-												target="_blank"
-												rel="noopener noreferrer"
-												className="text-blue hover:underline"
-											>
-												View Report
-											</a>
-										</div>
-									))
+								{certificates[diamond.DiamondId] ? (
+									 <div className="flex items-center space-x-2 mb-2">
+										<a
+											href={certificates[diamond.DiamondId].MediaPath}
+											target="_blank"
+											rel="noopener noreferrer"
+											className="text-blue hover:underline"
+										  >
+											View Report
+										</a>
+									</div>
 								) : (
 									<span className="text-gray">Không có</span>
 								)}
