@@ -269,18 +269,15 @@ export const InformationRight = ({
 										</div>
 										<div className="flex-1">
 											<div className="ml-5">
-												<p
-													className="text-ellipsis overflow-hidden"
-													// style={{maxWidth: 350}}
-												>
+												<div className="text-ellipsis overflow-hidden">
 													{diamond?.Title}
-												</p>
-												<p className="text-gray">
+												</div>
+												<div className="text-gray my-2">
 													SKU: {diamond?.SerialCode}
-												</p>
-												<p className="text-xl font-semibold">
+												</div>
+												<div className="text-xl font-semibold">
 													{formatPrice(diamond?.TruePrice)}
-												</p>
+												</div>
 											</div>
 										</div>
 									</div>

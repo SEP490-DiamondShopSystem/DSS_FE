@@ -8,38 +8,12 @@ const SidebarMenu = ({children}) => {
 
 	const menuData = [
 		{
-			title: 'Mua Sắm Cùng Diamond Shop',
-			items: [
-				{name: 'Người dùng mới', path: '/new-user'},
-				{name: 'Tạo tác', path: '/create-action'},
-				{name: 'Tính năng của Diamond Shop', path: '/features'},
-				{name: 'Khám phá', path: '/explore'},
-				{name: 'Thanh toán đơn hàng', path: '/payment'},
-				{name: 'Diamond Mall', path: '/diamond-mall'},
-				{name: 'Diamond Mart', path: '/diamond-mart'},
-				{name: 'Vay Tiêu Dùng', path: '/loan'},
-			],
-		},
-		{
-			title: 'Khuyến Mãi & Ưu Đãi',
-			items: [
-				{name: 'Chương trình khuyến mãi', path: '/promotions'},
-				{name: 'Chương trình cho Người dùng', path: '/user-programs'},
-			],
-		},
-		{
 			title: 'Chính Sách',
 			items: [
 				{name: 'Chính Sách Thanh Toán', path: '/payment-policy'},
 				{name: 'Chính Sách Giao Hàng', path: '/shipping-policy'},
 				{name: 'Chính Sách Bảo Hành', path: '/warranty'},
 				{name: 'Chính Sách Thành Viên', path: '/member-policy'},
-				// {name: 'DPayLater', path: '/dpaylater'},
-				// {name: 'Diamond Xu', path: '/diamond-xu'},
-				// {name: 'Số dư TK Diamond', path: '/diamond-balance'},
-				// {name: 'Thuế & Hóa đơn', path: '/tax-invoice'},
-				// {name: 'Phương thức thanh toán khác', path: '/other-payment-methods'},
-				// {name: 'Ứng dụng DiamondPay', path: '/diamondpay-app'},
 			],
 		},
 	];

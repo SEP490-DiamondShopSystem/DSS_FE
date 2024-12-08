@@ -85,11 +85,12 @@ export const getUserDetail = createAsyncThunk(
 
 export const handleUpdateAccount = createAsyncThunk(
 	'userLoginSlice/handleUpdateAccount',
-	async ({id, changedFullName, changedAddress}, {rejectWithValue}) => {
+	async ({id, changedFullName, changedAddress, newPhoneNumber}, {rejectWithValue}) => {
 		try {
 			const data = await api.put(`/Account/${id}/Profile`, {
 				changedFullName,
 				changedAddress,
+				newPhoneNumber,
 			});
 			return data;
 		} catch (error) {

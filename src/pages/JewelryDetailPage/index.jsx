@@ -99,6 +99,17 @@ const JewelryDetailPage = () => {
 		selectedSideDiamond
 	);
 
+	console.log('filteredGroups', filteredGroups);
+
+	useEffect(() => {
+		if (filteredGroups && size == null) {
+			const availableSize = filteredGroups[0]?.SizeGroups.find(
+				(group) => group.IsInStock === true
+			);
+			setSize(availableSize?.Size || null);
+		}
+	}, [filteredGroups, size]);
+
 	return (
 		<div className="px-4 md:px-32 md:mt-10">
 			<Steps items={items} current={0} className="w-full md:w-auto" />

@@ -94,13 +94,13 @@ const NavbarProfile = () => {
 					<h1 className="text-2xl text-center">
 						{userDetail?.FirstName} {userDetail?.LastName}
 					</h1>
-					<p className="text-2xl text-center mb-5">
+					<div className="text-2xl text-center mb-5">
 						{highestRank && (
 							<Tag color={roleMapping[highestRank]?.color}>
 								{roleMapping[highestRank]?.text}
 							</Tag>
 						)}
-					</p>
+					</div>
 					<TierProgressBar
 						currentPoints={userDetail?.TotalPoint}
 						bronzePoints={rank?.TotalPointToBronze}
