@@ -555,7 +555,7 @@ export const FilterDiamondJewelry = ({handleFilter, setFilters, filters, handleR
 		}
 	}, [categoryList]);
 
-	const filterTypes = ['Loại trang sức', 'Kim loại', 'Hoàn Thiện Rhodium', 'Được Khắc Chữ'];
+	const filterTypes = ['Loại trang sức', 'Kim loại', 'Được Khắc Chữ'];
 
 	const handleFilterChange = (filterType, selectedValues) => {
 		setFilters((prevFilters) => ({
@@ -587,7 +587,7 @@ export const FilterDiamondJewelry = ({handleFilter, setFilters, filters, handleR
 	const filterTypeMapping = {
 		'Kim loại': 'Metal',
 		'Loại trang sức': 'Type',
-		'Hoàn Thiện Rhodium': 'IsRhodiumFinished',
+
 		'Được Khắc Chữ': 'IsEngravable',
 	};
 
@@ -663,7 +663,7 @@ export const FilterJewelryCustomize = ({handleFilter, setFilters, filters, handl
 		}
 	}, [categoryList]);
 
-	const filterTypes = ['Loại trang sức', 'Hoàn Thiện Rhodium', 'Được Khắc Chữ'];
+	const filterTypes = ['Loại trang sức', 'Được Khắc Chữ'];
 
 	const handleFilterChange = (filterType, selectedValues) => {
 		setFilters((prevFilters) => ({

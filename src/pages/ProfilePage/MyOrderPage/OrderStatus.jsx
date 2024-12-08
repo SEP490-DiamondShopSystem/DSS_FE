@@ -119,9 +119,7 @@ export const OrderStatus = ({orderStatus, order}) => {
 					? 'Đã Chuẩn Bị'
 					: orderStatus === 4 && indexCancelled === 3
 					? 'Đã Hủy'
-					: orderStatus === 3 && indexRejected === 8
-					? 'Đã Bị Từ Chối'
-					: orderStatus === 3 && indexRejected === 7
+					: indexRejected === 8 || indexRejected === 7
 					? 'Đã Bị Từ Chối'
 					: 'Đã Chuẩn Bị',
 			description:
@@ -129,9 +127,7 @@ export const OrderStatus = ({orderStatus, order}) => {
 					? 'Đơn hàng đã được chuẩn bị, đang chờ nhân viên giao hàng vận chuyển.'
 					: orderStatus === 4 && indexCancelled === 3
 					? `Đơn hàng đã bị hủy. Lý Do: ${order?.CancelledReason}`
-					: indexRejected === 8
-					? `Đơn hàng đã bị từ chối. Lý Do: ${order?.CancelledReason}`
-					: indexRejected === 7
+					: indexRejected === 8 || indexRejected === 7
 					? `Đơn hàng đã bị từ chối. Lý Do: ${order?.CancelledReason}`
 					: 'Đơn hàng đã được chuẩn bị',
 		},
@@ -144,7 +140,7 @@ export const OrderStatus = ({orderStatus, order}) => {
 					? 'Đang Vận Chuyển'
 					: indexCancelled === 13 || indexCancelled === 5
 					? 'Đã Hủy'
-					: indexRejected === 20 || indexRejected === 5
+					: indexRejected === 20 || indexRejected === 5 || indexRejected === 3
 					? 'Đã Từ Chối'
 					: 'Đã Nhận Hàng',
 			description:
@@ -154,7 +150,7 @@ export const OrderStatus = ({orderStatus, order}) => {
 					? 'Khách đang nhận hàng.'
 					: indexCancelled === 13 || indexCancelled === 5
 					? `Đơn hàng đã bị hủy. Lý Do: ${order?.CancelledReason}`
-					: indexRejected === 20 || indexRejected === 5
+					: indexRejected === 20 || indexRejected === 5 || indexRejected === 3
 					? `Đơn hàng đã bị từ chối. Lý Do: ${order?.CancelledReason}`
 					: 'Đơn hàng đã hoàn thành.',
 		},
@@ -194,6 +190,11 @@ export const OrderStatus = ({orderStatus, order}) => {
 		steps[1].status = 'error';
 		steps[2].status = 'wait';
 		steps[3].status = 'wait';
+	} else if (currentStep === 2 && orderStatus === 3 && indexRejected === 3) {
+		steps[0].status = 'finish';
+		steps[1].status = 'finish';
+		steps[2].status = 'finish';
+		steps[3].status = 'error';
 		// steps[4].status = 'wait';
 	} else if (currentStep === 2 && orderStatus === 3 && indexRejected === 8) {
 		steps[0].status = 'finish';

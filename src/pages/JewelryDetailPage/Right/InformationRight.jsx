@@ -28,6 +28,7 @@ export const InformationRight = ({
 	filteredGroups,
 	id,
 	jewelrySelected,
+	processedMetals,
 }) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
@@ -118,6 +119,8 @@ export const InformationRight = ({
 
 	const someSize = filteredGroups[0]?.SizeGroups?.some((size) => size?.IsInStock);
 
+	console.log('someSize', someSize);
+
 	return (
 		<div>
 			<div className="border-tintWhite">
@@ -145,7 +148,7 @@ export const InformationRight = ({
 				</div>
 				<div>
 					<div className="flex">
-						{diamondJewelry?.Metals?.map((metal, i) => (
+						{processedMetals?.map((metal, i) => (
 							<div
 								key={i}
 								className={`${
