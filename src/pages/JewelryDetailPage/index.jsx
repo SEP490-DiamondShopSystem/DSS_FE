@@ -5,12 +5,13 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
 import LoginModal from '../../components/LogModal/LoginModal';
 import {GetJewelryDetailSelector, LoadingJewelrySelector} from '../../redux/selectors';
-import {getJewelryDetail, getJewelryNoDiamond} from '../../redux/slices/jewelrySlice';
+import {getJewelryDetail} from '../../redux/slices/jewelrySlice';
 import {ImageGallery} from './Left/ImageGallery';
 import {InformationLeft} from './Left/InformationLeft';
 import {InformationRight} from './Right/InformationRight';
 import ProductReviews from './Popup/ProductReviews';
 import Loading from '../../components/Loading';
+import {getJewelryNoDiamond} from '../../redux/slices/reviewSlice';
 
 const JewelryDetailPage = () => {
 	const {id} = useParams();
@@ -59,7 +60,7 @@ const JewelryDetailPage = () => {
 					setJewelrySelected(res);
 				});
 		}
-	}, [id]);
+	}, [id, selectedMetal, size, selectedSideDiamond]);
 
 	const hideLoginModal = () => setIsLoginModalVisible(false);
 

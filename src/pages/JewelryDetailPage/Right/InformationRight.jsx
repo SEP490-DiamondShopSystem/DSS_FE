@@ -12,7 +12,6 @@ import {convertToVietnamDate, formatPrice, Rating} from '../../../utils';
 import JewelryPopup from '../Popup/ProductReviews';
 import {getAllJewelryModelReview} from '../../../redux/slices/reviewSlice';
 import ProductReviews from '../Popup/ProductReviews';
-import {getJewelryNoDiamond} from '../../../redux/slices/jewelrySlice';
 
 const {Option} = Select;
 
@@ -118,6 +117,9 @@ export const InformationRight = ({
 		reviews?.reduce((total, review) => total + review.StarRating, 0) / reviewLength || 0;
 
 	const someSize = filteredGroups[0]?.SizeGroups?.some((size) => size?.IsInStock);
+
+	console.log('filteredGroups', filteredGroups);
+	console.log('jewelrySelected', jewelrySelected);
 
 	return (
 		<div>
