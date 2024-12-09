@@ -141,7 +141,7 @@ export const DiamondList = ({
 																</p>
 																<p className="text-red-500 ml-2">
 																	{formatPrice(
-																		diamondItem.DiscountPrice
+																		diamondItem.SalePrice
 																	)}
 																</p>
 															</div>
