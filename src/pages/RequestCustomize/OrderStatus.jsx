@@ -121,10 +121,6 @@ export const OrderStatus = ({orderStatus, orderDetail}) => {
 					: 'Yêu cầu thiết kế đã được shop chấp nhận. Tiến hành tạo đơn!',
 		},
 	];
-	console.log('orderStatus', orderStatus);
-	console.log('currentStep', currentStep);
-	console.log('orderDetail', orderDetail);
-	console.log('order', order);
 
 	// Cập nhật trạng thái dựa trên currentStep
 	if (currentStep === 0) {

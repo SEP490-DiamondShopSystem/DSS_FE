@@ -168,10 +168,6 @@ const JewelryDetailPage = () => {
 		setUniqueSideDiamonds(uniqueFilteredMetals);
 	}, [jewelry]);
 
-	console.log('uniqueMetals', uniqueMetals);
-	console.log('selectedSideDiamond', selectedSideDiamond);
-	console.log('uniqueSideDiamonds', uniqueSideDiamonds);
-
 	return (
 		<>
 			{loading ? (

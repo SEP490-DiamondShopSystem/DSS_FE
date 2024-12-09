@@ -107,8 +107,6 @@ const PaymentPage = () => {
 		setIsModalVisible(false);
 	};
 
-	console.log('cartList', cartList);
-
 	return (
 		<div className="my-10 mx-20 shadow-xl rounded">
 			<div className="flex justify-center items-center">

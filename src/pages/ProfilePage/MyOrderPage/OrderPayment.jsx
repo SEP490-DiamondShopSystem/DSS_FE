@@ -69,8 +69,6 @@ export const OrderPayment = ({order, setTransfer}) => {
 		return <div className="text-center text-gray-500">Không có dữ liệu đơn hàng.</div>;
 	}
 
-	console.log('ruleBank', ruleBank);
-
 	return (
 		<div className="p-6 bg-white rounded-lg shadow-md max-w-lg mx-auto">
 			{order?.PaymentMethodId === '1' && (

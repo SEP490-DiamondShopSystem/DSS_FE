@@ -188,7 +188,6 @@ const MyOrderPage = () => {
 			.unwrap()
 			.then((res) => {
 				setOrderList(res);
-				console.log('res', res);
 			});
 	}, [pageSize, currentPage, status]);
 
@@ -228,11 +227,7 @@ const MyOrderPage = () => {
 		setOpenInvoice(!openInvoice);
 	};
 
-	console.log('orderList', orderList);
-
 	const handleTransaction = (order) => {
-		console.log('order', order);
-
 		if (order?.paymentMethodId === '2') {
 			dispatch(getUserOrderTransaction(order?.orderId))
 				.unwrap()

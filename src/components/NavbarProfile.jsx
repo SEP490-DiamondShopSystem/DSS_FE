@@ -31,9 +31,6 @@ const NavbarProfile = () => {
 
 	const [active, setActive] = useState(localStorage.getItem('lastVisitedPage') || 'Profile');
 
-	console.log('rank', rank);
-	console.log('userDetail', userDetail);
-
 	useEffect(() => {
 		dispatch(getAccountRank())
 			.unwrap()
@@ -81,8 +78,6 @@ const NavbarProfile = () => {
 					parseInt(role.Id) > parseInt(max.Id) ? role : max
 			  ).Id
 			: null;
-
-	console.log('highestRank', highestRank);
 
 	return (
 		<div>

@@ -46,14 +46,6 @@ export const createDiamondPrice = createAsyncThunk(
 	'diamondPrice/createDiamondPrice',
 	async ({listPrices, shapeId, isSideDiamond, isLabDiamond}, {rejectWithValue}) => {
 		try {
-			// Log the data being sent to the API
-			console.log('Sending listPrices to API:', {
-				listPrices,
-				shapeId,
-				isLabDiamond,
-				isSideDiamond,
-			});
-
 			// Make the PUT request to update prices
 			const response = await api.post('/Diamond/Price', {
 				listPrices,
@@ -61,9 +53,6 @@ export const createDiamondPrice = createAsyncThunk(
 				isLabDiamond,
 				isSideDiamond,
 			});
-
-			// Log the response received from the API
-			console.log('Response from creating diamond prices:', response);
 
 			// Check if the API response is structured as expected
 			return response.data || response; // Adjust this based on your API's response structure
@@ -78,18 +67,9 @@ export const createDiamondPrice = createAsyncThunk(
 // PUT /api/Diamond/Price
 export const updateDiamondPrices = createAsyncThunk(
 	'diamondPrice/updateDiamondPrices',
-	async (
-		{updatedDiamondPrices, shapeId, isLabDiamond, isSideDiamond},
-		{rejectWithValue}
-	) => {
+	async ({updatedDiamondPrices, shapeId, isLabDiamond, isSideDiamond}, {rejectWithValue}) => {
 		try {
 			// Log the data being sent to the API
-			console.log('Sending updatedDiamondPrices to API:', {
-				updatedDiamondPrices,
-				shapeId,
-				isLabDiamond,
-				isSideDiamond,
-			});
 
 			// Make the PUT request to update prices
 			const response = await api.put('/Diamond/Price', {
@@ -100,7 +80,6 @@ export const updateDiamondPrices = createAsyncThunk(
 			});
 
 			// Log the response received from the API
-			console.log('Response from updating diamond prices:', response);
 
 			// Check if the API response is structured as expected
 			return response.data || response; // Adjust this based on your API's response structure
@@ -133,14 +112,6 @@ export const deleteDiamondPrice = createAsyncThunk(
 	'diamondPrice/deleteDiamondPrice',
 	async ({deleteList, shapeId, isLabDiamond, isSideDiamond}, {rejectWithValue}) => {
 		try {
-			// Log the data being sent to the API for debugging
-			console.log('Sending delete request with:', {
-				deleteList,
-				shapeId,
-				isLabDiamond,
-				isSideDiamond,
-			});
-
 			// Make the DELETE request with the appropriate request body
 			const response = await api.delete('/Diamond/Price', {
 				data: {
@@ -152,13 +123,11 @@ export const deleteDiamondPrice = createAsyncThunk(
 			});
 
 			// Log the response from the API for debugging
-			console.log('Response from delete diamond prices:', response);
 
 			// Check if the response is structured as expected and return the data
 			return response.data || response;
 		} catch (error) {
 			// Log the error response for better debugging
-			console.error('Error deleting diamond prices:', error);
 			// Handle different error response formats
 			if (error) {
 				return rejectWithValue(error.data); // Use the detailed error information
@@ -209,7 +178,6 @@ export const diamondPriceSlice = createSlice({
 			.addCase(fetchPriceBoard.fulfilled, (state, action) => {
 				state.loading = false;
 				state.priceBoard = action.payload.data || action.payload;
-				console.log('Price board data fetched successfully:', action.payload); // Log the fetched data
 			})
 			.addCase(fetchPriceBoard.rejected, (state, action) => {
 				state.loading = false;
@@ -253,8 +221,6 @@ export const diamondPriceSlice = createSlice({
 				state.loading = false;
 				const updatedPrices = action.payload.data || action.payload; // Make sure this is correct
 
-				console.log('Response from updating diamond prices:', updatedPrices); // Log the response
-
 				if (Array.isArray(updatedPrices) && updatedPrices.length > 0) {
 					updatedPrices.forEach((updatedPrice) => {
 						const index = state.prices.findIndex(
@@ -272,8 +238,6 @@ export const diamondPriceSlice = createSlice({
 				} else {
 					console.warn('No updated prices returned from the API.');
 				}
-
-				console.log('Updated diamond prices:', state.prices); // Log the updated prices array
 			})
 
 			.addCase(updateDiamondPrices.rejected, (state, action) => {

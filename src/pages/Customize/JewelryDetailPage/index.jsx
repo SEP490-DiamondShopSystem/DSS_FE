@@ -61,8 +61,6 @@ const JewelryCustomDetail = () => {
 		dispatch(getAllJewelryMetal());
 	}, []);
 
-	console.log('findMetals', findMetals);
-
 	useEffect(() => {
 		dispatch(getJewelryModelDetail({id}));
 	}, []);
@@ -96,15 +94,12 @@ const JewelryCustomDetail = () => {
 		},
 	];
 
-	console.log('stepChoose', stepChoose);
-
 	const handleSizeChange = (e) => {
 		setSize(e.target.value);
 	};
 
 	const handleSelectMetal = (metal) => {
 		setSelectedMetal(metal);
-		console.log('metal', metal);
 
 		localStorage.setItem('selectedMetal', JSON.stringify(metal));
 	};

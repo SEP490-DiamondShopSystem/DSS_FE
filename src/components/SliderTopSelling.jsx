@@ -17,8 +17,6 @@ const SliderTopSelling = () => {
 	const [isMobile, setIsMobile] = useState(false);
 	const [jewelryModel, setJewelryModel] = useState();
 
-	console.log('jewelryModel', jewelryModel);
-
 	const handleResize = () => {
 		if (window.innerWidth <= 768) {
 			setIsMobile(true);

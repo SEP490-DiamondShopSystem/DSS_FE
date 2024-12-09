@@ -96,8 +96,6 @@ const DiamondSearchPage = () => {
 	const [selectedIndex, setSelectedIndex] = useState(0);
 	const [diamondList, setDiamondList] = useState();
 
-	console.log('filters', filters);
-
 	useEffect(() => {
 		dispatch(getDiamondFilter());
 	}, []);
@@ -120,8 +118,6 @@ const DiamondSearchPage = () => {
 			return '';
 		}
 	};
-
-	console.log('getShapeFromLocalStorage', getShapeFromLocalStorage());
 
 	useEffect(() => {
 		if (filterLimits) {

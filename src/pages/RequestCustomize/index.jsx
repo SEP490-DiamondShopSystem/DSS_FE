@@ -76,8 +76,6 @@ const RequestCustomize = () => {
 		}
 	}, [requestList]);
 
-	console.log('requestList', requestList?.TotalPage);
-
 	const reverseEnum = (enumObj) => {
 		return Object.fromEntries(
 			Object.entries(enumObj).map(([key, value]) => [value, key.replace(/_/g, ' ')])

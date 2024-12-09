@@ -56,7 +56,6 @@ export const DiamondList = ({
 
 	const handleDiamondChoiceClick = (id) => {
 		navigate(`/diamond-detail/${id}`);
-		console.log(id);
 	};
 
 	return (

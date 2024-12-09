@@ -6,7 +6,6 @@ export const getAllBlog = createAsyncThunk('blogSlice/getAllBlog', async (_, {re
 		const response = await api.get(`/Blog/All`);
 		return response;
 	} catch (error) {
-		console.log('Error: ', JSON.stringify(error));
 		return rejectWithValue(error.data);
 	}
 });
@@ -18,7 +17,6 @@ export const getBlogDetail = createAsyncThunk(
 			const response = await api.get(`/Blog/Detail?BlogId=${BlogId}`);
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error));
 			return rejectWithValue(error.data);
 		}
 	}

@@ -48,12 +48,8 @@ export const DiamondList = ({
 	};
 
 	const handleClick = (id) => {
-		console.log('id jewelry', id);
-
 		navigate(`/completed-jewelry/${id}`);
 	};
-
-	console.log('diamond', diamondList);
 
 	return (
 		<div>

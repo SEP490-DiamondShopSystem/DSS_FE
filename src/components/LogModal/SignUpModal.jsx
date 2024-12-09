@@ -73,7 +73,6 @@ const SignUpModal = ({isOpen, onClose}) => {
 			.unwrap()
 			.then((res) => {
 				const decodedData = jwtDecode(res.accessToken);
-				console.log(decodedData);
 				setLocalStorage('user', JSON.stringify(decodedData));
 				setLocalStorage('userId', decodedData.UserId);
 				dispatch(setUser(decodedData));

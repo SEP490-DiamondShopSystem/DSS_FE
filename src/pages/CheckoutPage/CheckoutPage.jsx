@@ -176,8 +176,6 @@ const CheckoutPage = () => {
 		}
 	}, [orderRule]);
 
-	console.log('isAtShop', isAtShop);
-
 	useEffect(() => {
 		if (isAtShop && shopLocation) {
 			// Auto-fill with shop location when pickup is selected
@@ -320,8 +318,6 @@ const CheckoutPage = () => {
 				actionPayload.userAddress = userAddress;
 			}
 
-			console.log('actionPayload', actionPayload);
-
 			dispatch(handleCartValidate(actionPayload))
 				.unwrap()
 				.then((res) => {
@@ -331,7 +327,6 @@ const CheckoutPage = () => {
 			dispatch(checkPromoCart({items: [transformedData]}));
 		} else {
 			const local = JSON.parse(localStorage.getItem(`cart_${userId}`));
-			console.log('local', local);
 
 			const transformedData = local?.map((productId, index) => ({
 				id: Math.floor(1000000 + Math.random() * 9000000).toString(),
@@ -487,8 +482,6 @@ const CheckoutPage = () => {
 					showOrderSuccessModal();
 				})
 				.catch((error) => {
-					console.log('error', error);
-
 					message.error(error?.data?.title || error?.title);
 				});
 		} else {

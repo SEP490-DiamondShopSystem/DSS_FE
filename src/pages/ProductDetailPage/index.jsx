@@ -78,14 +78,12 @@ const ProductDetailPage = () => {
 	// Function to handle metal selection
 	const handleSelectMetal = (metal) => {
 		setSelectedMetal(metal);
-		console.log(metal);
 
 		localStorage.setItem('selectedMetal', JSON.stringify(metal));
 	};
 
 	const handleSelectWidth = (width) => {
 		setSelectedWidth(width);
-		console.log(width);
 
 		localStorage.setItem('selectedWidth', JSON.stringify(width));
 	};

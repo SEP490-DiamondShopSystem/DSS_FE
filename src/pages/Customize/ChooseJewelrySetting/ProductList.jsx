@@ -29,8 +29,6 @@ export const ProductList = () => {
 		IsEngravable: undefined,
 	});
 
-	console.log('filters', filters);
-
 	useEffect(() => {
 		const saved = localStorage.getItem('jewelry');
 		if (saved) {
@@ -40,9 +38,6 @@ export const ProductList = () => {
 			}));
 		}
 	}, []);
-
-	console.log('jewelryList', jewelryList);
-	console.log('jewelries', jewelries);
 
 	const fetchJewelryData = debounce(() => {
 		dispatch(

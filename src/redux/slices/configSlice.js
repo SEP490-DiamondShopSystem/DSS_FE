@@ -6,7 +6,6 @@ export const getConfigOrder = createAsyncThunk(
 	async (_, {rejectWithValue}) => {
 		try {
 			const data = await api.get(`/Configuration/OrderRule`);
-			console.log(data);
 
 			return data;
 		} catch (error) {

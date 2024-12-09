@@ -23,8 +23,6 @@ export const Metal = ({
 		setStep((prev) => prev + 1);
 	};
 
-	console.log('filteredGroups', filteredGroups);
-
 	return (
 		<div>
 			<div>
@@ -68,7 +66,10 @@ export const Metal = ({
 									<Radio value={diamond?.Id}>
 										<div className="">
 											<div className="m-5">
-												<p className="">{diamond?.CaratWeight} ct / {diamond?.Quantity} viên</p>
+												<p className="">
+													{diamond?.CaratWeight} ct / {diamond?.Quantity}{' '}
+													viên
+												</p>
 											</div>
 										</div>
 									</Radio>

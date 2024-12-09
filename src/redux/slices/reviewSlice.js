@@ -4,8 +4,6 @@ import {api} from '../../services/api';
 export const handleReviewOrder = createAsyncThunk(
 	'reviewSlice/handleReviewOrder',
 	async (body, {rejectWithValue}) => {
-		console.log('body', body);
-
 		try {
 			const {Content, Files, StarRating, JewelryId} = body;
 			const formData = new FormData();
@@ -35,8 +33,6 @@ export const handleReviewOrder = createAsyncThunk(
 export const getAllJewelryModelReview = createAsyncThunk(
 	'reviewSlice/getAllJewelryModelReview',
 	async (params, {rejectWithValue}) => {
-		console.log('params', params);
-
 		try {
 			const {CurrentPage, PageSize, MetalId, ModelId, OrderByOldest} = params;
 			let url = '/JewelryReview/All';
@@ -55,11 +51,9 @@ export const getAllJewelryModelReview = createAsyncThunk(
 			}
 
 			const response = await api.get(url);
-			console.log(response);
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.data));
 			return rejectWithValue(error.data);
 		}
 	}
@@ -72,7 +66,6 @@ export const deleteReviewAction = createAsyncThunk(
 			const response = await api.delete(`/JewelryReview/Delete?JewelryId=${JewelryId}`);
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error));
 			return rejectWithValue(error);
 		}
 	}

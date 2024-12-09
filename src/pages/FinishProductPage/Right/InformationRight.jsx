@@ -239,8 +239,6 @@ export const InformationRight = ({
 		</div>
 	);
 
-	console.log('jewelry', jewelry);
-
 	return (
 		<div>
 			<div className="border-tintWhite">

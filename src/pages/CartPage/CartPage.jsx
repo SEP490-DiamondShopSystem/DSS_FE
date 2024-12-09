@@ -112,8 +112,6 @@ const CartPage = () => {
 	const [cartValidateProduct, setCartValidateProduct] = useState([]);
 	const [promoId, setPromoId] = useState(null);
 
-	console.log('promoId', promoId);
-
 	useEffect(() => {
 		dispatch(getAllPromo());
 	}, []);
@@ -132,7 +130,6 @@ const CartPage = () => {
 
 	useEffect(() => {
 		const local = JSON.parse(localStorage.getItem(`cart_${userId}`));
-		console.log('local', local);
 
 		const transformedData = local?.map((productId, index) => ({
 			id: Math.floor(1000000 + Math.random() * 9000000).toString(),
@@ -152,8 +149,6 @@ const CartPage = () => {
 				productId?.warrantyDiamond?.warranty?.Type,
 		}));
 		const defaultAddress = userDetail?.Addresses?.find((address) => address?.IsDefault);
-
-		console.log('defaultAddress', defaultAddress);
 
 		const userAddress = {
 			province: defaultAddress?.Province,
@@ -185,9 +180,6 @@ const CartPage = () => {
 	}, [promoId]);
 
 	const handleViewCart = (jewelryId, diamondId) => {
-		console.log(jewelryId);
-		console.log(diamondId);
-
 		if (jewelryId) {
 			navigate(`/completed-jewelry/${jewelryId}`, {state: {jewelryId}});
 		} else if (diamondId) {
@@ -201,7 +193,6 @@ const CartPage = () => {
 	const jewelryOrDiamondProducts = cartValidate?.Products.filter(
 		(product) => product.Jewelry || product.Diamond
 	);
-	console.log('cartValidate', cartValidate);
 
 	const mappedProducts = useMemo(() => {
 		if (cartValidate && enums) {
@@ -252,7 +243,6 @@ const CartPage = () => {
 	};
 
 	const handlePromoChange = (value) => {
-		console.log('value', value);
 		setPromoId(value);
 	};
 

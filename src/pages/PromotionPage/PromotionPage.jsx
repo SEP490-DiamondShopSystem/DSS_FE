@@ -14,8 +14,6 @@ const PromotionPage = () => {
 
 	const [promo, setPromo] = useState();
 
-	console.log('promo', promo);
-
 	useEffect(() => {
 		dispatch(getAllPromo());
 	}, []);

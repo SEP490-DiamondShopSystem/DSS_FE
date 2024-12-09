@@ -29,7 +29,6 @@ const LoginModal = ({isOpen, onClose}) => {
 			.unwrap()
 			.then((res) => {
 				const decodedData = jwtDecode(res.accessToken);
-				console.log(decodedData);
 				setLocalStorage('user', JSON.stringify(decodedData));
 				setLocalStorage('userId', decodedData.UserId);
 				dispatch(setUser(decodedData));
@@ -43,13 +42,10 @@ const LoginModal = ({isOpen, onClose}) => {
 	};
 
 	const handleGoogleLoginBtn = (response) => {
-		console.log('Google login response:', response);
-
 		dispatch(handleGoogleLogin(response?.credential))
 			.unwrap()
 			.then((res) => {
 				const decodedData = jwtDecode(res.accessToken);
-				console.log(decodedData);
 				setLocalStorage('user', JSON.stringify(decodedData));
 				setLocalStorage('userId', decodedData.UserId);
 				dispatch(setUser(decodedData));

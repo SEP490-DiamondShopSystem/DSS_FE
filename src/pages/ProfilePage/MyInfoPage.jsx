@@ -211,8 +211,6 @@ const MyInfoPage = () => {
 	};
 
 	const handleDefaultAddress = (id) => {
-		console.log('id address', id);
-
 		dispatch(handleDefaultAccount({accountId: userDetail?.Id, id}))
 			.unwrap()
 			.then((res) => {
@@ -233,8 +231,6 @@ const MyInfoPage = () => {
 				message.error(error?.data?.title || error?.detail);
 			});
 	};
-
-	console.log('userInfo.phone', userInfo.phone);
 
 	const handleDeleteAddress = (street, id) => {
 		// Xóa địa chỉ dựa trên tên đường

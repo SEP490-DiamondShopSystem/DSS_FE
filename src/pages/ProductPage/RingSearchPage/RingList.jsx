@@ -23,8 +23,6 @@ export const RingList = () => {
 		price: {minPrice: 0, maxPrice: 1000},
 	});
 
-	console.log(filters);
-
 	useEffect(() => {
 		dispatch(getAllJewelry({pageSize}));
 	}, [dispatch]);
