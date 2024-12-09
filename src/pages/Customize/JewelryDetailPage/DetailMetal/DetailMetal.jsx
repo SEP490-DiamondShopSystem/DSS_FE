@@ -12,8 +12,6 @@ export const DetailMetal = ({customizeJewelry, imageData, selectedMetal, jewelry
 		dispatch(getDiamondShape());
 	}, []);
 
-	const metalNames = jewelry?.Metals?.map((metal) => metal.Name).join(', ');
-
 	// Get unique shape names across all MainDiamonds
 	const uniqueShapeNames = new Set();
 	jewelry?.MainDiamonds?.forEach((diamond) => {
@@ -25,20 +23,12 @@ export const DetailMetal = ({customizeJewelry, imageData, selectedMetal, jewelry
 
 	const mainDiamondShapes = Array.from(uniqueShapeNames).join(', ');
 
-	console.log('shape', shape);
-	console.log('jewelry', jewelry);
-	console.log('mainDiamondShapes', mainDiamondShapes);
-
 	return (
 		<div className="my-10 mx-20">
 			<div>
 				<h1 className="text-center text-2xl font-semibold">Thông tin chi tiết</h1>
 			</div>
-			{/* <div className="flex items-center justify-between mt-10">
-				<p className="font-semibold">SerialCode</p>
-				<p>JW1234</p>
-			</div> */}
-			{/* <Divider /> */}
+
 			<div className="flex items-center justify-between">
 				<p className="font-semibold">Vỏ:</p>
 				<p>{jewelry?.Name}</p>

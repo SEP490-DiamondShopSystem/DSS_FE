@@ -29,6 +29,7 @@ export const InformationRight = ({
 	id,
 	jewelrySelected,
 	processedMetals,
+	uniqueSideDiamonds,
 }) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
@@ -176,15 +177,23 @@ export const InformationRight = ({
 						</div>
 						<div>
 							<div className="flex">
-								{diamondJewelry?.SideDiamonds?.map((diamond, i) => (
+								{uniqueSideDiamonds?.map((diamond, i) => (
 									<div
 										key={i}
 										className={`
 								${
+									selectedSideDiamond.Quantity === diamond?.Quantity &&
 									selectedSideDiamond.CaratWeight === diamond?.CaratWeight
-										? 'border-2 border-black'
-										: 'border-2 border-white'
+										? 'border-2 border-black' // Cả Quantity và CaratWeight giống nhau
+										: selectedSideDiamond.Quantity !== diamond?.Quantity &&
+										  selectedSideDiamond.CaratWeight === diamond?.CaratWeight
+										? 'border-2 border-black' // Quantity khác nhau nhưng CaratWeight giống nhau
+										: selectedSideDiamond.Quantity === diamond?.Quantity &&
+										  selectedSideDiamond.CaratWeight !== diamond?.CaratWeight
+										? 'border-2 border-black' // Quantity giống nhau nhưng CaratWeight khác nhau
+										: 'border-2 border-white' // Cả Quantity và CaratWeight đều khác nhau
 								}
+
 						my-2 py-2 px-4 rounded-lg cursor-pointer hover:bg-offWhite`}
 										onClick={() => handleSelectSideDiamond(diamond)} // Save selected diamond on click
 									>
