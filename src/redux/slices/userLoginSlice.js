@@ -87,15 +87,17 @@ export const handleUpdateAccount = createAsyncThunk(
 	'userLoginSlice/handleUpdateAccount',
 	async ({id, changedFullName, changedAddress, newPhoneNumber}, {rejectWithValue}) => {
 		try {
-			const data = await api.put(`/Account/${id}/Profile`, {
+			const payload = {
 				changedFullName,
 				changedAddress,
-				newPhoneNumber,
-			});
+				...(newPhoneNumber && {newPhoneNumber}),
+			};
+
+			const data = await api.put(`/Account/${id}/Profile`, payload);
 			return data;
 		} catch (error) {
 			console.error(error);
-			return rejectWithValue(error.payload);
+			return rejectWithValue(error);
 		}
 	}
 );

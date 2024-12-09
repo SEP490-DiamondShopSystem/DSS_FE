@@ -4,16 +4,18 @@ import {Steps} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
 import LoginModal from '../../components/LogModal/LoginModal';
-import {GetJewelryDetailSelector} from '../../redux/selectors';
+import {GetJewelryDetailSelector, LoadingJewelrySelector} from '../../redux/selectors';
 import {getJewelryDetail, getJewelryNoDiamond} from '../../redux/slices/jewelrySlice';
 import {ImageGallery} from './Left/ImageGallery';
 import {InformationLeft} from './Left/InformationLeft';
 import {InformationRight} from './Right/InformationRight';
 import ProductReviews from './Popup/ProductReviews';
+import Loading from '../../components/Loading';
 
 const JewelryDetailPage = () => {
 	const {id} = useParams();
 	const dispatch = useDispatch();
+	const loading = useSelector(LoadingJewelrySelector);
 
 	const [size, setSize] = useState(null);
 	const [jewelry, setJewelry] = useState();
@@ -171,37 +173,46 @@ const JewelryDetailPage = () => {
 	console.log('uniqueSideDiamonds', uniqueSideDiamonds);
 
 	return (
-		<div className="px-4 md:px-32 md:mt-10">
-			<Steps items={items} current={0} className="w-full md:w-auto" />
+		<>
+			{loading ? (
+				<Loading />
+			) : (
+				<div className="px-4 md:px-32 md:mt-10">
+					<Steps items={items} current={0} className="w-full md:w-auto" />
 
-			<div className="flex flex-col md:flex-row bg-white my-10 md:my-20 rounded-lg shadow-lg">
-				<div className="w-full md:w-1/2 p-4 md:p-6">
-					<ImageGallery diamondJewelry={jewelry} selectedMetal={selectedMetal} />
-					<InformationLeft diamondJewelry={jewelry} selectedMetal={selectedMetal} />
+					<div className="flex flex-col md:flex-row bg-white my-10 md:my-20 rounded-lg shadow-lg">
+						<div className="w-full md:w-1/2 p-4 md:p-6">
+							<ImageGallery diamondJewelry={jewelry} selectedMetal={selectedMetal} />
+							<InformationLeft
+								diamondJewelry={jewelry}
+								selectedMetal={selectedMetal}
+							/>
+						</div>
+
+						<div className="w-full md:w-1/2 p-4 md:p-6">
+							<InformationRight
+								diamondJewelry={jewelry}
+								setSelectedMetal={setSelectedMetal}
+								selectedMetal={selectedMetal}
+								setSize={setSize}
+								size={size}
+								setIsLoginModalVisible={setIsLoginModalVisible}
+								setSelectedSideDiamond={setSelectedSideDiamond}
+								selectedSideDiamond={selectedSideDiamond}
+								filteredGroups={filteredGroups}
+								id={id}
+								jewelrySelected={jewelrySelected}
+								processedMetals={uniqueMetals}
+								uniqueSideDiamonds={uniqueSideDiamonds}
+							/>
+						</div>
+					</div>
+
+					{/* <ProductReviews /> */}
+					<LoginModal isOpen={isLoginModalVisible} onClose={hideLoginModal} />
 				</div>
-
-				<div className="w-full md:w-1/2 p-4 md:p-6">
-					<InformationRight
-						diamondJewelry={jewelry}
-						setSelectedMetal={setSelectedMetal}
-						selectedMetal={selectedMetal}
-						setSize={setSize}
-						size={size}
-						setIsLoginModalVisible={setIsLoginModalVisible}
-						setSelectedSideDiamond={setSelectedSideDiamond}
-						selectedSideDiamond={selectedSideDiamond}
-						filteredGroups={filteredGroups}
-						id={id}
-						jewelrySelected={jewelrySelected}
-						processedMetals={uniqueMetals}
-						uniqueSideDiamonds={uniqueSideDiamonds}
-					/>
-				</div>
-			</div>
-
-			{/* <ProductReviews /> */}
-			<LoginModal isOpen={isLoginModalVisible} onClose={hideLoginModal} />
-		</div>
+			)}
+		</>
 	);
 };
 

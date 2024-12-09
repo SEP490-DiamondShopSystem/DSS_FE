@@ -69,7 +69,7 @@ export const deleteReviewAction = createAsyncThunk(
 	'reviewSlice/deleteReviewAction',
 	async (JewelryId, {rejectWithValue}) => {
 		try {
-			const response = await api.delete(`/JewelryReview/Remove?JewelryId=${JewelryId}`);
+			const response = await api.delete(`/JewelryReview/Delete?JewelryId=${JewelryId}`);
 			return response;
 		} catch (error) {
 			console.log('Error: ', JSON.stringify(error));

@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
-
 import {Image} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import jewelryImg from '../../assets/ring_classic.png';
 import {FilterDiamondJewelry} from '../../components/Filter/Filter';
 import Loading from '../../components/Loading';
@@ -13,14 +13,14 @@ import debounce from 'lodash/debounce';
 
 export const DiamondJewelryList = () => {
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 	const jewelryList = useSelector(GetAllJewelryModelSelector);
 	const loading = useSelector(LoadingJewelrySelector);
-	const dispatch = useDispatch();
 
-	const [jewelries, setJewelries] = useState();
-	const [page, setPage] = useState(0);
+	const [jewelries, setJewelries] = useState([]);
+	const [hasMore, setHasMore] = useState(true);
+	const [page, setPage] = useState(1);
 	const [filters, setFilters] = useState({
-		// gender: [],
 		Type: undefined,
 		IsRhodiumFinished: undefined,
 		IsEngravable: undefined,
@@ -37,11 +37,16 @@ export const DiamondJewelryList = () => {
 				maxPrice: filters.price.maxPrice,
 				IsRhodiumFinished: filters?.IsRhodiumFinished,
 				IsEngravable: filters?.IsEngravable,
+				page,
 			})
 		)
 			.unwrap()
 			.then((res) => {
-				setJewelries(res?.Values);
+				if (res?.Values?.length > 0) {
+					setJewelries((prev) => [...prev, ...res.Values]);
+				} else {
+					setHasMore(false); // Không còn dữ liệu mới
+				}
 			});
 	}, 500);
 
@@ -49,7 +54,7 @@ export const DiamondJewelryList = () => {
 		fetchJewelryData();
 
 		return () => fetchJewelryData.cancel();
-	}, [filters]);
+	}, [filters, page]);
 
 	useEffect(() => {
 		const saved = localStorage.getItem('jewelry');
@@ -61,10 +66,6 @@ export const DiamondJewelryList = () => {
 		}
 	}, []);
 
-	// useEffect(() => {
-	// 	if (jewelryList) setJewelries(jewelryList.Values);
-	// }, [jewelryList]);
-
 	const handleReset = () => {
 		localStorage.removeItem('jewelry');
 		setFilters({
@@ -74,6 +75,13 @@ export const DiamondJewelryList = () => {
 			Metal: '',
 			price: {minPrice: 0, maxPrice: 40000000},
 		});
+		setPage(1); // Reset về trang đầu tiên
+		setJewelries([]); // Reset dữ liệu hiện tại
+		setHasMore(true); // Cho phép tải lại dữ liệu
+	};
+
+	const loadMoreData = () => {
+		setPage((prev) => prev + 1); // Tăng trang để tải thêm dữ liệu
 	};
 
 	return (
@@ -86,7 +94,7 @@ export const DiamondJewelryList = () => {
 				/>
 			</div>
 
-			{loading ? (
+			{loading && page === 1 ? (
 				<Loading />
 			) : (
 				<>
@@ -95,12 +103,19 @@ export const DiamondJewelryList = () => {
 							<p className="text-2xl">Chưa có sản phẩm nào</p>
 						</div>
 					) : (
-						<>
-							<div className="text-2xl flex justify-end mt-10">
-								<p className="p-2">{jewelries.length} Kết quả</p>
-							</div>
+						<InfiniteScroll
+							dataLength={jewelries.length}
+							next={loadMoreData}
+							hasMore={hasMore}
+							loader={<Loading />}
+							endMessage={
+								<p className="text-center mt-5 text-lg">
+									Bạn đã xem hết danh sách sản phẩm.
+								</p>
+							}
+						>
 							<div className="transition-all duration-300 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 mb-20 mt-10">
-								{jewelries?.map((jewelry, i) => (
+								{jewelries.map((jewelry, i) => (
 									<div
 										key={i}
 										className="shadow-lg bg-white rounded-lg hover:border-2 border-2 border-white cursor-pointer hover:border-black"
@@ -147,7 +162,7 @@ export const DiamondJewelryList = () => {
 									</div>
 								))}
 							</div>
-						</>
+						</InfiniteScroll>
 					)}
 				</>
 			)}
