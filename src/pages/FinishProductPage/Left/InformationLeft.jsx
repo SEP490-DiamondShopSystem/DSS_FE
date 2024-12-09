@@ -34,6 +34,7 @@ const mapAttributes = (diamonds, attributes) => {
 		DiamondId: data.Id,
 		Carat: data.Carat,
 		Title: data.Title,
+		Certificate: data.Certificate,
 		Clarity:
 			attributes.Clarity && data.Clarity !== undefined
 				? Object.keys(attributes.Clarity).find(
@@ -93,7 +94,7 @@ const mapAttributes = (diamonds, attributes) => {
 	}));
 };
 
-export const InformationLeft = ({jewelryDetail, diamondDetail, jewelry}) => {
+export const InformationLeft = ({jewelryDetail, diamondDetail, jewelry, diamond, Id}) => {
 	const dispatch = useDispatch();
 	const [showMore, setShowMore] = useState(false);
 	const [certificates, setCertificates] = useState([]);
@@ -111,16 +112,32 @@ export const InformationLeft = ({jewelryDetail, diamondDetail, jewelry}) => {
 
 	console.log('mappedDiamond', mappedDiamond);
 
-	// useEffect(() => {
-	// 	dispatch(fetchDiamondFiles(diamondId)).then((response) => {
-	// 		if (response.payload) {
-	// 			console.log('Fetched Certificates:', response);
-	// 			setCertificates(response.payload.Certificates);
-	// 		} else {
-	// 			console.log('No certificates found for diamond ID:', diamondId);
-	// 		}
-	// 	});
-	// }, [jewelry, dispatch]);
+	useEffect(() => {
+		if (mappedDiamond.length > 0) {
+			const diamondIds = mappedDiamond.map((diamond) => diamond.DiamondId);
+	
+			// Fetch certificates for each diamond ID sequentially
+			const fetchCertificatesForDiamonds = async () => {
+				try {
+					const certificateMap = {};
+					
+					for (const diamondId of diamondIds) {
+						const response = await dispatch(fetchDiamondFiles(diamondId));
+						
+						if (response.payload && response.payload.Certificates) {
+							certificateMap[diamondId] = response.payload.Certificates[0];
+						}
+					}
+	
+					setCertificates(certificateMap);
+				} catch (error) {
+					console.error('Error fetching diamond files:', error);
+				}
+			};
+	
+			fetchCertificatesForDiamonds();
+		}
+	}, [jewelry?.Diamonds, dispatch]);
 
 	const text = <span>Carat (ct.)</span>;
 
@@ -430,31 +447,25 @@ export const InformationLeft = ({jewelryDetail, diamondDetail, jewelry}) => {
 						<h2 className="text-lg font-semibold flex items-center justify-center my-10">
 							Thông Số Kim Cương {diamond?.IsLabDiamond ? 'Nhân Tạo' : 'Tự Nhiên'}
 						</h2>
-						{/* <div className="flex justify-between px-4 border-b border-tintWhite py-2">
-							<span className="text-gray-600">Chứng nhận</span>
+						<div className="flex justify-between px-4 border-b border-tintWhite py-2">
+							<span className="text-gray">Giấy chứng nhận</span>
 							<div>
-								{certificates.length > 0 ? (
-									certificates.map((certificate, index) => (
-										<div
-											key={index}
-											className="flex items-center space-x-2 mb-2"
-										>
-											<a
-												href={certificate.MediaPath}
-												target="_blank"
-												rel="noopener noreferrer"
-												className="text-blue hover:underline"
-											>
-												{certificate.MediaName ||
-													`Certificate ${index + 1}`}
-											</a>
-										</div>
-									))
+								{certificates[diamond.DiamondId] ? (
+									 <div className="flex items-center space-x-2 mb-2">
+										<a
+											href={certificates[diamond.DiamondId].MediaPath}
+											target="_blank"
+											rel="noopener noreferrer"
+											className="text-blue hover:underline"
+										  >
+											View Report
+										</a>
+									</div>
 								) : (
-									<span className="text-gray-800">Không có</span>
+									<span className="text-gray">Không có</span>
 								)}
 							</div>
-						</div> */}
+						</div>
 						<div className="flex justify-between px-4 border-b border-tintWhite py-2">
 							<span className="text-gray-600">Mã Định Danh</span>
 							<span className="text-gray-800">{diamond?.SerialCode}</span>

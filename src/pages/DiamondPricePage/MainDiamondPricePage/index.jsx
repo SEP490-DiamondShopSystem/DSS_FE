@@ -7,7 +7,7 @@ import {
 	updateDiamondPrices,
 	deleteDiamondPrice,
 } from '../../../redux/slices/diamondPriceSlice';
-import {getPriceBoardSelector, LoadingDiamondPriceSelector}  from '../../../redux/selectors';
+import {getPriceBoardSelector, LoadingDiamondPriceSelector} from '../../../redux/selectors';
 
 const formatPrice = (price) => {
 	if (price === null || price === undefined) return 'N/A';
@@ -43,51 +43,61 @@ const MainDiamondPricePage = () => {
 	const [isCreating, setIsCreating] = useState(false);
 	const [listPrices, setListPrices] = useState([]);
 	const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+	// State for Criteria Range Modals
+	const [isCreateRangeModalVisible, setIsCreateRangeModalVisible] = useState(false);
+	const [isUpdateRangeModalVisible, setIsUpdateRangeModalVisible] = useState(false);
+	const [selectedRange, setSelectedRange] = useState(null);
+	const [criteriaRangeToDelete, setCriteriaRangeToDelete] = useState(null);
 
 	useEffect(() => {
-		dispatch(fetchPriceBoard({shapeId, isLabDiamond, cut}));
+		dispatch(fetchPriceBoard({shapeId, isLabDiamond, isSideDiamond: false}));
 	}, [dispatch, shapeId, isLabDiamond, cut]);
 
 	const handleShapeChange = (event) => {
 		setShapeId(Number(event.target.value));
-	};
-	const handleCheckboxChange = (criteriaId) => {
-		setSelectedPrices(
-			(prev) =>
-				prev.includes(criteriaId)
-					? prev.filter((id) => id !== criteriaId) // Uncheck
-					: [...prev, criteriaId] // Check
-		);
 	};
 
 	const handleDelete = () => {
 		if (selectedPrices.length === 0) return;
 		setShowDeleteConfirm(true); // Show confirmation popup
 	};
-
+	const handleCheckboxChange = (diamondPriceId) => {
+		setSelectedPrices(
+			(prev) =>
+				prev.includes()
+					? prev.filter((id) => id !== diamondPriceId) // Uncheck
+					: [...prev, diamondPriceId] // Check
+		);
+	};
 	const confirmDelete = async () => {
-		const deleteList = selectedPrices.map((criteriaId) => ({criteriaId}));
+		const priceIds = selectedPrices;
 		const payload = {
-			deleteList,
+			priceIds,
 			shapeId,
 			isLabDiamond,
+			isSideDiamond: false,
 		};
 
 		await dispatch(deleteDiamondPrice(payload)); // Wait for delete to finish
 		setSelectedPrices([]);
 		setShowDeleteConfirm(false);
-		await dispatch(fetchPriceBoard({shapeId, isLabDiamond, cut})); // Fetch updated board
+		await dispatch(fetchPriceBoard({shapeId, isLabDiamond, isSideDiamond: false})); // Fetch updated board
 	};
 
 	const savePrices = async () => {
 		const listPrices = editedCells.map((cell) => ({
-			diamondCriteriaId: cell.diamondCriteriaId,
+			DiamondCriteriaId: priceBoard.PriceTables[0].CriteriaId,
 			price: Number(cell.price),
+			cut: priceBoard.MainCut,
+			color: Object.keys(priceBoard.PriceTables[0].ColorRange)[cell.rowIndex],
+			clarity: Object.keys(priceBoard.PriceTables[0].ClarityRange)[cell.cellIndex],
 		}));
 
 		if (listPrices.length === 0) return;
 
-		await dispatch(createDiamondPrice({listPrices, shapeId, isLabDiamond}))
+		await dispatch(
+			createDiamondPrice({listPrices, shapeId, isLabDiamond, isSideDiamond: false})
+		)
 			.unwrap()
 			.then(() => {
 				message.success('Thêm giá kim cương thành công!');
@@ -99,12 +109,20 @@ const MainDiamondPricePage = () => {
 		setEditedCells([]);
 		setIsCreating(false);
 
-		await dispatch(fetchPriceBoard({shapeId, isLabDiamond, cut}));
+		await dispatch(fetchPriceBoard({shapeId, isLabDiamond, isSideDiamond: false}));
 	};
 
 	const handleSave = async () => {
+		// Check if any edited price is 0 or negative
+		const invalidPrices = editedCells.filter((cell) => cell.price <= 0);
+
+		if (invalidPrices.length > 0) {
+			message.error('Giá kim cương phải lớn hơn 0. Vui lòng kiểm tra lại các giá trị.');
+			return;
+		}
+
 		const updatedPrices = editedCells.map((cell) => ({
-			diamondCriteriaId: cell.diamondCriteriaId,
+			diamondPriceId: cell.diamondPriceId,
 			price: Number(cell.price),
 		}));
 
@@ -113,6 +131,7 @@ const MainDiamondPricePage = () => {
 				updatedDiamondPrices: updatedPrices,
 				shapeId,
 				isLabDiamond,
+				isSideDiamond: false,
 			})
 		)
 			.unwrap()
@@ -122,9 +141,121 @@ const MainDiamondPricePage = () => {
 			.catch((error) => {
 				message.error(error?.data?.title || error?.detail);
 			});
+
 		setEditedCells([]);
-		setIsEditing(false)
-		await dispatch(fetchPriceBoard({shapeId, isLabDiamond, cut}));
+		setIsEditing(false);
+		await dispatch(fetchPriceBoard({shapeId, isLabDiamond, isSideDiamond: false}));
+	};
+
+	// Render missing ranges alert
+	const renderMissingRangesAlert = () => {
+		// Check if there are missing ranges
+		const missingRanges = priceBoard.MissingRange || [];
+		const uncoveredCaratRanges = priceBoard.UncoveredTableCaratRange || [];
+
+		// Combine and deduplicate missing ranges
+		const allMissingRanges = [
+			...missingRanges.map((range) => `${range.Item1} - ${range.Item2} Carat`),
+		];
+
+		if (allMissingRanges.length === 0) return null;
+
+		return (
+			<Alert
+				message="Các khoảng Carat chưa có sẵn"
+				description={
+					<ul className="list-disc pl-5">
+						{allMissingRanges.map((range, index) => (
+							<li key={index}>{range}</li>
+						))}
+					</ul>
+				}
+				type="warning"
+				showIcon
+				className="mb-4"
+			/>
+		);
+	};
+	const handleCreateMainDiamondRange = async (values) => {
+		try {
+			await dispatch(
+				createMainDiamondRange({
+					caratFrom: values.caratFrom,
+					caratTo: values.caratTo,
+					diamondShapeId: shapeId,
+					isLabDiamond: isLabDiamond,
+				})
+			).unwrap();
+
+			message.success('Tạo phạm vi kim cương mới thành công!');
+			setIsCreateRangeModalVisible(false);
+
+			// Refresh price board after creating range
+			dispatch(fetchPriceBoard({shapeId, isLabDiamond, cut, isSideDiamond: false}));
+		} catch (error) {
+			message.error(error?.data?.title || 'Không thể tạo phạm vi kim cương');
+		}
+	};
+
+	// New function to handle deleting a main diamond range
+	const handleDeleteMainDiamondRange = async () => {
+		try {
+			// Ensure criteriaRangeToDelete has valid data
+			if (!criteriaRangeToDelete) {
+				message.error('Phạm vi tiêu chí để xóa không tồn tại!');
+				return;
+			}
+
+			// Dispatch delete action with the selected range values
+			await dispatch(
+				deleteMainDiamondRange({
+					caratFrom: criteriaRangeToDelete.CaratFrom,
+					caratTo: criteriaRangeToDelete.CaratTo,
+					diamondShapeId: shapeId,
+					isLabDiamond: isLabDiamond,
+				})
+			).unwrap();
+
+			message.success('Xóa phạm vi kim cương thành công!');
+
+			// Refresh price board after deleting range
+			dispatch(fetchPriceBoard({shapeId, isLabDiamond, cut, isSideDiamond: false}));
+
+			// Reset criteriaRangeToDelete
+			setCriteriaRangeToDelete(null);
+		} catch (error) {
+			message.error(error?.data?.title || 'Không thể xóa phạm vi kim cương');
+		}
+	};
+	// New function to handle updating a criteria range
+	const handleUpdateCriteriaRange = async (values) => {
+		try {
+			// Prepare payload with old and new ranges
+			const payload = {
+				isSideDiamond: false, // Assuming it's always false as per your example
+				diamondShapeId: shapeId,
+				oldCaratRange: {
+					caratFrom: selectedRange.CaratFrom,
+					caratTo: selectedRange.CaratTo,
+				},
+				newCaratRange: {
+					caratFrom: values.caratFrom,
+					caratTo: values.caratTo,
+				},
+			};
+
+			// Dispatch update action with the new payload
+			await dispatch(updateCriteriaRange(payload)).unwrap();
+
+			message.success('Cập nhật phạm vi kim cương thành công!');
+			setIsUpdateRangeModalVisible(false);
+			setSelectedRange(null);
+
+			// Refresh price board after updating range
+			dispatch(fetchPriceBoard({shapeId, isLabDiamond, cut, isSideDiamond: false}));
+		} catch (error) {
+			message.error(error?.data?.title || 'Không thể cập nhật phạm vi kim cương');
+		}
 	};
 
 	const cancelDelete = () => {
@@ -148,9 +279,9 @@ const MainDiamondPricePage = () => {
 		setIsCreating(false);
 		setEditedCells([]);
 	};
-	const handleEditCell = (rowIndex, cellIndex, criteriaId, newValue) => {
+	const handleEditCell = (rowIndex, cellIndex, diamondPriceId, newValue) => {
 		const numericValue = parseFloat(newValue.replace(/\./g, '').replace(',', '.')) || 0;
-		console.log(`Received CriteriaId: ${criteriaId}`);
+		console.log(`Received diamondPriceId: ${diamondPriceId}`);
 
 		setEditedCells((prev) => {
 			const existingCell = prev.find(
@@ -158,41 +289,36 @@ const MainDiamondPricePage = () => {
 			);
 
 			if (existingCell) {
-				if (newValue.trim() === '' || numericValue === 0) {
-					// Remove the existing cell entry if the new value is empty
-					console.log(`Removing entry for CriteriaId: ${criteriaId} due to empty value`);
+				if (newValue.trim() === '') {
+					console.log(
+						`Removing entry for price Id: ${diamondPriceId} due to empty value`
+					);
 					return prev.filter((cell) => cell !== existingCell);
 				} else {
-					// Update the existing entry
 					console.log(
-						`Updating existing entry with CriteriaId: ${criteriaId}, Price: ${numericValue}`
+						`Updating existing entry with diamondPriceId: ${diamondPriceId}, Price: ${numericValue}`
 					);
 					return prev.map((cell) =>
 						cell === existingCell ? {...existingCell, price: numericValue} : cell
 					);
 				}
 			} else {
-				if (numericValue > 0) {
-					// Add new entry only if the value is greater than zero
-					const newEntry = {
-						diamondCriteriaId: criteriaId,
-						price: numericValue,
-						rowIndex,
-						cellIndex,
-					};
-					console.log(
-						`Adding new entry with CriteriaId: ${criteriaId}, Price: ${numericValue}`
-					);
-					return [...prev, newEntry];
-				}
-				// If the numeric value is zero or the new value is empty, do not add a new entry
-				return prev;
+				const newEntry = {
+					diamondPriceId: diamondPriceId,
+					price: numericValue,
+					rowIndex,
+					cellIndex,
+				};
+				console.log(
+					`Adding new entry with Price Id: ${diamondPriceId}, Price: ${numericValue}`
+				);
+				return [...prev, newEntry];
 			}
 		});
 	};
 
-	const handleAddPriceCell = (rowIndex, cellIndex, criteriaId, newValue) => {
-		console.log(`Received CriteriaId: ${criteriaId}, New Value: ${newValue}`);
+	const handleAddPriceCell = (rowIndex, cellIndex, diamondPriceId, newValue) => {
+		console.log(`Received DiamondPriceId: ${diamondPriceId}, New Value: ${newValue}`);
 		const numericValue = parseFloat(newValue.replace(/\./g, '').replace(',', '.')) || 0;
 
 		setEditedCells((prev) => {
@@ -203,12 +329,14 @@ const MainDiamondPricePage = () => {
 			if (existingCell) {
 				if (newValue.trim() === '' || numericValue === 0) {
 					// Remove the existing cell entry if the new value is empty
-					console.log(`Removing entry for CriteriaId: ${criteriaId} due to empty value`);
+					console.log(
+						`Removing entry for DiamondPriceId: ${diamondPriceId} due to empty value`
+					);
 					return prev.filter((cell) => cell !== existingCell);
 				} else {
 					// Update the existing entry
 					console.log(
-						`Updating existing entry with CriteriaId: ${criteriaId}, New Price: ${numericValue}`
+						`Updating existing entry with DiamondPriceId: ${diamondPriceId}, New Price: ${numericValue}`
 					);
 					return prev.map((cell) =>
 						cell === existingCell ? {...existingCell, price: numericValue} : cell
@@ -218,13 +346,13 @@ const MainDiamondPricePage = () => {
 				if (numericValue > 0) {
 					// Add new entry only if the value is greater than zero
 					const newCell = {
-						diamondCriteriaId: criteriaId,
+						diamondPriceId: diamondPriceId,
 						price: numericValue,
 						rowIndex,
 						cellIndex,
 					};
 					console.log(
-						`Adding new entry with CriteriaId: ${criteriaId}, Price: ${numericValue}`
+						`Adding new entry with DiamondPriceId: ${diamondPriceId}, Price: ${numericValue}`
 					);
 					return [...prev, newCell];
 				}
@@ -271,16 +399,16 @@ const MainDiamondPricePage = () => {
 									onChange={(e) => {
 										console.log(
 											'Creating price for cell with CriteriaId:',
-											cell.CriteriaId
+											cell.DiamondPriceId
 										);
 										handleAddPriceCell(
 											rowIndex,
 											cellIndex,
-											cell.CriteriaId,
+											cell.DiamondPriceId,
 											e.target.value
 										);
 									}}
-									min={1000}
+									min={-1}
 									step={1000}
 									className="w-full text-center border rounded"
 									placeholder="New Price"
@@ -296,19 +424,21 @@ const MainDiamondPricePage = () => {
 													handleEditCell(
 														rowIndex,
 														cellIndex,
-														cell.CriteriaId,
+														cell.DiamondPriceId,
 														e.target.value
 													)
 												}
-												min={1000}
+												min={-1}
 												step={1000}
 												className="w-full text-center border rounded"
 											/>
 											<input
 												type="checkbox"
-												checked={selectedPrices.includes(cell.CriteriaId)}
+												checked={selectedPrices.includes(
+													cell.DiamondPriceId
+												)}
 												onChange={() =>
-													handleCheckboxChange(cell.CriteriaId)
+													handleCheckboxChange(cell.DiamondPriceId)
 												}
 												className="mr-2"
 											/>
@@ -345,15 +475,7 @@ const MainDiamondPricePage = () => {
 							aria-label="Select Shape"
 						>
 							<option value="1">Round</option>
-							<option value="2">Princess</option>
-							<option value="3">Cushion</option>
-							<option value="4">Emerald</option>
-							<option value="5">Oval</option>
-							<option value="6">Radiant</option>
-							<option value="7">Asscher</option>
-							<option value="8">Marquise</option>
-							<option value="9">Heart</option>
-							<option value="10">Pear</option>
+							<option value="98">Fancy</option>
 						</select>
 					</div>
 
@@ -370,25 +492,6 @@ const MainDiamondPricePage = () => {
 							Kim Cương Nhân Tạo
 						</label>
 					</div>
-
-					{/* Cut Selection */}
-					<div className="flex sm:flex-row items-center gap-2">
-						<label htmlFor="cutSelect" className="text-lg font-semibold text-gray-800">
-							Cut:
-						</label>
-						<select
-							id="cutSelect"
-							value={cut}
-							onChange={handleCutChange}
-							className="border border-gray-300 p-2 rounded shadow focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 bg-white text-gray-700"
-							aria-label="Select Cut"
-						>
-							<option value="1">Good</option>
-							<option value="2">Very Good</option>
-							<option value="3">Excellent</option>
-						</select>
-					</div>
-					{/* )} */}
 
 					{/* Clear Filters Button */}
 					<div>
@@ -427,15 +530,7 @@ const MainDiamondPricePage = () => {
 						aria-label="Select Shape"
 					>
 						<option value="1">Round</option>
-						<option value="2">Princess</option>
-						<option value="3">Cushion</option>
-						<option value="4">Emerald</option>
-						<option value="5">Oval</option>
-						<option value="6">Radiant</option>
-						<option value="7">Asscher</option>
-						<option value="8">Marquise</option>
-						<option value="9">Heart</option>
-						<option value="10">Pear</option>
+						<option value="98">Fancy</option>
 					</select>
 				</div>
 
@@ -453,27 +548,8 @@ const MainDiamondPricePage = () => {
 					</label>
 				</div>
 
-				{/* Cut Selection */}
-				<div className="flex sm:flex-row items-center gap-2">
-					<label htmlFor="cutSelect" className="text-lg font-semibold text-gray-800">
-						Cut:
-					</label>
-					<select
-						id="cutSelect"
-						value={cut}
-						onChange={handleCutChange}
-						className="border border-gray-300 p-2 rounded shadow focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 bg-white text-gray-700"
-						aria-label="Select Cut"
-					>
-						<option value="1">Good</option>
-						<option value="2">Very Good</option>
-						<option value="3">Excellent</option>
-					</select>
-				</div>
-				{/* )} */}
-
 				{/* Clear Filters Button */}
-				<div>
+				<div className="flex gap-4">
 					<button
 						onClick={clearFilters}
 						className="bg-red text-white px-4 py-2 rounded hover:bg-redLight transition duration-200 font-semibold shadow hover:scale-105"
@@ -483,8 +559,6 @@ const MainDiamondPricePage = () => {
 					</button>
 				</div>
 			</div>
-
-			{/* Table Rendering */}
 			<div className="overflow-x-auto">
 				<table className="min-w-full border border-gray-300 text-sm w-full">
 					<thead className="bg-primary">

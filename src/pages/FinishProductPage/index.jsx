@@ -24,8 +24,9 @@ const FinishProductPage = () => {
 	const [jewelry, setJewelry] = useState({});
 	const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
 	const [diamondDetail, setDiamondDetail] = useState(
-		JSON.parse(localStorage.getItem(`diamond_${userId}`)) || ''
+		JSON.parse(localStorage.getItem(`diamond_${userId}`)) || {}
 	);
+	console.log('diamondDetail from localStorage:', diamondDetail);
 
 	console.log('jewelry', jewelry);
 
@@ -66,6 +67,8 @@ const FinishProductPage = () => {
 						jewelryDetail={jewelryDetail}
 						diamondDetail={diamondDetail}
 						jewelry={jewelry}
+						diamond={diamondDetail}
+						Id={jewelry?.Diamonds?.Id}
 					/>
 				</div>
 
