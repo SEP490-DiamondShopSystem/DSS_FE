@@ -48,6 +48,10 @@ export const Carat = ({
 					range
 					value={[customizeDiamond?.caratFrom, customizeDiamond?.caratTo]}
 					step={0.01}
+					marks={{
+						[customizeDiamond?.caratFrom]: `${customizeDiamond?.caratFrom}`,
+						[customizeDiamond?.caratTo]: `${customizeDiamond?.caratTo}`,
+					}}
 					min={caratFromShape}
 					max={caratToShape}
 					onChange={handleCaratChange}

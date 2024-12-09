@@ -36,7 +36,7 @@ export const ChoiceMetalDiamond = ({
 
 	const items = [
 		{
-			title: 'Shape',
+			title: 'Chọn Hình Dạng',
 			disabled: steps < 0,
 		},
 		{

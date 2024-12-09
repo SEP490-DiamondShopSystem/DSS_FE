@@ -138,11 +138,11 @@ export const FilterDiamond = ({filters, setFilters, handleReset, diamondForFilte
 									20000000000: '20000M',
 								}}
 								step={null}
-								min={filter?.Price?.Min ?? 0}
-								max={filter?.Price?.Max ?? 1000}
+								min={filter?.Price?.Min}
+								max={filter?.Price?.Max}
 								value={[
-									filters?.price?.minPrice ?? filter?.Price?.Min ?? 0,
-									filters?.price?.maxPrice ?? filter?.Price?.Max ?? 1000,
+									filters?.price?.minPrice ?? filter?.Price?.Min,
+									filters?.price?.maxPrice ?? filter?.Price?.Max,
 								]}
 								onChange={handlePriceChange}
 								className="w-full mx-auto"
@@ -156,7 +156,11 @@ export const FilterDiamond = ({filters, setFilters, handleReset, diamondForFilte
 						<Slider
 							range
 							value={[filters?.carat?.minCarat, filters?.carat?.maxCarat]}
-							step={0.1}
+							marks={{
+								[filters?.carat?.minCarat]: `${filters?.carat?.minCarat}`,
+								[filters?.carat?.maxCarat]: `${filters?.carat?.maxCarat}`,
+							}}
+							step={0.01}
 							min={findShape?.CaratFrom || filter?.Carat?.Min}
 							max={findShape?.CaratTo || filter?.Carat?.Max}
 							onChange={handleCaratChange}
@@ -356,6 +360,10 @@ export const FilterDiamondCustomize = ({
 							[maxCarat]: `${formatPrice(maxCarat)}`,
 						}}
 						value={[filters.carat.minCarat, filters.carat.maxCarat]}
+						// marks={{
+						// 	[filters.carat.minCarat]: `${filters.carat.minCarat}`,
+						// 	[filters.carat.maxCarat]: `${filters.carat.maxCarat}`,
+						// }}
 						step={0.1}
 						min={minCarat}
 						max={maxCarat}
@@ -474,7 +482,7 @@ export const FilterJewelry = ({handleFilter, setFilters, filters, handleReset}) 
 
 	// Render the filter UI
 	return (
-		<div wrap className="p-4 flex items-center">
+		<div className="p-4 flex items-center">
 			{filterTypes.map((filterType) => (
 				<Select
 					key={filterType} // Use the filter type as key
@@ -496,7 +504,7 @@ export const FilterJewelry = ({handleFilter, setFilters, filters, handleReset}) 
 				</Select>
 			))}
 
-			<div className="ml-10 min-w-44">
+			<div className="ml-10 min-w-44 md:min-w-96">
 				<p className="mb-4">Giá:</p>
 				<div className="flex">
 					<Slider
@@ -514,7 +522,7 @@ export const FilterJewelry = ({handleFilter, setFilters, filters, handleReset}) 
 						max={40000000}
 						defaultValue={range}
 						onChange={handlePriceChange}
-						className="md:w-64 mx-4"
+						className=" mx-4"
 					/>
 				</div>
 			</div>
@@ -587,7 +595,6 @@ export const FilterDiamondJewelry = ({handleFilter, setFilters, filters, handleR
 	const filterTypeMapping = {
 		'Kim loại': 'Metal',
 		'Loại trang sức': 'Type',
-
 		'Được Khắc Chữ': 'IsEngravable',
 	};
 
@@ -620,7 +627,7 @@ export const FilterDiamondJewelry = ({handleFilter, setFilters, filters, handleR
 			})}
 
 			{/* Price Range Slider */}
-			<div className="ml-10 min-w-44 sm:ml-0 sm:mt-4">
+			<div className="ml-10 min-w-44 md:min-w-96 sm:ml-0 sm:mt-4">
 				<p className="mb-4">Giá:</p>
 				<div className="flex">
 					<Slider

@@ -22,6 +22,7 @@ const JewelryDetailPage = () => {
 	const [selectedSideDiamond, setSelectedSideDiamond] = useState();
 	const [jewelrySelected, setJewelrySelected] = useState();
 	const [uniqueMetals, setUniqueMetals] = useState([]);
+	const [uniqueSideDiamonds, setUniqueSideDiamonds] = useState([]);
 
 	const items = [
 		{
@@ -38,8 +39,6 @@ const JewelryDetailPage = () => {
 			.unwrap()
 			.then((res) => {
 				setJewelry(res);
-				setSelectedMetal(res?.Metals?.[0] || null);
-				setSelectedSideDiamond(res?.SideDiamonds?.[0] || null);
 			});
 	}, []);
 
@@ -100,9 +99,6 @@ const JewelryDetailPage = () => {
 		selectedSideDiamond
 	);
 
-	console.log('selectedMetal', selectedMetal);
-	console.log('filteredGroups', filteredGroups);
-
 	useEffect(() => {
 		if (filteredGroups && size == null) {
 			const availableSize = filteredGroups[0]?.SizeGroups.find(
@@ -137,11 +133,42 @@ const JewelryDetailPage = () => {
 				uniqueFilteredMetals?.push(metal);
 			}
 		});
-
+		setSelectedMetal(uniqueFilteredMetals?.[0] || null);
 		setUniqueMetals(uniqueFilteredMetals);
 	}, [jewelry]);
 
+	useEffect(() => {
+		// Lọc MetalGroups có SizeGroups với IsInStock = true và gộp MetalName
+		const filteredSideDiamonds = jewelry?.MetalGroups?.filter((group) =>
+			group?.SizeGroups?.some((size) => size?.IsInStock)
+		).map((group) => {
+			const sideDiamond = jewelry?.SideDiamonds?.find((m) => m?.Id === group?.SideDiamondId);
+			return {
+				...group,
+				OriginalName: group?.Name, // Lưu tên cũ vào OriginalName
+				Quantity: sideDiamond?.Quantity,
+				CaratWeight: sideDiamond?.CaratWeight,
+				Id: group?.SideDiamondId,
+			};
+		});
+
+		// Loại bỏ MetalName (giờ là Name) trùng lặp
+		const uniqueFilteredMetals = [];
+		const seenNames = new Set();
+
+		filteredSideDiamonds?.forEach((sideDiamond) => {
+			if (!seenNames?.has(sideDiamond?.SideDiamondId)) {
+				seenNames?.add(sideDiamond?.SideDiamondId);
+				uniqueFilteredMetals?.push(sideDiamond);
+			}
+		});
+		setSelectedSideDiamond(filteredSideDiamonds?.[0] || null);
+		setUniqueSideDiamonds(uniqueFilteredMetals);
+	}, [jewelry]);
+
 	console.log('uniqueMetals', uniqueMetals);
+	console.log('selectedSideDiamond', selectedSideDiamond);
+	console.log('uniqueSideDiamonds', uniqueSideDiamonds);
 
 	return (
 		<div className="px-4 md:px-32 md:mt-10">
@@ -167,6 +194,7 @@ const JewelryDetailPage = () => {
 						id={id}
 						jewelrySelected={jewelrySelected}
 						processedMetals={uniqueMetals}
+						uniqueSideDiamonds={uniqueSideDiamonds}
 					/>
 				</div>
 			</div>
