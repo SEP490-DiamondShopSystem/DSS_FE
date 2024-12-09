@@ -59,7 +59,7 @@ const JewelryDetailPage = () => {
 					setJewelrySelected(res);
 				});
 		}
-	}, [selectedMetal, id, size, selectedSideDiamond]);
+	}, [id]);
 
 	const hideLoginModal = () => setIsLoginModalVisible(false);
 
