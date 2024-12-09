@@ -22,7 +22,7 @@ import {
 } from '../../utils/constant';
 import {formatPrice} from '../../utils';
 
-export const FilterDiamond = ({filters, setFilters, handleReset, diamondForFilter, findShape}) => {
+export const FilterDiamond = ({filters, setFilters, handleReset, findShape}) => {
 	const [collapsed, setCollapsed] = useState(false); // State to toggle collapse
 	const toggleCollapse = () => {
 		setCollapsed((prev) => !prev);

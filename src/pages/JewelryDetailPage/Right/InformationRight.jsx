@@ -118,9 +118,6 @@ export const InformationRight = ({
 
 	const someSize = filteredGroups[0]?.SizeGroups?.some((size) => size?.IsInStock);
 
-	console.log('filteredGroups', filteredGroups);
-	console.log('jewelrySelected', jewelrySelected);
-
 	return (
 		<div>
 			<div className="border-tintWhite">

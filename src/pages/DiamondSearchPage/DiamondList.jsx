@@ -16,7 +16,6 @@ export const DiamondList = ({
 	setFilters,
 	handleReset,
 	filterLimits,
-	diamondForFilter,
 	findShape,
 	diamondList,
 	jewelryModel,
@@ -65,7 +64,6 @@ export const DiamondList = ({
 				filters={filters}
 				handleReset={handleReset}
 				filterLimits={filterLimits}
-				diamondForFilter={diamondForFilter}
 				findShape={findShape}
 			/>
 
@@ -133,7 +131,7 @@ export const DiamondList = ({
 														{diamondItem?.Title}
 													</p>
 													<div className="flex items-center space-x-2 mt-2">
-														{diamondItem?.SalePrice !==
+														{diamondItem?.SalePrice <
 														diamondItem?.TruePrice ? (
 															<div className="flex items-center">
 																<p className="line-through text-gray-500">
