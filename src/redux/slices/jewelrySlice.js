@@ -141,32 +141,6 @@ export const getJewelryDetailFile = createAsyncThunk(
 	}
 );
 
-export const getJewelryNoDiamond = createAsyncThunk(
-	'jewelrySlice/getJewelryNoDiamond',
-	async (params, {rejectWithValue}) => {
-		try {
-			const {ModelId, MetalId, SizeId, SideDiamondOptId} = params;
-			let url = '/Jewelry/Available';
-			const queryParams = new URLSearchParams();
-
-			if (ModelId) queryParams.append('ModelId', ModelId);
-			if (MetalId) queryParams.append('MetalId', MetalId);
-			if (SizeId) queryParams.append('SizeId', SizeId);
-			if (SideDiamondOptId) queryParams.append('SideDiamondOptId', SideDiamondOptId);
-
-			if (queryParams.toString()) {
-				url += `?${queryParams.toString()}`;
-			}
-
-			const response = await api.get(url);
-
-			return response;
-		} catch (error) {
-			return rejectWithValue(error);
-		}
-	}
-);
-
 export const jewelrySlice = createSlice({
 	name: 'jewelrySlice',
 	initialState: {
@@ -265,18 +239,6 @@ export const jewelrySlice = createSlice({
 				state.jewelryDetailThumbnail = action.payload;
 			})
 			.addCase(getJewelryDetailFile.rejected, (state, action) => {
-				state.loading = false;
-				state.error = action.payload;
-			})
-			.addCase(getJewelryNoDiamond.pending, (state) => {
-				state.loading = true;
-				state.jewelryDetailThumbnail = null;
-			})
-			.addCase(getJewelryNoDiamond.fulfilled, (state, action) => {
-				state.loading = false;
-				state.jewelryDetailThumbnail = action.payload;
-			})
-			.addCase(getJewelryNoDiamond.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload;
 			});
