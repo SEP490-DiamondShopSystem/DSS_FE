@@ -19,10 +19,6 @@ export const Size = ({
 		setStep(2);
 	};
 
-	console.log('diamondJewelry', diamondJewelry);
-	console.log('size', size);
-	console.log('selectedMetal', selectedMetal.length);
-
 	return (
 		<div>
 			<div>

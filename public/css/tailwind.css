@@ -3381,3 +3381,15 @@ video {
 		min-width: 24rem /* 384px */;
 	}
 }
+
+.min-w-full {
+	min-width: 100%;
+}
+
+.max-w-full {
+	max-width: 100%;
+}
+
+.w-auto {
+	width: auto;
+}

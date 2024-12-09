@@ -4,7 +4,7 @@ import {InfoCircleFilled, MinusOutlined, PlusOutlined} from '@ant-design/icons';
 import {useDispatch} from 'react-redux';
 import {fetchDiamondFiles} from '../../../redux/slices/fileSlice';
 import GIA_logo from '../../../assets/GIA/GIA_logo.png';
-import {Popover, Segmented, Image} from 'antd';
+import {Popover, Segmented, Image, message} from 'antd';
 import {
 	clarityFlawless,
 	clarityI1I2,
@@ -41,14 +41,14 @@ export const InformationLeft = ({diamond, diamondId}) => {
 
 	// Fetch certificates when component mounts or when `diamond` changes
 	useEffect(() => {
-		dispatch(fetchDiamondFiles(diamondId)).then((response) => {
-			if (response.payload) {
-				console.log('Fetched Certificates:', response);
-				setCertificates(response.payload.Certificates);
-			} else {
-				console.log('No certificates found for diamond ID:', diamondId);
-			}
-		});
+		dispatch(fetchDiamondFiles(diamondId))
+			.unwrap()
+			.then((response) => {
+				setCertificates(response?.Certificates);
+			})
+			.catch((error) => {
+				message.error(error?.data?.detail || error?.detail);
+			});
 	}, [diamond, dispatch]);
 
 	const text = <span>Carat (ct.)</span>;

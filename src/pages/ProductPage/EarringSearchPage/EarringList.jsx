@@ -23,8 +23,6 @@ export const EarringList = () => {
 		price: {minPrice: 0, maxPrice: 1000},
 	});
 
-	console.log(filters);
-
 	useEffect(() => {
 		dispatch(getAllJewelry());
 	}, [dispatch]);

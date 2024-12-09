@@ -9,14 +9,16 @@ import LoginModal from '../../components/LogModal/LoginModal';
 import {getUserId} from '../../components/GetUserId';
 import {useLocation, useParams} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
-import {GetJewelryDetailPresetSelector} from '../../redux/selectors';
+import {GetJewelryDetailPresetSelector, LoadingJewelrySelector} from '../../redux/selectors';
 import {getJewelryDetailPreset} from '../../redux/slices/jewelrySlice';
+import Loading from '../../components/Loading';
 
 const FinishProductPage = () => {
 	const userId = getUserId();
 	const {id} = useParams();
 	const dispatch = useDispatch();
 	const jewelryDetailPreset = useSelector(GetJewelryDetailPresetSelector);
+	const loading = useSelector(LoadingJewelrySelector);
 	const location = useLocation();
 	const jewelryId = location.state?.jewelryId;
 	const jewelryDetail = location.state?.jewelryModel;
@@ -26,9 +28,6 @@ const FinishProductPage = () => {
 	const [diamondDetail, setDiamondDetail] = useState(
 		JSON.parse(localStorage.getItem(`diamond_${userId}`)) || {}
 	);
-	console.log('diamondDetail from localStorage:', diamondDetail);
-
-	console.log('jewelry', jewelry);
 
 	useEffect(() => {
 		dispatch(getJewelryDetailPreset(id))
@@ -51,43 +50,49 @@ const FinishProductPage = () => {
 	];
 
 	return (
-		<div className="mx-4 md:mx-32">
-			<Steps
-				current={3}
-				labelPlacement="horizontal"
-				items={items}
-				className="bg-white p-4 rounded-full my-10"
-			/>
-			{/* Responsive flex container */}
-			<div className="flex flex-col md:flex-row bg-white my-10 md:my-20 rounded-lg shadow-lg">
-				{/* Left side */}
-				<div className="w-full md:w-1/2 p-6">
-					<ImageGallery jewelryDetail={jewelryDetail} jewelry={jewelry} />
-					<InformationLeft
-						jewelryDetail={jewelryDetail}
-						diamondDetail={diamondDetail}
-						jewelry={jewelry}
-						diamond={diamondDetail}
-						Id={jewelry?.Diamonds?.Id}
+		<>
+			{loading ? (
+				<Loading />
+			) : (
+				<div className="mx-4 md:mx-32">
+					<Steps
+						current={3}
+						labelPlacement="horizontal"
+						items={items}
+						className="bg-white p-4 rounded-full my-10"
 					/>
-				</div>
+					{/* Responsive flex container */}
+					<div className="flex flex-col md:flex-row bg-white my-10 md:my-20 rounded-lg shadow-lg">
+						{/* Left side */}
+						<div className="w-full md:w-1/2 p-6">
+							<ImageGallery jewelryDetail={jewelryDetail} jewelry={jewelry} />
+							<InformationLeft
+								jewelryDetail={jewelryDetail}
+								diamondDetail={diamondDetail}
+								jewelry={jewelry}
+								diamond={diamondDetail}
+								Id={jewelry?.Diamonds?.Id}
+							/>
+						</div>
 
-				{/* Right side */}
-				<div className="w-full md:w-1/2 p-6 md:pr-32">
-					<InformationRight
-						jewelryDetail={jewelryDetail}
-						diamondDetail={diamondDetail}
-						setIsLoginModalVisible={setIsLoginModalVisible}
-						isLoginModalVisible={isLoginModalVisible}
-						userId={userId}
-						jewelry={jewelry}
-						jewelryId={jewelryId}
-					/>
+						{/* Right side */}
+						<div className="w-full md:w-1/2 p-6 md:pr-32">
+							<InformationRight
+								jewelryDetail={jewelryDetail}
+								diamondDetail={diamondDetail}
+								setIsLoginModalVisible={setIsLoginModalVisible}
+								isLoginModalVisible={isLoginModalVisible}
+								userId={userId}
+								jewelry={jewelry}
+								jewelryId={jewelryId}
+							/>
+						</div>
+					</div>
+					{/* Login Modal */}
+					<LoginModal isOpen={isLoginModalVisible} onClose={hideLoginModal} />
 				</div>
-			</div>
-			{/* Login Modal */}
-			<LoginModal isOpen={isLoginModalVisible} onClose={hideLoginModal} />
-		</div>
+			)}
+		</>
 	);
 };
 

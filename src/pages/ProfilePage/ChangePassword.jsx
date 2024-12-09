@@ -29,7 +29,6 @@ const ChangePassword = () => {
 	}, []);
 
 	const handleSubmit = (values) => {
-		console.log('Password changed:', values);
 		dispatch(
 			handleChangePassword({
 				identityId: userDetail?.IdentityId,

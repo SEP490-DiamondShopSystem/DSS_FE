@@ -105,7 +105,6 @@ export const InformationRight = ({
 			filteredGroups,
 		};
 
-		console.log('jewelryModel', jewelryModel);
 		if (diamondJewelry?.MainDiamonds?.length > 0) {
 			navigate(`/diamond-choose/search`, {state: {jewelryModel}});
 		} else {
@@ -119,8 +118,6 @@ export const InformationRight = ({
 		reviews?.reduce((total, review) => total + review.StarRating, 0) / reviewLength || 0;
 
 	const someSize = filteredGroups[0]?.SizeGroups?.some((size) => size?.IsInStock);
-
-	console.log('someSize', someSize);
 
 	return (
 		<div>

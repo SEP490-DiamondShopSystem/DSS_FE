@@ -47,7 +47,6 @@ export const FilterDiamond = ({filters, setFilters, handleReset, diamondForFilte
 			...prev,
 			[type]: value,
 		}));
-		console.log('value', value);
 	};
 
 	const handlePriceChange = (value) => {
@@ -243,7 +242,6 @@ export const FilterJewelryDiamond = ({
 			...prev,
 			[type]: value,
 		}));
-		console.log('value', value);
 
 		localStorage.setItem('selected', value);
 	};
@@ -311,7 +309,6 @@ export const FilterDiamondCustomize = ({
 			...prev,
 			[type]: value,
 		}));
-		console.log('value', value);
 		localStorage.setItem('selected', value);
 	};
 

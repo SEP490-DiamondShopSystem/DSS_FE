@@ -16,7 +16,6 @@ export const handleChangePassword = createAsyncThunk(
 				},
 			});
 
-			console.log(data);
 			return data;
 		} catch (error) {
 			console.error(error);
@@ -29,7 +28,6 @@ export const getAccountRank = createAsyncThunk(
 	async (_, {rejectWithValue}) => {
 		try {
 			const data = await api.get(`/Configuration/AccountRule`);
-			console.log(data);
 
 			return data;
 		} catch (error) {

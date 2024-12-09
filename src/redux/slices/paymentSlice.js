@@ -19,7 +19,6 @@ export const handleAddTransfer = createAsyncThunk(
 	async (body, {rejectWithValue}) => {
 		try {
 			const {OrderId, Evidence} = body;
-			console.log('Evidence', Evidence);
 
 			const formData = new FormData();
 			formData.append('OrderId', OrderId);
@@ -42,7 +41,6 @@ export const handleAddTransfer = createAsyncThunk(
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error));
 			return rejectWithValue(error);
 		}
 	}
@@ -53,7 +51,6 @@ export const handleChangeTransfer = createAsyncThunk(
 	async (body, {rejectWithValue}) => {
 		try {
 			const {TransactionId, Evidence} = body;
-			console.log('Evidence', Evidence);
 
 			const formData = new FormData();
 
@@ -79,7 +76,6 @@ export const handleChangeTransfer = createAsyncThunk(
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error));
 			return rejectWithValue(error);
 		}
 	}

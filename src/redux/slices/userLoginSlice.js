@@ -12,7 +12,6 @@ export const handleLogin = createAsyncThunk(
 				isExternalLogin,
 				isStaffLogin,
 			});
-			console.log(data);
 
 			return data;
 		} catch (error) {
@@ -25,15 +24,11 @@ export const handleLogin = createAsyncThunk(
 export const handleGoogleLogin = createAsyncThunk(
 	'userLoginSlice/handleGoogleLogin',
 	async (credential, {rejectWithValue}) => {
-		console.log('credential', typeof credential);
-
 		try {
 			const data = await api.post(`/Account/Google/Credential`, credential);
-			console.log(data);
 
 			return data;
 		} catch (error) {
-			console.error(error);
 			return rejectWithValue(error);
 		}
 	}
@@ -87,15 +82,17 @@ export const handleUpdateAccount = createAsyncThunk(
 	'userLoginSlice/handleUpdateAccount',
 	async ({id, changedFullName, changedAddress, newPhoneNumber}, {rejectWithValue}) => {
 		try {
-			const data = await api.put(`/Account/${id}/Profile`, {
+			const payload = {
 				changedFullName,
 				changedAddress,
-				newPhoneNumber,
-			});
+				...(newPhoneNumber && {newPhoneNumber}),
+			};
+
+			const data = await api.put(`/Account/${id}/Profile`, payload);
 			return data;
 		} catch (error) {
 			console.error(error);
-			return rejectWithValue(error.payload);
+			return rejectWithValue(error);
 		}
 	}
 );
@@ -118,7 +115,6 @@ export const handleVerifyAccount = createAsyncThunk(
 	async (id, {rejectWithValue}) => {
 		try {
 			const data = await api.get(`/Account/${id}/Email/SendConfirm`);
-			console.log(data);
 
 			return data;
 		} catch (error) {

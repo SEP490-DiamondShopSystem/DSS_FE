@@ -34,8 +34,6 @@ export const DetailMetalDiamond = ({
 			return str.replace(/_/g, ' '); // Thay thế tất cả dấu gạch dưới bằng dấu cách
 		};
 
-		console.log('diamond', diamond);
-
 		return {
 			...diamond,
 			clarityFrom: convertToSpace(
@@ -61,8 +59,6 @@ export const DetailMetalDiamond = ({
 
 	// Sử dụng hàm để chuyển đổi tất cả các phần tử trong mảng selectedDiamonds
 	const convertedDiamonds = selectedDiamonds.map(convertFields);
-
-	console.log('convertedDiamonds', convertedDiamonds);
 
 	return (
 		<div className="my-10 w-full">

@@ -77,8 +77,6 @@ export const DiamondLabList = ({diamond, filters, setFilters, handleReset, diamo
 		navigate(`/diamond-detail/${id}`);
 	};
 
-	console.log('diamondLab', diamondLab);
-
 	return (
 		<div>
 			<FilterDiamond

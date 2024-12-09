@@ -4,8 +4,6 @@ import {api} from '../../services/api';
 export const getAllJewelryModel = createAsyncThunk(
 	'jewelrySlice/getAllJewelryModel',
 	async (params, {rejectWithValue}) => {
-		console.log('params', params);
-
 		try {
 			const {page, Category, metalId, minPrice, maxPrice, IsEngravable, IsRhodiumFinished} =
 				params;
@@ -27,11 +25,9 @@ export const getAllJewelryModel = createAsyncThunk(
 			}
 
 			const response = await api.get(url);
-			console.log(response);
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error));
 			return rejectWithValue(error);
 		}
 	}
@@ -40,8 +36,6 @@ export const getAllJewelryModel = createAsyncThunk(
 export const getAllJewelry = createAsyncThunk(
 	'jewelrySlice/getAllJewelry',
 	async (params, {rejectWithValue}) => {
-		console.log('params', params);
-
 		try {
 			const {
 				CurrentPage,
@@ -71,11 +65,9 @@ export const getAllJewelry = createAsyncThunk(
 
 			const response = await api.get(url);
 			// const response = await api.get(`/all_jewelry`);
-			console.log(response);
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error));
 			return rejectWithValue(error);
 		}
 	}
@@ -86,11 +78,9 @@ export const getAllJewelryMetal = createAsyncThunk(
 	async (_, {rejectWithValue}) => {
 		try {
 			const response = await api.get(`/JewelryModel/Metal/All`);
-			console.log(response);
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error));
 			return rejectWithValue(error);
 		}
 	}
@@ -101,11 +91,9 @@ export const getAllJewelryModelCategory = createAsyncThunk(
 	async (_, {rejectWithValue}) => {
 		try {
 			const response = await api.get(`/JewelryModelCategory/All`);
-			console.log(response);
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error));
 			return rejectWithValue(error);
 		}
 	}
@@ -117,11 +105,9 @@ export const getJewelryDetail = createAsyncThunk(
 		try {
 			const response = await api.get(`/JewelryModel/Selling/Detail?modelId=${id}`);
 			// const response = await api.get(`/all_jewelry`);
-			console.log(response);
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error));
 			return rejectWithValue(error);
 		}
 	}
@@ -130,16 +116,12 @@ export const getJewelryDetail = createAsyncThunk(
 export const getJewelryDetailPreset = createAsyncThunk(
 	'jewelrySlice/getJewelryDetailPreset',
 	async (id, {rejectWithValue}) => {
-		console.log('idpreset', id);
-
 		try {
 			const response = await api.get(`/Jewelry/Detail/${id}`);
 			// const response = await api.get(`/all_jewelry`);
-			console.log(response);
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error));
 			return rejectWithValue(error);
 		}
 	}
@@ -151,11 +133,9 @@ export const getJewelryDetailFile = createAsyncThunk(
 		try {
 			const response = await api.get(`/JewelryModelFiles/${id}/Files`);
 			// const response = await api.get(`/all_jewelry`);
-			console.log(response);
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error));
 			return rejectWithValue(error);
 		}
 	}
@@ -179,11 +159,9 @@ export const getJewelryNoDiamond = createAsyncThunk(
 			}
 
 			const response = await api.get(url);
-			console.log(response);
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error));
 			return rejectWithValue(error);
 		}
 	}

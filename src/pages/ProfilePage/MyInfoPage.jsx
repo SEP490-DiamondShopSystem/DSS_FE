@@ -4,7 +4,7 @@ import {
 	ExclamationCircleOutlined,
 	PlusOutlined,
 } from '@ant-design/icons';
-import {Button, Input, message, Modal, Select, Space, Table, Tooltip} from 'antd';
+import {Button, Input, InputNumber, message, Modal, Select, Space, Table, Tooltip} from 'antd';
 import React, {useEffect, useState} from 'react';
 import {Helmet} from 'react-helmet';
 import {useDispatch, useSelector} from 'react-redux';
@@ -211,8 +211,6 @@ const MyInfoPage = () => {
 	};
 
 	const handleDefaultAddress = (id) => {
-		console.log('id address', id);
-
 		dispatch(handleDefaultAccount({accountId: userDetail?.Id, id}))
 			.unwrap()
 			.then((res) => {
@@ -253,6 +251,10 @@ const MyInfoPage = () => {
 	};
 
 	const handleSubmit = () => {
+		if (!userInfo.phone.startsWith('0')) {
+			message.error('Số điện thoại phải bắt đầu bằng số 0');
+			return;
+		}
 		const addedAddress = addAddress?.map((address) => ({
 			Province: address?.Province?.Name,
 			Ward: address?.Ward?.Name,
@@ -260,21 +262,25 @@ const MyInfoPage = () => {
 			District: address?.District?.Name,
 		}));
 
-		dispatch(
-			handleUpdateAccount({
-				id: userSelector.UserId,
-				changedFullName: {
-					firstName: userInfo.firstName,
-					lastName: userInfo.lastName,
-				},
-				changedAddress: {
-					removedAddressId: deletedAddressIds,
-					updatedAddress: null,
-					addedAddress: addedAddress,
-				},
-				newPhoneNumber: userInfo.phone,
-			})
-		)
+		// Tạo payload động dựa trên điều kiện
+		const payload = {
+			id: userSelector.UserId,
+			changedFullName: {
+				firstName: userInfo.firstName,
+				lastName: userInfo.lastName,
+			},
+			changedAddress: {
+				removedAddressId: deletedAddressIds,
+				updatedAddress: null,
+				addedAddress: addedAddress,
+			},
+		};
+
+		if (userInfo.phone) {
+			payload.newPhoneNumber = userInfo.phone;
+		}
+
+		dispatch(handleUpdateAccount(payload))
 			.unwrap()
 			.then(() => {
 				message.success('Cập nhật thông tin thành công!');
@@ -287,7 +293,7 @@ const MyInfoPage = () => {
 				});
 			})
 			.catch((error) => {
-				message.error(error?.data?.title || error?.detail);
+				message.error(error?.data?.detail || error?.detail);
 			});
 
 		setEditing(false);
@@ -456,13 +462,24 @@ const MyInfoPage = () => {
 							</div>
 							<div className="w-full">
 								<label>Số Điện Thoại</label>
-								<Input
-									value={userInfo.phone}
-									disabled={!editing}
-									onChange={(e) =>
-										setUserInfo((prev) => ({...prev, phone: e.target.value}))
-									}
-								/>
+								<div>
+									<Input
+										value={userInfo.phone}
+										disabled={!editing}
+										maxLength={10}
+										onChange={(e) => {
+											const value = e.target.value;
+											// Chỉ cho phép ký tự số
+											if (/^\d*$/.test(value)) {
+												setUserInfo((prev) => ({
+													...prev,
+													phone: value,
+												}));
+											}
+										}}
+										className="w-full"
+									/>
+								</div>
 							</div>
 						</div>
 					</div>

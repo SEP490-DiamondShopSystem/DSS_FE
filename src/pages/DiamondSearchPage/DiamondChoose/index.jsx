@@ -31,8 +31,6 @@ const DiamondChoosePage = () => {
 	const [selectedIndex, setSelectedIndex] = useState(0);
 	const [diamond, setDiamond] = useState();
 
-	console.log('diamond', diamond);
-
 	const items = [
 		{
 			title: 'Chọn Vỏ',

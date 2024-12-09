@@ -35,8 +35,6 @@ export const OrderLog = ({orderLogs}) => {
 		setModalVisible(false);
 	};
 
-	console.log('childLogs', childLogs);
-
 	return (
 		<div>
 			<Title level={3} className="">

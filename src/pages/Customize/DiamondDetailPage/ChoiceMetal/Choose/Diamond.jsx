@@ -86,8 +86,6 @@ export const Diamond = ({
 		setStep((prev) => prev - 1);
 	};
 
-	console.log('customizeDiamond', customizeDiamond);
-
 	return (
 		<div>
 			<Carat
