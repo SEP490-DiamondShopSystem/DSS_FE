@@ -28,6 +28,7 @@ export const InformationRight = ({
 	filteredGroups,
 	id,
 	jewelrySelected,
+	processedMetals,
 }) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
@@ -118,6 +119,8 @@ export const InformationRight = ({
 
 	const someSize = filteredGroups[0]?.SizeGroups?.some((size) => size?.IsInStock);
 
+	console.log('someSize', someSize);
+
 	return (
 		<div>
 			<div className="border-tintWhite">
@@ -145,7 +148,7 @@ export const InformationRight = ({
 				</div>
 				<div>
 					<div className="flex">
-						{diamondJewelry?.Metals?.map((metal, i) => (
+						{processedMetals?.map((metal, i) => (
 							<div
 								key={i}
 								className={`${
@@ -164,10 +167,12 @@ export const InformationRight = ({
 					<>
 						<div className="my-5 flex items-center">
 							<div className="font-semibold">Kim Cương Tấm</div>
-							<div className={`font-semibold text-xl pl-4 text-primary`}>
-								Số Lượng: {selectedSideDiamond?.Quantity} - Carat:{' '}
-								{selectedSideDiamond?.CaratWeight}
-							</div>
+							{selectedSideDiamond !== null && (
+								<div className={`font-semibold text-xl pl-4 text-primary`}>
+									Số Lượng: {selectedSideDiamond?.Quantity} - Carat:{' '}
+									{selectedSideDiamond?.CaratWeight}
+								</div>
+							)}
 						</div>
 						<div>
 							<div className="flex">
@@ -184,7 +189,6 @@ export const InformationRight = ({
 										onClick={() => handleSelectSideDiamond(diamond)} // Save selected diamond on click
 									>
 										<div className={`rounded-full p-1 flex items-center`}>
-											{/* <p className="mr-2">{diamond?.Quantity}</p> -{' '} */}
 											<p className="">{diamond?.CaratWeight}ct</p>
 										</div>
 									</div>
@@ -200,17 +204,19 @@ export const InformationRight = ({
 						<div className="mt-5 flex items-center">
 							<div className="font-semibold">Chọn kích thước:</div>
 							<div className="font-semibold text-xl pl-4 text-primary">
-								<Select value={size} style={{width: 120}} onChange={handleChange}>
-									{filteredGroups[0]?.SizeGroups.map(
-										(size, i) =>
-											size?.IsInStock === true && (
-												<Option key={size?.Size} value={size?.Size}>
-													<p className="font-semibold mr-2">
-														{size?.Size}
-													</p>
-												</Option>
-											)
-									)}
+								<Select
+									value={size}
+									style={{width: 120}}
+									onChange={handleChange}
+									placeholder="Chọn kích cỡ"
+								>
+									{filteredGroups[0]?.SizeGroups.filter(
+										(group) => group.IsInStock === true
+									).map((group) => (
+										<Option key={group?.Size} value={group?.Size}>
+											<p className="font-semibold">{group?.Size}</p>
+										</Option>
+									))}
 								</Select>
 							</div>
 							<div>

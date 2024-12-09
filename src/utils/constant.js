@@ -76,9 +76,9 @@ export const marks = {
 	8: 'D',
 };
 export const marksCut = {
-	1: 'Good',
-	2: 'Very Good',
-	3: 'Excelent',
+	1: 'Tốt',
+	2: 'Rất Tốt',
+	3: 'Xuất Sắc',
 };
 export const marksClarity = {
 	1: 'SI2',

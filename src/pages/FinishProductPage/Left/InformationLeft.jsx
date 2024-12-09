@@ -441,7 +441,7 @@ export const InformationLeft = ({jewelryDetail, diamondDetail, jewelry, diamond,
 
 	return (
 		<>
-			<div className="bg-gray-50 rounded-lg shadow-md w-full mt-10 ">
+			<div className="bg-gray-50 rounded-lg w-full mt-10 ">
 				{mappedDiamond?.map((diamond) => (
 					<>
 						<h2 className="text-lg font-semibold flex items-center justify-center my-10">
@@ -472,11 +472,7 @@ export const InformationLeft = ({jewelryDetail, diamondDetail, jewelry, diamond,
 						</div>
 
 						<div className="flex justify-between px-4 border-b border-tintWhite py-2">
-							<span className="text-gray-600">Cut</span>
-							<span className="text-gray-800 flex items-center">{diamond?.Cut}</span>
-						</div>
-						<div className="flex justify-between px-4 border-b border-tintWhite py-2">
-							<span className="text-gray-600">Cut</span>
+							<span className="text-gray-600">Giác cắt (Cut)</span>
 							<div className="flex items-center">
 								<span className="text-gray-800 flex items-center mr-2">
 									{diamond.Cut}{' '}
@@ -487,7 +483,7 @@ export const InformationLeft = ({jewelryDetail, diamondDetail, jewelry, diamond,
 							</div>
 						</div>
 						<div className="flex justify-between px-4 border-b border-tintWhite py-2">
-							<span className="text-gray-600">Color</span>
+							<span className="text-gray-600">Màu Sắc (Color)</span>
 							<div className="flex items-center">
 								<span className="text-gray-800 flex items-center mr-2">
 									{diamond.Color}{' '}
@@ -502,7 +498,7 @@ export const InformationLeft = ({jewelryDetail, diamondDetail, jewelry, diamond,
 							</div>
 						</div>
 						<div className="flex justify-between px-4 border-b border-tintWhite py-2">
-							<span className="text-gray-600">Clarity</span>
+							<span className="text-gray-600">Độ Tinh Khiết (Clarity)</span>
 							<div className="flex items-center">
 								<span className="text-gray-800 flex items-center mr-2">
 									{diamond.Clarity}{' '}
@@ -517,7 +513,7 @@ export const InformationLeft = ({jewelryDetail, diamondDetail, jewelry, diamond,
 							</div>
 						</div>
 						<div className="flex justify-between px-4 border-b border-tintWhite py-2">
-							<span className="text-gray-600">Trọng lượng Carat</span>
+							<span className="text-gray-600">Ly (Carat)</span>
 							<div className="flex items-center">
 								<span className="text-gray-800 flex items-center mr-2">
 									{diamond.Carat}{' '}
@@ -528,21 +524,21 @@ export const InformationLeft = ({jewelryDetail, diamondDetail, jewelry, diamond,
 							</div>
 						</div>
 						<div className="flex justify-between px-4 border-b border-tintWhite py-2">
-							<span className="text-gray-600">Fluorescence</span>
+							<span className="text-gray-600">Huỳnh quang (Fluorescence)</span>
 							<span className="text-gray-800 flex items-center">
 								{diamond.Fluorescence.replace('_', ' ')}
 							</span>
 						</div>
 						<div className="flex justify-between px-4 border-b border-tintWhite py-2">
-							<span className="text-gray-600">Depth %</span>
+							<span className="text-gray-600">Độ sâu (Depth) %</span>
 							<span className="text-gray-800">{diamond?.Depth}</span>
 						</div>
 						<div className="flex justify-between px-4 border-b border-tintWhite py-2">
-							<span className="text-gray-600">Table %</span>
+							<span className="text-gray-600">Bảng đáy (Table) %</span>
 							<span className="text-gray-800">{diamond?.Table}</span>
 						</div>
 						<div className="flex justify-between px-4 border-b border-tintWhite py-2">
-							<span className="text-gray-600">Polish</span>
+							<span className="text-gray-600">Độ bóng (Polish)</span>
 							<div>
 								<span className="text-gray-800 mr-2">{diamond.Polish}</span>
 								<Popover
@@ -555,7 +551,7 @@ export const InformationLeft = ({jewelryDetail, diamondDetail, jewelry, diamond,
 							</div>
 						</div>
 						<div className="flex justify-between px-4 border-b border-tintWhite py-2">
-							<span className="text-gray-600">Symmetry</span>
+							<span className="text-gray-600">Độ đối xứng (Symmetry)</span>
 							<div>
 								<span className="text-gray-800 mr-2">{diamond.Symmetry}</span>
 								<Popover
@@ -568,7 +564,7 @@ export const InformationLeft = ({jewelryDetail, diamondDetail, jewelry, diamond,
 							</div>
 						</div>
 						<div className="flex justify-between px-4 border-b border-tintWhite py-2">
-							<span className="text-gray-600">Girdle</span>
+							<span className="text-gray-600">Viền cạnh (Girdle)</span>
 							<div>
 								<span className="text-gray-800 mr-2">{diamond.Girdle}</span>
 								<Popover
@@ -581,7 +577,7 @@ export const InformationLeft = ({jewelryDetail, diamondDetail, jewelry, diamond,
 							</div>
 						</div>
 						<div className="flex justify-between px-4 border-b border-tintWhite py-2">
-							<span className="text-gray-600">Girdle</span>
+							<span className="text-gray-600">Chóp đáy (Culet)</span>
 							<div>
 								<span className="text-gray-800 mr-2">{diamond.Culet}</span>
 								<Popover
@@ -623,9 +619,10 @@ export const InformationLeft = ({jewelryDetail, diamondDetail, jewelry, diamond,
 								</span>
 							</div>
 							<div className="flex justify-between px-4 border-b border-tintWhite py-2">
-								<span className="text-gray-600">Rhodium Finish</span>
+								<span className="text-gray-600">Kim Cương Tấm</span>
 								<span className="text-gray-800 flex items-center">
-									{jewelry?.IsRhodiumFinish ? 'Có' : 'Không'}
+									Số viên: {jewelry?.SideDiamond?.Quantity} - Ly (Carat):{' '}
+									{jewelry?.SideDiamond?.Carat}
 								</span>
 							</div>
 						</div>
@@ -660,9 +657,10 @@ export const InformationLeft = ({jewelryDetail, diamondDetail, jewelry, diamond,
 							</span>
 						</div>
 						<div className="flex justify-between px-4 border-b border-tintWhite py-2">
-							<span className="text-gray-600">Rhodium Finish</span>
+							<span className="text-gray-600">Kim Cương Tấm</span>
 							<span className="text-gray-800 flex items-center">
-								{jewelry?.IsRhodiumFinish ? 'Có' : 'Không'}
+								Số viên: {jewelry?.SideDiamond?.Quantity} - Ly{' '}
+								{jewelry?.SideDiamond?.Carat}
 							</span>
 						</div>
 					</div>

@@ -21,6 +21,7 @@ const JewelryDetailPage = () => {
 	const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
 	const [selectedSideDiamond, setSelectedSideDiamond] = useState();
 	const [jewelrySelected, setJewelrySelected] = useState();
+	const [uniqueMetals, setUniqueMetals] = useState([]);
 
 	const items = [
 		{
@@ -99,6 +100,49 @@ const JewelryDetailPage = () => {
 		selectedSideDiamond
 	);
 
+	console.log('selectedMetal', selectedMetal);
+	console.log('filteredGroups', filteredGroups);
+
+	useEffect(() => {
+		if (filteredGroups && size == null) {
+			const availableSize = filteredGroups[0]?.SizeGroups.find(
+				(group) => group.IsInStock === true
+			);
+			setSize(availableSize?.Size || null);
+		}
+	}, [filteredGroups, size]);
+
+	useEffect(() => {
+		// Lọc MetalGroups có SizeGroups với IsInStock = true và gộp MetalName
+		const filteredMetals = jewelry?.MetalGroups?.filter((group) =>
+			group?.SizeGroups?.some((size) => size?.IsInStock)
+		).map((group) => {
+			const metal = jewelry?.Metals?.find((m) => m?.Id === group?.MetalId);
+			return {
+				...group,
+				OriginalName: group?.Name, // Lưu tên cũ vào OriginalName
+				Name: metal ? metal?.Name : 'Unknown Metal', // Gán MetalName thành Name
+				Price: metal?.Price,
+				Id: group?.MetalId,
+			};
+		});
+
+		// Loại bỏ MetalName (giờ là Name) trùng lặp
+		const uniqueFilteredMetals = [];
+		const seenNames = new Set();
+
+		filteredMetals?.forEach((metal) => {
+			if (!seenNames?.has(metal?.Name)) {
+				seenNames?.add(metal?.Name);
+				uniqueFilteredMetals?.push(metal);
+			}
+		});
+
+		setUniqueMetals(uniqueFilteredMetals);
+	}, [jewelry]);
+
+	console.log('uniqueMetals', uniqueMetals);
+
 	return (
 		<div className="px-4 md:px-32 md:mt-10">
 			<Steps items={items} current={0} className="w-full md:w-auto" />
@@ -122,6 +166,7 @@ const JewelryDetailPage = () => {
 						filteredGroups={filteredGroups}
 						id={id}
 						jewelrySelected={jewelrySelected}
+						processedMetals={uniqueMetals}
 					/>
 				</div>
 			</div>

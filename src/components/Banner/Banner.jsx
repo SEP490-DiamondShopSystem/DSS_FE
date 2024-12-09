@@ -83,10 +83,10 @@ export const BannerDiamond = () => {
 							<h2 className="text-3xl font-bold mb-4">
 								Chúc mừng cửa hàng khai trương!
 							</h2>
-							<p className="mb-4">
+							<div className="my-4">
 								Khám phá những tính năng tuyệt vời và nội dung phù hợp dành riêng
 								cho bạn.
-							</p>
+							</div>
 							<div className="flex flex-col sm:flex-row justify-end">
 								<Button
 									className="mr-0 sm:mr-10 mb-4 sm:mb-0 px-6 py-2 bg-primary rounded-lg uppercase font-semibold hover:bg-second w-full sm:w-auto h-12"

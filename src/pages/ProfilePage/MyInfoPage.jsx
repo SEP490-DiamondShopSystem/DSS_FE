@@ -46,9 +46,10 @@ const MyInfoPage = () => {
 		firstName: userDetail.FirstName || '',
 		lastName: userDetail.LastName || '',
 		email: userDetail.Email || '',
-		phone: userDetail.Phone || '',
+		phone: userDetail.PhoneNumber || '',
 		addresses: userDetail.Addresses || [],
 	});
+
 	const [isModalVisible, setIsModalVisible] = useState(false);
 	const [newAddress, setNewAddress] = useState({
 		Province: '',
@@ -75,7 +76,7 @@ const MyInfoPage = () => {
 				firstName: userDetail.FirstName || '',
 				lastName: userDetail.LastName || '',
 				email: userDetail.Email || '',
-				phone: userDetail.Phone || '',
+				phone: userDetail.PhoneNumber || '',
 				addresses: userDetail.Addresses || [],
 			});
 		}
@@ -271,6 +272,7 @@ const MyInfoPage = () => {
 					updatedAddress: null,
 					addedAddress: addedAddress,
 				},
+				newPhoneNumber: userInfo.phone,
 			})
 		)
 			.unwrap()
@@ -454,7 +456,13 @@ const MyInfoPage = () => {
 							</div>
 							<div className="w-full">
 								<label>Số Điện Thoại</label>
-								<Input value={userInfo.phone} disabled={!editing} />
+								<Input
+									value={userInfo.phone}
+									disabled={!editing}
+									onChange={(e) =>
+										setUserInfo((prev) => ({...prev, phone: e.target.value}))
+									}
+								/>
 							</div>
 						</div>
 					</div>

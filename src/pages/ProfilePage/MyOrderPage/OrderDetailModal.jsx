@@ -39,6 +39,7 @@ import {TransactionDetails} from './TransactionList';
 import {OrderLog} from './OrderLog';
 import {OrderPayment} from './OrderPayment';
 import InformationUser from './InformationUser';
+import {getTransactionByOrderId} from '../../../redux/slices/transactionSlice';
 
 const {Text, Title} = Typography;
 
@@ -214,10 +215,10 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 
 	useEffect(() => {
 		if (selectedOrder?.orderId) {
-			dispatch(getOrderLog(selectedOrder.orderId));
+			dispatch(getOrderLog(selectedOrder?.orderId));
 
 			if (order?.Status === 8) {
-				dispatch(getOrderFiles(selectedOrder.orderId))
+				dispatch(getOrderFiles(selectedOrder?.orderId))
 					.unwrap()
 					.then((res) => {
 						setOrderInvoice(res);
@@ -227,11 +228,10 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 					});
 			}
 
-			dispatch(getUserOrderDetail(selectedOrder.orderId))
+			dispatch(getUserOrderDetail(selectedOrder?.orderId))
 				.unwrap()
 				.then((res) => {
 					setOrder(res);
-					setTransaction(res?.Transactions);
 					setOrderLog(res?.Logs);
 					setStatusOrder(res?.Status);
 				})
@@ -240,6 +240,16 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 				});
 		}
 	}, [selectedOrder, dispatch, statusOrder, reviewDetail, transfer, cancelled]);
+
+	useEffect(() => {
+		if (selectedOrder?.orderId) {
+			dispatch(getTransactionByOrderId(selectedOrder?.orderId))
+				.unwrap()
+				.then((res) => {
+					setTransaction(res?.Transactions);
+				});
+		}
+	}, [selectedOrder?.orderId, transfer]);
 
 	const showModal = (review) => {
 		setReviewContent(review);
@@ -380,6 +390,28 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 								</Title>
 								<InformationUser order={order} />
 							</div>
+							{order?.Deliverer && (
+								<div className="my-5">
+									<Title level={3} className="mb-4">
+										Thông Tin Nhân Viên Giao Hàng
+									</Title>
+									<div className="p-6 bg-white rounded-lg shadow-md w-full  mt-7">
+										<div className="mb-2">
+											<strong>Họ và Tên:</strong>{' '}
+											{order?.Deliverer?.FirstName}{' '}
+											{order?.Deliverer?.LastName}
+										</div>
+										<div className="mb-2">
+											<strong>Email:</strong> {order?.Deliverer?.Email}
+										</div>
+										<div className="mb-2">
+											<strong>Số Điện Thoại:</strong>{' '}
+											{order?.Deliverer?.PhoneNumber}
+										</div>
+									</div>
+								</div>
+							)}
+
 							<div className="w-full flex flex-col sm:flex-row gap-4">
 								<div className="w-full sm:w-2/3">
 									{order?.Status === 1 && order?.Transactions?.length === 0 ? (
@@ -400,7 +432,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 								<Title level={3} className="text-xl font-semibold">
 									Chi tiết đơn hàng
 								</Title>
-								{/* {statusOrder === 1 && (
+								{statusOrder === 1 && order?.Transactions?.length === 0 && (
 									<Button
 										type="text"
 										className="bg-red text-white"
@@ -408,7 +440,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 									>
 										Hủy Đơn
 									</Button>
-								)} */}
+								)}
 								{statusOrder === 2 && (
 									<Button
 										type="text"
@@ -447,16 +479,18 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 								/>
 							</div>
 							<div className="justify-end items-end flex flex-col mt-10">
-								<div>Phí giao hàng: {formatPrice(order?.ShippingFee)}</div>
+								<div className="mb-2">
+									Phí giao hàng: {formatPrice(order?.ShippingFee)}
+								</div>
 								{order?.UserRankAmountSaved !== 0 && (
 									<div>
 										Khách hàng thân thiết: -
 										{formatPrice(order?.UserRankAmountSaved)}
 									</div>
 								)}
-								<p className="font-semibold text-lg mt-2">
+								<div className="font-semibold text-xl mt-2">
 									Tổng cộng: {formatPrice(order?.TotalPrice)}
-								</p>
+								</div>
 							</div>
 							{/* Cancel Order Modal */}
 							<Modal

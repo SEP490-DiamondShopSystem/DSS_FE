@@ -78,7 +78,7 @@ export const OrderStatus = ({orderStatus, order}) => {
 		{
 			title:
 				currentStep === 0
-					? 'Chờ Shop Xác Nhận'
+					? 'Chờ Xác Nhận'
 					: orderStatus === 3 && indexRejected === 1
 					? 'Đã Bị Từ Chối'
 					: orderStatus === 4 && indexCancelled === 1
@@ -86,7 +86,7 @@ export const OrderStatus = ({orderStatus, order}) => {
 					: 'Đã Xác Nhận',
 			description:
 				currentStep === 0
-					? 'Đơn hàng đang chờ xác nhận từ shop.'
+					? 'Đơn hàng đang chờ xác nhận từ cửa hàng.'
 					: orderStatus === 3 && indexRejected === 1
 					? `Đơn hàng đã bị từ chối. Lý Do: ${order?.CancelledReason}`
 					: orderStatus === 4 && indexCancelled === 1
@@ -97,72 +97,68 @@ export const OrderStatus = ({orderStatus, order}) => {
 		{
 			title:
 				currentStep === 1
-					? 'Đang Chuẩn Bị Đơn Hàng'
+					? 'Đang Xử Lí Đơn Hàng'
 					: orderStatus === 3 && indexRejected === 2
 					? 'Đã Bị Từ Chối'
 					: orderStatus === 4 && indexCancelled === 2
 					? 'Đã Hủy'
-					: 'Đã Chuẩn Bị Đơn Hàng',
+					: 'Đã Xử Lí Đơn Hàng',
 			description:
 				currentStep === 1
-					? 'Shop đang chuẩn bị hàng cho đơn hàng.'
+					? 'Cửa hàng đang xử lí đơn hàng thành công.'
 					: orderStatus === 3 && indexRejected === 2
 					? `Đơn hàng đã bị từ chối. Lý Do: ${order?.CancelledReason}`
 					: orderStatus === 4 && indexCancelled === 2
 					? `Đơn hàng đã bị hủy. Lý Do: ${order?.CancelledReason}`
-					: 'Shop đã chuẩn bị hàng cho đơn hàng.',
+					: 'Cửa hàng đã xử lí đơn hàng thành công.',
 		},
-		// Step 2: Đang Vận Chuyển
+		// Step 2: Đã Chuẩn Bị
 		{
 			title:
-				currentStep === 2 && orderStatus === 6
-					? 'Đang Vận Chuyển'
+				currentStep === 2 && orderStatus === 5
+					? 'Đã Chuẩn Bị'
 					: orderStatus === 4 && indexCancelled === 3
 					? 'Đã Hủy'
-					: orderStatus === 3 && indexRejected === 8
+					: indexRejected === 8 || indexRejected === 7
 					? 'Đã Bị Từ Chối'
-					: orderStatus === 3 && indexRejected === 7
-					? 'Đã Bị Từ Chối'
-					: 'Đã Vận Chuyển',
+					: 'Đã Chuẩn Bị',
 			description:
-				currentStep === 2 && orderStatus === 6
-					? 'Đơn hàng đang được vận chuyển.'
+				currentStep === 2 && orderStatus === 5
+					? 'Đơn hàng đã được chuẩn bị, đang chờ nhân viên giao hàng vận chuyển.'
 					: orderStatus === 4 && indexCancelled === 3
 					? `Đơn hàng đã bị hủy. Lý Do: ${order?.CancelledReason}`
-					: indexRejected === 8
+					: indexRejected === 8 || indexRejected === 7
 					? `Đơn hàng đã bị từ chối. Lý Do: ${order?.CancelledReason}`
-					: indexRejected === 7
-					? `Đơn hàng đã bị từ chối. Lý Do: ${order?.CancelledReason}`
-					: 'Đã Vận Chuyển',
+					: 'Đơn hàng đã được chuẩn bị',
 		},
 		// Step 3: Giao Hàng
 		{
 			title:
 				currentStep === 6 && orderStatus === 7
 					? 'Giao hàng Thất Bại'
-					: currentStep === 7
-					? 'Đang Giao Hàng'
+					: currentStep === 5
+					? 'Đang Vận Chuyển'
 					: indexCancelled === 13 || indexCancelled === 5
 					? 'Đã Hủy'
-					: indexRejected === 20 || indexRejected === 5
+					: indexRejected === 20 || indexRejected === 5 || indexRejected === 3
 					? 'Đã Từ Chối'
 					: 'Đã Nhận Hàng',
 			description:
 				currentStep === 6 && orderStatus === 7
 					? 'Giao đơn hàng thất bại.'
-					: currentStep === 7
-					? 'Đơn hàng đang được giao.'
+					: currentStep === 5
+					? 'Khách đang nhận hàng.'
 					: indexCancelled === 13 || indexCancelled === 5
 					? `Đơn hàng đã bị hủy. Lý Do: ${order?.CancelledReason}`
-					: indexRejected === 20 || indexRejected === 5
+					: indexRejected === 20 || indexRejected === 5 || indexRejected === 3
 					? `Đơn hàng đã bị từ chối. Lý Do: ${order?.CancelledReason}`
 					: 'Đơn hàng đã hoàn thành.',
 		},
 		// Step 4: Hoàn Thành
-		{
-			title: 'Hoàn Thành',
-			description: 'Đơn hàng đã hoàn thành.',
-		},
+		// {
+		// 	title: 'Hoàn Thành',
+		// 	description: 'Đơn hàng đã hoàn thành.',
+		// },
 	];
 
 	if (currentStep === 0) {
@@ -170,115 +166,120 @@ export const OrderStatus = ({orderStatus, order}) => {
 		steps[1].status = 'wait';
 		steps[2].status = 'wait';
 		steps[3].status = 'wait';
-		steps[4].status = 'wait';
+		// steps[4].status = 'wait';
 	} else if (currentStep === 1) {
 		steps[0].status = 'finish';
 		steps[1].status = 'process';
 		steps[2].status = 'wait';
 		steps[3].status = 'wait';
-		steps[4].status = 'wait';
+		// steps[4].status = 'wait';
 	} else if (currentStep === 2 && orderStatus === 3 && indexRejected === 1) {
 		steps[0].status = 'error';
 		steps[1].status = 'wait';
 		steps[2].status = 'wait';
 		steps[3].status = 'wait';
-		steps[4].status = 'wait';
+		// steps[4].status = 'wait';
 	} else if (currentStep === 2 && orderStatus === 3 && indexRejected === 2) {
 		steps[0].status = 'finish';
 		steps[1].status = 'error';
 		steps[2].status = 'wait';
 		steps[3].status = 'wait';
-		steps[4].status = 'wait';
+		// steps[4].status = 'wait';
 	} else if (currentStep === 2 && orderStatus === 3 && indexRejected === 2) {
 		steps[0].status = 'finish';
 		steps[1].status = 'error';
 		steps[2].status = 'wait';
 		steps[3].status = 'wait';
-		steps[4].status = 'wait';
+	} else if (currentStep === 2 && orderStatus === 3 && indexRejected === 3) {
+		steps[0].status = 'finish';
+		steps[1].status = 'finish';
+		steps[2].status = 'finish';
+		steps[3].status = 'error';
+		// steps[4].status = 'wait';
 	} else if (currentStep === 2 && orderStatus === 3 && indexRejected === 8) {
 		steps[0].status = 'finish';
 		steps[1].status = 'finish';
 		steps[2].status = 'error';
 		steps[3].status = 'wait';
-		steps[4].status = 'wait';
+		// steps[4].status = 'wait';
 	} else if (currentStep === 2 && orderStatus === 3 && indexRejected === 7) {
 		steps[0].status = 'finish';
 		steps[1].status = 'finish';
 		steps[2].status = 'error';
 		steps[3].status = 'wait';
-		steps[4].status = 'wait';
+		// steps[4].status = 'wait';
 	} else if (currentStep === 3 && orderStatus === 4 && indexCancelled === 1) {
 		steps[0].status = 'error';
 		steps[1].status = 'wait';
 		steps[2].status = 'wait';
 		steps[3].status = 'wait';
-		steps[4].status = 'wait';
+		// steps[4].status = 'wait';
 	} else if (currentStep === 3 && orderStatus === 4 && indexCancelled === 2) {
 		steps[0].status = 'finish';
 		steps[1].status = 'error';
 		steps[2].status = 'wait';
 		steps[3].status = 'wait';
-		steps[4].status = 'wait';
+		// steps[4].status = 'wait';
 	} else if (currentStep === 3 && orderStatus === 4 && indexCancelled === 3) {
 		steps[0].status = 'finish';
 		steps[1].status = 'finish';
 		steps[2].status = 'error';
 		steps[3].status = 'wait';
-		steps[4].status = 'wait';
+		// steps[4].status = 'wait';
 	} else if (currentStep === 3 && orderStatus === 4 && indexCancelled === 5) {
 		steps[0].status = 'finish';
 		steps[1].status = 'finish';
 		steps[2].status = 'finish';
 		steps[3].status = 'error';
-		steps[4].status = 'wait';
+		// steps[4].status = 'wait';
 	} else if (currentStep === 3 && orderStatus === 4 && indexCancelled === 13) {
 		steps[0].status = 'finish';
 		steps[1].status = 'finish';
 		steps[2].status = 'finish';
 		steps[3].status = 'error';
-		steps[4].status = 'wait';
+		// steps[4].status = 'wait';
 	} else if (currentStep === 3 && indexRejected === 20) {
 		steps[0].status = 'finish';
 		steps[1].status = 'finish';
 		steps[2].status = 'finish';
 		steps[3].status = 'error';
-		steps[4].status = 'wait';
+		// steps[4].status = 'wait';
 	} else if (currentStep === 3 && indexRejected === 5) {
 		steps[0].status = 'finish';
 		steps[1].status = 'finish';
 		steps[2].status = 'finish';
 		steps[3].status = 'error';
-		steps[4].status = 'wait';
+		// steps[4].status = 'wait';
 	} else if (currentStep === 4) {
 		steps[0].status = 'finish';
 		steps[1].status = 'finish';
 		steps[2].status = 'process';
 		steps[3].status = 'wait';
-		steps[4].status = 'wait';
+		// steps[4].status = 'wait';
 	} else if (currentStep === 5) {
 		steps[0].status = 'finish';
 		steps[1].status = 'finish';
 		steps[2].status = 'finish';
 		steps[3].status = 'process';
-		steps[4].status = 'wait';
+		// steps[4].status = 'wait';
 	} else if (currentStep === 6 && orderStatus === 7) {
 		steps[0].status = 'finish';
 		steps[1].status = 'finish';
 		steps[2].status = 'finish';
 		steps[3].status = 'error';
-		steps[4].status = 'wait';
+		// steps[4].status = 'wait';
 	} else if (currentStep === 7) {
 		steps[0].status = 'finish';
 		steps[1].status = 'finish';
 		steps[2].status = 'finish';
 		steps[3].status = 'finish';
-		steps[4].status = 'finish';
+		// steps[4].status = 'finish';
 	} else if (currentStep === 8) {
 		steps[0].status = 'finish';
 		steps[1].status = 'finish';
 		steps[2].status = 'finish';
 		steps[3].status = 'finish';
-		steps[4].status = 'finish';
+		// steps[4].status = 'finish';
 	}
 
 	return (

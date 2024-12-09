@@ -384,7 +384,7 @@ export const InformationLeft = ({diamond, diamondId}) => {
 					<span className="text-gray-800">{diamond.DiamondShape}</span>
 				</div>
 				<div className="flex justify-between px-4 border-b border-tintWhite py-2">
-					<span className="text-gray-600">Cut</span>
+					<span className="text-gray-600">Chất lượng cắt (Cut)</span>
 					<div className="flex items-center">
 						<span className="text-gray-800 flex items-center mr-2">{diamond.Cut} </span>{' '}
 						<Popover placement="topLeft" title={textCut} content={contentCut}>
@@ -393,7 +393,7 @@ export const InformationLeft = ({diamond, diamondId}) => {
 					</div>
 				</div>
 				<div className="flex justify-between px-4 border-b border-tintWhite py-2">
-					<span className="text-gray-600">Color</span>
+					<span className="text-gray-600">Màu sắc (Color)</span>
 					<div className="flex items-center">
 						<span className="text-gray-800 flex items-center mr-2">
 							{diamond.Color}{' '}
@@ -404,7 +404,7 @@ export const InformationLeft = ({diamond, diamondId}) => {
 					</div>
 				</div>
 				<div className="flex justify-between px-4 border-b border-tintWhite py-2">
-					<span className="text-gray-600">Clarity</span>
+					<span className="text-gray-600">Độ trong suốt (Clarity)</span>
 					<div className="flex items-center">
 						<span className="text-gray-800 flex items-center mr-2">
 							{diamond.Clarity}{' '}
@@ -415,7 +415,7 @@ export const InformationLeft = ({diamond, diamondId}) => {
 					</div>
 				</div>
 				<div className="flex justify-between px-4 border-b border-tintWhite py-2">
-					<span className="text-gray-600">Trọng lượng Carat</span>
+					<span className="text-gray-600">Ly (Carat)</span>
 					<div className="flex items-center">
 						<span className="text-gray-800 flex items-center mr-2">
 							{diamond.Carat}{' '}
@@ -426,7 +426,7 @@ export const InformationLeft = ({diamond, diamondId}) => {
 					</div>
 				</div>
 				<div className="flex justify-between px-4 border-b border-tintWhite py-2">
-					<span className="text-gray-600">Fluorescence</span>
+					<span className="text-gray-600">Huỳnh quang (Fluorescence)</span>
 					<span className="text-gray-800 flex items-center">
 						{diamond.Fluorescence.replace('_', ' ')}
 					</span>
@@ -440,15 +440,15 @@ export const InformationLeft = ({diamond, diamondId}) => {
 			>
 				<div className="bg-gray-50 rounded-lg shadow-md w-full ">
 					<div className="flex justify-between px-4 border-b border-tintWhite py-2">
-						<span className="text-gray-600">Depth %</span>
+						<span className="text-gray-600">Độ sâu (Depth) %</span>
 						<span className="text-gray-800">{diamond.Depth}</span>
 					</div>
 					<div className="flex justify-between px-4 border-b border-tintWhite py-2">
-						<span className="text-gray-600">Table %</span>
+						<span className="text-gray-600">Bảng đáy (Table) %</span>
 						<span className="text-gray-800">{diamond.Table}</span>
 					</div>
 					<div className="flex justify-between px-4 border-b border-tintWhite py-2">
-						<span className="text-gray-600">Polish</span>
+						<span className="text-gray-600">Độ bóng (Polish)</span>
 						<div>
 							<span className="text-gray-800 mr-2">{diamond.Polish}</span>
 							<Popover placement="topLeft" title={textPolish} content={contentPolish}>
@@ -457,7 +457,7 @@ export const InformationLeft = ({diamond, diamondId}) => {
 						</div>
 					</div>
 					<div className="flex justify-between px-4 border-b border-tintWhite py-2">
-						<span className="text-gray-600">Symmetry</span>
+						<span className="text-gray-600">Độ đối xứng (Symmetry)</span>
 						<div>
 							<span className="text-gray-800 mr-2">{diamond.Symmetry}</span>
 							<Popover
@@ -470,7 +470,7 @@ export const InformationLeft = ({diamond, diamondId}) => {
 						</div>
 					</div>
 					<div className="flex justify-between px-4 border-b border-tintWhite py-2">
-						<span className="text-gray-600">Girdle</span>
+						<span className="text-gray-600">Viền cạnh (Girdle)</span>
 						<div>
 							<span className="text-gray-800 mr-2">{diamond.Girdle}</span>
 							<Popover placement="topLeft" title={textGirdle} content={contentGirdle}>
@@ -479,7 +479,7 @@ export const InformationLeft = ({diamond, diamondId}) => {
 						</div>
 					</div>
 					<div className="flex justify-between px-4 border-b border-tintWhite py-2">
-						<span className="text-gray-600">Girdle</span>
+						<span className="text-gray-600">Chóp đáy (Culet)</span>
 						<div>
 							<span className="text-gray-800 mr-2">{diamond.Culet}</span>
 							<Popover placement="topLeft" title={textCulet} content={contentCulet}>
