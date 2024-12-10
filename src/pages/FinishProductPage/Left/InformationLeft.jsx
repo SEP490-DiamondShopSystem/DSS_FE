@@ -108,33 +108,29 @@ export const InformationLeft = ({jewelryDetail, diamondDetail, jewelry, diamond,
 
 	const mappedDiamond = mapAttributes(jewelry?.Diamonds, enums);
 
-	console.log('jewelry', jewelry);
-
-	console.log('mappedDiamond', mappedDiamond);
-
 	useEffect(() => {
 		if (mappedDiamond.length > 0) {
 			const diamondIds = mappedDiamond.map((diamond) => diamond.DiamondId);
-	
+
 			// Fetch certificates for each diamond ID sequentially
 			const fetchCertificatesForDiamonds = async () => {
 				try {
 					const certificateMap = {};
-					
+
 					for (const diamondId of diamondIds) {
 						const response = await dispatch(fetchDiamondFiles(diamondId));
-						
+
 						if (response.payload && response.payload.Certificates) {
 							certificateMap[diamondId] = response.payload.Certificates[0];
 						}
 					}
-	
+
 					setCertificates(certificateMap);
 				} catch (error) {
 					console.error('Error fetching diamond files:', error);
 				}
 			};
-	
+
 			fetchCertificatesForDiamonds();
 		}
 	}, [jewelry?.Diamonds, dispatch]);
@@ -451,13 +447,13 @@ export const InformationLeft = ({jewelryDetail, diamondDetail, jewelry, diamond,
 							<span className="text-gray">Giấy chứng nhận</span>
 							<div>
 								{certificates[diamond.DiamondId] ? (
-									 <div className="flex items-center space-x-2 mb-2">
+									<div className="flex items-center space-x-2 mb-2">
 										<a
 											href={certificates[diamond.DiamondId].MediaPath}
 											target="_blank"
 											rel="noopener noreferrer"
 											className="text-blue hover:underline"
-										  >
+										>
 											View Report
 										</a>
 									</div>

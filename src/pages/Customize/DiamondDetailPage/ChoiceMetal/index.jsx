@@ -36,7 +36,7 @@ export const ChoiceMetalDiamond = ({
 
 	const items = [
 		{
-			title: 'Shape',
+			title: 'Chọn Hình Dạng',
 			disabled: steps < 0,
 		},
 		{
@@ -57,11 +57,9 @@ export const ChoiceMetalDiamond = ({
 	const currentJewelry = filteredGroups[stepChooseDiamond];
 
 	const quantities = jewelry?.MainDiamonds?.map((diamond) => diamond.Quantity) || [];
-	console.log('quantities', quantities);
 
 	const totalQuantity =
 		jewelry?.MainDiamonds?.reduce((sum, diamond) => sum + diamond.Quantity, 0) || 0;
-	console.log('totalQuantity', totalQuantity);
 
 	useEffect(() => {
 		dispatch(getAllJewelryMetal());
@@ -89,12 +87,10 @@ export const ChoiceMetalDiamond = ({
 	};
 
 	const onChange = (value) => {
-		console.log('onChange:', value);
 		setStep(value);
 	};
 
 	const onChangeDiamond = (value) => {
-		console.log('onChange:', value);
 		setStepChooseDiamond(value);
 	};
 
@@ -138,8 +134,6 @@ export const ChoiceMetalDiamond = ({
 				setStepChoose(3);
 			})
 			.catch((error) => {
-				console.log('error', error);
-
 				message.error(error?.data?.title || error?.title);
 			});
 	};

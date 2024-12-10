@@ -4,8 +4,6 @@ import {api} from '../../services/api';
 export const getAllJewelryModelCustomize = createAsyncThunk(
 	'customizeSlice/getAllJewelryModelCustomize',
 	async (params, {rejectWithValue}) => {
-		console.log('params', params);
-
 		try {
 			const {page, take, name, Category, IsRhodiumFinished, IsEngravable} = params;
 			let url = '/JewelryModel/Customize/All';
@@ -27,11 +25,9 @@ export const getAllJewelryModelCustomize = createAsyncThunk(
 			}
 
 			const response = await api.get(url);
-			console.log(response);
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.data));
 			return rejectWithValue(error.data);
 		}
 	}
@@ -40,15 +36,11 @@ export const getAllJewelryModelCustomize = createAsyncThunk(
 export const handleSendRequest = createAsyncThunk(
 	'customizeSlice/handleSendRequest',
 	async (body, {rejectWithValue}) => {
-		console.log('body', JSON.stringify(body));
-
 		try {
 			const response = await api.post(`/CustomizeRequest/Send`, body);
-			console.log(response);
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.data));
 			return rejectWithValue(error.data);
 		}
 	}
@@ -60,11 +52,9 @@ export const getJewelryModelDetail = createAsyncThunk(
 		try {
 			const response = await api.get(`/JewelryModel/Customize/Detail?modelId=${id}`);
 			// const response = await api.get(`/all_jewelry`);
-			console.log(response);
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.data));
 			return rejectWithValue(error.data);
 		}
 	}
@@ -89,11 +79,9 @@ export const getAllRequestUser = createAsyncThunk(
 			}
 
 			const response = await api.get(url);
-			console.log(response);
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.data));
 			return rejectWithValue(error.data);
 		}
 	}
@@ -104,11 +92,9 @@ export const getRequestCustomizeDetail = createAsyncThunk(
 	async (id, {rejectWithValue}) => {
 		try {
 			const response = await api.get(`/CustomizeRequest/Customer/Detail?requestId=${id}`);
-			console.log(response);
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.data));
 			return rejectWithValue(error.data);
 		}
 	}
@@ -119,11 +105,9 @@ export const handleOrderCustomizeProceed = createAsyncThunk(
 	async (id, {rejectWithValue}) => {
 		try {
 			const response = await api.put(`/CustomizeRequest/Proceed?CustomizeRequestId=${id}`);
-			console.log(response);
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.data));
 			return rejectWithValue(error.data);
 		}
 	}
@@ -134,11 +118,9 @@ export const handleOrderCustomizeReject = createAsyncThunk(
 	async (id, {rejectWithValue}) => {
 		try {
 			const response = await api.put(`/CustomizeRequest/Reject?CustomizeRequestId=${id}`);
-			console.log(response);
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.data));
 			return rejectWithValue(error.data);
 		}
 	}
@@ -149,11 +131,9 @@ export const handleOrderCustomizeCancel = createAsyncThunk(
 	async (id, {rejectWithValue}) => {
 		try {
 			const response = await api.put(`/CustomizeRequest/Cancel?CustomizeRequestId=${id}`);
-			console.log(response);
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.data));
 			return rejectWithValue(error.data);
 		}
 	}
@@ -164,11 +144,9 @@ export const handleOrderCustomizeCheckout = createAsyncThunk(
 	async (body, {rejectWithValue}) => {
 		try {
 			const response = await api.post(`/CustomizeRequest/Checkout`, body);
-			console.log(response);
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.data));
 			return rejectWithValue(error.data);
 		}
 	}

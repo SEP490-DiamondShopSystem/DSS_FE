@@ -8,7 +8,6 @@ export const getAllWarranty = createAsyncThunk(
 			const response = await api.get(`/Warranty/All`);
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.data));
 			return rejectWithValue(error.data);
 		}
 	}

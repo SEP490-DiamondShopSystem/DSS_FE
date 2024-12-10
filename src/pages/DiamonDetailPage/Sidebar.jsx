@@ -34,8 +34,6 @@ export const Sidebar = ({
 		localStorage.setItem('jewelryType', jewelry);
 	};
 
-	console.log(diamond);
-
 	const handleNavigate = () => {
 		const isLoggedIn = userSelector && userSelector.UserId;
 

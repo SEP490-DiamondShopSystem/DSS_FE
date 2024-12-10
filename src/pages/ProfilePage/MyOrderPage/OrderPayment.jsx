@@ -1,5 +1,5 @@
 import {InboxOutlined} from '@ant-design/icons';
-import {Button, Modal, QRCode, Upload, message} from 'antd';
+import {Button, Image, Modal, QRCode, Upload, message} from 'antd';
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {LoadingPaymentSelector} from '../../../redux/selectors';
@@ -69,8 +69,6 @@ export const OrderPayment = ({order, setTransfer}) => {
 		return <div className="text-center text-gray-500">Không có dữ liệu đơn hàng.</div>;
 	}
 
-	console.log('fileList', fileList);
-
 	return (
 		<div className="p-6 bg-white rounded-lg shadow-md max-w-lg mx-auto">
 			{order?.PaymentMethodId === '1' && (
@@ -96,10 +94,10 @@ export const OrderPayment = ({order, setTransfer}) => {
 							</p>
 						</div>
 						<div className="mt-4 sm:mt-0 sm:ml-10 flex justify-center">
-							<QRCode
-								value={order.qrCode || 'https://example.com'}
-								size={150}
-								className="rounded-md border border-gray-300"
+							<Image
+								preview={false}
+								src={ruleBank?.BankQr?.MediaPath}
+								className="max-w-52"
 							/>
 						</div>
 					</div>

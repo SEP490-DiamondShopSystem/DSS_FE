@@ -4,16 +4,19 @@ import {Steps} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
 import LoginModal from '../../components/LogModal/LoginModal';
-import {GetJewelryDetailSelector} from '../../redux/selectors';
-import {getJewelryDetail, getJewelryNoDiamond} from '../../redux/slices/jewelrySlice';
+import {GetJewelryDetailSelector, LoadingJewelrySelector} from '../../redux/selectors';
+import {getJewelryDetail} from '../../redux/slices/jewelrySlice';
 import {ImageGallery} from './Left/ImageGallery';
 import {InformationLeft} from './Left/InformationLeft';
 import {InformationRight} from './Right/InformationRight';
 import ProductReviews from './Popup/ProductReviews';
+import Loading from '../../components/Loading';
+import {getJewelryNoDiamond} from '../../redux/slices/reviewSlice';
 
 const JewelryDetailPage = () => {
 	const {id} = useParams();
 	const dispatch = useDispatch();
+	const loading = useSelector(LoadingJewelrySelector);
 
 	const [size, setSize] = useState(null);
 	const [jewelry, setJewelry] = useState();
@@ -22,6 +25,7 @@ const JewelryDetailPage = () => {
 	const [selectedSideDiamond, setSelectedSideDiamond] = useState();
 	const [jewelrySelected, setJewelrySelected] = useState();
 	const [uniqueMetals, setUniqueMetals] = useState([]);
+	const [uniqueSideDiamonds, setUniqueSideDiamonds] = useState([]);
 
 	const items = [
 		{
@@ -38,8 +42,6 @@ const JewelryDetailPage = () => {
 			.unwrap()
 			.then((res) => {
 				setJewelry(res);
-				setSelectedMetal(res?.Metals?.[0] || null);
-				setSelectedSideDiamond(res?.SideDiamonds?.[0] || null);
 			});
 	}, []);
 
@@ -58,7 +60,7 @@ const JewelryDetailPage = () => {
 					setJewelrySelected(res);
 				});
 		}
-	}, [selectedMetal, id, size, selectedSideDiamond]);
+	}, [id, selectedMetal, size, selectedSideDiamond]);
 
 	const hideLoginModal = () => setIsLoginModalVisible(false);
 
@@ -100,9 +102,6 @@ const JewelryDetailPage = () => {
 		selectedSideDiamond
 	);
 
-	console.log('selectedMetal', selectedMetal);
-	console.log('filteredGroups', filteredGroups);
-
 	useEffect(() => {
 		if (filteredGroups && size == null) {
 			const availableSize = filteredGroups[0]?.SizeGroups.find(
@@ -137,43 +136,80 @@ const JewelryDetailPage = () => {
 				uniqueFilteredMetals?.push(metal);
 			}
 		});
-
+		setSelectedMetal(uniqueFilteredMetals?.[0] || null);
 		setUniqueMetals(uniqueFilteredMetals);
 	}, [jewelry]);
 
-	console.log('uniqueMetals', uniqueMetals);
+	useEffect(() => {
+		// Lọc MetalGroups có SizeGroups với IsInStock = true và gộp MetalName
+		const filteredSideDiamonds = jewelry?.MetalGroups?.filter((group) =>
+			group?.SizeGroups?.some((size) => size?.IsInStock)
+		).map((group) => {
+			const sideDiamond = jewelry?.SideDiamonds?.find((m) => m?.Id === group?.SideDiamondId);
+			return {
+				...group,
+				OriginalName: group?.Name, // Lưu tên cũ vào OriginalName
+				Quantity: sideDiamond?.Quantity,
+				CaratWeight: sideDiamond?.CaratWeight,
+				Id: group?.SideDiamondId,
+			};
+		});
+
+		// Loại bỏ MetalName (giờ là Name) trùng lặp
+		const uniqueFilteredMetals = [];
+		const seenNames = new Set();
+
+		filteredSideDiamonds?.forEach((sideDiamond) => {
+			if (!seenNames?.has(sideDiamond?.SideDiamondId)) {
+				seenNames?.add(sideDiamond?.SideDiamondId);
+				uniqueFilteredMetals?.push(sideDiamond);
+			}
+		});
+		setSelectedSideDiamond(filteredSideDiamonds?.[0] || null);
+		setUniqueSideDiamonds(uniqueFilteredMetals);
+	}, [jewelry]);
 
 	return (
-		<div className="px-4 md:px-32 md:mt-10">
-			<Steps items={items} current={0} className="w-full md:w-auto" />
+		<>
+			{loading ? (
+				<Loading />
+			) : (
+				<div className="px-4 md:px-32 md:mt-10">
+					<Steps items={items} current={0} className="w-full md:w-auto" />
 
-			<div className="flex flex-col md:flex-row bg-white my-10 md:my-20 rounded-lg shadow-lg">
-				<div className="w-full md:w-1/2 p-4 md:p-6">
-					<ImageGallery diamondJewelry={jewelry} selectedMetal={selectedMetal} />
-					<InformationLeft diamondJewelry={jewelry} selectedMetal={selectedMetal} />
+					<div className="flex flex-col md:flex-row bg-white my-10 md:my-20 rounded-lg shadow-lg">
+						<div className="w-full md:w-1/2 p-4 md:p-6">
+							<ImageGallery diamondJewelry={jewelry} selectedMetal={selectedMetal} />
+							<InformationLeft
+								diamondJewelry={jewelry}
+								selectedMetal={selectedMetal}
+							/>
+						</div>
+
+						<div className="w-full md:w-1/2 p-4 md:p-6">
+							<InformationRight
+								diamondJewelry={jewelry}
+								setSelectedMetal={setSelectedMetal}
+								selectedMetal={selectedMetal}
+								setSize={setSize}
+								size={size}
+								setIsLoginModalVisible={setIsLoginModalVisible}
+								setSelectedSideDiamond={setSelectedSideDiamond}
+								selectedSideDiamond={selectedSideDiamond}
+								filteredGroups={filteredGroups}
+								id={id}
+								jewelrySelected={jewelrySelected}
+								processedMetals={uniqueMetals}
+								uniqueSideDiamonds={uniqueSideDiamonds}
+							/>
+						</div>
+					</div>
+
+					{/* <ProductReviews /> */}
+					<LoginModal isOpen={isLoginModalVisible} onClose={hideLoginModal} />
 				</div>
-
-				<div className="w-full md:w-1/2 p-4 md:p-6">
-					<InformationRight
-						diamondJewelry={jewelry}
-						setSelectedMetal={setSelectedMetal}
-						selectedMetal={selectedMetal}
-						setSize={setSize}
-						size={size}
-						setIsLoginModalVisible={setIsLoginModalVisible}
-						setSelectedSideDiamond={setSelectedSideDiamond}
-						selectedSideDiamond={selectedSideDiamond}
-						filteredGroups={filteredGroups}
-						id={id}
-						jewelrySelected={jewelrySelected}
-						processedMetals={uniqueMetals}
-					/>
-				</div>
-			</div>
-
-			{/* <ProductReviews /> */}
-			<LoginModal isOpen={isLoginModalVisible} onClose={hideLoginModal} />
-		</div>
+			)}
+		</>
 	);
 };
 

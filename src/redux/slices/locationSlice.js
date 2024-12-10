@@ -8,7 +8,6 @@ export const getShopLocation = createAsyncThunk(
 			const response = await api.get(`Configuration/LocationRules`);
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error));
 			return rejectWithValue(error);
 		}
 	}

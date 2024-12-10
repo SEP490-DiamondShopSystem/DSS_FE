@@ -50,11 +50,6 @@ export const InformationRight = ({
 		setStepChoose(1);
 	};
 
-	console.log('size', size);
-	console.log('selectedSideDiamond', selectedSideDiamond);
-	console.log('selectedMetal', selectedMetal);
-	console.log('filteredGroups', filteredGroups);
-
 	return (
 		<div>
 			<div className="border-tintWhite">
@@ -65,18 +60,6 @@ export const InformationRight = ({
 					<Rating rating={0} />
 					<p className="ml-5">477 Đánh Giá</p>
 				</div>
-				{/* <div className="font-semibold my-2">
-					Ngày Giao Hàng Dự Kiến: {convertToVietnamDate(diamondJewelry?.ShippingDate)}
-				</div> */}
-				{/* <div className="flex mb-2">
-					<div className="font-semibold  text-green cursor-pointer">
-						Giao Hàng Miễn Phí Ngay
-					</div>
-
-					<div className="font-semibold pl-2 text-green cursor-pointer">
-						Giao Hàng Miễn Phí Ngay
-					</div>
-				</div> */}
 			</div>
 			<div>
 				<div className="my-5 flex items-center">

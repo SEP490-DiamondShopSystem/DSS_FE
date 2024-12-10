@@ -8,8 +8,6 @@ export const InformationLeft = ({diamondJewelry, selectedMetal}) => {
 		setShowMore(!showMore);
 	};
 
-	console.log('diamondJewelry', diamondJewelry);
-
 	return (
 		<>
 			<div className="bg-gray-50 w-full mt-10 ">

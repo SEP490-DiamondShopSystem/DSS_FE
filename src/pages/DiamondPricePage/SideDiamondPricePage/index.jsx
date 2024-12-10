@@ -7,7 +7,7 @@ import {
 	updateDiamondPrices,
 	deleteDiamondPrice,
 } from '../../../redux/slices/diamondPriceSlice';
-import {getPriceBoardSelector, LoadingDiamondPriceSelector}  from '../../../redux/selectors';
+import {getPriceBoardSelector, LoadingDiamondPriceSelector} from '../../../redux/selectors';
 
 const formatPrice = (price) => {
 	if (price === null || price === undefined) return 'N/A';
@@ -155,7 +155,6 @@ const SideDiamondPricePage = () => {
 	};
 	const handleEditCell = (rowIndex, cellIndex, criteriaId, newValue) => {
 		const numericValue = parseFloat(newValue.replace(/\./g, '').replace(',', '.')) || 0;
-		console.log(`Received CriteriaId: ${criteriaId}`);
 
 		setEditedCells((prev) => {
 			const existingCell = prev.find(
@@ -165,13 +164,9 @@ const SideDiamondPricePage = () => {
 			if (existingCell) {
 				if (newValue.trim() === '' || numericValue === 0) {
 					// Remove the existing cell entry if the new value is empty
-					console.log(`Removing entry for CriteriaId: ${criteriaId} due to empty value`);
 					return prev.filter((cell) => cell !== existingCell);
 				} else {
 					// Update the existing entry
-					console.log(
-						`Updating existing entry with CriteriaId: ${criteriaId}, Price: ${numericValue}`
-					);
 					return prev.map((cell) =>
 						cell === existingCell ? {...existingCell, price: numericValue} : cell
 					);
@@ -185,9 +180,6 @@ const SideDiamondPricePage = () => {
 						rowIndex,
 						cellIndex,
 					};
-					console.log(
-						`Adding new entry with CriteriaId: ${criteriaId}, Price: ${numericValue}`
-					);
 					return [...prev, newEntry];
 				}
 				// If the numeric value is zero or the new value is empty, do not add a new entry
@@ -197,7 +189,6 @@ const SideDiamondPricePage = () => {
 	};
 
 	const handleAddPriceCell = (rowIndex, cellIndex, criteriaId, newValue) => {
-		console.log(`Received CriteriaId: ${criteriaId}, New Value: ${newValue}`);
 		const numericValue = parseFloat(newValue.replace(/\./g, '').replace(',', '.')) || 0;
 
 		setEditedCells((prev) => {
@@ -208,13 +199,9 @@ const SideDiamondPricePage = () => {
 			if (existingCell) {
 				if (newValue.trim() === '' || numericValue === 0) {
 					// Remove the existing cell entry if the new value is empty
-					console.log(`Removing entry for CriteriaId: ${criteriaId} due to empty value`);
 					return prev.filter((cell) => cell !== existingCell);
 				} else {
 					// Update the existing entry
-					console.log(
-						`Updating existing entry with CriteriaId: ${criteriaId}, New Price: ${numericValue}`
-					);
 					return prev.map((cell) =>
 						cell === existingCell ? {...existingCell, price: numericValue} : cell
 					);
@@ -228,9 +215,6 @@ const SideDiamondPricePage = () => {
 						rowIndex,
 						cellIndex,
 					};
-					console.log(
-						`Adding new entry with CriteriaId: ${criteriaId}, Price: ${numericValue}`
-					);
 					return [...prev, newCell];
 				}
 				// If the numeric value is zero or the new value is empty, do not add a new entry
@@ -273,10 +257,6 @@ const SideDiamondPricePage = () => {
 								<input
 									type="number"
 									onChange={(e) => {
-										console.log(
-											'Creating price for cell with CriteriaId:',
-											cell.CriteriaId
-										);
 										handleAddPriceCell(
 											rowIndex,
 											cellIndex,

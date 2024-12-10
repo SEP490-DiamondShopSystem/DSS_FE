@@ -5,6 +5,7 @@ import {useLocation, useNavigate, useParams} from 'react-router-dom';
 import {
 	GetDiamondDetailSelector,
 	GetOrderWarrantySelector,
+	LoadingDiamondSelector,
 	UserInfoSelector,
 } from '../../redux/selectors';
 import {enums} from '../../utils/constant';
@@ -16,6 +17,7 @@ import {getDiamondDetail} from '../../redux/slices/diamondSlice';
 import LoginModal from '../../components/LogModal/LoginModal';
 import {getUserId} from '../../components/GetUserId';
 import {getAllWarranty} from '../../redux/slices/warrantySlice';
+import Loading from '../../components/Loading';
 
 const mapAttributes = (data, attributes) => {
 	return {
@@ -91,6 +93,7 @@ const DiamondDetailPage = () => {
 	const diamondDetail = useSelector(GetDiamondDetailSelector);
 	const userSelector = useSelector(UserInfoSelector);
 	const warrantyList = useSelector(GetOrderWarrantySelector);
+	const loading = useSelector(LoadingDiamondSelector);
 	const local = JSON.parse(localStorage.getItem(`cart_${userId}`));
 
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -207,31 +210,35 @@ const DiamondDetailPage = () => {
 
 	return (
 		<>
-			<div className="mx-6 md:mx-32">
-				<div className="flex flex-col md:flex-row bg-white my-10 md:my-20 rounded-lg shadow-lg">
-					<div className="w-full md:w-1/2 p-6">
-						<ImageGallery diamondId={mappedDiamond.DiamondId} />
-						<InformationLeft
-							diamond={mappedDiamond}
-							diamondId={mappedDiamond.DiamondId}
-						/>
-					</div>
+			{loading ? (
+				<Loading />
+			) : (
+				<div className="mx-6 md:mx-32">
+					<div className="flex flex-col md:flex-row bg-white my-10 md:my-20 rounded-lg shadow-lg">
+						<div className="w-full md:w-1/2 p-6">
+							<ImageGallery diamondId={mappedDiamond.DiamondId} />
+							<InformationLeft
+								diamond={mappedDiamond}
+								diamondId={mappedDiamond.DiamondId}
+							/>
+						</div>
 
-					<div className="w-full md:w-1/2 p-6 md:pr-32">
-						<InformationRight
-							diamondChoice={diamondChoice}
-							toggleSidebar={toggleSidebar}
-							diamond={mappedDiamond}
-							handleAddToCart={handleAddToCart}
-							warrantyDiamond={warrantyDiamond}
-							handleChangeWarranty={handleChangeWarranty}
-							diamondId={diamondId}
-							warrantyDiamondSelected={warrantyDiamondSelected}
-						/>
+						<div className="w-full md:w-1/2 p-6 md:pr-32">
+							<InformationRight
+								diamondChoice={diamondChoice}
+								toggleSidebar={toggleSidebar}
+								diamond={mappedDiamond}
+								handleAddToCart={handleAddToCart}
+								warrantyDiamond={warrantyDiamond}
+								handleChangeWarranty={handleChangeWarranty}
+								diamondId={diamondId}
+								warrantyDiamondSelected={warrantyDiamondSelected}
+							/>
+						</div>
 					</div>
+					<LoginModal isOpen={isLoginModalVisible} onClose={hideLoginModal} />
 				</div>
-				<LoginModal isOpen={isLoginModalVisible} onClose={hideLoginModal} />
-			</div>
+			)}
 		</>
 	);
 };

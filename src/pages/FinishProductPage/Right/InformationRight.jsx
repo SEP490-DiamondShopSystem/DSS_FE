@@ -239,8 +239,6 @@ export const InformationRight = ({
 		</div>
 	);
 
-	console.log('jewelry', jewelry);
-
 	return (
 		<div>
 			<div className="border-tintWhite">
@@ -253,13 +251,12 @@ export const InformationRight = ({
 				{/* <div className="font-semibold my-2">Ngày Giao Hàng Dự Kiến: {metalType?.ship}</div> */}
 
 				<div>
-					{jewelry?.Diamonds?.length > 0 && (
-						<Text strong style={{fontSize: '18px'}}>
-							Kim Cương:
-						</Text>
-					)}
-
 					<div className="mt-5">
+						{jewelry?.Diamonds?.length > 0 && (
+							<Text strong style={{fontSize: '18px'}}>
+								Kim Cương:
+							</Text>
+						)}
 						{jewelry &&
 							jewelry?.Diamonds?.map((diamond) => (
 								<div className="flex flex-wrap justify-between mb-2">
@@ -281,9 +278,52 @@ export const InformationRight = ({
 											</div>
 										</div>
 									</div>
-									{/* <p className="text-primary cursor-pointer">Thay Đổi Kim Cương</p> */}
 								</div>
 							))}
+
+						{jewelry?.SD_Price !== 0 && (
+							<Text strong style={{fontSize: '18px'}}>
+								Kim Cương Tấm:
+							</Text>
+						)}
+
+						{jewelry?.SD_Price !== 0 && (
+							<div className="flex flex-wrap justify-between mb-2">
+								<div className="flex w-full sm:w-auto">
+									<div className="mr-3">
+										<DiamondIcon />
+									</div>
+									<div className="flex-1">
+										<div className="ml-5">
+											<div className="text-ellipsis overflow-hidden">
+												{jewelry?.SideDiamond?.Carat} carat - Số lượng:{' '}
+												{jewelry?.SideDiamond?.Quantity}
+											</div>
+											<div className="text-xl font-semibold">
+												{formatPrice(jewelry?.SD_Price)}
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						)}
+
+						{jewelry?.ND_Price && (
+							<div className="flex flex-wrap justify-between mb-2">
+								<div className="flex w-full sm:w-auto">
+									<div className="mr-3">
+										<FontAwesomeIcon icon={faRing} />
+									</div>
+									<div className="flex-1">
+										<div className="ml-5">
+											<div className="text-xl font-semibold">
+												Giá Vỏ: {formatPrice(jewelry?.ND_Price)}
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						)}
 
 						{/* Warranty Selection */}
 						<div className="flex flex-wrap justify-between mb-2">

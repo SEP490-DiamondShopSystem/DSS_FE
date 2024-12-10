@@ -52,8 +52,6 @@ export const InformationRight = ({
 		setProductWarranty(!showProductWarranty);
 	};
 
-	console.log('diamond', diamond);
-
 	return (
 		<div>
 			<div className="border-tintWhite">

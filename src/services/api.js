@@ -1,10 +1,7 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL;
 const API_DEV = import.meta.env.VITE_API_DEV;
 const API_TUNNELDEV = import.meta.env.VITE_DEVTUNNEL_API;
-
-console.log('API_URL', API_DEV);
 
 // Khởi tạo axios instance
 export const api = axios.create({
@@ -56,7 +53,6 @@ api.interceptors.response.use(
 
 					// Lưu Access Token mới
 					const newAccessToken = refreshResponse.accessToken;
-					console.log('newAccessToken', newAccessToken);
 
 					localStorage.setItem('accessToken', newAccessToken);
 
@@ -70,9 +66,7 @@ api.interceptors.response.use(
 				}
 			}
 		} else if (error.request) {
-			console.log(error.request);
 		} else {
-			console.log('Error', error.message);
 		}
 		return Promise.reject(res);
 	}

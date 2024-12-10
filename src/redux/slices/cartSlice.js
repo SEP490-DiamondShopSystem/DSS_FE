@@ -13,11 +13,9 @@ export const handleCartValidate = createAsyncThunk(
 				userAddress,
 				accountId,
 			});
-			console.log(response);
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.data));
 			return rejectWithValue(error.data);
 		}
 	}

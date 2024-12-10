@@ -27,7 +27,7 @@ const orderStatus = [
 	{icon: <OrderedListOutlined />, name: 'Tổng đơn hàng', status: '', order: 1},
 	{icon: <HourglassOutlined />, name: 'Chờ xử lí', status: '1', order: 3},
 	{icon: <DeliveredProcedureOutlined />, name: 'Đang vận chuyển', status: '6', order: 4},
-	{icon: <CheckCircleOutlined />, name: 'Đã giao', status: '8', order: 10},
+	{icon: <CheckCircleOutlined />, name: 'Thành Công', status: '8', order: 10},
 	{icon: <CloseCircleFilled />, name: 'Đã hủy', status: '4', order: 10},
 ];
 
@@ -188,7 +188,6 @@ const MyOrderPage = () => {
 			.unwrap()
 			.then((res) => {
 				setOrderList(res);
-				console.log('res', res);
 			});
 	}, [pageSize, currentPage, status]);
 
@@ -228,11 +227,7 @@ const MyOrderPage = () => {
 		setOpenInvoice(!openInvoice);
 	};
 
-	console.log('orderList', orderList);
-
 	const handleTransaction = (order) => {
-		console.log('order', order);
-
 		if (order?.paymentMethodId === '2') {
 			dispatch(getUserOrderTransaction(order?.orderId))
 				.unwrap()
@@ -258,14 +253,14 @@ const MyOrderPage = () => {
 				{orderStatus.map((statusItem) => (
 					<div
 						key={statusItem.status}
-						className={`flex flex-col sm:flex-row items-center justify-center sm:justify-around shadow-xl py-2 sm:py-3 px-4 sm:px-12 border-gray-300 hover:border-black w-full sm:w-auto ${
+						className={`flex flex-col sm:flex-row items-center justify-center sm:justify-start shadow-xl py-2 sm:py-3 px-4 sm:px-12 border-gray hover:border-black w-full sm:w-auto ${
 							status === statusItem.status ? 'bg-primary' : 'bg-white'
 						} rounded-lg cursor-pointer border ${
 							status === statusItem.status ? 'border-black' : 'border-white'
 						} hover:border-black`}
 						onClick={() => handleStatusClick(statusItem.status)}
 					>
-						<div className="p-3 w-16 sm:w-20 text-center">{statusItem.icon}</div>
+						{/* <div className="p-3 w-16 sm:w-20 text-center">{statusItem.icon}</div> */}
 						<div className="sm:mt-0 sm:ml-5 text-sm sm:text-base text-center">
 							{statusItem.name}
 						</div>

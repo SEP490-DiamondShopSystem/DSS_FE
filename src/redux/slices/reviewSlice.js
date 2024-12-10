@@ -4,8 +4,6 @@ import {api} from '../../services/api';
 export const handleReviewOrder = createAsyncThunk(
 	'reviewSlice/handleReviewOrder',
 	async (body, {rejectWithValue}) => {
-		console.log('body', body);
-
 		try {
 			const {Content, Files, StarRating, JewelryId} = body;
 			const formData = new FormData();
@@ -35,8 +33,6 @@ export const handleReviewOrder = createAsyncThunk(
 export const getAllJewelryModelReview = createAsyncThunk(
 	'reviewSlice/getAllJewelryModelReview',
 	async (params, {rejectWithValue}) => {
-		console.log('params', params);
-
 		try {
 			const {CurrentPage, PageSize, MetalId, ModelId, OrderByOldest} = params;
 			let url = '/JewelryReview/All';
@@ -55,11 +51,9 @@ export const getAllJewelryModelReview = createAsyncThunk(
 			}
 
 			const response = await api.get(url);
-			console.log(response);
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.data));
 			return rejectWithValue(error.data);
 		}
 	}
@@ -69,10 +63,35 @@ export const deleteReviewAction = createAsyncThunk(
 	'reviewSlice/deleteReviewAction',
 	async (JewelryId, {rejectWithValue}) => {
 		try {
-			const response = await api.delete(`/JewelryReview/Remove?JewelryId=${JewelryId}`);
+			const response = await api.delete(`/JewelryReview/Delete?JewelryId=${JewelryId}`);
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error));
+			return rejectWithValue(error);
+		}
+	}
+);
+
+export const getJewelryNoDiamond = createAsyncThunk(
+	'jewelrySlice/getJewelryNoDiamond',
+	async (params, {rejectWithValue}) => {
+		try {
+			const {ModelId, MetalId, SizeId, SideDiamondOptId} = params;
+			let url = '/Jewelry/Available';
+			const queryParams = new URLSearchParams();
+
+			if (ModelId) queryParams.append('ModelId', ModelId);
+			if (MetalId) queryParams.append('MetalId', MetalId);
+			if (SizeId) queryParams.append('SizeId', SizeId);
+			if (SideDiamondOptId) queryParams.append('SideDiamondOptId', SideDiamondOptId);
+
+			if (queryParams.toString()) {
+				url += `?${queryParams.toString()}`;
+			}
+
+			const response = await api.get(url);
+
+			return response;
+		} catch (error) {
 			return rejectWithValue(error);
 		}
 	}
@@ -84,6 +103,7 @@ export const reviewSlice = createSlice({
 		reviews: null,
 		review: null,
 		loading: false,
+		jewelryDetailThumbnail: null,
 		error: null,
 	},
 	reducers: {
@@ -128,6 +148,18 @@ export const reviewSlice = createSlice({
 				state.review = action.payload;
 			})
 			.addCase(deleteReviewAction.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload;
+			})
+			.addCase(getJewelryNoDiamond.pending, (state) => {
+				state.loading = true;
+				state.jewelryDetailThumbnail = null;
+			})
+			.addCase(getJewelryNoDiamond.fulfilled, (state, action) => {
+				state.loading = false;
+				state.jewelryDetailThumbnail = action.payload;
+			})
+			.addCase(getJewelryNoDiamond.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload;
 			});

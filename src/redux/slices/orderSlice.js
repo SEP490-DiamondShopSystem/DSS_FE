@@ -9,11 +9,9 @@ export const handleCheckoutOrder = createAsyncThunk(
 				billingDetail,
 				createOrderInfo,
 			});
-			console.log(response);
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error));
 			return rejectWithValue(error);
 		}
 	}
@@ -24,11 +22,9 @@ export const handleOrderCancel = createAsyncThunk(
 	async ({orderId, reason}, {rejectWithValue}) => {
 		try {
 			const response = await api.put(`/Order/Cancel?orderId=${orderId}&reason=${reason}`);
-			console.log(response);
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error));
 			return rejectWithValue(error);
 		}
 	}
@@ -55,7 +51,6 @@ export const getUserOrder = createAsyncThunk(
 			const data = await api.get(url);
 			return data;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error));
 			return rejectWithValue(error);
 		}
 	}
@@ -66,11 +61,9 @@ export const getUserOrderDetail = createAsyncThunk(
 	async (orderId, {rejectWithValue}) => {
 		try {
 			const response = await api.get(`/Order/${orderId}`);
-			console.log(response);
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error));
 			return rejectWithValue(error);
 		}
 	}
@@ -81,11 +74,9 @@ export const getUserOrderTransaction = createAsyncThunk(
 	async (orderId, {rejectWithValue}) => {
 		try {
 			const response = await api.get(`/Order/PaymentLink/${orderId}`);
-			console.log(response);
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error));
 			return rejectWithValue(error);
 		}
 	}
@@ -96,11 +87,9 @@ export const getOrderLog = createAsyncThunk(
 	async (orderId, {rejectWithValue}) => {
 		try {
 			const response = await api.get(`/Order/Log/${orderId}`);
-			console.log(response);
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error));
 			return rejectWithValue(error);
 		}
 	}
@@ -114,7 +103,6 @@ export const getOrderFiles = createAsyncThunk(
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error));
 			return rejectWithValue(error);
 		}
 	}
@@ -128,7 +116,6 @@ export const getOrderChidLog = createAsyncThunk(
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error));
 			return rejectWithValue(error);
 		}
 	}

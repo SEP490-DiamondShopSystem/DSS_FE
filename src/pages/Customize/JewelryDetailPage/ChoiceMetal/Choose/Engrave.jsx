@@ -116,7 +116,6 @@ export const Engrave = ({
 			});
 
 			if (response.ok) {
-				console.log('Image uploaded successfully');
 				setIsModalOpen(false);
 			} else {
 				console.error('Error uploading image:', response.statusText);
@@ -134,9 +133,6 @@ export const Engrave = ({
 	const handleTextChange = (e) => {
 		setTextContent(e.target.value);
 	};
-
-	console.log('textValue', textValue);
-	console.log('textContent', textContent);
 
 	return (
 		<div className="mt-10">

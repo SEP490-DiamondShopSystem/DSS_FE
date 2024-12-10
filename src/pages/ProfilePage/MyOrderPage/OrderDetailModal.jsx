@@ -64,8 +64,6 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 	const [statusOrder, setStatusOrder] = useState();
 	const [cancelled, setCancelled] = useState();
 
-	console.log('order ', order);
-
 	const data = order?.Items?.map((item, i) => ({
 		key: i,
 		orderDate: order?.CreatedDate || 'N/A',
@@ -173,7 +171,6 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 						align: 'center',
 						render: (_, record) => {
 							const review = record?.Review;
-							console.log('record', record);
 
 							return (
 								<div className="flex justify-center">
@@ -236,7 +233,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 					setStatusOrder(res?.Status);
 				})
 				.catch((error) => {
-					message.error(error.title || error.data.title);
+					message.error(error.detail || error.data.detail);
 				});
 		}
 	}, [selectedOrder, dispatch, statusOrder, reviewDetail, transfer, cancelled]);
@@ -262,8 +259,6 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 	};
 
 	const handleDeleteReview = () => {
-		console.log('reviewContent', reviewContent);
-
 		if (reviewContent) {
 			dispatch(deleteReviewAction(reviewContent.Id))
 				.unwrap()
@@ -274,7 +269,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 					setIsModalVisible(false);
 				})
 				.catch((error) => {
-					message.error(error?.title || error?.data?.title);
+					message.error(error?.detail || error?.data?.detail);
 				});
 		}
 	};
@@ -284,8 +279,6 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 	};
 
 	const handleReviewRequest = (id) => {
-		console.log('jewelryId', id);
-
 		setJewelryId(id);
 		setIsReviewModalVisible(true);
 	};
@@ -304,7 +297,6 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 	};
 
 	const submitReviewRequest = (values) => {
-		console.log('values', values);
 		const {Content, StarRating} = values;
 
 		dispatch(

@@ -34,8 +34,6 @@ export const Rating = ({rating}) => {
 };
 
 export const StarRating = ({rating}) => {
-	console.log('rating', rating);
-
 	return (
 		<>
 			<Rate allowHalf value={rating} disabled />

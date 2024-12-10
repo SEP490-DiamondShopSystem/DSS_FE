@@ -29,8 +29,6 @@ export const TransactionDetails = ({transactions, order}) => {
 	const [isEvidenceVisible, setIsEvidenceVisible] = useState(false);
 	const [fileList, setFileList] = useState([]);
 
-	console.log('transactions', transactions);
-
 	const toggleEvidenceVisibility = () => {
 		setIsEvidenceVisible((prev) => !prev);
 	};

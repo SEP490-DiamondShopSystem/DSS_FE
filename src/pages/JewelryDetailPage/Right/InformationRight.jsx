@@ -12,7 +12,6 @@ import {convertToVietnamDate, formatPrice, Rating} from '../../../utils';
 import JewelryPopup from '../Popup/ProductReviews';
 import {getAllJewelryModelReview} from '../../../redux/slices/reviewSlice';
 import ProductReviews from '../Popup/ProductReviews';
-import {getJewelryNoDiamond} from '../../../redux/slices/jewelrySlice';
 
 const {Option} = Select;
 
@@ -29,6 +28,7 @@ export const InformationRight = ({
 	id,
 	jewelrySelected,
 	processedMetals,
+	uniqueSideDiamonds,
 }) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
@@ -104,7 +104,6 @@ export const InformationRight = ({
 			filteredGroups,
 		};
 
-		console.log('jewelryModel', jewelryModel);
 		if (diamondJewelry?.MainDiamonds?.length > 0) {
 			navigate(`/diamond-choose/search`, {state: {jewelryModel}});
 		} else {
@@ -119,7 +118,8 @@ export const InformationRight = ({
 
 	const someSize = filteredGroups[0]?.SizeGroups?.some((size) => size?.IsInStock);
 
-	console.log('someSize', someSize);
+	console.log('filteredGroups', filteredGroups);
+	console.log('jewelrySelected', jewelrySelected);
 
 	return (
 		<div>
@@ -176,15 +176,23 @@ export const InformationRight = ({
 						</div>
 						<div>
 							<div className="flex">
-								{diamondJewelry?.SideDiamonds?.map((diamond, i) => (
+								{uniqueSideDiamonds?.map((diamond, i) => (
 									<div
 										key={i}
 										className={`
 								${
+									selectedSideDiamond.Quantity === diamond?.Quantity &&
 									selectedSideDiamond.CaratWeight === diamond?.CaratWeight
-										? 'border-2 border-black'
-										: 'border-2 border-white'
+										? 'border-2 border-black' // Cả Quantity và CaratWeight giống nhau
+										: selectedSideDiamond.Quantity !== diamond?.Quantity &&
+										  selectedSideDiamond.CaratWeight === diamond?.CaratWeight
+										? 'border-2 border-black' // Quantity khác nhau nhưng CaratWeight giống nhau
+										: selectedSideDiamond.Quantity === diamond?.Quantity &&
+										  selectedSideDiamond.CaratWeight !== diamond?.CaratWeight
+										? 'border-2 border-black' // Quantity giống nhau nhưng CaratWeight khác nhau
+										: 'border-2 border-white' // Cả Quantity và CaratWeight đều khác nhau
 								}
+
 						my-2 py-2 px-4 rounded-lg cursor-pointer hover:bg-offWhite`}
 										onClick={() => handleSelectSideDiamond(diamond)} // Save selected diamond on click
 									>

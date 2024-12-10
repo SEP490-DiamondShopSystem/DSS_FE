@@ -9,7 +9,6 @@ export const fetchDistances = createAsyncThunk(
 			const response = await api.get('/Location/Province');
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.data));
 			return rejectWithValue(error.data);
 		}
 	}
@@ -22,7 +21,6 @@ export const fetchWard = createAsyncThunk(
 			const response = await api.get(`/Location/Ward/${districtId}`);
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.data));
 			return rejectWithValue(error.data);
 		}
 	}
@@ -31,13 +29,10 @@ export const fetchWard = createAsyncThunk(
 export const fetchDistrict = createAsyncThunk(
 	'distances/fetchDistrict',
 	async (provinceId, {rejectWithValue}) => {
-		console.log('provinceId', provinceId);
-
 		try {
 			const response = await api.get(`/Location/District/${provinceId}`);
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.data));
 			return rejectWithValue(error.data);
 		}
 	}
@@ -58,11 +53,9 @@ export const handleCalculateLocation = createAsyncThunk(
 					'Content-Type': 'multipart/form-data',
 				},
 			});
-			console.log(response);
 
 			return response;
 		} catch (error) {
-			console.log('Error: ', JSON.stringify(error.data));
 			return rejectWithValue(error.data);
 		}
 	}

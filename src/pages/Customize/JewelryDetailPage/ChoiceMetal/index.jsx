@@ -55,12 +55,8 @@ export const ChoiceMetal = ({
 	};
 
 	const handleSideDiamondChange = (e) => {
-		console.log('side diamond', e.target.value);
-
 		setSelectedSideDiamond(e.target.value);
 	};
-
-	console.log('jewelryModel', diamondJewelry);
 
 	const handleNextStep = () => {
 		if (diamondJewelry?.MainDiamonds.length === 0) {
@@ -96,7 +92,7 @@ export const ChoiceMetal = ({
 					setStepChoose(3);
 				})
 				.catch((error) => {
-					message.error(error.data.title || error.title || error.detail);
+					message.error(error.detail || error.data.detail);
 				});
 		} else {
 			setStepChoose((prev) => prev + 1);
@@ -113,9 +109,6 @@ export const ChoiceMetal = ({
 		setImageData(null);
 		setSelectedMetal('');
 	};
-
-	console.log('diamondJewelry', diamondJewelry);
-	console.log('selectedMetal', selectedMetal);
 
 	return (
 		<div className="my-10 mx-5">

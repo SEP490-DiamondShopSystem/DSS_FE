@@ -3361,3 +3361,35 @@ video {
 		width: 100px;
 	}
 }
+
+.max-w-32 {
+	max-width: 8rem /* 128px */;
+}
+
+.max-w-52 {
+	max-width: 13rem /* 208px */;
+}
+
+@media (min-width: 768px) {
+	.md\:w-96 {
+		width: 24rem /* 384px */;
+	}
+}
+
+@media (min-width: 768px) {
+	.md\:min-w-96 {
+		min-width: 24rem /* 384px */;
+	}
+}
+
+.min-w-full {
+	min-width: 100%;
+}
+
+.max-w-full {
+	max-width: 100%;
+}
+
+.w-auto {
+	width: auto;
+}
