@@ -423,6 +423,19 @@ const CheckoutPage = () => {
 		});
 	};
 	const onFinish = () => {
+		if (!userInfo?.phone) {
+			message.error('Vui lòng nhập số điện thoại');
+			return;
+		}
+		if (!paymentForm) {
+			message.error('Vui lòng chọn hình thức thanh toán');
+			return;
+		}
+		if (!paymentMethod) {
+			message.error('Vui lòng chọn phương thức thanh toán');
+			return;
+		}
+
 		const orderItemRequestDtos = cartList?.Products?.map((product) => {
 			return {
 				jewelryId: product?.Jewelry?.Id || null,
@@ -482,7 +495,7 @@ const CheckoutPage = () => {
 					showOrderSuccessModal();
 				})
 				.catch((error) => {
-					message.error(error?.data?.title || error?.title);
+					message.error(error?.detail);
 				});
 		} else {
 			dispatch(handleCheckoutOrder({createOrderInfo, billingDetail}))
@@ -492,7 +505,7 @@ const CheckoutPage = () => {
 					showOrderSuccessModal();
 				})
 				.catch((error) => {
-					message.error(error?.data?.title || error?.detail);
+					message.error(error?.detail);
 				});
 		}
 	};
@@ -960,6 +973,12 @@ const CheckoutPage = () => {
 															{formatPrice(item.JewelryPrice)}
 														</span>
 													</div>
+													{/* <div className="text-gray-700 text-sm mr-1">
+														SKU:
+														<span className="text-gray-900 font-semibold py-3">
+															{item.SerialCode}
+														</span>
+													</div> */}
 													{item.CategoryName === 'Ring' && (
 														<div className="flex items-center mt-2">
 															<label className="mr-2 text-gray-700">

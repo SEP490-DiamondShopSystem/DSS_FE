@@ -9,6 +9,7 @@ import {AppRouters} from './routes/AppRoutes';
 
 function App() {
 	const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+	const [collapse, setCollapsed] = useState(false);
 	// Responsive handling
 	useEffect(() => {
 		const handleResize = () => {
@@ -29,8 +30,8 @@ function App() {
 		// <section className="font-body">
 		<BrowserRouter>
 			<Header />
-			<div style={isMobile ? { paddingTop: '4rem' } : { padding: '0' }}>
-			<AppRouters />
+			<div style={isMobile ? {paddingTop: '4rem'} : {padding: '0'}}>
+				<AppRouters />
 
 				<ToastContainer limit={3} />
 			</div>

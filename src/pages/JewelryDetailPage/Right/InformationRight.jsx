@@ -118,8 +118,7 @@ export const InformationRight = ({
 
 	const someSize = filteredGroups[0]?.SizeGroups?.some((size) => size?.IsInStock);
 
-	console.log('filteredGroups', filteredGroups);
-	console.log('jewelrySelected', jewelrySelected);
+	console.log('selectedSideDiamond', selectedSideDiamond);
 
 	return (
 		<div>
@@ -163,7 +162,7 @@ export const InformationRight = ({
 						))}
 					</div>
 				</div>
-				{selectedSideDiamond !== null && (
+				{selectedSideDiamond && selectedSideDiamond?.SideDiamondId !== null && (
 					<>
 						<div className="my-5 flex items-center">
 							<div className="font-semibold">Kim Cương Tấm</div>

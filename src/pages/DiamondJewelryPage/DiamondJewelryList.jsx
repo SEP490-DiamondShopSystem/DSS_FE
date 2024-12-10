@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Image} from 'antd';
+import {Image, Rate} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -8,7 +8,7 @@ import {FilterDiamondJewelry} from '../../components/Filter/Filter';
 import Loading from '../../components/Loading';
 import {GetAllJewelryModelSelector, LoadingJewelrySelector} from '../../redux/selectors';
 import {getAllJewelryModel} from '../../redux/slices/jewelrySlice';
-import {formatPrice, Rating} from '../../utils';
+import {formatPrice, Rating, StarRating} from '../../utils';
 import debounce from 'lodash/debounce';
 
 export const DiamondJewelryList = () => {
@@ -147,13 +147,13 @@ export const DiamondJewelryList = () => {
 												</div>
 												<div className="flex items-center mt-2">
 													<p className="text-sm">
-														Giá Vỏ: {formatPrice(jewelry.MinPrice)} -{' '}
+														Giá Mẫu: {formatPrice(jewelry.MinPrice)} -{' '}
 														{formatPrice(jewelry.MaxPrice)}
 													</p>
 												</div>
 												<div className="flex items-center mt-2">
 													<p className="mr-3">
-														<Rating rating={jewelry?.StarRating} />
+														<StarRating rating={jewelry?.StarRating} />
 													</p>
 													<p>{jewelry.ReviewCount}</p>
 												</div>

@@ -10,18 +10,21 @@ export const ImageGallery = ({diamondId}) => {
 
 	useEffect(() => {
 		if (diamondId) {
-			dispatch(fetchDiamondFiles(diamondId)).then((response) => {
-				if (response.payload && response.payload.BaseImages) {
-					// Filter only images with a valid ContentType (e.g., 'image/jpeg', 'image/png')
-					const validImages = response.payload.BaseImages.filter((image) =>
-						image.ContentType.startsWith('image/')
-					);
-					setImageFiles(validImages);
-					if (validImages.length > 0) {
-						setCurrentImageIndex(0); // Start with the first image
+			dispatch(fetchDiamondFiles(diamondId))
+				.unwrap()
+				.then((response) => {
+					if (response && response.BaseImages) {
+						// Filter only images with a valid ContentType (e.g., 'image/jpeg', 'image/png')
+						const validImages = response.BaseImages.filter((image) =>
+							image.ContentType.startsWith('image/')
+						);
+						setImageFiles(validImages);
+						if (validImages.length > 0) {
+							setCurrentImageIndex(0); // Start with the first image
+						}
 					}
-				}
-			});
+				})
+				.catch((error) => {});
 		}
 	}, [diamondId, dispatch]);
 

@@ -68,10 +68,6 @@ const JewelryCustomDetail = () => {
 	useEffect(() => {
 		if (jewelryDetail) {
 			setJewelry(jewelryDetail);
-			setSelectedSideDiamond(jewelryDetail?.SideDiamonds[0]?.Id);
-		}
-		if (metals) {
-			setSelectedMetal(findMetals[0]);
 		}
 	}, [jewelryDetail, metals]);
 

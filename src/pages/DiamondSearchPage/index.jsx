@@ -155,6 +155,7 @@ const DiamondSearchPage = () => {
 				caratFrom: filters?.carat?.minCarat,
 				caratTo: filters?.carat?.maxCarat,
 				isLab: !changeDiamond,
+				status: 1,
 			})
 		)
 			.unwrap()

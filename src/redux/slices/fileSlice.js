@@ -9,7 +9,7 @@ export const fetchDiamondFiles = createAsyncThunk(
 			const response = await api.get(`/Diamond/${diamondId}/Files`);
 			return response;
 		} catch (error) {
-			return rejectWithValue(error.response || error.message);
+			// return rejectWithValue(error);
 		}
 	}
 );
@@ -20,7 +20,7 @@ export const fetchJewelryModelFiles = createAsyncThunk(
 			const response = await api.get(`/JewelryModelFiles/${jewelryModelId}/Files`);
 			return response;
 		} catch (error) {
-			return rejectWithValue(error.response || error.message);
+			return rejectWithValue(error);
 		}
 	}
 );

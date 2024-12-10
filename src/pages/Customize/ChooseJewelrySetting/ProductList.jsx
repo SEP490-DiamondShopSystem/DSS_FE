@@ -103,14 +103,10 @@ export const ProductList = () => {
 									</div>
 									<div className="mx-5 my-5">
 										<p>{jewelry.Name}</p>
-										<div className="flex mt-2">
-											<p className="line-through" style={{color: '#b0b0b0'}}>
-												{jewelry.price}
-											</p>
-											<p className="ml-5 " style={{color: '#707070'}}>
-												{jewelry.discountPrice}
-											</p>
-										</div>
+
+										<p className="mt-2" style={{color: '#b0b0b0'}}>
+											Trang Sức {jewelry.MainDiamondCount} Kim Cương
+										</p>
 									</div>
 								</div>
 							</div>

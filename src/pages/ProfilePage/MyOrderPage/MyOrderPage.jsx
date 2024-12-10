@@ -20,7 +20,6 @@ import {
 	getOrderPaymentStatus,
 	getOrderStatus,
 } from '../../../utils/index';
-import {OrderDetailModal} from './OrderDetailModal';
 import {OrderInvoiceModal} from './OrderInvoiceModal';
 
 const orderStatus = [
@@ -29,6 +28,7 @@ const orderStatus = [
 	{icon: <DeliveredProcedureOutlined />, name: 'Đang vận chuyển', status: '6', order: 4},
 	{icon: <CheckCircleOutlined />, name: 'Thành Công', status: '8', order: 10},
 	{icon: <CloseCircleFilled />, name: 'Đã hủy', status: '4', order: 10},
+	{icon: <CloseCircleFilled />, name: 'Từ chối', status: '3', order: 10},
 ];
 
 const MyOrderPage = () => {
@@ -139,7 +139,7 @@ const MyOrderPage = () => {
 						<Button
 							type="text"
 							className="p-2 border border-primary rounded-lg hover:bg-primary hover:text-white transition-colors duration-300 mr-2"
-							onClick={() => toggleDetailModal(record)}
+							onClick={() => navigate(`/my-orders/${record?.orderId}`)}
 						>
 							<EyeFilled />
 						</Button>
@@ -249,11 +249,11 @@ const MyOrderPage = () => {
 				<title>Đơn Hàng Của Tôi</title>
 			</Helmet>
 			{isLgScreen && <div>Đơn hàng của tôi</div>}
-			<div className="flex flex-wrap items-center font-medium justify-center sm:justify-between mt-10 gap-5">
+			<div className="flex flex-wrap items-center font-medium mt-10">
 				{orderStatus.map((statusItem) => (
 					<div
 						key={statusItem.status}
-						className={`flex flex-col sm:flex-row items-center justify-center sm:justify-start shadow-xl py-2 sm:py-3 px-4 sm:px-12 border-gray hover:border-black w-full sm:w-auto ${
+						className={`flex flex-col mr-2 sm:flex-row items-center justify-center sm:justify-start shadow-xl py-2 sm:py-3 px-4 sm:px-12 border-gray hover:border-black w-full sm:w-auto ${
 							status === statusItem.status ? 'bg-primary' : 'bg-white'
 						} rounded-lg cursor-pointer border ${
 							status === statusItem.status ? 'border-black' : 'border-white'
@@ -261,7 +261,7 @@ const MyOrderPage = () => {
 						onClick={() => handleStatusClick(statusItem.status)}
 					>
 						{/* <div className="p-3 w-16 sm:w-20 text-center">{statusItem.icon}</div> */}
-						<div className="sm:mt-0 sm:ml-5 text-sm sm:text-base text-center">
+						<div className="sm:mt-0 text-sm sm:text-base text-center">
 							{statusItem.name}
 						</div>
 					</div>
@@ -291,11 +291,11 @@ const MyOrderPage = () => {
 				/>
 			</div>
 
-			<OrderDetailModal
+			{/* <OrderDetailModal
 				toggleDetailModal={toggleDetailModal}
 				openDetail={openDetail}
 				selectedOrder={selectedOrder}
-			/>
+			/> */}
 
 			<OrderInvoiceModal toggleInvoiceModal={toggleInvoiceModal} openInvoice={openInvoice} />
 		</div>

@@ -22,7 +22,7 @@ import {
 } from '../../utils/constant';
 import {formatPrice} from '../../utils';
 
-export const FilterDiamond = ({filters, setFilters, handleReset, diamondForFilter, findShape}) => {
+export const FilterDiamond = ({filters, setFilters, handleReset, findShape}) => {
 	const [collapsed, setCollapsed] = useState(false); // State to toggle collapse
 	const toggleCollapse = () => {
 		setCollapsed((prev) => !prev);
@@ -579,10 +579,6 @@ export const FilterDiamondJewelry = ({handleFilter, setFilters, filters, handleR
 	const filterOptions = {
 		Type: categories?.map((category) => ({id: category.Name, name: category.Name})),
 		Metal: metals?.map((metal) => ({id: metal.Id, name: metal.Name})),
-		IsRhodiumFinished: [
-			{id: true, name: 'Có'},
-			{id: false, name: 'Không'},
-		],
 		IsEngravable: [
 			{id: true, name: 'Có'},
 			{id: false, name: 'Không'},
@@ -625,7 +621,7 @@ export const FilterDiamondJewelry = ({handleFilter, setFilters, filters, handleR
 
 			{/* Price Range Slider */}
 			<div className="ml-10 min-w-44 md:min-w-96 sm:ml-0 sm:mt-4">
-				<p className="mb-4">Giá:</p>
+				<p className="mb-4">Giá Mẫu:</p>
 				<div className="flex">
 					<Slider
 						range

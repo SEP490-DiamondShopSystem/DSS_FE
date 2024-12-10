@@ -12,6 +12,8 @@ import {
 } from '../../redux/slices/customizeSlice';
 import {enums} from '../../utils/constant';
 import {OrderStatus} from './OrderStatus';
+import {formatPrice} from '../../utils';
+import InformationUser from './InformationUser';
 
 const {Title, Text} = Typography;
 
@@ -248,6 +250,13 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 			key: 'IsLabGrown',
 			render: (shape) => (shape ? 'Nhân Tạo' : 'Tự Nhiên'),
 		},
+		{
+			title: 'Giá',
+			dataIndex: 'TruePrice',
+			key: 'TruePrice',
+			align: 'center',
+			render: (TruePrice) => formatPrice(TruePrice),
+		},
 	];
 
 	const handleExpand = (expanded, record) => {
@@ -393,9 +402,14 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 						orderStatus={orderStatus}
 						orderDetail={orderDetail}
 					/>
-
+					<div className="my-5">
+						<Title level={3} className="mb-5">
+							Thông Tin Khách Hàng
+						</Title>
+						<InformationUser order={order} />
+					</div>
 					<div className="flex justify-between">
-						<h1 className="text-xl font-semibold">Chi tiết đơn thiết kế</h1>
+						<Title level={3}>Chi tiết đơn thiết kế</Title>
 						{orderStatus === 1 && (
 							<Space>
 								<Button danger className="" onClick={handleCancelOrder}>
