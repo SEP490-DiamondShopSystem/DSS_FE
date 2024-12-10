@@ -343,9 +343,9 @@ export const enums = {
 		Đã_Có_Giá: 2,
 		Đang_Yêu_Cầu: 3,
 		Chấp_Nhận: 4,
-		Shop_Từ_Chối: 5,
-		Customer_Từ_Chối: 6,
-		Customer_Hủy_Đơn: 7,
+		Cửa_Hàng_Từ_Chối: 5,
+		Khách_Hàng_Từ_Chối: 6,
+		Khách_Hàng_Hủy_Đơn: 7,
 	},
 	AccountRoleType: {
 		Customer: 0,

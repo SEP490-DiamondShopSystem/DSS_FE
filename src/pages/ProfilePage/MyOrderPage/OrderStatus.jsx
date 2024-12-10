@@ -147,7 +147,7 @@ export const OrderStatus = ({orderStatus, order}) => {
 				currentStep === 6 && orderStatus === 7
 					? 'Giao đơn hàng thất bại.'
 					: currentStep === 5
-					? 'Khách đang nhận hàng.'
+					? 'Đơn hàng đang vận chuyển.'
 					: indexCancelled === 13 || indexCancelled === 5
 					? `Đơn hàng đã bị hủy. Lý Do: ${order?.CancelledReason}`
 					: indexRejected === 20 || indexRejected === 5 || indexRejected === 3

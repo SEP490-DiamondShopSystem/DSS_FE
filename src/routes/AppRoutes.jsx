@@ -47,6 +47,7 @@ import TermOfServices from '../components/TermOfServices';
 import ShoppingGuide from '../pages/PortalPage/ShoppingGuide';
 import WarrantyPolicyPage from '../pages/PortalPage/WarrantyPolicy';
 import LoyalCustomerPolicyPage from '../pages/PortalPage/CustomerPolicy';
+import {OrderDetailModal} from '../pages/ProfilePage/MyOrderPage/OrderDetailModal';
 export const AppRouters = () => {
 	return (
 		<>
@@ -219,6 +220,14 @@ export const AppRouters = () => {
 					element={
 						<PrivateRoute roles={'customer'}>
 							<OrderPage />
+						</PrivateRoute>
+					}
+				/>
+				<Route
+					path="/my-orders/:id"
+					element={
+						<PrivateRoute roles={'customer'}>
+							<OrderDetailModal />
 						</PrivateRoute>
 					}
 				/>

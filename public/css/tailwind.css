@@ -3393,3 +3393,8 @@ video {
 .w-auto {
 	width: auto;
 }
+
+.border-gray {
+	--tw-border-opacity: 1;
+	border-color: rgb(112 112 112 / var(--tw-border-opacity, 1)) /* #707070 */;
+}

@@ -28,10 +28,11 @@ const orderStatus = [
 	{icon: <OrderedListOutlined />, name: 'Tổng đơn thiết kế', status: '', order: 1},
 	{icon: <HourglassOutlined />, name: 'Đơn chờ xử lí', status: '1', order: 2},
 	{icon: <HourglassOutlined />, name: 'Đã có giá', status: '2', order: 2},
-	// {icon: <CheckCircleOutlined />, name: 'Đã đồng ý', status: '3', order: 3},
-	{icon: <DeliveredProcedureOutlined />, name: 'Tạo Đơn Đặt Hàng', status: '4', order: 4},
-	// {icon: <CloseCircleFilled />, name: 'Shop Từ Chối', status: '5', order: 5},
-	// {icon: <CloseCircleOutlined />, name: 'Hủy Đơn', status: '6', order: 6},
+	{icon: <CheckCircleOutlined />, name: 'Đang yêu cầu', status: '3', order: 3},
+	{icon: <DeliveredProcedureOutlined />, name: 'Chấp nhận', status: '4', order: 4},
+	{icon: <CloseCircleFilled />, name: 'Cửa hàng từ chối', status: '5', order: 5},
+	{icon: <CloseCircleOutlined />, name: 'Khách hàng từ chối', status: '6', order: 6},
+	{icon: <CloseCircleOutlined />, name: 'Khách hàng hủy đơn', status: '7', order: 6},
 ];
 
 const RequestCustomize = () => {
@@ -123,18 +124,21 @@ const RequestCustomize = () => {
 			title: 'Mã Yêu Cầu',
 			dataIndex: 'RequestCode',
 			key: 'requestCode',
+			align: 'center',
 			render: (text) => text,
 		},
 		{
 			title: 'Ngày Tạo Đơn',
 			dataIndex: 'CreatedDate',
 			key: 'createdAt',
+			align: 'center',
 			render: (text) => text,
 		},
 		{
 			title: 'Ngày Hết Hạn',
 			dataIndex: 'ExpiredDate',
 			key: 'expiredDate',
+			align: 'center',
 			responsive: ['md'],
 			render: (text) => text,
 		},
@@ -142,6 +146,7 @@ const RequestCustomize = () => {
 			title: 'Ghi Chú',
 			dataIndex: 'Note',
 			key: 'Note',
+			align: 'center',
 			render: (text) => text,
 			responsive: ['md'],
 		},
@@ -149,6 +154,7 @@ const RequestCustomize = () => {
 			title: 'Trạng Thái',
 			dataIndex: 'Status',
 			key: 'status',
+			align: 'center',
 			render: (status) => {
 				const statusLabel = reversedEnums.Status[status] || 'Unknown';
 				const color = statusColors[status] || 'default';
@@ -158,6 +164,7 @@ const RequestCustomize = () => {
 		{
 			title: '',
 			key: 'actions',
+			align: 'center',
 			render: (record) => (
 				<Space className="">
 					<Tooltip title={'Xem Chi Tiết'}>
@@ -187,21 +194,18 @@ const RequestCustomize = () => {
 						Danh Sách Đơn Thiết Kế Đã Gửi
 					</span>
 
-					<div className="flex flex-wrap items-center font-medium justify-between mt-10 gap-5">
+					<div className="flex flex-wrap items-center font-medium mt-10 gap-5">
 						{orderStatus.map((statusItem) => (
 							<div
 								key={statusItem.status}
-								className={`flex flex-col sm:flex-row items-center justify-center sm:justify-around shadow-xl py-2 sm:py-3 px-4 sm:px-12 border-gray-300 hover:border-black w-full sm:w-auto ${
+								className={`flex flex-col sm:flex-row items-center justify-center sm:justify-around shadow-xl py-2 sm:py-3 px-4 sm:px-12 border-gray hover:border-black w-full sm:w-auto ${
 									status === statusItem.status ? 'bg-primary' : 'bg-white'
 								} rounded-lg cursor-pointer border ${
 									status === statusItem.status ? 'border-black' : 'border-white'
 								} hover:border-black`}
 								onClick={() => handleStatusClick(statusItem.status)}
 							>
-								<div className="p-2 sm:p-3 w-16 sm:w-20">{statusItem.icon}</div>
-								<div className="ml-3 sm:ml-5 text-sm sm:text-base">
-									{statusItem.name}
-								</div>
+								<div className="text-sm sm:text-base">{statusItem.name}</div>
 							</div>
 						))}
 					</div>

@@ -281,13 +281,13 @@ export const InformationRight = ({
 								</div>
 							))}
 
-						{jewelry?.SD_Price !== 0 && (
+						{jewelry?.SideDiamond && (
 							<Text strong style={{fontSize: '18px'}}>
 								Kim Cương Tấm:
 							</Text>
 						)}
 
-						{jewelry?.SD_Price !== 0 && (
+						{jewelry?.SideDiamond && (
 							<div className="flex flex-wrap justify-between mb-2">
 								<div className="flex w-full sm:w-auto">
 									<div className="mr-3">

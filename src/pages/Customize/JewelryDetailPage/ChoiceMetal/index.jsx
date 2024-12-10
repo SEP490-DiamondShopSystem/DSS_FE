@@ -182,6 +182,7 @@ export const ChoiceMetal = ({
 										type="text"
 										className="bg-primary border"
 										onClick={handleNextStep}
+										loading={loading}
 									>
 										{diamondJewelry?.MainDiamonds.length === 0
 											? 'Đặt thiết kế'
