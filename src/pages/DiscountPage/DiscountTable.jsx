@@ -1,9 +1,29 @@
 import React from 'react';
-
-import {Table, Tag} from 'antd';
+import {Image, Table, Tag} from 'antd';
 
 const DiscountTable = ({discounts}) => {
+	const statusMapping = {
+		1: {label: 'Đã Lên Lịch', color: 'blue'},
+		2: {label: 'Đang Hoạt Động', color: 'green'},
+		3: {label: 'Đã Tạm Dừng', color: 'orange'},
+		4: {label: 'Hết Hạn', color: 'red'},
+		5: {label: 'Đã Hủy', color: 'gray'},
+	};
+
 	const columns = [
+		{
+			title: 'Hình ảnh',
+			dataIndex: 'Thumbnail',
+			key: 'Thumbnail',
+			render: (url) => (
+				<Image
+					width={400}
+					src={url?.MediaPath}
+					alt=""
+					fallback="https://via.placeholder.com/50" // Placeholder khi không có ảnh
+				/>
+			),
+		},
 		{
 			title: 'Tên khuyến mãi',
 			dataIndex: 'Name',
@@ -21,24 +41,15 @@ const DiscountTable = ({discounts}) => {
 			render: (percent) => <strong>{percent}%</strong>,
 		},
 		{
-			title: 'Thời gian hiệu lực',
-			key: 'time',
-			render: (_, record) => (
-				<span>
-					{record.StartDate} - {record.EndDate}
-				</span>
-			),
-		},
-		{
 			title: 'Trạng thái',
-			dataIndex: 'IsActive',
-			key: 'IsActive',
-			render: (isActive) => (
-				<Tag color={isActive ? 'green' : 'red'}>
-					{isActive ? 'Hoạt động' : 'Không hoạt động'}
-				</Tag>
-			),
+			dataIndex: 'Status',
+			key: 'Status',
+			render: (status) => {
+				const {label, color} = statusMapping[status] || {};
+				return <Tag color={color || 'default'}>{label || 'Không xác định'}</Tag>;
+			},
 		},
+
 		{
 			title: 'Yêu cầu khuyến mãi',
 			key: 'requirements',

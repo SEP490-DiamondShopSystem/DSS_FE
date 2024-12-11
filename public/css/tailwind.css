@@ -3398,3 +3398,15 @@ video {
 	--tw-border-opacity: 1;
 	border-color: rgb(112 112 112 / var(--tw-border-opacity, 1)) /* #707070 */;
 }
+
+.h-\[250px\] {
+	height: 250px;
+}
+
+.max-h-\[250px\] {
+	max-height: 250px;
+}
+
+.min-w-\[800px\] {
+	min-width: 800px;
+}
