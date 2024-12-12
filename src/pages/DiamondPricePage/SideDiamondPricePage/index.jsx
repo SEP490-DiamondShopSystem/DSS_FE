@@ -75,10 +75,10 @@ const SideDiamondPricePage = () => {
 					message.success('Xóa Giá Thành Công!');
 				})
 				.catch((error) => {
-					message.error(error?.data?.title || error?.detail);
+					message.error(error?.data?.detail || error?.detail);
 				}); // Wait for delete to finish
 		} catch (error) {
-			message.error(error?.data?.title || error?.detail);
+			message.error(error?.data?.detail || error?.detail);
 		}
 		setSelectedPrices([]);
 		setShowDeleteConfirm(false);
@@ -100,10 +100,10 @@ const SideDiamondPricePage = () => {
 					message.success('Thêm Giá Thành Công!');
 				})
 				.catch((error) => {
-					message.error(error?.data?.title || error?.detail);
+					message.error(error?.data?.detail || error?.detail);
 				});
 		} catch (error) {
-			message.error(error?.data?.title || error?.detail);
+			message.error(error?.data?.detail || error?.detail);
 		}
 		setEditedCells([]);
 		setIsCreating(!isCreating);
@@ -129,7 +129,7 @@ const SideDiamondPricePage = () => {
 				message.success('Cập Nhật Giá Thành Công!');
 			})
 			.catch((error) => {
-				message.error(error?.data?.title || error?.detail);
+				message.error(error?.data?.detail || error?.detail);
 			});
 		setEditedCells([]);
 		setIsEditing(!isEditing);

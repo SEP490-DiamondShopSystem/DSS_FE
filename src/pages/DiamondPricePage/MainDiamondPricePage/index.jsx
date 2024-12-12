@@ -103,7 +103,7 @@ const MainDiamondPricePage = () => {
 				message.success('Thêm giá kim cương thành công!');
 			})
 			.catch((error) => {
-				message.error(error?.data?.title || error?.detail);
+				message.error(error?.data?.detail || error?.detail);
 			});
 
 		setEditedCells([]);
@@ -139,7 +139,7 @@ const MainDiamondPricePage = () => {
 				message.success('Cập nhật giá kim cương thành công!');
 			})
 			.catch((error) => {
-				message.error(error?.data?.title || error?.detail);
+				message.error(error?.data?.detail || error?.detail);
 			});
 
 		setEditedCells([]);
@@ -193,7 +193,7 @@ const MainDiamondPricePage = () => {
 			// Refresh price board after creating range
 			dispatch(fetchPriceBoard({shapeId, isLabDiamond, cut, isSideDiamond: false}));
 		} catch (error) {
-			message.error(error?.data?.title || 'Không thể tạo phạm vi kim cương');
+			message.error(error?.data?.detail || 'Không thể tạo phạm vi kim cương');
 		}
 	};
 
@@ -224,7 +224,7 @@ const MainDiamondPricePage = () => {
 			// Reset criteriaRangeToDelete
 			setCriteriaRangeToDelete(null);
 		} catch (error) {
-			message.error(error?.data?.title || 'Không thể xóa phạm vi kim cương');
+			message.error(error?.data?.detail || 'Không thể xóa phạm vi kim cương');
 		}
 	};
 	// New function to handle updating a criteria range
@@ -254,7 +254,7 @@ const MainDiamondPricePage = () => {
 			// Refresh price board after updating range
 			dispatch(fetchPriceBoard({shapeId, isLabDiamond, cut, isSideDiamond: false}));
 		} catch (error) {
-			message.error(error?.data?.title || 'Không thể cập nhật phạm vi kim cương');
+			message.error(error?.data?.detail || 'Không thể cập nhật phạm vi kim cương');
 		}
 	};
 

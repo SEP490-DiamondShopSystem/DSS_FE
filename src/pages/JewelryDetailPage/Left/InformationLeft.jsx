@@ -23,12 +23,12 @@ export const InformationLeft = ({diamondJewelry, selectedMetal}) => {
 					<span className="text-gray-600">Chiều Rộng</span>
 					<span className="text-gray-800">{diamondJewelry?.Width}mm</span>
 				</div>
-				<div className="flex justify-between px-4 py-2">
+				{/* <div className="flex justify-between px-4 py-2">
 					<span className="text-gray-600">Hoàn Thiện Rhodium</span>
 					<span className="text-gray-800 flex items-center">
 						{diamondJewelry?.IsRhodiumFinish ? 'Có' : 'Không'}
 					</span>
-				</div>
+				</div> */}
 				{/* <div className="flex justify-between px-4 py-2">
 					<span className="text-gray-600">Trọng Lượng</span>
 					<span className="text-gray-800 flex items-center">

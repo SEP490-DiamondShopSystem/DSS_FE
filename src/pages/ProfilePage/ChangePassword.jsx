@@ -59,7 +59,9 @@ const ChangePassword = () => {
 				)}
 
 				<div className="font-semibold w-full px-5 sm:px-10 lg:px-20 py-10 bg-white rounded-lg shadow-lg">
-					<h2 className="text-xl sm:text-2xl mb-6 text-center">Đổi Mật Khẩu</h2>
+					<h2 className="text-xl sm:text-2xl mb-6 text-center font-semibold">
+						Đổi Mật Khẩu
+					</h2>
 
 					<Form
 						form={form}
@@ -120,7 +122,7 @@ const ChangePassword = () => {
 								block
 								className="bg-primary"
 							>
-								Change Password
+								Đổi Mật Khẩu
 							</Button>
 						</Form.Item>
 					</Form>
