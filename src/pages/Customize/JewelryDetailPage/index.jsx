@@ -62,14 +62,18 @@ const JewelryCustomDetail = () => {
 	}, []);
 
 	useEffect(() => {
-		dispatch(getJewelryModelDetail({id}));
-	}, []);
+		dispatch(getJewelryModelDetail({id}))
+			.unwrap()
+			.then((res) => {
+				setJewelry(res);
+			});
+	}, [metals]);
 
-	useEffect(() => {
-		if (jewelryDetail) {
-			setJewelry(jewelryDetail);
-		}
-	}, [jewelryDetail, metals]);
+	// useEffect(() => {
+	// 	if (jewelryDetail) {
+	// 		setJewelry(jewelryDetail);
+	// 	}
+	// }, [jewelryDetail, metals]);
 
 	const items = [
 		{
