@@ -260,15 +260,15 @@ export const FilterJewelryDiamond = ({
 						range
 						marks={{
 							0: '0',
-							1000000000: '100M',
-							5000000000: '500M',
-							10000000000: '1000M',
-							15000000000: '15000M',
-							20000000000: '20000M',
+							1000000: '10M',
+							50000000: '50M',
+							100000000: '100M',
+							150000000: '150M',
+							200000000: '200M',
 						}}
 						step={null}
 						min={0}
-						max={filter?.Price?.Max}
+						max={filters?.price?.maxPrice}
 						value={[filters?.price?.minPrice, filters?.price?.maxPrice]}
 						onChange={handlePriceChange}
 						className="w-full mx-4"

@@ -104,9 +104,16 @@ export const ProductList = () => {
 									<div className="mx-5 my-5">
 										<p>{jewelry.Name}</p>
 
-										<p className="mt-2" style={{color: '#b0b0b0'}}>
-											Trang Sức {jewelry.MainDiamondCount} Kim Cương
-										</p>
+										{jewelry.MainDiamondCount?.length !== 0 ? (
+											<p className="mt-2" style={{color: '#b0b0b0'}}>
+												Mẫu Trang Sức {jewelry.MainDiamondCount} Kim Cương
+												Chính
+											</p>
+										) : (
+											<p className="mt-2" style={{color: '#b0b0b0'}}>
+												Mẫu Trang Sức Không Đính Kim Cương
+											</p>
+										)}
 									</div>
 								</div>
 							</div>

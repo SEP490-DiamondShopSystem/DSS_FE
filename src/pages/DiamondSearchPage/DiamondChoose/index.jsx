@@ -26,7 +26,7 @@ const DiamondChoosePage = () => {
 	const [pageSize, setPageSize] = useState(100);
 	const [start, setStart] = useState(0);
 	const [filters, setFilters] = useState({
-		price: {minPrice: 0, maxPrice: 20000000000},
+		price: {minPrice: 0, maxPrice: 200000000},
 	});
 	const [selectedIndex, setSelectedIndex] = useState(0);
 	const [diamond, setDiamond] = useState();

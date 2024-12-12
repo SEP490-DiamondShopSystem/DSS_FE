@@ -71,11 +71,7 @@ export const DiamondList = ({
 				<Loading />
 			) : (
 				<>
-					{!Array.isArray(diamondNatural) || diamondNatural.length === 0 ? (
-						<div className="flex items-center justify-center my-10">
-							<p className="text-2xl">Chưa có sản phẩm nào</p>
-						</div>
-					) : (
+					{Array.isArray(diamondNatural) ? (
 						<>
 							{/* Results Header */}
 							<div className="text-xl flex justify-between items-center flex-wrap mt-10 px-4">
@@ -236,6 +232,10 @@ export const DiamondList = ({
 								</div>
 							)}
 						</>
+					) : (
+						<div className="flex items-center justify-center my-10">
+							<p className="text-2xl">Chưa có sản phẩm nào</p>
+						</div>
 					)}
 				</>
 			)}

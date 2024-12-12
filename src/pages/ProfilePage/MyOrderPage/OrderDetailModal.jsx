@@ -77,7 +77,7 @@ export const OrderDetailModal = () => {
 	const data = order?.Items?.map((item, i) => ({
 		key: i,
 		orderDate: order?.CreatedDate || 'N/A',
-		productName: item?.Diamond?.Title || item?.Jewelry?.SerialCode,
+		productName: item?.Name,
 		price: formatPrice(item?.PurchasedPrice || 0),
 		jewelryId: item?.JewelryId || null,
 		diamondId: item?.DiamondId || null,
