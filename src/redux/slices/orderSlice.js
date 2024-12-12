@@ -34,7 +34,7 @@ export const getUserOrder = createAsyncThunk(
 	'orderSlice/getUserOrder',
 	async (params, {rejectWithValue}) => {
 		try {
-			const {pageSize, start, Status} = params;
+			const {pageSize, start, Status, IsCustomize} = params;
 
 			let url = '/Order/All';
 
@@ -43,6 +43,8 @@ export const getUserOrder = createAsyncThunk(
 			if (pageSize) queryParams.append('pageSize', pageSize);
 			if (start) queryParams.append('start', start);
 			if (Status) queryParams.append('Status', Status);
+			if (IsCustomize !== null || IsCustomize !== undefined)
+				queryParams.append('IsCustomize', IsCustomize);
 
 			if (queryParams.toString()) {
 				url += `?${queryParams.toString()}`;

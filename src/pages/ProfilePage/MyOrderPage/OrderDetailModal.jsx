@@ -74,12 +74,10 @@ export const OrderDetailModal = () => {
 	const [statusOrder, setStatusOrder] = useState();
 	const [cancelled, setCancelled] = useState();
 
-	console.log('id', id);
-
 	const data = order?.Items?.map((item, i) => ({
 		key: i,
 		orderDate: order?.CreatedDate || 'N/A',
-		productName: item?.Diamond?.Title || item?.Jewelry?.SerialCode,
+		productName: item?.Name,
 		price: formatPrice(item?.PurchasedPrice || 0),
 		jewelryId: item?.JewelryId || null,
 		diamondId: item?.DiamondId || null,
@@ -299,7 +297,7 @@ export const OrderDetailModal = () => {
 				setCancelled(res);
 			})
 			.catch((error) => {
-				message.error(error?.data?.title || error?.detail);
+				message.error(error?.data?.detail || error?.detail);
 			});
 		setIsCancelModalVisible(false);
 	};
@@ -322,7 +320,7 @@ export const OrderDetailModal = () => {
 			})
 			.catch((error) => {
 				message.error(
-					error?.data?.errors?.Files[0] || error?.data?.title || 'Có lỗi xảy ra!'
+					error?.data?.errors?.Files[0] || error?.data?.detail || 'Có lỗi xảy ra!'
 				);
 			});
 	};

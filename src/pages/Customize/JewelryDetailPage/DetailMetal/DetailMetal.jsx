@@ -57,13 +57,15 @@ export const DetailMetal = ({customizeJewelry, imageData, selectedMetal, jewelry
 				<p>{size}</p>
 			</div>
 			<Divider />
+			{imageData && (
+				<div className="flex items-center justify-between">
+					<p className="font-semibold text-primary">Hình:</p>
+					<p className="h-16 w-16">
+						<Image src={imageData} alt={imageData} />
+					</p>
+				</div>
+			)}
 
-			<div className="flex items-center justify-between">
-				<p className="font-semibold text-primary">Hình:</p>
-				<p className="h-16 w-16">
-					<Image src={imageData} alt={imageData} />
-				</p>
-			</div>
 			{/* <Divider />
 			<div className="flex items-center justify-between">
 				<p className="font-semibold">Tổng cộng:</p>

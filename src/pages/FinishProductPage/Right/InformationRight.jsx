@@ -107,9 +107,7 @@ export const InformationRight = ({
 		setProductWarrantly(!showProductWarrantly);
 	};
 
-	const handleChange = (value) => {
-		setSizeChange(value);
-	};
+	console.log('jewelry', jewelry);
 
 	const handleAddToCart = () => {
 		if (!userId) {

@@ -7,20 +7,17 @@ import {
 	OrderedListOutlined,
 	TransactionOutlined,
 } from '@ant-design/icons';
-import {Button, message, Modal, Table, Tag, Tooltip} from 'antd';
+import {Button, message, Modal, Select, Space, Table, Tag, Tooltip, Typography} from 'antd';
 import React, {useEffect, useState} from 'react';
 import {Helmet} from 'react-helmet';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
-import {GetAllOrderSelector, LoadingOrderSelector} from '../../../redux/selectors';
+import {LoadingOrderSelector} from '../../../redux/selectors';
 import {getUserOrder, getUserOrderTransaction} from '../../../redux/slices/orderSlice';
-import {
-	convertToVietnamDate,
-	formatPrice,
-	getOrderPaymentStatus,
-	getOrderStatus,
-} from '../../../utils/index';
+import {formatPrice, getOrderStatus} from '../../../utils/index';
 import {OrderInvoiceModal} from './OrderInvoiceModal';
+
+const {Title} = Typography;
 
 const orderStatus = [
 	{icon: <OrderedListOutlined />, name: 'Tổng đơn hàng', status: '', order: 1},
@@ -46,6 +43,7 @@ const MyOrderPage = () => {
 	const [pageSize, setPageSize] = useState(5);
 	const [status, setStatus] = useState('');
 	const [orderList, setOrderList] = useState();
+	const [isCustomizeOrder, setIsCustomizeOrder] = useState(false);
 	const [isResponsive, setIsResponsive] = useState(window.innerWidth <= 768);
 
 	useEffect(() => {
@@ -76,13 +74,13 @@ const MyOrderPage = () => {
 			align: 'center',
 		},
 		{
-			title: 'HT Giao Hàng',
+			title: 'Hình Thức Giao Hàng',
 			dataIndex: 'deliveryMethod',
 			align: 'center',
 			responsive: ['md'],
 		},
 		{
-			title: 'PT Thanh Toán',
+			title: 'Trạng Thái Thanh Toán',
 			dataIndex: 'paymentMethodName',
 			align: 'center',
 			responsive: ['md'],
@@ -183,13 +181,14 @@ const MyOrderPage = () => {
 				pageSize: pageSize,
 				start: currentPage,
 				Status: status,
+				IsCustomize: isCustomizeOrder,
 			})
 		)
 			.unwrap()
 			.then((res) => {
 				setOrderList(res);
 			});
-	}, [pageSize, currentPage, status]);
+	}, [pageSize, currentPage, status, isCustomizeOrder]);
 
 	useEffect(() => {
 		if (orderList && orderList?.Values) {
@@ -243,12 +242,25 @@ const MyOrderPage = () => {
 			});
 		}
 	};
+
+	const onChangeOrder = (value) => {
+		setIsCustomizeOrder(value);
+	};
+
 	return (
 		<div>
 			<Helmet>
 				<title>Đơn Hàng Của Tôi</title>
 			</Helmet>
-			{isLgScreen && <div>Đơn hàng của tôi</div>}
+			<Space>
+				<Title level={3}>Đơn hàng của tôi</Title>
+				<div>
+					<Select className="w-32" onChange={onChangeOrder} value={isCustomizeOrder}>
+						<Option value={false}>Đơn Thường</Option>
+						<Option value={true}>Đơn Thiết Kế</Option>
+					</Select>
+				</div>
+			</Space>
 			<div className="flex flex-wrap items-center font-medium mt-10">
 				{orderStatus.map((statusItem) => (
 					<div

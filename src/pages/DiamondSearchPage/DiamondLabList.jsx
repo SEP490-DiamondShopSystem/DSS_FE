@@ -164,7 +164,7 @@ export const DiamondLabList = ({diamond, filters, setFilters, handleReset, diamo
 																</p>
 																<p className="text-red-500 ml-2">
 																	{formatPrice(
-																		diamondItem.DiscountPrice
+																		diamondItem.SalePrice
 																	)}
 																</p>
 															</div>

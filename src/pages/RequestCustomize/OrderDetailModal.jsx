@@ -3,7 +3,10 @@ import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import logo from '../../assets/logo-short-ex.png';
-import {GetRequestCustomizeDetailSelector} from '../../redux/selectors';
+import {
+	GetLoadingCustomizeSelector,
+	GetRequestCustomizeDetailSelector,
+} from '../../redux/selectors';
 import {
 	getRequestCustomizeDetail,
 	handleOrderCustomizeCancel,
@@ -21,6 +24,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const orderDetail = useSelector(GetRequestCustomizeDetailSelector);
+	const loading = useSelector(GetLoadingCustomizeSelector);
 
 	const [isCancelModalVisible, setIsCancelModalVisible] = useState(false);
 	const [expandedRowKeys, setExpandedRowKeys] = useState([]);
@@ -313,7 +317,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 				message.success(`Bạn đã xác nhận đơn thiết kế ${selectedOrder.Id}!`);
 			})
 			.catch((error) => {
-				message.error(error?.data?.title || error?.detail);
+				message.error(error?.data?.detail || error?.detail);
 			});
 	};
 
@@ -331,11 +335,11 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 		dispatch(handleOrderCustomizeCancel(selectedOrder.Id))
 			.unwrap()
 			.then(() => {
-				message.success('Hủy đơn thành công!');
+				message.success('Hủy yêu cầu thành công!');
 				setIsCancelModalVisible(false);
 			})
 			.catch((error) => {
-				message.error(error?.data?.title || error?.detail);
+				message.error(error?.data?.detail || error?.detail);
 			});
 	};
 
@@ -353,11 +357,11 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 		dispatch(handleOrderCustomizeReject(selectedOrder.Id))
 			.unwrap()
 			.then(() => {
-				message.success('Hủy đơn thành công!');
+				message.success('Hủy yêu cầu thành công!');
 				setIsRejectModalVisible(false);
 			})
 			.catch((error) => {
-				message.error(error?.data?.title || error?.detail);
+				message.error(error?.data?.detail || error?.detail);
 			});
 	};
 
@@ -423,6 +427,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 									type="text"
 									className="bg-primary "
 									onClick={handleProceedConfirmation}
+									loading={loading}
 								>
 									Đồng Ý Đơn
 								</Button>

@@ -66,11 +66,7 @@ export const DiamondList = ({
 				<Loading />
 			) : (
 				<>
-					{!Array.isArray(diamondList) || diamondList.length === 0 ? (
-						<div className="flex items-center justify-center my-10">
-							<p className="text-2xl">Chưa có sản phẩm nào</p>
-						</div>
-					) : (
+					{Array.isArray(diamondList) && (
 						<>
 							<div className="text-2xl flex justify-end mt-10">
 								<p className="p-2">{diamondList?.length} Kết quả</p>

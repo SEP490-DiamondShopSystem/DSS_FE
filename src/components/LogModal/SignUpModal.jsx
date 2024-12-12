@@ -60,8 +60,8 @@ const SignUpModal = ({isOpen, onClose}) => {
 			})
 			.catch((error) => {
 				console.error('error', error);
-				if (error?.data?.title || error?.detail) {
-					message.error(error?.data?.title || error?.detail);
+				if (error?.data?.detail || error?.detail) {
+					message.error(error?.data?.detail || error?.detail);
 				} else {
 					message.error('Đã xảy ra lỗi!');
 				}
@@ -80,7 +80,7 @@ const SignUpModal = ({isOpen, onClose}) => {
 				onClose();
 			})
 			.catch((error) => {
-				message.error(error?.data?.title || error?.title);
+				message.error(error?.data?.detail || error?.detail);
 			});
 	};
 
@@ -101,7 +101,7 @@ const SignUpModal = ({isOpen, onClose}) => {
 				{/* First Name */}
 				<Form.Item
 					label="Họ"
-					name="lastName"
+					name="firstName"
 					rules={[{required: true, message: 'Vui lòng nhập họ của bạn!'}]}
 				>
 					<Input placeholder="Họ" />
@@ -110,7 +110,7 @@ const SignUpModal = ({isOpen, onClose}) => {
 				{/* Last Name */}
 				<Form.Item
 					label="Tên"
-					name="firstName"
+					name="lastName"
 					rules={[{required: true, message: 'Vui lòng nhập tên của bạn!'}]}
 				>
 					<Input placeholder="Tên" />

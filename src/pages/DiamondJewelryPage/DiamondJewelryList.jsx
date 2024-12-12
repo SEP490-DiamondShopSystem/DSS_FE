@@ -98,11 +98,7 @@ export const DiamondJewelryList = () => {
 				<Loading />
 			) : (
 				<>
-					{!Array.isArray(jewelries) || jewelries.length === 0 ? (
-						<div className="flex items-center justify-center my-10">
-							<p className="text-2xl">Chưa có sản phẩm nào</p>
-						</div>
-					) : (
+					{Array.isArray(jewelries) && (
 						<InfiniteScroll
 							dataLength={jewelries.length}
 							next={loadMoreData}
@@ -146,11 +142,36 @@ export const DiamondJewelryList = () => {
 													</p>
 												</div>
 												<div className="flex items-center mt-2">
-													<p className="text-sm">
-														Giá Mẫu: {formatPrice(jewelry.MinPrice)} -{' '}
-														{formatPrice(jewelry.MaxPrice)}
-													</p>
+													{jewelry?.MinPrice ===
+														jewelry?.MinPriceAfterDiscount &&
+													jewelry?.MaxPrice ===
+														jewelry?.MaxPriceAfterDiscount ? (
+														<p className="text-sm">
+															Giá Mẫu: {formatPrice(jewelry.MinPrice)}{' '}
+															- {formatPrice(jewelry.MaxPrice)}
+														</p>
+													) : (
+														<div className="space-y-1">
+															<p className="text-sm line-through">
+																Giá Mẫu:{' '}
+																{formatPrice(jewelry.MinPrice)} -{' '}
+																{formatPrice(jewelry.MaxPrice)}
+															</p>
+															<br />
+															<p className="text-sm">
+																Giá Mẫu Đã Giảm:{' '}
+																{formatPrice(
+																	jewelry.MinPriceAfterDiscount
+																)}{' '}
+																-{' '}
+																{formatPrice(
+																	jewelry.MaxPriceAfterDiscount
+																)}
+															</p>
+														</div>
+													)}
 												</div>
+
 												<div className="flex items-center mt-2">
 													<p className="mr-3">
 														<StarRating rating={jewelry?.StarRating} />
