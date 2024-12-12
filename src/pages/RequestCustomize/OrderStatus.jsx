@@ -19,6 +19,8 @@ export const OrderStatus = ({orderStatus, orderDetail}) => {
 
 	// }, [orderStatus, orderDetail]);
 
+	console.log('currentStep', currentStep);
+
 	useEffect(() => {
 		const getOrderStatus = (status) => {
 			switch (status) {
@@ -85,14 +87,14 @@ export const OrderStatus = ({orderStatus, orderDetail}) => {
 				? 'Đã Hủy'
 				: stage === 5
 				? 'Đã Từ Chối'
-				: 'Chưa Có Giá',
+				: 'Đã Có Giá',
 			description: [2, 3, 4].includes(currentStep)
-				? 'Yêu cầu thiết kế đã có thiết lập giá.'
+				? 'Yêu cầu thiết kế đã có giá trang sức.'
 				: stage === 4
 				? 'Đơn thiết kế đã bị hủy.'
 				: stage === 5
 				? `Yêu cầu thiết kế đã bị từ chối.`
-				: 'Yêu cầu thiết kế chưa có thiết lập giá.',
+				: 'Yêu cầu thiết kế đã có giá trang sức.',
 		},
 		// Step 2:Requesting
 		{

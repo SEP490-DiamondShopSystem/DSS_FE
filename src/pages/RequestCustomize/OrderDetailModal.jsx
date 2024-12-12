@@ -32,7 +32,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 	const orderStatus = order?.Status;
 
 	useEffect(() => {
-		if (selectedOrder) {
+		if (selectedOrder?.Id) {
 			dispatch(getRequestCustomizeDetail(selectedOrder.Id));
 		}
 	}, [selectedOrder, dispatch]);
@@ -354,11 +354,10 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 	};
 
 	const submitRejectOrder = () => {
-		dispatch(handleOrderCustomizeReject(selectedOrder.Id))
+		dispatch(handleOrderCustomizeReject(selectedOrder?.Id))
 			.unwrap()
 			.then(() => {
 				message.success('Hủy yêu cầu thành công!');
-				setIsRejectModalVisible(false);
 			})
 			.catch((error) => {
 				message.error(error?.data?.detail || error?.detail);
