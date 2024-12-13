@@ -16,6 +16,7 @@ import {DiamondLabList} from './DiamondLabList';
 import {DiamondList} from './DiamondList';
 import {JewelryList} from './JewelryList';
 import {useLocation} from 'react-router-dom';
+import {fetchFrontendDisplayRule} from '../../../redux/slices/configSlice';
 
 const DiamondChoosePage = () => {
 	const dispatch = useDispatch();
@@ -23,13 +24,14 @@ const DiamondChoosePage = () => {
 	const location = useLocation();
 	const jewelryModel = location.state.jewelryModel;
 
-	const [pageSize, setPageSize] = useState(100);
-	const [start, setStart] = useState(0);
+	const [pageSize, setPageSize] = useState(10);
+	const [start, setStart] = useState(1);
 	const [filters, setFilters] = useState({
 		price: {minPrice: 0, maxPrice: 200000000},
 	});
 	const [selectedIndex, setSelectedIndex] = useState(0);
 	const [diamond, setDiamond] = useState();
+	const [totalPage, setTotal] = useState();
 
 	const items = [
 		{
@@ -63,6 +65,7 @@ const DiamondChoosePage = () => {
 			.unwrap()
 			.then((res) => {
 				setDiamond(res?.Values);
+				setTotal(res?.TotalPage);
 			});
 	}, 500);
 
@@ -116,6 +119,11 @@ const DiamondChoosePage = () => {
 					findShape={findShape}
 					jewelryModel={jewelryModel}
 					diamondList={diamond}
+					setStart={setStart}
+					pageSize={pageSize}
+					setPageSize={setPageSize}
+					start={start}
+					totalPage={totalPage}
 				/>
 			) : (
 				<JewelryList
