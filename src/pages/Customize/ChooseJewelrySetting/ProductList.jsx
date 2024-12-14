@@ -2,7 +2,6 @@ import React, {useEffect, useRef, useState} from 'react';
 
 import {Image} from 'antd';
 import debounce from 'lodash/debounce';
-import Loading from 'react-loading';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import jewelryImg from '../../../assets/jewelry.png';
@@ -14,6 +13,7 @@ import {
 import {getAllJewelryModelCustomize} from '../../../redux/slices/customizeSlice';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import {fetchFrontendDisplayRule} from '../../../redux/slices/configSlice';
+import Loading from '../../../components/Loading';
 
 export const ProductList = () => {
 	const navigate = useNavigate();
@@ -91,7 +91,9 @@ export const ProductList = () => {
 	}, [filters]);
 
 	const loadMoreData = () => {
-		setPage((prev) => prev + 1);
+		setTimeout(() => {
+			setPage((prev) => prev + 1);
+		}, 200);
 	};
 	const handleReset = () => {
 		localStorage.removeItem('jewelry');

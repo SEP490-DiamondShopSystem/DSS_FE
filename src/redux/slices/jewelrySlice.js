@@ -50,7 +50,8 @@ export const getAllJewelry = createAsyncThunk(
 			let url = '/Jewelry/Selling';
 			const queryParams = new URLSearchParams();
 
-			if (CurrentPage) queryParams.append('CurrentPage', CurrentPage);
+			if (CurrentPage !== undefined || CurrentPage !== null)
+				queryParams.append('CurrentPage', CurrentPage);
 			if (PageSize) queryParams.append('PageSize', PageSize);
 			if (ModelId) queryParams.append('ModelId', ModelId);
 			if (MetalId) queryParams.append('MetalId', MetalId);

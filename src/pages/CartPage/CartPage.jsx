@@ -436,7 +436,7 @@ const CartPage = () => {
 								</span>
 							</div>
 						</div>
-						<div className="flex justify-between">
+						<div className="flex justify-between mb-1">
 							<div className="mb-1 flex justify-between w-full">
 								<span className="font-semibold">Khuyến Mãi</span>{' '}
 								<span>

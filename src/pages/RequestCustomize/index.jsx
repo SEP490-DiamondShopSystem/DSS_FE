@@ -37,10 +37,9 @@ const orderStatus = [
 
 const RequestCustomize = () => {
 	const dispatch = useDispatch();
-	const navigate = useNavigate();
 	const requestList = useSelector(GetAllRequestCustomizeSelector);
+
 	const [dataSource, setDataSource] = useState([]);
-	const [expandedRowKeys, setExpandedRowKeys] = useState([]);
 	const [selectedOrder, setSelectedOrder] = useState(null);
 	const [openDetail, setOpenDetail] = useState(false);
 	const [startDate, setStartDate] = useState(null);
@@ -76,6 +75,10 @@ const RequestCustomize = () => {
 			setDataSource(requestList?.Values || []);
 		}
 	}, [requestList]);
+
+	useEffect(() => {
+		setCurrentPage(1);
+	}, [startDate, endDate, pageSize, status]);
 
 	const reverseEnum = (enumObj) => {
 		return Object.fromEntries(

@@ -89,13 +89,13 @@ export const BannerDiamond = () => {
 							</div>
 							<div className="flex flex-col sm:flex-row justify-end">
 								<Button
-									className="mr-0 sm:mr-10 mb-4 sm:mb-0 px-6 py-2 bg-primary rounded-lg uppercase font-semibold hover:bg-second w-full sm:w-auto h-12"
+									className="mr-0 sm:mr-10 mb-4 sm:mb-0 px-6 py-2 rounded-lg uppercase font-semibold hover:bg-second w-full sm:w-auto h-12"
 									onClick={handleDiamondShopClick}
 								>
 									Mua Kim Cương
 								</Button>
 								<Button
-									className="px-6 py-2 bg-primary rounded-lg uppercase font-semibold hover:bg-second w-full sm:w-auto h-12"
+									className="px-6 py-2 rounded-lg uppercase font-semibold hover:bg-second w-full sm:w-auto h-12"
 									onClick={handleJewelryShopClick}
 								>
 									Mua Trang Sức

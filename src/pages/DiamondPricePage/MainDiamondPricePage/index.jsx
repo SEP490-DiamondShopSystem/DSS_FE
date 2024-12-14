@@ -8,6 +8,7 @@ import {
 	deleteDiamondPrice,
 } from '../../../redux/slices/diamondPriceSlice';
 import {getPriceBoardSelector, LoadingDiamondPriceSelector} from '../../../redux/selectors';
+import Loading from '../../../components/Loading';
 
 const formatPrice = (price) => {
 	if (price === null || price === undefined) return 'N/A';
@@ -349,7 +350,7 @@ const MainDiamondPricePage = () => {
 	};
 
 	if (loading) {
-		return <div className="text-center text-lg font-semibold">Đang Tải...</div>;
+		return <Loading />;
 	}
 
 	const renderPriceRows = (cellMatrix, colorRange, isCreating) => {

@@ -1080,7 +1080,7 @@ const CheckoutPage = () => {
 										{formatPrice(cartList?.OrderPrices?.DefaultPrice || 0)}
 									</span>
 								</div>
-								<div className="flex justify-between mb-1">
+								<div className="mb-2">
 									<div className="mb-1 flex justify-between w-full">
 										<span className="font-semibold">Phí Vận Chuyển</span>{' '}
 										<span>
@@ -1089,7 +1089,7 @@ const CheckoutPage = () => {
 									</div>
 								</div>
 
-								<div className="flex justify-between mb-1">
+								<div className="mb-2">
 									<div className="mb-1 flex justify-between w-full">
 										<span className="font-semibold">Giảm Giá</span>{' '}
 										<span>
@@ -1101,8 +1101,8 @@ const CheckoutPage = () => {
 										</span>
 									</div>
 								</div>
-								<div className="flex justify-between">
-									<div className="mb-1 flex justify-between w-full">
+								<div className="mb-2">
+									<div className="flex justify-between w-full">
 										<span className="font-semibold">Khuyến Mãi</span>{' '}
 										<span>
 											{cartList?.OrderPrices?.PromotionAmountSaved !== 0 &&
@@ -1113,7 +1113,7 @@ const CheckoutPage = () => {
 										</span>
 									</div>
 								</div>
-								<div className="flex justify-between mb-1">
+								<div className="mb-2">
 									<div className="mb-1 flex justify-between w-full">
 										<span className="font-semibold">Bảo Hành</span>{' '}
 										<span>
@@ -1123,7 +1123,7 @@ const CheckoutPage = () => {
 										</span>
 									</div>
 								</div>
-								<div className="flex justify-between mb-1">
+								<div className="mb-2">
 									<div className="mb-1 flex justify-between w-full">
 										<span className="font-semibold">Khách Hàng Thân Thiết</span>
 

@@ -42,7 +42,7 @@ const MyOrderPage = () => {
 	const [currentPage, setCurrentPage] = useState(1);
 	const [pageSize, setPageSize] = useState(5);
 	const [status, setStatus] = useState('');
-	const [orderList, setOrderList] = useState();
+	const [orderList, setOrderList] = useState([]);
 	const [isCustomizeOrder, setIsCustomizeOrder] = useState(false);
 	const [isResponsive, setIsResponsive] = useState(window.innerWidth <= 768);
 
@@ -174,6 +174,12 @@ const MyOrderPage = () => {
 			window.removeEventListener('resize', handleResize);
 		};
 	}, []);
+
+	useEffect(() => {
+		setCurrentPage(1);
+		setOrderList([]);
+		setCurrentPage(1);
+	}, [status]);
 
 	useEffect(() => {
 		dispatch(

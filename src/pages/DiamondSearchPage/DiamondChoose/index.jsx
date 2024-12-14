@@ -24,7 +24,7 @@ const DiamondChoosePage = () => {
 	const location = useLocation();
 	const jewelryModel = location.state.jewelryModel;
 
-	const [pageSize, setPageSize] = useState(10);
+	const [pageSize, setPageSize] = useState(2);
 	const [start, setStart] = useState(1);
 	const [filters, setFilters] = useState({
 		price: {minPrice: 0, maxPrice: 200000000},
@@ -52,7 +52,7 @@ const DiamondChoosePage = () => {
 	const fetchJewelryData = debounce(() => {
 		dispatch(
 			getAllJewelry({
-				PageSize: pageSize,
+				// PageSize: pageSize,
 				CurrentPage: start,
 				ModelId: jewelryModel?.jewelryModelId,
 				MetalId: jewelryModel?.selectedMetal?.Id,
