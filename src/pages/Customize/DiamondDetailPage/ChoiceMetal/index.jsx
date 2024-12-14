@@ -121,7 +121,7 @@ export const ChoiceMetalDiamond = ({
 				jewelryModelId: id,
 				metalId: selectedMetal?.Id,
 				sizeId: size,
-				sideDiamondOptId: selectedSideDiamond,
+				sideDiamondOptId: selectedSideDiamond?.Id,
 				engravedText: textValue,
 				engravedFont: fontFamily,
 				note: note,

@@ -3,8 +3,18 @@ import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {GetDiamondShapeSelector} from '../../../../redux/selectors';
 import {getDiamondShape} from '../../../../redux/slices/diamondSlice';
+import {formatPrice} from '../../../../utils';
 
-export const DetailMetal = ({customizeJewelry, imageData, selectedMetal, jewelry, size}) => {
+export const DetailMetal = ({
+	customizeJewelry,
+	imageData,
+	selectedMetal,
+	jewelry,
+	size,
+	selectedSideDiamond,
+	fontFamily,
+	textValue,
+}) => {
 	const dispatch = useDispatch();
 	const shape = useSelector(GetDiamondShapeSelector);
 
@@ -28,15 +38,14 @@ export const DetailMetal = ({customizeJewelry, imageData, selectedMetal, jewelry
 			<div>
 				<h1 className="text-center text-2xl font-semibold">Thông tin chi tiết</h1>
 			</div>
-
-			<div className="flex items-center justify-between">
+			<div className="flex items-center justify-between mt-5">
 				<p className="font-semibold">Vỏ:</p>
 				<p>{jewelry?.Name}</p>
 			</div>
 			<Divider />
 			<div className="flex items-center justify-between">
 				<p className="font-semibold">Các hình dáng phù hợp:</p>
-				<p>{mainDiamondShapes}</p>
+				<p className="text-end">{mainDiamondShapes}</p>
 			</div>
 			<Divider />
 			<div className="flex items-center justify-between">
@@ -47,30 +56,60 @@ export const DetailMetal = ({customizeJewelry, imageData, selectedMetal, jewelry
 			<div>
 				<h1 className="text-center text-2xl font-semibold my-10">Lựa chọn của bạn</h1>
 			</div>
-			<div className="flex items-center justify-between">
-				<p className="font-semibold text-primary">Vật liệu đã chọn:</p>
-				<p>{selectedMetal && selectedMetal.Name}</p>
-			</div>
-			<Divider />
-			<div className="flex items-center justify-between ">
-				<p className="font-semibold text-primary">Kích thước vỏ:</p>
-				<p>{size}</p>
-			</div>
-			<Divider />
-			{imageData && (
+			{selectedMetal && (
+				<>
+					<div className="flex items-center justify-between mt-5">
+						<p className="font-semibold text-primary">Vật liệu đã chọn:</p>
+						<p>
+							{selectedMetal && selectedMetal.Name} -{' '}
+							{formatPrice(selectedMetal?.Price)} / gram
+						</p>
+					</div>
+					<Divider />
+				</>
+			)}
+
+			{selectedSideDiamond && (
+				<>
+					<div className="flex items-center justify-between">
+						<p className="font-semibold text-primary">Kim Cương Tấm:</p>
+						<p className="">
+							{selectedSideDiamond?.CaratWeight} ct / {selectedSideDiamond?.Quantity}{' '}
+							viên
+						</p>
+					</div>{' '}
+					<Divider />
+				</>
+			)}
+
+			{size && (
+				<>
+					<div className="flex items-center justify-between ">
+						<p className="font-semibold text-primary">Kích thước vỏ:</p>
+						<p>{size}</p>
+					</div>
+					<Divider />
+				</>
+			)}
+
+			{textValue && (
+				<>
+					<div className="flex items-center justify-between ">
+						<p className="font-semibold text-primary">Chữ Khắc:</p>
+						<p>{textValue}</p>
+					</div>
+					{/* <Divider /> */}
+				</>
+			)}
+
+			{/* {imageData && (
 				<div className="flex items-center justify-between">
 					<p className="font-semibold text-primary">Hình:</p>
 					<p className="h-16 w-16">
 						<Image src={imageData} alt={imageData} />
 					</p>
 				</div>
-			)}
-
-			{/* <Divider />
-			<div className="flex items-center justify-between">
-				<p className="font-semibold">Tổng cộng:</p>
-				<p className="font-semibold">$2,040</p>
-			</div> */}
+			)} */}
 		</div>
 	);
 };

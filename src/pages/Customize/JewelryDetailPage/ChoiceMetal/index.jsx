@@ -79,7 +79,7 @@ export const ChoiceMetal = ({
 					jewelryModelId: id,
 					metalId: selectedMetal?.Id,
 					sizeId: size,
-					sideDiamondOptId: selectedSideDiamond || null,
+					sideDiamondOptId: selectedSideDiamond?.Id || null,
 					engravedText: textValue,
 					engravedFont: fontFamily,
 					note: note,
@@ -108,6 +108,9 @@ export const ChoiceMetal = ({
 		setSize(null);
 		setImageData(null);
 		setSelectedMetal('');
+		setImageData(null);
+		setTextValue(null);
+		setFontFamily(null);
 	};
 
 	return (
