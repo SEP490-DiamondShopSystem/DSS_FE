@@ -33,7 +33,7 @@ import {checkPromoCart, getAllPromo} from '../../redux/slices/promotionSlice';
 import {getAllWarranty} from '../../redux/slices/warrantySlice';
 import {formatPrice} from '../../utils';
 import {enums} from '../../utils/constant';
-import {getConfigOrder} from '../../redux/slices/configSlice';
+import {fetchOrderRule, getConfigOrder} from '../../redux/slices/configSlice';
 
 const {Option} = Select;
 
@@ -84,6 +84,9 @@ const mapAttributes = (data, attributes) => {
 		Carat: data?.Diamond?.Carat || null,
 		CategoryName: data?.Jewelry?.Model?.Category?.Name || null,
 		JewelryThumbnail: data?.Jewelry?.Model?.Thumbnail?.MediaPath,
+		DefaultPrice: data?.ReviewPrice?.DefaultPrice,
+		FinalPrice: data?.ReviewPrice?.FinalPrice,
+		TitleJewelry: data?.Jewelry?.Title,
 
 		// Using the helper function to map diamond attributes
 		Clarity: getEnumKey(attributes.Clarity, data?.Diamond?.Clarity),
@@ -417,6 +420,7 @@ const CheckoutPage = () => {
 	const showOrderSuccessModal = () => {
 		Modal.confirm({
 			title: 'Đặt Hàng Thành Công!',
+			centered: true,
 			icon: <CheckCircleOutlined style={{color: '#52c41a'}} />,
 			content:
 				'Đơn hàng của bạn đã được đặt thành công. Cảm ơn bạn đã mua sắm với chúng tôi!',
@@ -929,13 +933,27 @@ const CheckoutPage = () => {
 											{item.JewelryId && (
 												<div>
 													<div className="mb-1 text-gray-800 font-semibold">
-														{item.SerialCode}
+														{item.TitleJewelry}
 													</div>
 													<div className="text-gray-700 text-sm mr-1">
-														Giá:
-														<span className="text-gray-900 font-semibold ml-1">
-															{formatPrice(item.JewelryPrice)}
-														</span>
+														{item?.FinalPrice === item.DefaultPrice ? (
+															<p className="text-gray-700 text-sm py-3 ml-1">
+																Giá:
+																<span className="text-gray-900 font-semibold ml-1">
+																	{formatPrice(item.DefaultPrice)}
+																</span>
+															</p>
+														) : (
+															<p className="text-gray-700 text-sm py-3 ml-1">
+																Giá:
+																<span className="text-gray-900 font-semibold ml-1 line-through text-gray">
+																	{formatPrice(item.DefaultPrice)}
+																</span>
+																<span className="text-gray-900 font-semibold ml-1">
+																	{formatPrice(item.FinalPrice)}
+																</span>
+															</p>
+														)}
 													</div>
 												</div>
 											)}
@@ -1019,13 +1037,27 @@ const CheckoutPage = () => {
 											{item.JewelryId ? (
 												<div>
 													<div className="mb-1 text-gray-800 font-semibold">
-														{item.SerialCode}
+														{item.TitleJewelry}
 													</div>
 													<div className="text-gray-700 text-sm mr-1">
-														Giá:
-														<span className="text-gray-900 font-semibold ml-1">
-															{formatPrice(item.JewelryPrice)}
-														</span>
+														{item?.FinalPrice === item.DefaultPrice ? (
+															<p className="text-gray-700 text-sm py-3 ml-1">
+																Giá:
+																<span className="text-gray-900 font-semibold ml-1">
+																	{formatPrice(item.DefaultPrice)}
+																</span>
+															</p>
+														) : (
+															<p className="text-gray-700 text-sm py-3 ml-1">
+																Giá:
+																<span className="text-gray-900 font-semibold ml-1 line-through text-gray">
+																	{formatPrice(item.DefaultPrice)}
+																</span>
+																<span className="text-gray-900 font-semibold ml-1">
+																	{formatPrice(item.FinalPrice)}
+																</span>
+															</p>
+														)}
 													</div>
 													{/* <div className="text-gray-700 text-sm mr-1">
 														SKU:
@@ -1048,10 +1080,24 @@ const CheckoutPage = () => {
 														{item?.Title}
 													</div>
 													<div className="text-gray-700 text-sm mr-1">
-														Giá:
-														<span className="text-gray-900 font-semibold py-3">
-															{formatPrice(item.DiamondTruePrice)}
-														</span>
+														{item?.FinalPrice === item.DefaultPrice ? (
+															<p className="text-gray-700 text-sm py-3 ml-1">
+																Giá:
+																<span className="text-gray-900 font-semibold ml-1">
+																	{formatPrice(item.DefaultPrice)}
+																</span>
+															</p>
+														) : (
+															<p className="text-gray-700 text-sm py-3 ml-1">
+																Giá:
+																<span className="text-gray-900 font-semibold ml-1 line-through text-gray">
+																	{formatPrice(item.DefaultPrice)}
+																</span>
+																<span className="text-gray-900 font-semibold ml-1">
+																	{formatPrice(item.FinalPrice)}
+																</span>
+															</p>
+														)}
 													</div>
 													<div className="text-gray-700 text-sm mr-1">
 														SKU:
@@ -1084,7 +1130,9 @@ const CheckoutPage = () => {
 									<div className="mb-1 flex justify-between w-full">
 										<span className="font-semibold">Phí Vận Chuyển</span>{' '}
 										<span>
-											{formatPrice(cartList?.ShippingPrice?.FinalPrice || 0)}
+											{formatPrice(
+												cartList?.ShippingPrice?.DefaultPrice || 0
+											)}
 										</span>
 									</div>
 								</div>
@@ -1138,12 +1186,9 @@ const CheckoutPage = () => {
 								</div>
 
 								<div className="flex text-sm text-gray-600 my-2">
-									<span className="mr-2">📅 Thời gian giao hàng</span>
-									{idCustomize ? (
-										<span>Giao hàng sau 7 ngày</span>
-									) : (
-										<span>Giao hàng sau 3 ngày</span>
-									)}
+									<span className="mr-2">📅 Thời gian giao hàng dự kiến</span>
+
+									<span>{orderRule?.ExpectedDeliveryDate} ngày</span>
 								</div>
 
 								<div className="flex justify-between items-center font-semibold mt-4 text-lg">

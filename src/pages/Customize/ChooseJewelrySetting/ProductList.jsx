@@ -31,6 +31,7 @@ export const ProductList = () => {
 		name: undefined,
 		IsRhodiumFinished: undefined,
 		IsEngravable: undefined,
+		MainDiamond: undefined,
 	});
 
 	console.log('pageSize', pageSize);
@@ -59,10 +60,10 @@ export const ProductList = () => {
 				getAllJewelryModelCustomize({
 					Category: filters.Type,
 					Name: filters?.name,
-					IsRhodiumFinished: filters?.IsRhodiumFinished,
+					MainDiamondQuantity: filters?.MainDiamond,
 					IsEngravable: filters?.IsEngravable,
 					CurrentPage: page,
-					PageSize: pageSize,
+					// PageSize: pageSize,
 				})
 			)
 				.unwrap()
@@ -93,7 +94,7 @@ export const ProductList = () => {
 	const loadMoreData = () => {
 		setTimeout(() => {
 			setPage((prev) => prev + 1);
-		}, 200);
+		}, 300);
 	};
 	const handleReset = () => {
 		localStorage.removeItem('jewelry');

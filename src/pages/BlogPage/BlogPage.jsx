@@ -108,7 +108,7 @@ const BlogPage = () => {
 				</div>
 			) : (
 				// Grid view for larger screens (hidden on small screens)
-				<Row gutter={[16, 16]} justify="center" style={{marginTop: '20px'}}>
+				<Row gutter={[16, 16]} justify="start" style={{marginTop: '20px'}}>
 					{Array.isArray(blogs) &&
 						blogs.slice(0, visibleCount).map((item, index) => (
 							<Col xs={24} sm={12} md={8} key={index}>
@@ -134,6 +134,7 @@ const BlogPage = () => {
 										boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
 										display: 'flex',
 										flexDirection: 'column',
+										height: '100%',
 									}}
 								>
 									<Card.Meta title={item.Title} style={{marginBottom: '16px'}} />

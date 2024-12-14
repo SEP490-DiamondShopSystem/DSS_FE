@@ -39,6 +39,7 @@ export const Diamond = ({
 		Modal.confirm({
 			title: 'Vui lòng kiểm tra lại thông số kim cương trước khi tiếp tục!',
 			content: 'Bạn có chắc chắn muốn tiếp tục?',
+			centered: true,
 			okText: 'Đồng Ý',
 			cancelText: 'Hủy Bỏ',
 			onOk: handleNextStep,

@@ -49,7 +49,7 @@ const SliderTopSelling = () => {
 	return (
 		<div className="p-5">
 			<Title level={3} className="text-center mb-5">
-				Trang Sức Nổi Bật
+				Mẫu Trang Sức Nổi Bật
 			</Title>
 
 			{isMobile ? (

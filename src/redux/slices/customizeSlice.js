@@ -10,7 +10,7 @@ export const getAllJewelryModelCustomize = createAsyncThunk(
 				CurrentPage,
 				Name,
 				Category,
-				IsRhodiumFinished,
+				MainDiamond,
 				IsEngravable,
 				Code,
 				MainDiamondQuantity,
@@ -24,8 +24,8 @@ export const getAllJewelryModelCustomize = createAsyncThunk(
 			if (Name) queryParams.append('Name', Name);
 			if (Code) queryParams.append('Code', Code);
 			if (MainDiamondQuantity) queryParams.append('MainDiamondQuantity', MainDiamondQuantity);
-			if (IsRhodiumFinished !== null && IsRhodiumFinished !== undefined) {
-				queryParams.append('IsRhodiumFinished', IsRhodiumFinished);
+			if (MainDiamondQuantity !== null && MainDiamondQuantity !== undefined) {
+				queryParams.append('MainDiamondQuantity', MainDiamondQuantity);
 			}
 			if (IsEngravable !== null && IsEngravable !== undefined) {
 				queryParams.append('IsEngravable', IsEngravable);

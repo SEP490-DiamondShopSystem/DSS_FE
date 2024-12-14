@@ -91,7 +91,9 @@ export const DiamondJewelryList = () => {
 	};
 
 	const loadMoreData = () => {
-		setPage((prev) => prev + 1); // Tăng trang để tải thêm dữ liệu
+		setTimeout(() => {
+			setPage((prev) => prev + 1);
+		}, 300);
 	};
 
 	return (

@@ -240,7 +240,7 @@ export const InformationRight = ({
 	return (
 		<div>
 			<div className="border-tintWhite">
-				<h1 className="text-3xl mb-5">{jewelry?.SerialCode}</h1>
+				<h1 className="text-3xl mb-5">{jewelry?.Title}</h1>
 				{/* <div className="my-5 flex">
 					<Rating rating={0} />
 					<p className="ml-5">477 Đánh Giá</p>

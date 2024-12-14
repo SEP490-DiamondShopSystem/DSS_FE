@@ -46,6 +46,7 @@ export const TransactionDetails = ({transactions, order}) => {
 		Modal.confirm({
 			title: 'Xác nhận tải ảnh lên',
 			okText: 'Đồng ý',
+			centered: true,
 			cancelText: 'Hủy bỏ',
 			onOk: () => handleChange(id),
 		});

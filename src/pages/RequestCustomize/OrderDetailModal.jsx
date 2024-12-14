@@ -304,6 +304,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 		Modal.confirm({
 			title: 'Đồng ý đơn thiết kế này',
 			content: 'Bạn có chắc chắn muốn tiếp tục?',
+			centered: true,
 			okText: 'Đồng Ý',
 			cancelText: 'Hủy Bỏ',
 			onOk: handleProceed,
@@ -325,6 +326,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 		Modal.confirm({
 			title: 'Hủy đơn đơn thiết kế này',
 			content: 'Bạn có chắc chắn muốn tiếp tục?',
+			centered: true,
 			okText: 'Xác nhận',
 			cancelText: 'Hủy Bỏ',
 			onOk: submitCancelOrder,
@@ -347,6 +349,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 		Modal.confirm({
 			title: 'Từ chối đơn thiết kế này',
 			content: 'Bạn có chắc chắn muốn tiếp tục?',
+			centered: true,
 			okText: 'Xác nhận',
 			cancelText: 'Hủy Bỏ',
 			onOk: submitRejectOrder,

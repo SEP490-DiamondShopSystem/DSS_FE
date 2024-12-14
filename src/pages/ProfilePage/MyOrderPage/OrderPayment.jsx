@@ -40,6 +40,7 @@ export const OrderPayment = ({order, setTransfer}) => {
 		Modal.confirm({
 			title: 'Bạn có chắc chắn muốn tải lên ảnh này!',
 			// content: 'Bạn có chắc chắn muốn tiếp tục?',
+			centered: true,
 			okText: 'Đồng Ý',
 			cancelText: 'Hủy Bỏ',
 			onOk: handleAdd,
