@@ -55,7 +55,7 @@ export const BannerDiamond = () => {
 	};
 
 	return (
-		<div className="relative bg-gray-800 text-white">
+		<div className="relative bg-gray-800">
 			{/* Background image slideshow with fade transition */}
 			<div className={`slideshow-image ${fadeState}`}>
 				<img
@@ -68,7 +68,7 @@ export const BannerDiamond = () => {
 
 			{/* Content with gradient background */}
 			<div
-				className="absolute inset-0 flex items-center justify-end text-white"
+				className="absolute inset-0 flex items-center justify-end text-tintWhite"
 				style={{
 					background: 'linear-gradient(to left, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0))',
 				}}
@@ -87,15 +87,15 @@ export const BannerDiamond = () => {
 								Khám phá những tính năng tuyệt vời và nội dung phù hợp dành riêng
 								cho bạn.
 							</div>
-							<div className="flex flex-col sm:flex-row justify-end">
+							<div className="flex flex-col sm:flex-row justify-end ">
 								<Button
-									className="mr-0 sm:mr-10 mb-4 sm:mb-0 px-6 py-2 bg-primary rounded-lg uppercase font-semibold hover:bg-second w-full sm:w-auto h-12"
+									className="mr-0 sm:mr-10 mb-4 sm:mb-0 px-6 py-2 rounded-lg uppercase font-semibold hover:bg-secondary w-full sm:w-auto h-12 bg-primary"
 									onClick={handleDiamondShopClick}
 								>
 									Mua Kim Cương
 								</Button>
 								<Button
-									className="px-6 py-2 bg-primary rounded-lg uppercase font-semibold hover:bg-second w-full sm:w-auto h-12"
+									className="px-6 py-2 rounded-lg uppercase font-semibold hover:bg-secondary w-full sm:w-auto h-12 bg-primary"
 									onClick={handleJewelryShopClick}
 								>
 									Mua Trang Sức

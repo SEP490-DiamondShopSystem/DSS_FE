@@ -5,16 +5,27 @@ export const getAllJewelryModelCustomize = createAsyncThunk(
 	'customizeSlice/getAllJewelryModelCustomize',
 	async (params, {rejectWithValue}) => {
 		try {
-			const {page, take, name, Category, IsRhodiumFinished, IsEngravable} = params;
+			const {
+				PageSize,
+				CurrentPage,
+				Name,
+				Category,
+				MainDiamond,
+				IsEngravable,
+				Code,
+				MainDiamondQuantity,
+			} = params;
 			let url = '/JewelryModel/Customize/All';
 			const queryParams = new URLSearchParams();
 
 			if (Category) queryParams.append('Category', Category);
-			if (take) queryParams.append('take', take);
-			if (page) queryParams.append('page', page);
-			if (name) queryParams.append('name', name);
-			if (IsRhodiumFinished !== null && IsRhodiumFinished !== undefined) {
-				queryParams.append('IsRhodiumFinished', IsRhodiumFinished);
+			if (CurrentPage) queryParams.append('CurrentPage', CurrentPage);
+			if (PageSize) queryParams.append('PageSize', PageSize);
+			if (Name) queryParams.append('Name', Name);
+			if (Code) queryParams.append('Code', Code);
+			if (MainDiamondQuantity) queryParams.append('MainDiamondQuantity', MainDiamondQuantity);
+			if (MainDiamondQuantity !== null && MainDiamondQuantity !== undefined) {
+				queryParams.append('MainDiamondQuantity', MainDiamondQuantity);
 			}
 			if (IsEngravable !== null && IsEngravable !== undefined) {
 				queryParams.append('IsEngravable', IsEngravable);

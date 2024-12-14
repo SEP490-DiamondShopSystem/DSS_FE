@@ -90,10 +90,11 @@ const DiamondSearchPage = () => {
 	const [diamondChoice, setDiamondChoice] = useState(() => {
 		return localStorage.getItem(`diamondChoice`) || '';
 	});
-	const [pageSize, setPageSize] = useState(100);
+	const [pageSize, setPageSize] = useState();
 	const [start, setStart] = useState(0);
 	const [filters, setFilters] = useState({});
 	const [selectedIndex, setSelectedIndex] = useState(0);
+	const [hasMore, setHasMore] = useState(true);
 	const [diamondList, setDiamondList] = useState();
 
 	useEffect(() => {
@@ -141,7 +142,6 @@ const DiamondSearchPage = () => {
 	const fetchDiamondData = debounce(() => {
 		dispatch(
 			getAllDiamond({
-				pageSize,
 				start,
 				priceStart: filters?.price?.minPrice,
 				priceEnd: filters?.price?.maxPrice,
@@ -160,7 +160,19 @@ const DiamondSearchPage = () => {
 		)
 			.unwrap()
 			.then((res) => {
-				setDiamondList(res);
+				const newValues = res?.Values || [];
+				if (newValues.length > 0) {
+					setDiamondList((prev) => [
+						...(start === 0 ? [] : prev), // Nếu start = 0, làm mới danh sách
+						...newValues,
+					]);
+					// Nếu trả về ít hơn số lượng kỳ vọng, đặt hasMore thành false
+					if (newValues.length < pageSize) {
+						setHasMore(false);
+					}
+				} else {
+					setHasMore(false); // Không còn dữ liệu
+				}
 			});
 	}, 500);
 
@@ -168,11 +180,11 @@ const DiamondSearchPage = () => {
 		fetchDiamondData();
 
 		return () => fetchDiamondData.cancel();
-	}, [dispatch, filters]);
+	}, [dispatch, filters, start]);
 
 	useEffect(() => {
 		if (diamondList && enums) {
-			const mappedData = diamondList?.Values?.map((diamond) => mapAttributes(diamond, enums));
+			const mappedData = diamondList?.map((diamond) => mapAttributes(diamond, enums));
 			setMappedDiamonds(mappedData);
 		}
 	}, [diamondList, enums]);
@@ -188,6 +200,17 @@ const DiamondSearchPage = () => {
 			cut: {minCut: 1, maxCut: 3},
 		});
 	};
+
+	const loadMoreData = () => {
+		if (hasMore) {
+			setStart((prevStart) => prevStart + 1); // Sử dụng callback để tránh lỗi giá trị cũ
+		}
+	};
+	useEffect(() => {
+		setStart(0);
+		setDiamondList([]);
+		setHasMore(true);
+	}, [filters]);
 
 	return (
 		<div className="px-4 md:px-32">
@@ -247,6 +270,8 @@ const DiamondSearchPage = () => {
 					diamondForFilter={diamondForFilter}
 					findShape={findShape}
 					jewelryModel={jewelryModel}
+					loadMoreData={loadMoreData}
+					hasMore={hasMore}
 				/>
 			) : (
 				<DiamondLabList
@@ -257,6 +282,8 @@ const DiamondSearchPage = () => {
 					handleReset={handleReset}
 					diamondForFilter={diamondForFilter}
 					findShape={findShape}
+					loadMoreData={loadMoreData}
+					hasMore={hasMore}
 				/>
 			)}
 		</div>

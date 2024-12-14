@@ -335,6 +335,8 @@ export const InformationLeft = ({jewelryDetail, diamondDetail, jewelry, diamond,
 		</div>
 	);
 
+	console.log('jewelry', jewelry);
+
 	const textCut = <span>Chế Tác Kim Cương</span>;
 
 	const contentCut = (
@@ -589,6 +591,48 @@ export const InformationLeft = ({jewelryDetail, diamondDetail, jewelry, diamond,
 							<span className="text-gray-600">Kích Thước</span>
 							<span className="text-gray-800">{diamond?.Measurement}</span>
 						</div>
+						<div className="bg-gray-50 rounded-lg w-full">
+							<div className="flex justify-center items-center text-xl font-semibold my-10">
+								<span>Thông Số Kim Cương Tấm</span>
+							</div>
+							<div class="flex justify-between px-4 border-b border-tintWhite py-2">
+								<span className="text-gray-600">Ly(Carat)</span>
+								<span className="text-gray-800">{jewelry?.SideDiamond?.Carat}</span>
+							</div>
+
+							<div className="flex justify-between px-4 border-b border-tintWhite py-2">
+								<span className="text-gray-600">Độ Tinh Khiết (Clarity)</span>
+								<span className="text-gray-800 flex items-center">
+									{Object.keys(enums.Clarity).find(
+										(key) =>
+											enums.Clarity[key] === jewelry?.SideDiamond?.ClarityMin
+									)}
+									-{' '}
+									{Object.keys(enums.Clarity).find(
+										(key) =>
+											enums.Clarity[key] === jewelry?.SideDiamond?.ClarityMax
+									)}
+								</span>
+							</div>
+							<div className="flex justify-between px-4 border-b border-tintWhite py-2">
+								<span className="text-gray-600">Màu Sắc (Color)</span>
+								<span className="text-gray-800 flex items-center">
+									{Object.keys(enums.Color).find(
+										(key) => enums.Color[key] === jewelry?.SideDiamond?.ColorMin
+									)}
+									-{' '}
+									{Object.keys(enums.Color).find(
+										(key) => enums.Color[key] === jewelry?.SideDiamond?.ColorMax
+									)}
+								</span>
+							</div>
+							<div className="flex justify-between px-4 border-b border-tintWhite py-2">
+								<span className="text-gray-600">Số lượng</span>
+								<span className="text-gray-800 flex items-center">
+									{jewelry?.SideDiamond?.Quantity}
+								</span>
+							</div>
+						</div>
 					</>
 				))}
 			</div>
@@ -604,6 +648,10 @@ export const InformationLeft = ({jewelryDetail, diamondDetail, jewelry, diamond,
 								<span>Thông Số Vỏ</span>
 							</div>
 							<div class="flex justify-between px-4 border-b border-tintWhite py-2">
+								<span className="text-gray-600">Mã sê-ri</span>
+								<span className="text-gray-800">{jewelry?.SerialCode}</span>
+							</div>
+							<div class="flex justify-between px-4 border-b border-tintWhite py-2">
 								<span className="text-gray-600">Vật Liệu</span>
 								<span className="text-gray-800">{jewelry?.Metal?.Name}</span>
 							</div>
@@ -612,13 +660,6 @@ export const InformationLeft = ({jewelryDetail, diamondDetail, jewelry, diamond,
 								<span className="text-gray-600">Kích Cỡ Nhẫn (mm)</span>
 								<span className="text-gray-800 flex items-center">
 									{jewelry?.Size?.Value}
-								</span>
-							</div>
-							<div className="flex justify-between px-4 border-b border-tintWhite py-2">
-								<span className="text-gray-600">Kim Cương Tấm</span>
-								<span className="text-gray-800 flex items-center">
-									Số viên: {jewelry?.SideDiamond?.Quantity} - Ly (Carat):{' '}
-									{jewelry?.SideDiamond?.Carat}
 								</span>
 							</div>
 						</div>

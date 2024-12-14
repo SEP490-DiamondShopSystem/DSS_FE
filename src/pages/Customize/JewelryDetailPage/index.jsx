@@ -19,7 +19,6 @@ import {getAllJewelryMetal} from '../../../redux/slices/jewelrySlice';
 const JewelryCustomDetail = () => {
 	const {id} = useParams();
 	const dispatch = useDispatch();
-	const jewelryDetail = useSelector(GetAllJewelryModelDetailCustomizeSelector);
 	const metals = useSelector(GetAllJewelryMetalSelector);
 	const navigate = useNavigate();
 
@@ -136,7 +135,7 @@ const JewelryCustomDetail = () => {
 	const filteredGroups = filterMetalGroups(
 		jewelry?.SizeMetals,
 		selectedMetal,
-		selectedSideDiamond
+		selectedSideDiamond?.Id
 	);
 
 	const onChange = (step) => {
@@ -191,6 +190,9 @@ const JewelryCustomDetail = () => {
 								jewelry={jewelry}
 								selectedMetal={selectedMetal}
 								size={size}
+								selectedSideDiamond={selectedSideDiamond}
+								textValue={textValue}
+								fontFamily={fontFamily}
 							/>
 						</div>
 					</div>
@@ -229,6 +231,8 @@ const JewelryCustomDetail = () => {
 								selectedMetal={selectedMetal}
 								size={size}
 								selectedDiamonds={selectedDiamonds}
+								textValue={textValue}
+								fontFamily={fontFamily}
 							/>
 						</div>
 					</div>

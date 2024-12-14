@@ -42,7 +42,7 @@ const MyOrderPage = () => {
 	const [currentPage, setCurrentPage] = useState(1);
 	const [pageSize, setPageSize] = useState(5);
 	const [status, setStatus] = useState('');
-	const [orderList, setOrderList] = useState();
+	const [orderList, setOrderList] = useState([]);
 	const [isCustomizeOrder, setIsCustomizeOrder] = useState(false);
 	const [isResponsive, setIsResponsive] = useState(window.innerWidth <= 768);
 
@@ -142,7 +142,7 @@ const MyOrderPage = () => {
 							<EyeFilled />
 						</Button>
 					</Tooltip>
-					{record?.paymentStatus === 1 && record?.Transactions?.length === 0 && (
+					{record?.status === 'Chờ Xử Lý' && record?.DepositFee === 0 && (
 						<Tooltip title={'Thanh Toán'}>
 							<Button
 								type="text"
@@ -176,6 +176,11 @@ const MyOrderPage = () => {
 	}, []);
 
 	useEffect(() => {
+		setOrderList([]);
+		setCurrentPage(1);
+	}, [status]);
+
+	useEffect(() => {
 		dispatch(
 			getUserOrder({
 				pageSize: pageSize,
@@ -203,6 +208,7 @@ const MyOrderPage = () => {
 				status: getOrderStatus(order.Status),
 				paymentStatus: order.PaymentStatus,
 				Transactions: order.Transactions,
+				DepositFee: order?.DepositFee,
 				products: order.Items.map((item) => ({
 					productId: item.Id,
 					productName: item.Name,
@@ -239,6 +245,7 @@ const MyOrderPage = () => {
 		} else {
 			Modal.confirm({
 				title: 'Vui lòng vào đơn hàng để thanh toán',
+				centered: true,
 			});
 		}
 	};

@@ -163,7 +163,7 @@ const NavLinks = () => {
 	};
 
 	const renderPopoverContent = (sublinks) => (
-		<div className="z-50 rounded-lg shadow-xl flex p-3.5">
+		<div className="z-50 rounded-lg flex p-3.5">
 			<div className={`grid ${sublinks.length > 1 ? 'grid-cols-2' : 'grid-cols-1'} gap-10`}>
 				{sublinks.map((mySubLink, j) => (
 					<div key={j}>

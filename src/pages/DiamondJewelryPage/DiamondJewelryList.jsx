@@ -28,6 +28,8 @@ export const DiamondJewelryList = () => {
 		price: {minPrice: 0, maxPrice: 40000000},
 	});
 
+	console.log('jewelries', jewelries);
+
 	const fetchJewelryData = debounce(() => {
 		dispatch(
 			getAllJewelryModel({
@@ -43,7 +45,9 @@ export const DiamondJewelryList = () => {
 			.unwrap()
 			.then((res) => {
 				if (res?.Values?.length > 0) {
-					setJewelries((prev) => [...prev, ...res.Values]);
+					setJewelries((prev) =>
+						page === 1 ? [...res.Values] : [...prev, ...res.Values]
+					);
 				} else {
 					setHasMore(false); // Không còn dữ liệu mới
 				}
@@ -55,6 +59,12 @@ export const DiamondJewelryList = () => {
 
 		return () => fetchJewelryData.cancel();
 	}, [filters, page]);
+
+	useEffect(() => {
+		setPage(1);
+		setJewelries([]);
+		setHasMore(true);
+	}, [filters]);
 
 	useEffect(() => {
 		const saved = localStorage.getItem('jewelry');
@@ -81,7 +91,9 @@ export const DiamondJewelryList = () => {
 	};
 
 	const loadMoreData = () => {
-		setPage((prev) => prev + 1); // Tăng trang để tải thêm dữ liệu
+		setTimeout(() => {
+			setPage((prev) => prev + 1);
+		}, 300);
 	};
 
 	return (

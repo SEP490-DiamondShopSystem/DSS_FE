@@ -53,11 +53,13 @@ const mapAttributes = (data, attributes) => {
 		MetalPrice: data?.Jewelry?.Metal?.Price,
 		Model: data?.Jewelry?.Model,
 		ModelId: data?.Jewelry?.ModelId,
-		JewelryPrice: data?.Jewelry?.TotalPrice,
+		DefaultPrice: data?.ReviewPrice?.DefaultPrice,
+		FinalPrice: data?.ReviewPrice?.FinalPrice,
 		JewelryName: data?.Jewelry?.Model?.Name,
 		SerialCode: data?.Jewelry?.SerialCode,
 		ShippingDate: data?.Jewelry?.ShippingDate,
 		SideDiamonds: data?.Jewelry?.SideDiamonds,
+		TitleJewelry: data?.Jewelry?.Title,
 		JewelryThumbnail: data?.Jewelry?.Model?.Thumbnail?.MediaPath,
 		SizeId: data?.Jewelry?.SizeId,
 		Weight: data?.Jewelry?.Weight,
@@ -279,14 +281,27 @@ const CartPage = () => {
 											{item.JewelryId ? (
 												<div>
 													<p className="mb-1 text-gray-800 font-semibold">
-														{item.SerialCode} {item.MetalName}
+														{item.TitleJewelry}
 													</p>
-													<p className="text-gray-700 text-sm py-3 ml-1">
-														Giá:
-														<span className="text-gray-900 font-semibold ml-1">
-															{formatPrice(item.JewelryPrice)}
-														</span>
-													</p>
+													{item?.FinalPrice === item.DefaultPrice ? (
+														<p className="text-gray-700 text-sm py-3 ml-1">
+															Giá:
+															<span className="text-gray-900 font-semibold ml-1">
+																{formatPrice(item.DefaultPrice)}
+															</span>
+														</p>
+													) : (
+														<p className="text-gray-700 text-sm py-3 ml-1">
+															Giá:
+															<span className="text-gray-900 font-semibold ml-1 line-through text-gray">
+																{formatPrice(item.DefaultPrice)}
+															</span>
+															<span className="text-gray-900 font-semibold ml-1">
+																{formatPrice(item.FinalPrice)}
+															</span>
+														</p>
+													)}
+
 													<p className="text-gray-700 text-sm">
 														Bảo hành:
 														<span className="text-gray-900 font-semibold mx-3">
@@ -313,12 +328,24 @@ const CartPage = () => {
 															{item?.SerialCodeDiamond}
 														</span>
 													</p>
-													<p className="text-gray-700 text-sm py-3">
-														Giá:
-														<span className="text-gray-900 font-semibold py-3 ml-1">
-															{formatPrice(item.DiamondTruePrice)}
-														</span>
-													</p>
+													{item?.FinalPrice === item.DefaultPrice ? (
+														<p className="text-gray-700 text-sm py-3 ml-1">
+															Giá:
+															<span className="text-gray-900 font-semibold ml-1">
+																{formatPrice(item.DefaultPrice)}
+															</span>
+														</p>
+													) : (
+														<p className="text-gray-700 text-sm py-3 ml-1">
+															Giá:
+															<span className="text-gray-900 font-semibold ml-1 line-through text-gray">
+																{formatPrice(item.DefaultPrice)}
+															</span>
+															<span className="text-gray-900 font-semibold ml-1">
+																{formatPrice(item.FinalPrice)}
+															</span>
+														</p>
+													)}
 													<p className="text-gray-700 text-sm">
 														Bảo hành:
 														<span className="text-gray-900 font-semibold mx-3">
@@ -436,7 +463,7 @@ const CartPage = () => {
 								</span>
 							</div>
 						</div>
-						<div className="flex justify-between">
+						<div className="flex justify-between mb-1">
 							<div className="mb-1 flex justify-between w-full">
 								<span className="font-semibold">Khuyến Mãi</span>{' '}
 								<span>
