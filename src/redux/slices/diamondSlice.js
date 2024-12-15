@@ -20,12 +20,15 @@ export const getAllDiamond = createAsyncThunk(
 				isLab,
 				priceStart,
 				priceEnd,
+				status,
 			} = params;
 			let url = '/Diamond/Page';
 			const queryParams = new URLSearchParams();
 
+			console.log('start', start);
+
 			if (pageSize) queryParams.append('pageSize', pageSize);
-			if (start) queryParams.append('start', start);
+			if (start !== null && start !== undefined) queryParams.append('start', start);
 			if (shapeId) queryParams.append('shapeId', shapeId);
 			if (cutFrom) queryParams.append('diamond_4C.cutFrom', cutFrom);
 			if (cutTo) queryParams.append('diamond_4C.cutTo', cutTo);
@@ -37,6 +40,7 @@ export const getAllDiamond = createAsyncThunk(
 			if (caratTo) queryParams.append('diamond_4C.caratTo', caratTo);
 			if (priceStart) queryParams.append('priceStart', priceStart);
 			if (priceEnd) queryParams.append('priceEnd', priceEnd);
+			if (status) queryParams.append('GetDiamond_ManagerQuery.diamondStatuses', status);
 			if (isLab !== null || isLab !== undefined) queryParams.append('isLab', isLab);
 
 			if (queryParams.toString()) {

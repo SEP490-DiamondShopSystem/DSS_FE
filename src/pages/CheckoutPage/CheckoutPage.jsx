@@ -33,7 +33,7 @@ import {checkPromoCart, getAllPromo} from '../../redux/slices/promotionSlice';
 import {getAllWarranty} from '../../redux/slices/warrantySlice';
 import {formatPrice} from '../../utils';
 import {enums} from '../../utils/constant';
-import {getConfigOrder} from '../../redux/slices/configSlice';
+import {fetchOrderRule, getConfigOrder} from '../../redux/slices/configSlice';
 
 const {Option} = Select;
 
@@ -84,6 +84,9 @@ const mapAttributes = (data, attributes) => {
 		Carat: data?.Diamond?.Carat || null,
 		CategoryName: data?.Jewelry?.Model?.Category?.Name || null,
 		JewelryThumbnail: data?.Jewelry?.Model?.Thumbnail?.MediaPath,
+		DefaultPrice: data?.ReviewPrice?.DefaultPrice,
+		FinalPrice: data?.ReviewPrice?.FinalPrice,
+		TitleJewelry: data?.Jewelry?.Title,
 
 		// Using the helper function to map diamond attributes
 		Clarity: getEnumKey(attributes.Clarity, data?.Diamond?.Clarity),
@@ -145,6 +148,7 @@ const CheckoutPage = () => {
 	const [promo, setPromo] = useState('');
 	const [districtId, setDistrictId] = useState('');
 	const [warrantiesJewelrySelected, setWarrantiesJewelrySelected] = useState();
+	const [warrantiesJewelrySelectedDefault, setWarrantiesJewelrySelectedDefault] = useState();
 	const [payment, setPayment] = useState();
 	const [isAtShop, setIsAtShop] = useState(false);
 	const [orderRule, setOrderRule] = useState();
@@ -200,9 +204,11 @@ const CheckoutPage = () => {
 			}));
 		}
 	}, [isAtShop, shopLocation]);
+
 	const defaultAddress =
 		userDetail.Addresses.length > 0 &&
 		userDetail?.Addresses?.find((address) => address?.IsDefault === true);
+
 	useEffect(() => {
 		if (userDetail && userDetail.Addresses && userDetail.Addresses.length > 0) {
 			const firstAddress = userDetail.Addresses[0];
@@ -218,7 +224,9 @@ const CheckoutPage = () => {
 	}, [userDetail]);
 
 	useEffect(() => {
-		dispatch(getAllWarranty());
+		dispatch(getAllWarranty())
+			.unwrap()
+			.then((res) => {});
 	}, []);
 
 	useEffect(() => {
@@ -264,7 +272,11 @@ const CheckoutPage = () => {
 
 	useEffect(() => {
 		if (warrantyList) {
-			setWarrantiesJewelry(warrantyList?.Values?.filter((warranty) => warranty?.Type === 2));
+			const warrantyJewelry = warrantyList?.Values?.filter(
+				(warranty) => warranty?.Type === 2
+			);
+			setWarrantiesJewelry(warrantyJewelry);
+			setWarrantiesJewelrySelectedDefault(warrantyJewelry[0]);
 		}
 	}, [warrantyList]);
 
@@ -408,6 +420,7 @@ const CheckoutPage = () => {
 	const showOrderSuccessModal = () => {
 		Modal.confirm({
 			title: 'Đặt Hàng Thành Công!',
+			centered: true,
 			icon: <CheckCircleOutlined style={{color: '#52c41a'}} />,
 			content:
 				'Đơn hàng của bạn đã được đặt thành công. Cảm ơn bạn đã mua sắm với chúng tôi!',
@@ -423,6 +436,19 @@ const CheckoutPage = () => {
 		});
 	};
 	const onFinish = () => {
+		if (!userInfo?.phone) {
+			message.error('Vui lòng nhập số điện thoại');
+			return;
+		}
+		if (!paymentForm) {
+			message.error('Vui lòng chọn hình thức thanh toán');
+			return;
+		}
+		if (!paymentMethod) {
+			message.error('Vui lòng chọn phương thức thanh toán');
+			return;
+		}
+
 		const orderItemRequestDtos = cartList?.Products?.map((product) => {
 			return {
 				jewelryId: product?.Jewelry?.Id || null,
@@ -482,7 +508,7 @@ const CheckoutPage = () => {
 					showOrderSuccessModal();
 				})
 				.catch((error) => {
-					message.error(error?.data?.title || error?.title);
+					message.error(error?.detail);
 				});
 		} else {
 			dispatch(handleCheckoutOrder({createOrderInfo, billingDetail}))
@@ -492,7 +518,7 @@ const CheckoutPage = () => {
 					showOrderSuccessModal();
 				})
 				.catch((error) => {
-					message.error(error?.data?.title || error?.detail);
+					message.error(error?.detail);
 				});
 		}
 	};
@@ -501,8 +527,14 @@ const CheckoutPage = () => {
 		if (value !== undefined) {
 			const parseValue = JSON.parse(value);
 			setWarrantiesJewelrySelected(parseValue);
+			setWarrantiesJewelrySelectedDefault({
+				Name: parseValue?.Name,
+				Code: parseValue?.warrantyCode,
+				Type: parseValue?.warrantyType,
+			});
 		} else {
 			console.warn('Giá trị "value" là undefined, không có hành động nào được thực hiện');
+			setWarrantiesJewelrySelectedDefault(null);
 		}
 	};
 
@@ -885,53 +917,106 @@ const CheckoutPage = () => {
 					</div>
 					<div className="space-y-6">
 						{idCustomize ? (
-							<>
-								<div className="flex mt-4 shadow-xl p-5 rounded-lg" key={order.Id}>
-									<div className="mr-4 flex-shrink-0">
-										<img
-											src={order?.JewelryThumbnail}
-											alt={order?.Jewelry?.SerialCode || order?.Title}
-											className="w-32 h-32 object-cover rounded-lg border"
-										/>
-									</div>
-									<div className="flex-1 mx-5">
-										<div>
-											<div className="mb-1 text-gray-800 font-semibold">
-												{order?.Jewelry?.SerialCode}
-											</div>
-											<div className="text-gray-700 text-sm py-2">
-												Giá:
-												<span className="text-gray-900 font-semibold ml-1">
-													{formatPrice(
-														order?.Jewelry?.SoldPrice ||
-															order?.Jewelry?.TotalPrice
-													)}
-												</span>
-											</div>
+							<div className="shadow-xl p-5 rounded-lg">
+								{mappedProducts?.map((item, index) => (
+									<div className="flex mt-4 " key={item.Id}>
+										<div className="mr-4 flex-shrink-0">
+											<img
+												src={
+													item?.DiamondThumbnail || item?.JewelryThumbnail
+												}
+												className="w-32 h-32 object-cover rounded-lg border"
+											/>
 										</div>
-										<label>Chọn bảo hành trang sức</label>
-										<Select
-											allowClear
-											className="w-full mt-2 mb-5" // Sử dụng class custom
-											placeholder="Chọn bảo hành trang sức"
-											onChange={onChangeWarrantyJewelry}
-										>
-											{warrantiesJewelry &&
-												warrantiesJewelry?.map((warranty, i) => (
-													<Select.Option
-														key={i}
-														value={JSON.stringify({
-															warrantyCode: warranty.Code,
-															warrantyType: warranty?.Type,
-														})}
-													>
-														{warranty?.Name?.replace(/_/g, ' ')}
-													</Select.Option>
-												))}
-										</Select>
+										<div className="flex-1 mx-5">
+											{/* Kiểm tra và hiển thị thông tin sản phẩm */}
+											{item.JewelryId && (
+												<div>
+													<div className="mb-1 text-gray-800 font-semibold">
+														{item.TitleJewelry}
+													</div>
+													<div className="text-gray-700 text-sm mr-1">
+														{item?.FinalPrice === item.DefaultPrice ? (
+															<p className="text-gray-700 text-sm py-3 ml-1">
+																Giá:
+																<span className="text-gray-900 font-semibold ml-1">
+																	{formatPrice(item.DefaultPrice)}
+																</span>
+															</p>
+														) : (
+															<p className="text-gray-700 text-sm py-3 ml-1">
+																Giá:
+																<span className="text-gray-900 font-semibold ml-1 line-through text-gray">
+																	{formatPrice(item.DefaultPrice)}
+																</span>
+																<span className="text-gray-900 font-semibold ml-1">
+																	{formatPrice(item.FinalPrice)}
+																</span>
+															</p>
+														)}
+													</div>
+												</div>
+											)}
+										</div>
 									</div>
+								))}
+								<div className="mt-5">
+									<label>Chọn bảo hành trang sức</label>
+									<Select
+										allowClear
+										className="w-full mt-2 mb-5" // Sử dụng class custom
+										placeholder="Chọn bảo hành trang sức"
+										onChange={onChangeWarrantyJewelry}
+									>
+										{warrantiesJewelry &&
+											warrantiesJewelry?.map((warranty, i) => (
+												<Select.Option
+													key={i}
+													value={JSON.stringify({
+														warrantyCode: warranty.Code,
+														warrantyType: warranty?.Type,
+													})}
+												>
+													{warranty?.Name?.replace(/_/g, ' ')}
+												</Select.Option>
+											))}
+									</Select>
 								</div>
-							</>
+
+								<>
+									<label
+										htmlFor="promotions"
+										className="block mb-2 text-gray-700 font-medium"
+									>
+										Khuyến mãi có sẵn
+									</label>
+
+									<Select
+										className="w-full"
+										onChange={handlePromoChange}
+										allowClear
+									>
+										{promo &&
+											promo.map((promotion) => (
+												<Select.Option
+													key={promotion.PromoId}
+													value={promotion.PromoId}
+													disabled={!promotion?.IsApplicable}
+												>
+													<div
+														className={`${
+															promotion?.IsApplicable
+																? 'text-darkGreen'
+																: 'text-red'
+														}`}
+													>
+														{promotion.PromotionDto.Description}
+													</div>
+												</Select.Option>
+											))}
+									</Select>
+								</>
+							</div>
 						) : (
 							<>
 								{mappedProducts?.map((item, index) => (
@@ -952,14 +1037,34 @@ const CheckoutPage = () => {
 											{item.JewelryId ? (
 												<div>
 													<div className="mb-1 text-gray-800 font-semibold">
-														{item.SerialCode}
+														{item.TitleJewelry}
 													</div>
 													<div className="text-gray-700 text-sm mr-1">
-														Giá:
-														<span className="text-gray-900 font-semibold ml-1">
-															{formatPrice(item.JewelryPrice)}
-														</span>
+														{item?.FinalPrice === item.DefaultPrice ? (
+															<p className="text-gray-700 text-sm py-3 ml-1">
+																Giá:
+																<span className="text-gray-900 font-semibold ml-1">
+																	{formatPrice(item.DefaultPrice)}
+																</span>
+															</p>
+														) : (
+															<p className="text-gray-700 text-sm py-3 ml-1">
+																Giá:
+																<span className="text-gray-900 font-semibold ml-1 line-through text-gray">
+																	{formatPrice(item.DefaultPrice)}
+																</span>
+																<span className="text-gray-900 font-semibold ml-1">
+																	{formatPrice(item.FinalPrice)}
+																</span>
+															</p>
+														)}
 													</div>
+													{/* <div className="text-gray-700 text-sm mr-1">
+														SKU:
+														<span className="text-gray-900 font-semibold py-3">
+															{item.SerialCode}
+														</span>
+													</div> */}
 													{item.CategoryName === 'Ring' && (
 														<div className="flex items-center mt-2">
 															<label className="mr-2 text-gray-700">
@@ -975,10 +1080,24 @@ const CheckoutPage = () => {
 														{item?.Title}
 													</div>
 													<div className="text-gray-700 text-sm mr-1">
-														Giá:
-														<span className="text-gray-900 font-semibold py-3">
-															{formatPrice(item.DiamondTruePrice)}
-														</span>
+														{item?.FinalPrice === item.DefaultPrice ? (
+															<p className="text-gray-700 text-sm py-3 ml-1">
+																Giá:
+																<span className="text-gray-900 font-semibold ml-1">
+																	{formatPrice(item.DefaultPrice)}
+																</span>
+															</p>
+														) : (
+															<p className="text-gray-700 text-sm py-3 ml-1">
+																Giá:
+																<span className="text-gray-900 font-semibold ml-1 line-through text-gray">
+																	{formatPrice(item.DefaultPrice)}
+																</span>
+																<span className="text-gray-900 font-semibold ml-1">
+																	{formatPrice(item.FinalPrice)}
+																</span>
+															</p>
+														)}
 													</div>
 													<div className="text-gray-700 text-sm mr-1">
 														SKU:
@@ -1007,51 +1126,18 @@ const CheckoutPage = () => {
 										{formatPrice(cartList?.OrderPrices?.DefaultPrice || 0)}
 									</span>
 								</div>
-								<div className="flex justify-between mb-1">
+								<div className="mb-2">
 									<div className="mb-1 flex justify-between w-full">
 										<span className="font-semibold">Phí Vận Chuyển</span>{' '}
 										<span>
-											{formatPrice(cartList?.ShippingPrice?.FinalPrice || 0)}
+											{formatPrice(
+												cartList?.ShippingPrice?.DefaultPrice || 0
+											)}
 										</span>
 									</div>
 								</div>
-								{idCustomize && (
-									<>
-										<label
-											htmlFor="promotions"
-											className="block mb-2 text-gray-700 font-medium"
-										>
-											Khuyến mãi có sẵn
-										</label>
 
-										<Select
-											className="w-full"
-											onChange={handlePromoChange}
-											allowClear
-										>
-											{promo &&
-												promo.map((promotion) => (
-													<Select.Option
-														key={promotion.PromoId}
-														value={promotion.PromoId}
-														disabled={!promotion?.IsApplicable}
-													>
-														<div
-															className={`${
-																promotion?.IsApplicable
-																	? 'text-darkGreen'
-																	: 'text-red'
-															}`}
-														>
-															{promotion.PromotionDto.Description}
-														</div>
-													</Select.Option>
-												))}
-										</Select>
-									</>
-								)}
-
-								<div className="flex justify-between mb-1">
+								<div className="mb-2">
 									<div className="mb-1 flex justify-between w-full">
 										<span className="font-semibold">Giảm Giá</span>{' '}
 										<span>
@@ -1063,8 +1149,8 @@ const CheckoutPage = () => {
 										</span>
 									</div>
 								</div>
-								<div className="flex justify-between">
-									<div className="mb-1 flex justify-between w-full">
+								<div className="mb-2">
+									<div className="flex justify-between w-full">
 										<span className="font-semibold">Khuyến Mãi</span>{' '}
 										<span>
 											{cartList?.OrderPrices?.PromotionAmountSaved !== 0 &&
@@ -1075,7 +1161,7 @@ const CheckoutPage = () => {
 										</span>
 									</div>
 								</div>
-								<div className="flex justify-between mb-1">
+								<div className="mb-2">
 									<div className="mb-1 flex justify-between w-full">
 										<span className="font-semibold">Bảo Hành</span>{' '}
 										<span>
@@ -1085,7 +1171,7 @@ const CheckoutPage = () => {
 										</span>
 									</div>
 								</div>
-								<div className="flex justify-between mb-1">
+								<div className="mb-2">
 									<div className="mb-1 flex justify-between w-full">
 										<span className="font-semibold">Khách Hàng Thân Thiết</span>
 
@@ -1100,12 +1186,9 @@ const CheckoutPage = () => {
 								</div>
 
 								<div className="flex text-sm text-gray-600 my-2">
-									<span className="mr-2">📅 Thời gian giao hàng</span>
-									{idCustomize ? (
-										<span>Giao hàng sau 7 ngày</span>
-									) : (
-										<span>Giao hàng sau 3 ngày</span>
-									)}
+									<span className="mr-2">📅 Thời gian giao hàng dự kiến</span>
+
+									<span>{orderRule?.ExpectedDeliveryDate} ngày</span>
 								</div>
 
 								<div className="flex justify-between items-center font-semibold mt-4 text-lg">

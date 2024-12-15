@@ -22,7 +22,7 @@ import {
 } from '../../utils/constant';
 import {formatPrice} from '../../utils';
 
-export const FilterDiamond = ({filters, setFilters, handleReset, diamondForFilter, findShape}) => {
+export const FilterDiamond = ({filters, setFilters, handleReset, findShape}) => {
 	const [collapsed, setCollapsed] = useState(false); // State to toggle collapse
 	const toggleCollapse = () => {
 		setCollapsed((prev) => !prev);
@@ -260,15 +260,15 @@ export const FilterJewelryDiamond = ({
 						range
 						marks={{
 							0: '0',
-							1000000000: '100M',
-							5000000000: '500M',
-							10000000000: '1000M',
-							15000000000: '15000M',
-							20000000000: '20000M',
+							1000000: '10M',
+							50000000: '50M',
+							100000000: '100M',
+							150000000: '150M',
+							200000000: '200M',
 						}}
 						step={null}
 						min={0}
-						max={filter?.Price?.Max}
+						max={filters?.price?.maxPrice}
 						value={[filters?.price?.minPrice, filters?.price?.maxPrice]}
 						onChange={handlePriceChange}
 						className="w-full mx-4"
@@ -579,10 +579,6 @@ export const FilterDiamondJewelry = ({handleFilter, setFilters, filters, handleR
 	const filterOptions = {
 		Type: categories?.map((category) => ({id: category.Name, name: category.Name})),
 		Metal: metals?.map((metal) => ({id: metal.Id, name: metal.Name})),
-		IsRhodiumFinished: [
-			{id: true, name: 'Có'},
-			{id: false, name: 'Không'},
-		],
 		IsEngravable: [
 			{id: true, name: 'Có'},
 			{id: false, name: 'Không'},
@@ -625,7 +621,7 @@ export const FilterDiamondJewelry = ({handleFilter, setFilters, filters, handleR
 
 			{/* Price Range Slider */}
 			<div className="ml-10 min-w-44 md:min-w-96 sm:ml-0 sm:mt-4">
-				<p className="mb-4">Giá:</p>
+				<p className="mb-4">Giá Mẫu:</p>
 				<div className="flex">
 					<Slider
 						range
@@ -667,7 +663,7 @@ export const FilterJewelryCustomize = ({handleFilter, setFilters, filters, handl
 		}
 	}, [categoryList]);
 
-	const filterTypes = ['Loại trang sức', 'Được Khắc Chữ'];
+	const filterTypes = ['Loại trang sức', 'Được Khắc Chữ', 'Kim Cương Chính'];
 
 	const handleFilterChange = (filterType, selectedValues) => {
 		setFilters((prevFilters) => ({
@@ -685,20 +681,24 @@ export const FilterJewelryCustomize = ({handleFilter, setFilters, filters, handl
 
 	const filterOptions = {
 		Type: categories?.map((category) => ({id: category.Name, name: category.Name})),
-		IsRhodiumFinished: [
-			{id: true, name: 'Có'},
-			{id: false, name: 'Không'},
-		],
+
 		IsEngravable: [
 			{id: true, name: 'Có'},
 			{id: false, name: 'Không'},
+		],
+		MainDiamond: [
+			{id: 0, name: '0'},
+			{id: 1, name: '1'},
+			{id: 2, name: '2'},
+			{id: 3, name: '3'},
+			{id: 4, name: '4'},
 		],
 	};
 
 	const filterTypeMapping = {
 		'Loại trang sức': 'Type',
-		'Hoàn Thiện Rhodium': 'IsRhodiumFinished',
 		'Được Khắc Chữ': 'IsEngravable',
+		'Kim Cương Chính': 'MainDiamond',
 	};
 
 	return (

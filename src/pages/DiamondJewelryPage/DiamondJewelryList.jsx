@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Image} from 'antd';
+import {Image, Rate} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -8,7 +8,7 @@ import {FilterDiamondJewelry} from '../../components/Filter/Filter';
 import Loading from '../../components/Loading';
 import {GetAllJewelryModelSelector, LoadingJewelrySelector} from '../../redux/selectors';
 import {getAllJewelryModel} from '../../redux/slices/jewelrySlice';
-import {formatPrice, Rating} from '../../utils';
+import {formatPrice, Rating, StarRating} from '../../utils';
 import debounce from 'lodash/debounce';
 
 export const DiamondJewelryList = () => {
@@ -28,6 +28,8 @@ export const DiamondJewelryList = () => {
 		price: {minPrice: 0, maxPrice: 40000000},
 	});
 
+	console.log('jewelries', jewelries);
+
 	const fetchJewelryData = debounce(() => {
 		dispatch(
 			getAllJewelryModel({
@@ -43,7 +45,9 @@ export const DiamondJewelryList = () => {
 			.unwrap()
 			.then((res) => {
 				if (res?.Values?.length > 0) {
-					setJewelries((prev) => [...prev, ...res.Values]);
+					setJewelries((prev) =>
+						page === 1 ? [...res.Values] : [...prev, ...res.Values]
+					);
 				} else {
 					setHasMore(false); // Không còn dữ liệu mới
 				}
@@ -55,6 +59,12 @@ export const DiamondJewelryList = () => {
 
 		return () => fetchJewelryData.cancel();
 	}, [filters, page]);
+
+	useEffect(() => {
+		setPage(1);
+		setJewelries([]);
+		setHasMore(true);
+	}, [filters]);
 
 	useEffect(() => {
 		const saved = localStorage.getItem('jewelry');
@@ -81,7 +91,9 @@ export const DiamondJewelryList = () => {
 	};
 
 	const loadMoreData = () => {
-		setPage((prev) => prev + 1); // Tăng trang để tải thêm dữ liệu
+		setTimeout(() => {
+			setPage((prev) => prev + 1);
+		}, 300);
 	};
 
 	return (
@@ -98,11 +110,7 @@ export const DiamondJewelryList = () => {
 				<Loading />
 			) : (
 				<>
-					{!Array.isArray(jewelries) || jewelries.length === 0 ? (
-						<div className="flex items-center justify-center my-10">
-							<p className="text-2xl">Chưa có sản phẩm nào</p>
-						</div>
-					) : (
+					{Array.isArray(jewelries) && (
 						<InfiniteScroll
 							dataLength={jewelries.length}
 							next={loadMoreData}
@@ -146,14 +154,39 @@ export const DiamondJewelryList = () => {
 													</p>
 												</div>
 												<div className="flex items-center mt-2">
-													<p className="text-sm">
-														Giá Vỏ: {formatPrice(jewelry.MinPrice)} -{' '}
-														{formatPrice(jewelry.MaxPrice)}
-													</p>
+													{jewelry?.MinPrice ===
+														jewelry?.MinPriceAfterDiscount &&
+													jewelry?.MaxPrice ===
+														jewelry?.MaxPriceAfterDiscount ? (
+														<p className="text-sm">
+															Giá Mẫu: {formatPrice(jewelry.MinPrice)}{' '}
+															- {formatPrice(jewelry.MaxPrice)}
+														</p>
+													) : (
+														<div className="space-y-1">
+															<p className="text-sm line-through">
+																Giá Mẫu:{' '}
+																{formatPrice(jewelry.MinPrice)} -{' '}
+																{formatPrice(jewelry.MaxPrice)}
+															</p>
+															<br />
+															<p className="text-sm">
+																Giá Mẫu Đã Giảm:{' '}
+																{formatPrice(
+																	jewelry.MinPriceAfterDiscount
+																)}{' '}
+																-{' '}
+																{formatPrice(
+																	jewelry.MaxPriceAfterDiscount
+																)}
+															</p>
+														</div>
+													)}
 												</div>
+
 												<div className="flex items-center mt-2">
 													<p className="mr-3">
-														<Rating rating={jewelry?.StarRating} />
+														<StarRating rating={jewelry?.StarRating} />
 													</p>
 													<p>{jewelry.ReviewCount}</p>
 												</div>

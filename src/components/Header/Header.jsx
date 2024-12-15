@@ -46,6 +46,12 @@ export const Header = () => {
 						>
 							Khuyến mãi
 						</Link>
+						<Link
+							to="/discount"
+							className="py-2 px-3 text-sm md:text-base lg:text-lg no-underline text-black"
+						>
+							Giảm giá
+						</Link>
 					</div>
 
 					{/* Actions */}

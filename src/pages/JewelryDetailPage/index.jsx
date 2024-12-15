@@ -183,6 +183,7 @@ const JewelryDetailPage = () => {
 							<InformationLeft
 								diamondJewelry={jewelry}
 								selectedMetal={selectedMetal}
+								selectedSideDiamond={selectedSideDiamond}
 							/>
 						</div>
 

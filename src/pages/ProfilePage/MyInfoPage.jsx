@@ -206,7 +206,7 @@ const MyInfoPage = () => {
 				});
 			})
 			.catch((error) => {
-				message.error(error?.data?.title || error?.detail);
+				message.error(error?.data?.detail || error?.detail);
 			});
 	};
 
@@ -217,7 +217,7 @@ const MyInfoPage = () => {
 				message.success('Địa chỉ đã được đặt làm mặc định');
 			})
 			.catch((error) => {
-				message.error(error?.data?.title || error?.detail);
+				message.error(error?.data?.detail || error?.detail);
 			});
 	};
 
@@ -228,7 +228,7 @@ const MyInfoPage = () => {
 				message.warning('Đã gửi mã xác thực về email, xin hãy xác nhận!');
 			})
 			.catch((error) => {
-				message.error(error?.data?.title || error?.detail);
+				message.error(error?.data?.detail || error?.detail);
 			});
 	};
 

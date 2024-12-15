@@ -3393,3 +3393,40 @@ video {
 .w-auto {
 	width: auto;
 }
+
+.border-gray {
+	--tw-border-opacity: 1;
+	border-color: rgb(112 112 112 / var(--tw-border-opacity, 1)) /* #707070 */;
+}
+
+.h-\[250px\] {
+	height: 250px;
+}
+
+.max-h-\[250px\] {
+	max-height: 250px;
+}
+
+.min-w-\[800px\] {
+	min-width: 800px;
+}
+
+.text-tintWhite {
+	--tw-text-opacity: 1;
+	color: rgb(243 243 243 / var(--tw-text-opacity, 1)) /* #f3f3f3 */;
+}
+
+.hover\:bg-secondary:hover {
+	--tw-bg-opacity: 1;
+	background-color: rgb(255 237 153 / var(--tw-bg-opacity, 1)) /* #ffed99 */;
+}
+
+.text-lightGray {
+	--tw-text-opacity: 1;
+	color: rgb(221 221 221 / var(--tw-text-opacity, 1)) /* #dddddd */;
+}
+
+.text-gray {
+	--tw-text-opacity: 1;
+	color: rgb(112 112 112 / var(--tw-text-opacity, 1)) /* #707070 */;
+}

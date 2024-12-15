@@ -8,6 +8,8 @@ import {
 	deleteDiamondPrice,
 } from '../../../redux/slices/diamondPriceSlice';
 import {getPriceBoardSelector, LoadingDiamondPriceSelector} from '../../../redux/selectors';
+import {message} from 'antd';
+import Loading from '../../../components/Loading';
 
 const formatPrice = (price) => {
 	if (price === null || price === undefined) return 'N/A';
@@ -75,10 +77,10 @@ const SideDiamondPricePage = () => {
 					message.success('Xóa Giá Thành Công!');
 				})
 				.catch((error) => {
-					message.error(error?.data?.title || error?.detail);
+					message.error(error?.data?.detail || error?.detail);
 				}); // Wait for delete to finish
 		} catch (error) {
-			message.error(error?.data?.title || error?.detail);
+			message.error(error?.data?.detail || error?.detail);
 		}
 		setSelectedPrices([]);
 		setShowDeleteConfirm(false);
@@ -100,10 +102,10 @@ const SideDiamondPricePage = () => {
 					message.success('Thêm Giá Thành Công!');
 				})
 				.catch((error) => {
-					message.error(error?.data?.title || error?.detail);
+					message.error(error?.data?.detail || error?.detail);
 				});
 		} catch (error) {
-			message.error(error?.data?.title || error?.detail);
+			message.error(error?.data?.detail || error?.detail);
 		}
 		setEditedCells([]);
 		setIsCreating(!isCreating);
@@ -129,7 +131,7 @@ const SideDiamondPricePage = () => {
 				message.success('Cập Nhật Giá Thành Công!');
 			})
 			.catch((error) => {
-				message.error(error?.data?.title || error?.detail);
+				message.error(error?.data?.detail || error?.detail);
 			});
 		setEditedCells([]);
 		setIsEditing(!isEditing);
@@ -229,7 +231,7 @@ const SideDiamondPricePage = () => {
 	};
 
 	if (loading) {
-		return <div className="text-center text-lg font-semibold">Đang Tải...</div>;
+		return <Loading />;
 	}
 
 	const renderPriceRows = (cellMatrix, colorRange, isCreating) => {

@@ -19,6 +19,8 @@ export const OrderStatus = ({orderStatus, orderDetail}) => {
 
 	// }, [orderStatus, orderDetail]);
 
+	console.log('currentStep', currentStep);
+
 	useEffect(() => {
 		const getOrderStatus = (status) => {
 			switch (status) {
@@ -80,34 +82,36 @@ export const OrderStatus = ({orderStatus, orderDetail}) => {
 		// Step 1: Priced
 		{
 			title: [2, 3, 4].includes(currentStep)
-				? 'Chưa Có Giá'
+				? 'Đã Có Giá'
 				: stage === 4
 				? 'Đã Hủy'
 				: stage === 5
 				? 'Đã Từ Chối'
-				: 'Đã Có Giá ',
+				: 'Đã Có Giá',
 			description: [2, 3, 4].includes(currentStep)
-				? 'Yêu cầu thiết kế chưa được thiết lập giá.'
+				? 'Yêu cầu thiết kế đã có giá trang sức.'
 				: stage === 4
 				? 'Đơn thiết kế đã bị hủy.'
 				: stage === 5
 				? `Yêu cầu thiết kế đã bị từ chối.`
-				: 'Yêu cầu thiết kế đã có thiết lập giá.',
+				: 'Yêu cầu thiết kế đã có giá trang sức.',
 		},
 		// Step 2:Requesting
 		{
 			title: [2, 3, 4].includes(currentStep)
-				? 'Đã Chấp Nhận Giá'
+				? 'Đang Gửi Yêu Cầu'
 				: stage === 9
 				? 'Đã Từ Chối'
-				: 'Chưa Xác Nhận',
-			description: [2, 3, 4].includes(currentStep)
-				? 'Khách hàng đã chấp nhận giá yêu cầu thiết kế.'
 				: stage === 8
 				? 'Đã Hủy'
+				: 'Xác Nhận Yêu Cầu',
+			description: [2, 3, 4].includes(currentStep)
+				? 'Khách hàng đang gửi yêu cầu xác nhận thiết kế.'
+				: stage === 8
+				? 'Khách hàng đã hủy yêu cầu thiết kế'
 				: stage === 9
 				? `Yêu cầu thiết kế đã bị từ chối.`
-				: 'Đang chờ khách chấp nhận giá yêu cầu thiết kế.',
+				: 'Cửa hàng đã chấp nhận yêu cầu thiết kế.',
 		},
 		// Step 4: Accepted
 		{
@@ -118,7 +122,7 @@ export const OrderStatus = ({orderStatus, orderDetail}) => {
 					? 'Đơn thiết kế đã bị hủy.'
 					: order !== null
 					? 'Đơn thiết kế đã được đặt hàng.'
-					: 'Yêu cầu thiết kế đã được shop chấp nhận. Tiến hành tạo đơn!',
+					: 'Yêu cầu thiết kế đã được cửa hàng chấp nhận. Tiến hành tạo đơn!',
 		},
 	];
 

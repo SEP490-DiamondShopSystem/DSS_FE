@@ -48,6 +48,7 @@ export const ErrorCartSelector = (state) => state.cartSlice.error;
 export const LoadingPromotionSelector = (state) => state.promotionSlice.loading;
 export const GetPromotionSelector = (state) => state.promotionSlice.promotion;
 export const GetPromotionAbleSelector = (state) => state.promotionSlice.promoAble;
+export const GetDiscountSelector = (state) => state.promotionSlice.discount;
 export const ErrorPromotionSelector = (state) => state.promotionSlice.error;
 
 //ORDER

@@ -20,6 +20,8 @@ export const DetailMetalDiamond = ({
 	selectedMetal,
 	size,
 	selectedDiamonds,
+	textValue,
+	fontFamily,
 }) => {
 	const convertFields = (diamond) => {
 		const findKeyByValue = (obj, value) => {
@@ -70,7 +72,7 @@ export const DetailMetalDiamond = ({
 				<p>123456</p>
 			</div>
 			<Divider /> */}
-			<div className="flex items-center justify-between pr-5">
+			<div className="flex items-center justify-between pr-5 mt-5">
 				<p className="font-semibold">Vỏ:</p>
 				<p>{jewelry?.Name}</p>
 			</div>
@@ -90,7 +92,16 @@ export const DetailMetalDiamond = ({
 				<p>{customizeJewelry.shape}</p>
 			</div>
 			<Divider /> */}
-			{imageData && (
+			{textValue && (
+				<>
+					<div className="flex items-center justify-between ">
+						<p className="font-semibold text-primary">Chữ Khắc:</p>
+						<p>{textValue}</p>
+					</div>
+					{/* <Divider /> */}
+				</>
+			)}
+			{/* {imageData && (
 				<>
 					<div className="flex items-center justify-between">
 						<p className="font-semibold text-primary">Hình:</p>
@@ -100,9 +111,9 @@ export const DetailMetalDiamond = ({
 					</div>
 					<Divider />
 				</>
-			)}
+			)} */}
 
-			<div>
+			<div className="my-5">
 				<h1 className="text-center text-2xl font-semibold mb-5">Thông số kim cương</h1>
 			</div>
 			{convertedDiamonds.length > 0 &&

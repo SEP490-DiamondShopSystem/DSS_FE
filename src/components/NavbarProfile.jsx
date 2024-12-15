@@ -82,7 +82,13 @@ const NavbarProfile = () => {
 	return (
 		<div>
 			<div className="flex items-center justify-center">
-				<Image src={avatar} height={50} width={50} className="rounded-full" />
+				<Image
+					src={avatar}
+					height={50}
+					width={50}
+					className="rounded-full"
+					preview={false}
+				/>
 			</div>
 			<div className="font-semibold w-full flex justify-center items-center my-5 ">
 				<div className="">

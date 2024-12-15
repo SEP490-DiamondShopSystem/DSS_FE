@@ -3,7 +3,10 @@ import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import logo from '../../assets/logo-short-ex.png';
-import {GetRequestCustomizeDetailSelector} from '../../redux/selectors';
+import {
+	GetLoadingCustomizeSelector,
+	GetRequestCustomizeDetailSelector,
+} from '../../redux/selectors';
 import {
 	getRequestCustomizeDetail,
 	handleOrderCustomizeCancel,
@@ -12,6 +15,8 @@ import {
 } from '../../redux/slices/customizeSlice';
 import {enums} from '../../utils/constant';
 import {OrderStatus} from './OrderStatus';
+import {formatPrice} from '../../utils';
+import InformationUser from './InformationUser';
 
 const {Title, Text} = Typography;
 
@@ -19,6 +24,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const orderDetail = useSelector(GetRequestCustomizeDetailSelector);
+	const loading = useSelector(GetLoadingCustomizeSelector);
 
 	const [isCancelModalVisible, setIsCancelModalVisible] = useState(false);
 	const [expandedRowKeys, setExpandedRowKeys] = useState([]);
@@ -26,7 +32,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 	const orderStatus = order?.Status;
 
 	useEffect(() => {
-		if (selectedOrder) {
+		if (selectedOrder?.Id) {
 			dispatch(getRequestCustomizeDetail(selectedOrder.Id));
 		}
 	}, [selectedOrder, dispatch]);
@@ -248,6 +254,13 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 			key: 'IsLabGrown',
 			render: (shape) => (shape ? 'Nhân Tạo' : 'Tự Nhiên'),
 		},
+		{
+			title: 'Giá',
+			dataIndex: 'TruePrice',
+			key: 'TruePrice',
+			align: 'center',
+			render: (TruePrice) => formatPrice(TruePrice),
+		},
 	];
 
 	const handleExpand = (expanded, record) => {
@@ -291,6 +304,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 		Modal.confirm({
 			title: 'Đồng ý đơn thiết kế này',
 			content: 'Bạn có chắc chắn muốn tiếp tục?',
+			centered: true,
 			okText: 'Đồng Ý',
 			cancelText: 'Hủy Bỏ',
 			onOk: handleProceed,
@@ -304,7 +318,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 				message.success(`Bạn đã xác nhận đơn thiết kế ${selectedOrder.Id}!`);
 			})
 			.catch((error) => {
-				message.error(error?.data?.title || error?.detail);
+				message.error(error?.data?.detail || error?.detail);
 			});
 	};
 
@@ -312,6 +326,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 		Modal.confirm({
 			title: 'Hủy đơn đơn thiết kế này',
 			content: 'Bạn có chắc chắn muốn tiếp tục?',
+			centered: true,
 			okText: 'Xác nhận',
 			cancelText: 'Hủy Bỏ',
 			onOk: submitCancelOrder,
@@ -322,11 +337,11 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 		dispatch(handleOrderCustomizeCancel(selectedOrder.Id))
 			.unwrap()
 			.then(() => {
-				message.success('Hủy đơn thành công!');
+				message.success('Hủy yêu cầu thành công!');
 				setIsCancelModalVisible(false);
 			})
 			.catch((error) => {
-				message.error(error?.data?.title || error?.detail);
+				message.error(error?.data?.detail || error?.detail);
 			});
 	};
 
@@ -334,6 +349,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 		Modal.confirm({
 			title: 'Từ chối đơn thiết kế này',
 			content: 'Bạn có chắc chắn muốn tiếp tục?',
+			centered: true,
 			okText: 'Xác nhận',
 			cancelText: 'Hủy Bỏ',
 			onOk: submitRejectOrder,
@@ -341,14 +357,13 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 	};
 
 	const submitRejectOrder = () => {
-		dispatch(handleOrderCustomizeReject(selectedOrder.Id))
+		dispatch(handleOrderCustomizeReject(selectedOrder?.Id))
 			.unwrap()
 			.then(() => {
-				message.success('Hủy đơn thành công!');
-				setIsRejectModalVisible(false);
+				message.success('Hủy yêu cầu thành công!');
 			})
 			.catch((error) => {
-				message.error(error?.data?.title || error?.detail);
+				message.error(error?.data?.detail || error?.detail);
 			});
 	};
 
@@ -393,9 +408,14 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 						orderStatus={orderStatus}
 						orderDetail={orderDetail}
 					/>
-
+					<div className="my-5">
+						<Title level={3} className="mb-5">
+							Thông Tin Khách Hàng
+						</Title>
+						<InformationUser order={order} />
+					</div>
 					<div className="flex justify-between">
-						<h1 className="text-xl font-semibold">Chi tiết đơn thiết kế</h1>
+						<Title level={3}>Chi tiết đơn thiết kế</Title>
 						{orderStatus === 1 && (
 							<Space>
 								<Button danger className="" onClick={handleCancelOrder}>
@@ -409,6 +429,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 									type="text"
 									className="bg-primary "
 									onClick={handleProceedConfirmation}
+									loading={loading}
 								>
 									Đồng Ý Đơn
 								</Button>

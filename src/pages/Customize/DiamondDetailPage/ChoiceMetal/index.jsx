@@ -121,7 +121,7 @@ export const ChoiceMetalDiamond = ({
 				jewelryModelId: id,
 				metalId: selectedMetal?.Id,
 				sizeId: size,
-				sideDiamondOptId: selectedSideDiamond,
+				sideDiamondOptId: selectedSideDiamond?.Id,
 				engravedText: textValue,
 				engravedFont: fontFamily,
 				note: note,
@@ -134,7 +134,7 @@ export const ChoiceMetalDiamond = ({
 				setStepChoose(3);
 			})
 			.catch((error) => {
-				message.error(error?.data?.title || error?.title);
+				message.error(error?.data?.detail || error?.title);
 			});
 	};
 

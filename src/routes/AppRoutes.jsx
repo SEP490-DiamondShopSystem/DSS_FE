@@ -47,6 +47,8 @@ import TermOfServices from '../components/TermOfServices';
 import ShoppingGuide from '../pages/PortalPage/ShoppingGuide';
 import WarrantyPolicyPage from '../pages/PortalPage/WarrantyPolicy';
 import LoyalCustomerPolicyPage from '../pages/PortalPage/CustomerPolicy';
+import {OrderDetailModal} from '../pages/ProfilePage/MyOrderPage/OrderDetailModal';
+import DiscountPage from '../pages/DiscountPage/DiscountPage';
 export const AppRouters = () => {
 	return (
 		<>
@@ -213,12 +215,21 @@ export const AppRouters = () => {
 					}
 				/>
 				<Route path="/promotion" element={<PromotionPage />} />
+				<Route path="/discount" element={<DiscountPage />} />
 
 				<Route
 					path="/my-orders"
 					element={
 						<PrivateRoute roles={'customer'}>
 							<OrderPage />
+						</PrivateRoute>
+					}
+				/>
+				<Route
+					path="/my-orders/:id"
+					element={
+						<PrivateRoute roles={'customer'}>
+							<OrderDetailModal />
 						</PrivateRoute>
 					}
 				/>

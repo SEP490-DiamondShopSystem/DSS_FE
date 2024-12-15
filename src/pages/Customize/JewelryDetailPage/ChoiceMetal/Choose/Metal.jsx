@@ -29,7 +29,7 @@ export const Metal = ({
 				<div className="flex items-center justify-center mt-10">
 					<label className=" font-semibold text-xl">Chọn Vật Liệu</label>
 				</div>
-				<div className="grid grid-cols-2 gap-5">
+				<div className="">
 					{findMetals?.map((metal, i) => (
 						<div key={i}>
 							<Radio.Group
@@ -63,7 +63,7 @@ export const Metal = ({
 									onChange={handleSideDiamondChange}
 									value={selectedSideDiamond}
 								>
-									<Radio value={diamond?.Id}>
+									<Radio value={diamond}>
 										<div className="">
 											<div className="m-5">
 												<p className="">
@@ -79,38 +79,54 @@ export const Metal = ({
 					</div>
 				</>
 			)}
-
-			<div className="flex items-center justify-center mt-10">
-				<label className=" font-semibold text-xl">Chọn Kích Thước</label>
-			</div>
-			<div className="grid grid-cols-3 gap-5">
-				{filteredGroups?.map((metal, i) => (
-					<div key={i}>
-						<Radio.Group onChange={handleSizeChange} value={size}>
-							<Radio value={metal?.SizeId}>
-								<div
-									className="flex items-center justify-between"
-									style={{width: 1000}}
-								>
-									<div className="flex items-center justify-between  m-5">
-										<p className="">{metal?.SizeId}mm</p>
-									</div>
-									{/* <p className="font-semibold">{formatPrice(metal.Price)}</p> */}
-								</div>
-							</Radio>
-						</Radio.Group>
+			{filteredGroups && filteredGroups?.length > 0 && (
+				<>
+					<div className="flex items-center justify-center mt-10">
+						<label className=" font-semibold text-xl">Chọn Kích Thước</label>
 					</div>
-				))}
-			</div>
-			<div className="flex justify-center items-center mt-10">
+					<div className="grid grid-cols-3 gap-5">
+						{filteredGroups?.map((metal, i) => (
+							<div key={i}>
+								<Radio.Group onChange={handleSizeChange} value={size}>
+									<Radio value={metal?.SizeId}>
+										<div
+											className="flex items-center justify-between"
+											style={{width: 1000}}
+										>
+											<div className="flex items-center justify-between  m-5">
+												<p className="">{metal?.SizeId}mm</p>
+											</div>
+											{/* <p className="font-semibold">{formatPrice(metal.Price)}</p> */}
+										</div>
+									</Radio>
+								</Radio.Group>
+							</div>
+						))}
+					</div>
+				</>
+			)}
+
+			<div className="flex justify-around items-center mt-10">
 				<Button
 					type="text"
 					className="bg-primary w-48 uppercase font-semibold"
 					disabled={size === null}
-					onClick={handleNextStep}
+					onClick={() => setStep(3)}
 				>
-					Tiếp tục
+					{diamondJewelry && diamondJewelry?.IsEngravable
+						? 'Bỏ Qua Chữ Khắc'
+						: 'Tiếp Tục'}
 				</Button>
+				{diamondJewelry && diamondJewelry?.IsEngravable && (
+					<Button
+						type="text"
+						className="bg-primary w-48 uppercase font-semibold"
+						disabled={size === null}
+						onClick={handleNextStep}
+					>
+						Thêm Chữ Khắc
+					</Button>
+				)}
 			</div>
 		</div>
 	);

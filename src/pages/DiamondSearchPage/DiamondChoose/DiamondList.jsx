@@ -6,7 +6,7 @@ import {
 	HeartOutlined,
 	UnorderedListOutlined,
 } from '@ant-design/icons';
-import {Divider, Image} from 'antd';
+import {Divider, Image, Pagination} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import diamondImg from '../../../assets/img-diamond.png';
@@ -16,6 +16,7 @@ import {LoadingDiamondSelector} from '../../../redux/selectors';
 import {formatPrice} from '../../../utils';
 import Loading from '../../../components/Loading';
 import {Clarity, Color, Cut} from '../../../utils/constant';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 export const DiamondList = ({
 	filters,
@@ -25,7 +26,11 @@ export const DiamondList = ({
 	diamondForFilter,
 	findShape,
 	diamondList,
-	jewelryModel,
+	setPageSize,
+	pageSize,
+	setStart,
+	start,
+	totalPage,
 }) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -66,11 +71,7 @@ export const DiamondList = ({
 				<Loading />
 			) : (
 				<>
-					{!Array.isArray(diamondList) || diamondList.length === 0 ? (
-						<div className="flex items-center justify-center my-10">
-							<p className="text-2xl">Chưa có sản phẩm nào</p>
-						</div>
-					) : (
+					{Array.isArray(diamondList) && (
 						<>
 							<div className="text-2xl flex justify-end mt-10">
 								<p className="p-2">{diamondList?.length} Kết quả</p>
@@ -204,6 +205,18 @@ export const DiamondList = ({
 							</div>
 						</>
 					)}
+					<div className="flex justify-center mt-4">
+						<Pagination
+							current={start}
+							pageSize={pageSize}
+							total={totalPage || 0} // Ensure total count is provided
+							onChange={(page, pageSize) => {
+								setStart(page);
+								setPageSize(pageSize);
+							}}
+							// showSizeChanger
+						/>
+					</div>
 				</>
 			)}
 		</div>

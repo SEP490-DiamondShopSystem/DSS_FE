@@ -1,11 +1,14 @@
 import {InboxOutlined} from '@ant-design/icons';
-import {Button, Image, Modal, QRCode, Upload, message} from 'antd';
+import {Button, Image, Modal, QRCode, Typography, Upload, message} from 'antd';
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {LoadingPaymentSelector} from '../../../redux/selectors';
 import {fetchShopBankAccountRule} from '../../../redux/slices/configSlice';
 import {getUserOrderTransaction} from '../../../redux/slices/orderSlice';
 import {handleAddTransfer} from '../../../redux/slices/paymentSlice';
+import Loading from '../../../components/Loading';
+
+const {Title} = Typography;
 
 export const OrderPayment = ({order, setTransfer}) => {
 	const dispatch = useDispatch();
@@ -37,6 +40,7 @@ export const OrderPayment = ({order, setTransfer}) => {
 		Modal.confirm({
 			title: 'Bạn có chắc chắn muốn tải lên ảnh này!',
 			// content: 'Bạn có chắc chắn muốn tiếp tục?',
+			centered: true,
 			okText: 'Đồng Ý',
 			cancelText: 'Hủy Bỏ',
 			onOk: handleAdd,
@@ -61,101 +65,104 @@ export const OrderPayment = ({order, setTransfer}) => {
 				window.open(res?.PaymentUrl, '_blank');
 			})
 			.catch((error) => {
-				message.error(error?.detail || error?.title);
+				message.error(error?.detail || error?.data.detail);
 			});
 	};
 
 	if (!order) {
-		return <div className="text-center text-gray-500">Không có dữ liệu đơn hàng.</div>;
+		return <Loading />;
 	}
 
 	return (
-		<div className="p-6 bg-white rounded-lg shadow-md max-w-lg mx-auto">
-			{order?.PaymentMethodId === '1' && (
-				<div className="w-full">
-					<h3 className="text-xl font-semibold mb-4">Chuyển khoản ngân hàng</h3>
-					<div className="space-y-4 sm:space-y-0 sm:flex sm:items-center sm:justify-between">
-						<div className="text-sm sm:text-base">
-							<p>
-								<strong className="text-gray-700">Tên ngân hàng:</strong>{' '}
-								{ruleBank?.BankName || 'VIETCOMBANK'}
-							</p>
-							<p>
-								<strong className="text-gray-700">Số tài khoản:</strong>{' '}
-								{ruleBank?.AccountNumber || '0701000439554'}
-							</p>
-							<p>
-								<strong className="text-gray-700">Tên người nhận:</strong>{' '}
-								{ruleBank?.AccountName || 'PHAM XUAN HUY'}
-							</p>
-							<p>
-								<strong className="text-gray-700">Ghi chú:</strong>{' '}
-								{'Vui lòng ghi mã đơn hàng vào nội dung chuyển khoản.'}
-							</p>
+		<>
+			<Title level={3}>Thanh Toán</Title>
+			<div className="p-6 bg-white rounded-lg shadow-md max-w-lg mx-auto">
+				{order?.PaymentMethodId === '1' && (
+					<div className="w-full">
+						<h3 className="text-xl font-semibold mb-4">Chuyển khoản ngân hàng</h3>
+						<div className="space-y-4 sm:space-y-0 sm:flex sm:items-center sm:justify-between">
+							<div className="text-sm sm:text-base">
+								<p>
+									<strong className="text-gray-700">Tên ngân hàng:</strong>{' '}
+									{ruleBank?.BankName || 'VIETCOMBANK'}
+								</p>
+								<p>
+									<strong className="text-gray-700">Số tài khoản:</strong>{' '}
+									{ruleBank?.AccountNumber || '0701000439554'}
+								</p>
+								<p>
+									<strong className="text-gray-700">Tên người nhận:</strong>{' '}
+									{ruleBank?.AccountName || 'PHAM XUAN HUY'}
+								</p>
+								<p>
+									<strong className="text-gray-700">Ghi chú:</strong>{' '}
+									{'Vui lòng ghi mã đơn hàng vào nội dung chuyển khoản.'}
+								</p>
+							</div>
+							<div className="mt-4 sm:mt-0 sm:ml-10 flex justify-center">
+								<Image
+									preview={false}
+									src={ruleBank?.BankQr?.MediaPath}
+									className="max-w-52"
+								/>
+							</div>
 						</div>
-						<div className="mt-4 sm:mt-0 sm:ml-10 flex justify-center">
-							<Image
-								preview={false}
-								src={ruleBank?.BankQr?.MediaPath}
-								className="max-w-52"
-							/>
+
+						<div className="mt-6">
+							<h4 className="text-lg font-medium mb-2">Tải ảnh đã thanh toán</h4>
+							<div className="flex items-center justify-center">
+								<Upload.Dragger
+									listType="picture-card"
+									fileList={fileList}
+									onChange={handleFileChange}
+									beforeUpload={beforeUpload}
+									maxCount={1}
+									accept="image/*"
+									capture="camera"
+								>
+									<div className="ant-upload-drag-icon">
+										<InboxOutlined />
+									</div>
+									<div className="ant-upload-text">
+										Nhấp hoặc kéo tệp vào khu vực này để tải lên
+									</div>
+									<div className="ant-upload-hint">
+										Hỗ trợ cho một lần tải lên. Kéo tệp vào đây hoặc nhấp để tải
+										lên.
+									</div>
+								</Upload.Dragger>
+							</div>
+
+							<div className="flex justify-center items-center mt-5">
+								<Button
+									type="text"
+									className="px-10 py-2 bg-primary"
+									onClick={handleCompleted}
+									loading={loading}
+									disabled={fileList?.length === 0}
+								>
+									Gửi
+								</Button>
+							</div>
 						</div>
 					</div>
+				)}
 
-					<div className="mt-6">
-						<h4 className="text-lg font-medium mb-2">Tải ảnh đã thanh toán</h4>
-						<div className="flex items-center justify-center">
-							<Upload.Dragger
-								listType="picture-card"
-								fileList={fileList}
-								onChange={handleFileChange}
-								beforeUpload={beforeUpload}
-								maxCount={1}
-								accept="image/*"
-								capture="camera"
-							>
-								<p className="ant-upload-drag-icon">
-									<InboxOutlined />
-								</p>
-								<p className="ant-upload-text">
-									Nhấp hoặc kéo tệp vào khu vực này để tải lên
-								</p>
-								<p className="ant-upload-hint">
-									Hỗ trợ cho một lần tải lên. Kéo tệp vào đây hoặc nhấp để tải
-									lên.
-								</p>
-							</Upload.Dragger>
+				{order?.PaymentMethodId === '2' && (
+					<div className="zalopay-payment">
+						<h3 className="text-xl font-semibold mb-4">Thanh toán qua ZaloPay</h3>
+						<div className="my-5 text-gray-600">
+							Bấm nút bên dưới để chuyển đến cổng thanh toán ZaloPay:
 						</div>
-
-						<div className="flex justify-center items-center mt-5">
-							<Button
-								type="text"
-								className="px-10 py-2 bg-primary"
-								onClick={handleCompleted}
-								loading={loading}
-								disabled={fileList?.length === 0}
-							>
-								Gửi
-							</Button>
-						</div>
+						<button
+							onClick={handleZaloPay}
+							className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-md shadow hover:bg-blue-700 transition"
+						>
+							Thanh toán với ZaloPay
+						</button>
 					</div>
-				</div>
-			)}
-
-			{order?.PaymentMethodId === '2' && (
-				<div className="zalopay-payment">
-					<h3 className="text-xl font-semibold mb-4">Thanh toán qua ZaloPay</h3>
-					<span className="mb-4 text-gray-600">
-						Bấm nút bên dưới để chuyển đến cổng thanh toán ZaloPay:
-					</span>
-					<button
-						onClick={handleZaloPay}
-						className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-md shadow hover:bg-blue-700 transition"
-					>
-						Thanh toán với ZaloPay
-					</button>
-				</div>
-			)}
-		</div>
+				)}
+			</div>
+		</>
 	);
 };
