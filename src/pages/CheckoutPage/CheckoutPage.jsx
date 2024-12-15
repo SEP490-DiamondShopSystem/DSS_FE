@@ -151,6 +151,8 @@ const CheckoutPage = () => {
 	const [warrantiesJewelrySelectedDefault, setWarrantiesJewelrySelectedDefault] = useState();
 	const [payment, setPayment] = useState();
 	const [isAtShop, setIsAtShop] = useState(false);
+	const [isAtShopOrder, setIsAtShopOrder] = useState(false);
+
 	const [orderRule, setOrderRule] = useState();
 	const [userInfo, setUserInfo] = useState({
 		firstName: userDetail.FirstName || '',
@@ -177,6 +179,7 @@ const CheckoutPage = () => {
 			const isEligibleForShop =
 				cartList.OrderPrices.FinalPrice >= orderRule.MaxOrderAmountForDelivery;
 			setIsAtShop(isEligibleForShop);
+			setIsAtShopOrder(isEligibleForShop);
 		}
 	}, [orderRule]);
 
@@ -318,6 +321,7 @@ const CheckoutPage = () => {
 				promotionId: promoCustomizeId || null,
 				items: [transformedData],
 				accountId: userDetail?.Id,
+				isAtShopOrder: isAtShopOrder,
 			};
 
 			// Nếu userAddress có dữ liệu, thêm vào payload
@@ -371,6 +375,7 @@ const CheckoutPage = () => {
 				promotionId: promoId != undefined ? promoId : null,
 				items: transformedData,
 				accountId: userDetail?.Id,
+				isAtShopOrder: isAtShopOrder,
 			};
 
 			// Nếu userAddress có dữ liệu, thêm vào payload
@@ -399,6 +404,7 @@ const CheckoutPage = () => {
 		promoCustomizeId,
 		defaultAddress,
 		userInfo,
+		isAtShopOrder,
 	]);
 
 	useEffect(() => {
