@@ -131,7 +131,7 @@ export const DetailMetalDiamond = ({
 						</div>
 						<Divider />
 						<div className="flex items-center justify-between my-2 pr-5">
-							<p className="font-semibold">Độ Trong (Clarity):</p>
+							<p className="font-semibold">Độ Tinh Khuyết (Clarity):</p>
 							<p>
 								{diamond?.clarityFrom} - {diamond?.clarityTo}
 							</p>

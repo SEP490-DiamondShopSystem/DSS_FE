@@ -321,7 +321,7 @@ const CheckoutPage = () => {
 				promotionId: promoCustomizeId || null,
 				items: [transformedData],
 				accountId: userDetail?.Id,
-				isAtShopOrder: isAtShopOrder,
+				isAtShopOrder: isAtShop,
 			};
 
 			// Nếu userAddress có dữ liệu, thêm vào payload
@@ -375,7 +375,7 @@ const CheckoutPage = () => {
 				promotionId: promoId != undefined ? promoId : null,
 				items: transformedData,
 				accountId: userDetail?.Id,
-				isAtShopOrder: isAtShopOrder,
+				isAtShopOrder: isAtShop,
 			};
 
 			// Nếu userAddress có dữ liệu, thêm vào payload

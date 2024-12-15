@@ -5,13 +5,14 @@ import {getUserId} from '../../components/GetUserId';
 
 export const handleCartValidate = createAsyncThunk(
 	'cartSlice/handleCartValidate',
-	async ({promotionId, items, userAddress, accountId}, {rejectWithValue}) => {
+	async ({promotionId, items, userAddress, accountId, isAtShopOrder}, {rejectWithValue}) => {
 		try {
 			const response = await api.post(`/Cart/Validate`, {
 				promotionId,
 				items,
 				userAddress,
 				accountId,
+				isAtShopOrder,
 			});
 
 			return response;

@@ -240,7 +240,7 @@ const MyOrderPage = () => {
 					window.open(res?.PaymentUrl, '_blank');
 				})
 				.catch((error) => {
-					message.error(error?.detail || error?.title);
+					message.error(error?.data?.detail || error?.data);
 				});
 		} else {
 			Modal.confirm({
