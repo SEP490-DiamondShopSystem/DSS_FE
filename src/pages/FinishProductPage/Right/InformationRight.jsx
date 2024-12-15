@@ -414,9 +414,20 @@ export const InformationRight = ({
 						{/* <p className="line-through text-gray decoration-gray text-2xl">
 							{metalType.price}
 						</p> */}
-						<p className="font-semibold text-2xl">
-							{formatPrice(jewelry?.TotalPrice || 0)}
-						</p>
+						{jewelry?.TotalPrice === jewelry?.SalePrice ? (
+							<p className="font-semibold text-2xl">
+								{formatPrice(jewelry?.TotalPrice || 0)}
+							</p>
+						) : (
+							<>
+								<p className="font-semibold text-xl line-through text-gray mr-3">
+									{formatPrice(jewelry?.TotalPrice || 0)}
+								</p>
+								<p className="font-semibold text-2xl">
+									{formatPrice(jewelry?.SalePrice || 0)}
+								</p>
+							</>
+						)}
 					</div>
 					<div>
 						<div className="text-xl pt-2 font-semibold">
