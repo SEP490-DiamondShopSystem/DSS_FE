@@ -534,7 +534,10 @@ export const OrderDetailModal = () => {
 							</div>
 						</div>
 						<Button
-							onClick={() => navigate('/my-orders')}
+							onClick={() => {
+								navigate('/my-orders');
+								localStorage.setItem('lastVisitedPage', 'Đơn hàng của tôi');
+							}}
 							type="text"
 							className="text-primary"
 							icon={<LeftOutlined />}

@@ -512,6 +512,19 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 								</Button>
 							</Space>
 						)}
+						{orderStatus === 4 && order?.Order !== null && (
+							<Space>
+								<Button
+									type="text"
+									className="bg-primary text-white"
+									onClick={() => {
+										navigate(`/my-orders/${order?.Order?.Id}`);
+									}}
+								>
+									Chi Tiết Đơn Hàng
+								</Button>
+							</Space>
+						)}
 					</div>
 					<div className="mt-10">
 						<Table

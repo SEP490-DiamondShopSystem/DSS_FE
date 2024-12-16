@@ -251,8 +251,17 @@ const MyInfoPage = () => {
 	};
 
 	const handleSubmit = () => {
+		if (!/^\d{10}$/.test(userInfo.phone)) {
+			message.error('Số điện thoại phải có đủ 10 số');
+			return;
+		}
 		if (!userInfo.phone.startsWith('0')) {
 			message.error('Số điện thoại phải bắt đầu bằng số 0');
+			return;
+		}
+
+		if (!userInfo.firstName || !userInfo.lastName) {
+			message.error('Vui lòng nhập họ và tên');
 			return;
 		}
 		const addedAddress = addAddress?.map((address) => ({
