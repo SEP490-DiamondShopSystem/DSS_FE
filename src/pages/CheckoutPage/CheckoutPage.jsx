@@ -1,4 +1,4 @@
-import {CheckCircleOutlined, InfoCircleFilled} from '@ant-design/icons';
+import {CheckCircleOutlined, EyeOutlined, InfoCircleFilled} from '@ant-design/icons';
 import DiamondIcon from '@mui/icons-material/Diamond';
 import {Button, Checkbox, Form, Input, message, Modal, Popover, Radio, Select} from 'antd';
 import React, {useEffect, useMemo, useState} from 'react';
@@ -105,6 +105,7 @@ const mapAttributes = (data, attributes) => {
 		DiscountPrice: data?.Diamond?.DiscountPrice,
 		DiamondTruePrice: data?.Diamond?.TruePrice,
 		DiamondPriceOffset: data?.Diamond?.PriceOffset,
+		DiamondId: data?.Diamond?.Id,
 		Title: data?.Diamond?.Title,
 		IsLabDiamond: data?.IsLabDiamond,
 		CriteriaId: data?.Diamond?.DiamondPrice?.CriteriaId,
@@ -602,6 +603,16 @@ const CheckoutPage = () => {
 		setPromoCustomizeId(value);
 	};
 
+	const handleViewCart = (jewelryId, diamondId) => {
+		if (jewelryId) {
+			navigate(`/completed-jewelry/${jewelryId}`, {state: {jewelryId}});
+		} else if (diamondId) {
+			navigate(`/diamond-detail/${diamondId}`, {state: {diamondId}});
+		} else {
+			console.error('No jewelry or diamond ID provided.');
+		}
+	};
+
 	const text = <span>Kim Cương</span>;
 	const content = (
 		<div>
@@ -1093,10 +1104,11 @@ const CheckoutPage = () => {
 										<div className="flex-1 mx-5">
 											{/* Kiểm tra và hiển thị thông tin sản phẩm */}
 											{item.JewelryId ? (
-												<div>
-													<div className="mb-1 text-gray-800 font-semibold">
-														{item.TitleJewelry}{' '}
-														{/* {item?.DiamondJewelry?.length > 0 && (
+												<div className="flex items-center">
+													<div>
+														<div className="mb-1 text-gray-800 font-semibold">
+															{item.TitleJewelry}{' '}
+															{/* {item?.DiamondJewelry?.length > 0 && (
 															<Popover
 																placement="topLeft"
 																title={text}
@@ -1105,133 +1117,174 @@ const CheckoutPage = () => {
 																<InfoCircleFilled />
 															</Popover>
 														)} */}
-													</div>
-													<div className="text-gray-700 text-sm mr-1 mb-2">
-														Mã sê-ri:
-														<span className="text-gray-900 font-semibold ml-1">
-															{item.SerialCode}
-														</span>
-													</div>
-													<div className="text-gray-700 text-sm mr-1">
-														{item?.FinalPrice === item.DefaultPrice ? (
-															<p className="text-gray-700 text-sm py-3 ml-1 mb-2">
-																Tổng Giá:
-																<span className="text-gray-900 font-semibold ml-1">
-																	{formatPrice(item.DefaultPrice)}
-																</span>
-															</p>
-														) : (
-															<>
-																{item.PromotionAmountSaved !==
-																	0 && (
-																	<p className="text-gray-700 text-sm mb-2 ml-1">
-																		Giá Khuyến Mãi:
-																		<span className="text-gray-900 font-semibold ml-1">
-																			{formatPrice(
-																				item.PromotionAmountSaved
-																			)}
-																		</span>
-																	</p>
-																)}
-																{item.DiscountAmountSaved !== 0 && (
-																	<p className="text-gray-700 text-sm ml-1 mb-2">
-																		Giá Giảm:
-																		<span className="text-gray-900 font-semibold ml-1">
-																			{formatPrice(
-																				item.DiscountAmountSaved
-																			)}
-																		</span>
-																	</p>
-																)}
-																<p className="text-gray-700 text-sm ml-1 mb-2">
+														</div>
+														<div className="text-gray-700 text-sm mr-1 mb-2">
+															Mã sê-ri:
+															<span className="text-gray-900 font-semibold ml-1">
+																{item.SerialCode}
+															</span>
+														</div>
+														<div className="text-gray-700 text-sm mr-1">
+															{item?.FinalPrice ===
+															item.DefaultPrice ? (
+																<p className="text-gray-700 text-sm py-3 ml-1 mb-2">
 																	Tổng Giá:
-																	<span className="text-gray-900 font-semibold ml-1 line-through text-gray">
+																	<span className="text-gray-900 font-semibold ml-1">
 																		{formatPrice(
 																			item.DefaultPrice
 																		)}
 																	</span>
-																	<span className="text-gray-900 font-semibold ml-1">
-																		{formatPrice(
-																			item.FinalPrice
-																		)}
-																	</span>
 																</p>
-															</>
-														)}
-													</div>
-													{/* <div className="text-gray-700 text-sm mr-1">
-														SKU:
-														<span className="text-gray-900 font-semibold py-3">
-															{item.SerialCode}
-														</span>
-													</div> */}
-													{item.CategoryName === 'Ring' && (
-														<div className="flex items-center mt-2">
-															<label className="mr-2 text-gray-700">
-																Kích thước nhẫn:
-															</label>
-															<p>{item?.SizeId}</p>
+															) : (
+																<>
+																	{item.PromotionAmountSaved !==
+																		0 && (
+																		<p className="text-gray-700 text-sm mb-2 ml-1">
+																			Giá Khuyến Mãi:
+																			<span className="text-gray-900 font-semibold ml-1">
+																				{formatPrice(
+																					item.PromotionAmountSaved
+																				)}
+																			</span>
+																		</p>
+																	)}
+																	{item.DiscountAmountSaved !==
+																		0 && (
+																		<p className="text-gray-700 text-sm ml-1 mb-2">
+																			Giá Giảm:
+																			<span className="text-gray-900 font-semibold ml-1">
+																				{formatPrice(
+																					item.DiscountAmountSaved
+																				)}
+																			</span>
+																		</p>
+																	)}
+																	<p className="text-gray-700 text-sm ml-1 mb-2">
+																		Tổng Giá:
+																		<span className="text-gray-900 font-semibold ml-1 line-through text-gray">
+																			{formatPrice(
+																				item.DefaultPrice
+																			)}
+																		</span>
+																		<span className="text-gray-900 font-semibold ml-1">
+																			{formatPrice(
+																				item.FinalPrice
+																			)}
+																		</span>
+																	</p>
+																</>
+															)}
 														</div>
-													)}
+													</div>
+													<div>
+														<Button
+															className="cursor-pointer px-3 mr-2"
+															onClick={() => {
+																if (item.JewelryId) {
+																	handleViewCart(
+																		item.JewelryId,
+																		null
+																	);
+																} else if (
+																	item.DiamondId !== undefined
+																) {
+																	handleViewCart(
+																		null,
+																		item.DiamondId
+																	);
+																}
+															}}
+														>
+															<EyeOutlined />
+														</Button>
+													</div>
 												</div>
 											) : item.Carat ? (
-												<div>
-													<div className="mb-2 text-gray-800 font-semibold">
-														{item?.Title}
-													</div>
-													<div className="text-gray-700 text-sm mr-1 mb-2">
-														SKU:
-														<span className="text-gray-900 font-semibold ml-1">
-															{item.SerialCodeDiamond}
-														</span>
-													</div>
-													<div className="text-gray-700 text-sm mr-1">
-														{item?.FinalPrice === item.DefaultPrice ? (
-															<p className="text-gray-700 text-sm ml-1 mb-2">
-																Giá:
-																<span className="text-gray-900 font-semibold ml-1">
-																	{formatPrice(item.DefaultPrice)}
-																</span>
-															</p>
-														) : (
-															<>
-																{item.PromotionAmountSaved !==
-																	0 && (
-																	<p className="text-gray-700 text-sm ml-1 mb-2">
-																		Giá Khuyến Mãi:
-																		<span className="text-gray-900 font-semibold ml-1">
-																			{formatPrice(
-																				item.PromotionAmountSaved
-																			)}
-																		</span>
-																	</p>
-																)}
-																{item.DiscountAmountSaved !== 0 && (
-																	<p className="text-gray-700 text-sm ml-1 mb-2">
-																		Giá Giảm:
-																		<span className="text-gray-900 font-semibold ml-1">
-																			{formatPrice(
-																				item.DiscountAmountSaved
-																			)}
-																		</span>
-																	</p>
-																)}
-
+												<div className="flex items-center">
+													<div>
+														<div className="mb-2 text-gray-800 font-semibold">
+															{item?.Title}
+														</div>
+														<div className="text-gray-700 text-sm mr-1 mb-2">
+															SKU:
+															<span className="text-gray-900 font-semibold ml-1">
+																{item.SerialCodeDiamond}
+															</span>
+														</div>
+														<div className="text-gray-700 text-sm mr-1">
+															{item?.FinalPrice ===
+															item.DefaultPrice ? (
 																<p className="text-gray-700 text-sm ml-1 mb-2">
-																	Tổng Giá:
-																	<span className="text-gray-900 font-semibold ml-1 line-through text-gray">
+																	Giá:
+																	<span className="text-gray-900 font-semibold ml-1">
 																		{formatPrice(
 																			item.DefaultPrice
 																		)}
 																	</span>
-																	<span className="text-gray-900 font-semibold ml-1">
-																		{formatPrice(
-																			item.FinalPrice
-																		)}
-																	</span>
 																</p>
-															</>
-														)}
+															) : (
+																<>
+																	{item.PromotionAmountSaved !==
+																		0 && (
+																		<p className="text-gray-700 text-sm ml-1 mb-2">
+																			Giá Khuyến Mãi:
+																			<span className="text-gray-900 font-semibold ml-1">
+																				{formatPrice(
+																					item.PromotionAmountSaved
+																				)}
+																			</span>
+																		</p>
+																	)}
+																	{item.DiscountAmountSaved !==
+																		0 && (
+																		<p className="text-gray-700 text-sm ml-1 mb-2">
+																			Giá Giảm:
+																			<span className="text-gray-900 font-semibold ml-1">
+																				{formatPrice(
+																					item.DiscountAmountSaved
+																				)}
+																			</span>
+																		</p>
+																	)}
+
+																	<p className="text-gray-700 text-sm ml-1 mb-2">
+																		Tổng Giá:
+																		<span className="text-gray-900 font-semibold ml-1 line-through text-gray">
+																			{formatPrice(
+																				item.DefaultPrice
+																			)}
+																		</span>
+																		<span className="text-gray-900 font-semibold ml-1">
+																			{formatPrice(
+																				item.FinalPrice
+																			)}
+																		</span>
+																	</p>
+																</>
+															)}
+														</div>
+													</div>
+													<div>
+														<Button
+															className="cursor-pointer px-3 mr-2"
+															onClick={() => {
+																if (item.JewelryId) {
+																	handleViewCart(
+																		item.JewelryId,
+																		null
+																	);
+																} else if (
+																	item.DiamondId !== undefined
+																) {
+																	handleViewCart(
+																		null,
+																		item.DiamondId
+																	);
+																}
+															}}
+														>
+															<EyeOutlined />
+														</Button>
 													</div>
 												</div>
 											) : (

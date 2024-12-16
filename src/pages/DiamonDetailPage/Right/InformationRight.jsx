@@ -80,12 +80,9 @@ export const InformationRight = ({
 					<label>Chọn Bảo Hành: </label>
 					<Select
 						// allowClear
-						className="mb-5 mt-2"
-						style={{
-							width: 300,
-							textOverflow: 'ellipsis',
-						}}
-						size="small"
+						style={{width: '100%'}}
+						className="mt-2 mb-5"
+						size="large"
 						value={
 							warrantyDiamondSelected?.warranty?.MappedName?.replace(/_/g, ' ') ||
 							warrantyDiamondSelected?.MappedName?.replace(/_/g, ' ')
@@ -108,7 +105,21 @@ export const InformationRight = ({
 				</div>
 
 				<div className="flex items-center">
-					<p className="font-semibold pl-2 text-2xl">{formatPrice(diamond.Price)}</p>
+					{diamond.TruePrice === diamond.SalePrice ? (
+						<p className="font-semibold pl-2 text-2xl">
+							{formatPrice(diamond.TruePrice)}
+						</p>
+					) : (
+						<>
+							<p className="font-semibold pl-2 text-xl line-through text-gray">
+								{formatPrice(diamond.TruePrice)}
+							</p>
+							<p className="font-semibold pl-2 text-2xl">
+								{formatPrice(diamond.SalePrice)}
+							</p>
+						</>
+					)}
+
 					<div className="text-sm pl-2">(Giá Kim Cương)</div>
 				</div>
 			</div>

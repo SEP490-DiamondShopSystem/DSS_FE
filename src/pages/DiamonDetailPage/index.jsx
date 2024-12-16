@@ -77,7 +77,8 @@ const mapAttributes = (data, attributes) => {
 		Table: data.Table,
 		Measurement: data.Measurement,
 		DiamondShape: data.DiamondShape?.ShapeName,
-		Price: data.TruePrice,
+		TruePrice: data.TruePrice,
+		SalePrice: data.SalePrice,
 		IsLabDiamond: data.IsLabDiamond,
 		Criteria: data.DiamondPrice?.CriteriaId,
 	};

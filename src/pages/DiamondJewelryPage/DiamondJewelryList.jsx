@@ -28,8 +28,6 @@ export const DiamondJewelryList = () => {
 		price: {minPrice: 0, maxPrice: 40000000},
 	});
 
-	console.log('jewelries', jewelries);
-
 	const fetchJewelryData = debounce(() => {
 		dispatch(
 			getAllJewelryModel({

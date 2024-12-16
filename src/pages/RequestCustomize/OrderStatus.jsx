@@ -19,8 +19,6 @@ export const OrderStatus = ({orderStatus, orderDetail}) => {
 
 	// }, [orderStatus, orderDetail]);
 
-	console.log('currentStep', currentStep);
-
 	useEffect(() => {
 		const getOrderStatus = (status) => {
 			switch (status) {
