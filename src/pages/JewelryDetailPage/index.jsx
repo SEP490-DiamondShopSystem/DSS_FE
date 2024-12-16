@@ -141,33 +141,47 @@ const JewelryDetailPage = () => {
 	}, [jewelry]);
 
 	useEffect(() => {
-		// Lọc MetalGroups có SizeGroups với IsInStock = true và gộp MetalName
-		const filteredSideDiamonds = jewelry?.MetalGroups?.filter((group) =>
-			group?.SizeGroups?.some((size) => size?.IsInStock)
-		).map((group) => {
-			const sideDiamond = jewelry?.SideDiamonds?.find((m) => m?.Id === group?.SideDiamondId);
-			return {
-				...group,
-				OriginalName: group?.Name, // Lưu tên cũ vào OriginalName
-				Quantity: sideDiamond?.Quantity,
-				CaratWeight: sideDiamond?.CaratWeight,
-				Id: group?.SideDiamondId,
-			};
-		});
+		if (jewelry && selectedMetal) {
+			// Lọc MetalGroups có MetalId trùng khớp với MetalId trong selectedMetal
+			const filteredSideDiamonds = jewelry.MetalGroups.filter(
+				(group) => group.MetalId === selectedMetal.MetalId
+			) // Kiểm tra MetalId trùng
+				.map((group) => {
+					// Lấy thông tin viên kim cương từ SideDiamonds
+					const sideDiamond = jewelry.SideDiamonds.find(
+						(m) => m.Id === group.SideDiamondId
+					);
+					return {
+						...group,
+						OriginalName: group.Name, // Lưu tên cũ vào OriginalName
+						Quantity: sideDiamond?.Quantity,
+						CaratWeight: sideDiamond?.CaratWeight,
+						Id: group.SideDiamondId,
+					};
+				});
 
-		// Loại bỏ MetalName (giờ là Name) trùng lặp
-		const uniqueFilteredMetals = [];
-		const seenNames = new Set();
+			// Loại bỏ MetalName (giờ là Name) trùng lặp
+			const uniqueFilteredMetals = [];
+			const seenNames = new Set();
 
-		filteredSideDiamonds?.forEach((sideDiamond) => {
-			if (!seenNames?.has(sideDiamond?.SideDiamondId)) {
-				seenNames?.add(sideDiamond?.SideDiamondId);
-				uniqueFilteredMetals?.push(sideDiamond);
-			}
-		});
-		setSelectedSideDiamond(filteredSideDiamonds?.[0] || null);
-		setUniqueSideDiamonds(uniqueFilteredMetals);
-	}, [jewelry]);
+			filteredSideDiamonds.forEach((sideDiamond) => {
+				if (!seenNames.has(sideDiamond.SideDiamondId)) {
+					seenNames.add(sideDiamond.SideDiamondId);
+					uniqueFilteredMetals.push(sideDiamond);
+				}
+			});
+
+			// setSelectedSideDiamond(filteredSideDiamonds[0] || null); // Lấy viên kim cương đầu tiên nếu có
+			setUniqueSideDiamonds(uniqueFilteredMetals); // Cập nhật danh sách kim cương đã lọc
+		}
+	}, [jewelry, selectedMetal]);
+
+	console.log('processedMetals', uniqueMetals);
+	console.log('filteredGroups', filteredGroups);
+	console.log('uniqueSideDiamonds', uniqueSideDiamonds);
+	console.log('jewelry', jewelry);
+	console.log('selectedMetal', selectedMetal);
+	console.log('selectedSideDiamond', selectedSideDiamond);
 
 	return (
 		<>

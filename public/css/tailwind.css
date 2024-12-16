@@ -3438,3 +3438,11 @@ video {
 .mr-1 {
 	margin-right: 0.25rem /* 4px */;
 }
+
+.cursor-not-allowed {
+	cursor: not-allowed;
+}
+
+.opacity-50 {
+	opacity: 0.5;
+}
