@@ -342,7 +342,7 @@ const CartPage = () => {
 														{item?.Title}
 													</p>
 													<p className="text-gray-700 text-sm mt-3">
-														SKU:
+														Mã sê-ri:
 														<span className="text-gray-900 font-semibold ml-1">
 															{item?.SerialCodeDiamond}
 														</span>

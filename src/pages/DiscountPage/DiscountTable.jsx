@@ -55,10 +55,10 @@ const DiscountTable = ({discounts}) => {
 			key: 'requirements',
 			render: (_, record) => (
 				<ul>
-					{record.DiscountReq.map((req) => (
-						<li key={req.Id}>
-							{req.Name} (Carat: {req.DiamondRequirementSpec.CaratFrom} -{' '}
-							{req.DiamondRequirementSpec.CaratTo})
+					{record?.DiscountReq?.map((req) => (
+						<li key={req?.Id}>
+							{req?.Name} (Carat: {req.DiamondRequirementSpec?.CaratFrom} -{' '}
+							{req.DiamondRequirementSpec?.CaratTo})
 						</li>
 					))}
 				</ul>

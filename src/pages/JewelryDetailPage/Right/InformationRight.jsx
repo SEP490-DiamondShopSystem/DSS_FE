@@ -165,7 +165,7 @@ export const InformationRight = ({
 					<>
 						<div className="my-5 flex items-center">
 							<div className="font-semibold">Kim Cương Tấm</div>
-							{selectedSideDiamond !== null && (
+							{selectedSideDiamond !== undefined && (
 								<div className={`font-semibold text-xl pl-4 text-primary`}>
 									Số Lượng: {selectedSideDiamond?.Quantity} - Carat:{' '}
 									{selectedSideDiamond?.CaratWeight}
@@ -188,12 +188,6 @@ export const InformationRight = ({
 				selectedSideDiamond?.Quantity === diamond?.Quantity &&
 				selectedSideDiamond?.CaratWeight === diamond?.CaratWeight
 					? 'border-2 border-black' // Cả Quantity và CaratWeight giống nhau
-					: selectedSideDiamond?.Quantity !== diamond?.Quantity &&
-					  selectedSideDiamond?.CaratWeight === diamond?.CaratWeight
-					? 'border-2 border-black' // Quantity khác nhau nhưng CaratWeight giống nhau
-					: selectedSideDiamond?.Quantity === diamond?.Quantity &&
-					  selectedSideDiamond?.CaratWeight !== diamond?.CaratWeight
-					? 'border-2 border-black' // Quantity giống nhau nhưng CaratWeight khác nhau
 					: 'border-2 border-white' // Cả Quantity và CaratWeight đều khác nhau
 			}
 

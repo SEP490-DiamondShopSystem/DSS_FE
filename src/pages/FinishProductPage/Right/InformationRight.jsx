@@ -251,7 +251,7 @@ export const InformationRight = ({
 													{diamond?.Title}
 												</div>
 												<div className="text-gray my-2">
-													SKU: {diamond?.SerialCode}
+													Mã sê-ri: {diamond?.SerialCode}
 												</div>
 												<div className="text-xl font-semibold">
 													{formatPrice(diamond?.TruePrice)}

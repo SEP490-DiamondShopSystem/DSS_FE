@@ -1206,7 +1206,7 @@ const CheckoutPage = () => {
 															{item?.Title}
 														</div>
 														<div className="text-gray-700 text-sm mr-1 mb-2">
-															SKU:
+															Mã sê-ri:
 															<span className="text-gray-900 font-semibold ml-1">
 																{item.SerialCodeDiamond}
 															</span>
