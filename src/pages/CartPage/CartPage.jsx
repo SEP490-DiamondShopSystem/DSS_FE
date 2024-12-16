@@ -1,23 +1,23 @@
 import React, {useEffect, useMemo, useState} from 'react';
 
-import {DeleteOutlined, EyeOutlined} from '@ant-design/icons';
-import {Button, Divider, Image, message, Select, Space} from 'antd';
+import {DeleteOutlined, EyeOutlined, InfoCircleFilled} from '@ant-design/icons';
+import DiamondIcon from '@mui/icons-material/Diamond';
+import {Button, Divider, Image, message, Popover, Select, Space} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
+import logo from '../../assets/logo-short-ex.png';
 import {getUserId} from '../../components/GetUserId';
 import Loading from '../../components/Loading';
 import {
 	GetCartSelector,
 	GetPromotionAbleSelector,
-	GetPromotionSelector,
 	GetUserDetailSelector,
 	LoadingCartSelector,
 } from '../../redux/selectors';
-import {handleCartValidate, removeFromCartFinish} from '../../redux/slices/cartSlice';
+import {handleCartValidate} from '../../redux/slices/cartSlice';
 import {checkPromoCart, getAllPromo} from '../../redux/slices/promotionSlice';
 import {formatPrice} from '../../utils';
 import {enums} from '../../utils/constant';
-import logo from '../../assets/logo-short-ex.png';
 
 const getEnumKey = (enumObj, value) => {
 	return enumObj
@@ -60,6 +60,7 @@ const mapAttributes = (data, attributes) => {
 		ShippingDate: data?.Jewelry?.ShippingDate,
 		SideDiamonds: data?.Jewelry?.SideDiamonds,
 		TitleJewelry: data?.Jewelry?.Title,
+		DiamondJewelry: data?.Jewelry?.Diamonds,
 		JewelryThumbnail: data?.Jewelry?.Model?.Thumbnail?.MediaPath,
 		SizeId: data?.Jewelry?.SizeId,
 		Weight: data?.Jewelry?.Weight,
@@ -248,6 +249,24 @@ const CartPage = () => {
 		setPromoId(value);
 	};
 
+	const text = <span>Kim Cương</span>;
+	const content = (
+		<div>
+			{mappedProducts?.map((item, index) => (
+				<div className=" flex flex-col p-5 rounded-lg" key={item.Id}>
+					<div className="flex-1 mx-5 sm:mt-0">
+						<div className="mr-3">
+							<DiamondIcon />
+						</div>
+						{item?.DiamondJewelry?.map((diamond) => (
+							<div>{diamond?.Title}</div>
+						))}
+					</div>
+				</div>
+			))}
+		</div>
+	);
+
 	return (
 		<div className="mt-5 p-8 bg-gray-50 mx-5 md:mx-16 lg:mx-32 my-10 flex flex-col md:flex-row">
 			{/* Left Segment: Engagement Ring, Loose Diamond, Promotions */}
@@ -281,7 +300,16 @@ const CartPage = () => {
 											{item.JewelryId ? (
 												<div>
 													<p className="mb-1 text-gray-800 font-semibold">
-														{item.TitleJewelry}
+														{item.TitleJewelry}{' '}
+														{/* {item?.DiamondJewelry?.length > 0 && (
+															<Popover
+																placement="topLeft"
+																title={text}
+																content={content}
+															>
+																<InfoCircleFilled />
+															</Popover>
+														)} */}
 													</p>
 													{item?.FinalPrice === item.DefaultPrice ? (
 														<p className="text-gray-700 text-sm py-3 ml-1">

@@ -1,5 +1,6 @@
-import {CheckCircleOutlined} from '@ant-design/icons';
-import {Button, Form, Input, message, Modal, Radio, Select, Checkbox} from 'antd';
+import {CheckCircleOutlined, InfoCircleFilled} from '@ant-design/icons';
+import DiamondIcon from '@mui/icons-material/Diamond';
+import {Button, Checkbox, Form, Input, message, Modal, Popover, Radio, Select} from 'antd';
 import React, {useEffect, useMemo, useState} from 'react';
 import {FaPhoneAlt, FaRegAddressBook, FaRegEnvelope} from 'react-icons/fa';
 import {useDispatch, useSelector} from 'react-redux';
@@ -12,20 +13,16 @@ import {
 	GetLoadingCustomizeSelector,
 	GetOrderWarrantySelector,
 	GetPromotionAbleSelector,
+	GetShopLocationSelector,
 	GetUserDetailSelector,
 	LoadingOrderSelector,
 	selectDistances,
 	selectLoading,
-	GetShopLocationSelector,
 } from '../../redux/selectors';
 import {handleCartValidate} from '../../redux/slices/cartSlice';
+import {getConfigOrder} from '../../redux/slices/configSlice';
 import {handleOrderCustomizeCheckout} from '../../redux/slices/customizeSlice';
-import {
-	fetchDistances,
-	fetchDistrict,
-	fetchWard,
-	handleCalculateLocation,
-} from '../../redux/slices/distanceSlice';
+import {fetchDistances, fetchDistrict, fetchWard} from '../../redux/slices/distanceSlice';
 import {getShopLocation} from '../../redux/slices/locationSlice';
 import {handleCheckoutOrder} from '../../redux/slices/orderSlice';
 import {getAllPayment} from '../../redux/slices/paymentSlice';
@@ -33,7 +30,6 @@ import {checkPromoCart, getAllPromo} from '../../redux/slices/promotionSlice';
 import {getAllWarranty} from '../../redux/slices/warrantySlice';
 import {formatPrice} from '../../utils';
 import {enums} from '../../utils/constant';
-import {fetchOrderRule, getConfigOrder} from '../../redux/slices/configSlice';
 
 const {Option} = Select;
 
@@ -78,6 +74,7 @@ const mapAttributes = (data, attributes) => {
 		SideDiamonds: data?.Jewelry?.SideDiamonds,
 		SizeId: data?.Jewelry?.SizeId,
 		Weight: data?.Jewelry?.Weight,
+		DiamondJewelry: data?.Jewelry?.Diamonds,
 		JewelryModel: data.JewelryModel,
 		PromotionId: data.PromotionId,
 		RequirementQualifedId: data.RequirementQualifedId,
@@ -605,6 +602,24 @@ const CheckoutPage = () => {
 		setPromoCustomizeId(value);
 	};
 
+	const text = <span>Kim Cương</span>;
+	const content = (
+		<div>
+			{mappedProducts?.map((item, index) => (
+				<div className=" flex flex-col p-5 rounded-lg" key={item.Id}>
+					<div className="flex-1 mx-5 sm:mt-0">
+						<div className="mr-3">
+							<DiamondIcon />
+						</div>
+						{item?.DiamondJewelry?.map((diamond) => (
+							<div>{diamond?.Title}</div>
+						))}
+					</div>
+				</div>
+			))}
+		</div>
+	);
+
 	return (
 		<div className="min-h-screen flex justify-center items-center bg-gray-100 md:mx-40 my-20">
 			<div className="w-full flex flex-col md:flex-row">
@@ -1079,12 +1094,21 @@ const CheckoutPage = () => {
 											{/* Kiểm tra và hiển thị thông tin sản phẩm */}
 											{item.JewelryId ? (
 												<div>
-													<div className="mb-2 text-gray-800 font-semibold">
-														{item.TitleJewelry}
+													<div className="mb-1 text-gray-800 font-semibold">
+														{item.TitleJewelry}{' '}
+														{/* {item?.DiamondJewelry?.length > 0 && (
+															<Popover
+																placement="topLeft"
+																title={text}
+																content={content}
+															>
+																<InfoCircleFilled />
+															</Popover>
+														)} */}
 													</div>
 													<div className="text-gray-700 text-sm mr-1 mb-2">
 														Mã sê-ri:
-														<span className="text-gray-900 font-semibold">
+														<span className="text-gray-900 font-semibold ml-1">
 															{item.SerialCode}
 														</span>
 													</div>
@@ -1157,7 +1181,7 @@ const CheckoutPage = () => {
 													</div>
 													<div className="text-gray-700 text-sm mr-1 mb-2">
 														SKU:
-														<span className="text-gray-900 font-semibold">
+														<span className="text-gray-900 font-semibold ml-1">
 															{item.SerialCodeDiamond}
 														</span>
 													</div>

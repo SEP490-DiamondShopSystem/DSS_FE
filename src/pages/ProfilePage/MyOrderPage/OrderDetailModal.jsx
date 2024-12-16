@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 
 import {
 	DeleteOutlined,
@@ -47,12 +47,14 @@ import {OrderLog} from './OrderLog';
 import {OrderPayment} from './OrderPayment';
 import InformationUser from './InformationUser';
 import {getTransactionByOrderId} from '../../../redux/slices/transactionSlice';
-import {useNavigate, useParams} from 'react-router-dom';
+import {useLocation, useNavigate, useParams} from 'react-router-dom';
 
 const {Text, Title} = Typography;
 
 export const OrderDetailModal = () => {
 	const {id} = useParams();
+	const location = useLocation();
+	const transactionRef = useRef(null);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const loading = useSelector(LoadingOrderSelector);
@@ -282,6 +284,15 @@ export const OrderDetailModal = () => {
 	}, [dispatch, statusOrder, reviewDetail, transfer, cancelled]);
 
 	useEffect(() => {
+		if (location.state?.scrollTo) {
+			const targetSection = location.state.scrollTo;
+			if (targetSection === 'transaction') {
+				transactionRef.current.scrollIntoView({behavior: 'smooth'});
+			}
+		}
+	}, [location]);
+
+	useEffect(() => {
 		if (id) {
 			dispatch(getTransactionByOrderId(id))
 				.unwrap()
@@ -457,7 +468,7 @@ export const OrderDetailModal = () => {
 						)}
 
 						<div className="w-full flex flex-col sm:flex-row gap-4">
-							<div className="w-full sm:w-2/3">
+							<div ref={transactionRef} className="w-full sm:w-2/3">
 								{order?.Status === 1 && order?.Transactions?.length === 0 ? (
 									<OrderPayment order={order} />
 								) : (

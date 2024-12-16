@@ -243,7 +243,7 @@ const MyOrderPage = () => {
 					message.error(error?.data?.detail || error?.data);
 				});
 		} else {
-			navigate(`/my-orders/${order?.orderId}`);
+			navigate(`/my-orders/${order?.orderId}`, {state: {scrollTo: 'transaction'}});
 		}
 	};
 
