@@ -335,8 +335,6 @@ export const InformationLeft = ({jewelryDetail, diamondDetail, jewelry, diamond,
 		</div>
 	);
 
-	console.log('jewelry', jewelry);
-
 	const textCut = <span>Chế Tác Kim Cương</span>;
 
 	const contentCut = (

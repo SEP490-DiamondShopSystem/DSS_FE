@@ -444,7 +444,7 @@ export const OrderDetailModal = () => {
 							<Title level={3} className="mb-4">
 								Thông Tin Khách Hàng
 							</Title>
-							<InformationUser order={order} />
+							<InformationUser order={order} transaction={transaction} />
 						</div>
 						{order?.Deliverer && (
 							<div className="my-5">

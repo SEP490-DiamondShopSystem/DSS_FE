@@ -98,8 +98,6 @@ export const InformationRight = ({
 		setProductWarrantly(!showProductWarrantly);
 	};
 
-	console.log('jewelry', jewelry);
-
 	const handleAddToCart = () => {
 		if (!userId) {
 			message.warning('Bạn cần phải đăng nhập để thêm sản phẩm vào giỏ hàng!');

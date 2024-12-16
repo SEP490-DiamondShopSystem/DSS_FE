@@ -301,15 +301,6 @@ const CartPage = () => {
 												<div>
 													<p className="mb-1 text-gray-800 font-semibold">
 														{item.TitleJewelry}{' '}
-														{/* {item?.DiamondJewelry?.length > 0 && (
-															<Popover
-																placement="topLeft"
-																title={text}
-																content={content}
-															>
-																<InfoCircleFilled />
-															</Popover>
-														)} */}
 													</p>
 													{item?.FinalPrice === item.DefaultPrice ? (
 														<p className="text-gray-700 text-sm py-3 ml-1">

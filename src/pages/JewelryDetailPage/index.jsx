@@ -176,13 +176,6 @@ const JewelryDetailPage = () => {
 		}
 	}, [jewelry, selectedMetal]);
 
-	console.log('processedMetals', uniqueMetals);
-	console.log('filteredGroups', filteredGroups);
-	console.log('uniqueSideDiamonds', uniqueSideDiamonds);
-	console.log('jewelry', jewelry);
-	console.log('selectedMetal', selectedMetal);
-	console.log('selectedSideDiamond', selectedSideDiamond);
-
 	return (
 		<>
 			{loading ? (

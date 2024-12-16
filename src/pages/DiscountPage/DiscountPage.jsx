@@ -11,8 +11,6 @@ const DiscountPage = () => {
 	const dispatch = useDispatch();
 	const [discounts, setDiscounts] = useState();
 
-	console.log('discount', discounts);
-
 	useEffect(() => {
 		dispatch(getAllDiscount())
 			.unwrap()

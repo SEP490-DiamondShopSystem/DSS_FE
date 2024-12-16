@@ -9,9 +9,6 @@ export const InformationLeft = ({diamondJewelry, selectedMetal, selectedSideDiam
 		setShowMore(!showMore);
 	};
 
-	console.log('selectedMetal', selectedMetal);
-	console.log('selectedSideDiamond', selectedSideDiamond);
-
 	return (
 		<>
 			<div className="bg-gray-50 w-full mt-10 ">
