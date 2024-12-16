@@ -204,9 +204,10 @@ export const enums = {
 		Cancelled: 4,
 	},
 	OrderItemStatus: {
-		Preparing: 0,
-		Done: 1,
-		Removed: 2,
+		Chờ_Xử_Lí: 0,
+		Đang_Chuẩn_Bị: 1,
+		Đã_Xong: 2,
+		Đã_Xóa: 3,
 	},
 	OrderStatus: {
 		Pending: 1,
@@ -289,7 +290,7 @@ export const enums = {
 		D: 8,
 	},
 	Culet: {
-		None: 1,
+		Không_Có: 1,
 		Rất_Nhỏ: 2,
 		Nhỏ: 3,
 		Bình_Thường: 4,

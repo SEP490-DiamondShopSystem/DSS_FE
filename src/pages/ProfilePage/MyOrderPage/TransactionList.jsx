@@ -153,12 +153,13 @@ export const TransactionDetails = ({transactions, order}) => {
 										)}
 									</div>
 								</Col>
+
 								<Col span={24}>
-									<Title level={4} className="text-primary">
+									<Title level={4} className="text-gray-600 font-medium">
 										Loại giao dịch
 									</Title>
 									<div className="">
-										<div className="mt-2">
+										<div className="mt-2 font-semibold">
 											{transaction.TransactionType === 1 ? (
 												<div className="text-darkGreen text-lg">
 													Thanh Toán
@@ -168,6 +169,29 @@ export const TransactionDetails = ({transactions, order}) => {
 											)}
 										</div>
 									</div>
+								</Col>
+								<Col xs={24}>
+									<Title level={4} className="text-gray-600 font-medium">
+										<p className="text-gray-600 font-medium">
+											Trạng thái giao dịch
+										</p>
+									</Title>
+									<Tag
+										color={
+											transaction?.Status === 1
+												? 'orange'
+												: transaction?.Status === 2
+												? 'green'
+												: 'red'
+										}
+										className="font-semibold text-sm"
+									>
+										{transaction?.Status === 1
+											? 'CHỜ XỬ LÝ'
+											: transaction?.Status === 2
+											? 'HỢP LỆ'
+											: 'KHÔNG HỢP LỆ'}
+									</Tag>
 								</Col>
 
 								{/* Evidence Section */}

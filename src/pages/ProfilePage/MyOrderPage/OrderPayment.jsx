@@ -7,6 +7,7 @@ import {fetchShopBankAccountRule} from '../../../redux/slices/configSlice';
 import {getUserOrderTransaction} from '../../../redux/slices/orderSlice';
 import {handleAddTransfer} from '../../../redux/slices/paymentSlice';
 import Loading from '../../../components/Loading';
+import {formatPrice} from '../../../utils';
 
 const {Title} = Typography;
 
@@ -65,7 +66,7 @@ export const OrderPayment = ({order, setTransfer}) => {
 				window.open(res?.PaymentUrl, '_blank');
 			})
 			.catch((error) => {
-				message.error(error?.detail || error?.data.detail);
+				message.error(error?.data.detail);
 			});
 	};
 
@@ -97,6 +98,12 @@ export const OrderPayment = ({order, setTransfer}) => {
 								<p>
 									<strong className="text-gray-700">Ghi chú:</strong>{' '}
 									{'Vui lòng ghi mã đơn hàng vào nội dung chuyển khoản.'}
+								</p>
+								<p className="font-semibold">
+									<strong className="text-gray-700">Số tiền cần chuyển:</strong>{' '}
+									{order?.DepositFee !== 0
+										? formatPrice(order?.DepositFee)
+										: formatPrice(order?.TotalPrice)}
 								</p>
 							</div>
 							<div className="mt-4 sm:mt-0 sm:ml-10 flex justify-center">
@@ -150,7 +157,13 @@ export const OrderPayment = ({order, setTransfer}) => {
 
 				{order?.PaymentMethodId === '2' && (
 					<div className="zalopay-payment">
-						<h3 className="text-xl font-semibold mb-4">Thanh toán qua ZaloPay</h3>
+						<h3 className="text-xl font-semibold ">Thanh toán qua ZaloPay</h3>{' '}
+						<p className="font-semibold">
+							<strong className="text-gray-700 my-4">Số tiền cần chuyển:</strong>{' '}
+							{order?.DepositFee !== 0
+								? formatPrice(order?.DepositFee)
+								: formatPrice(order?.TotalPrice)}
+						</p>
 						<div className="my-5 text-gray-600">
 							Bấm nút bên dưới để chuyển đến cổng thanh toán ZaloPay:
 						</div>

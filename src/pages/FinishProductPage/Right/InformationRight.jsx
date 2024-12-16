@@ -1,23 +1,14 @@
-import {CheckCircleFilled, MinusOutlined, PlusOutlined} from '@ant-design/icons';
-import {
-	faClose,
-	faDiamond,
-	faMinus,
-	faPlus,
-	faRefresh,
-	faRing,
-	faTruck,
-} from '@fortawesome/free-solid-svg-icons';
+import {MinusOutlined, PlusOutlined} from '@ant-design/icons';
+import {faClose, faPlus, faRefresh, faRing, faTruck} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import DiamondIcon from '@mui/icons-material/Diamond';
 import {Button, Input, message, Popover, Select, Typography} from 'antd';
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import {GetOrderWarrantySelector, UserInfoSelector} from '../../../redux/selectors';
-import {addToCartFinish} from '../../../redux/slices/cartSlice';
-import {formatPrice, Rating} from '../../../utils';
 import {getAllWarranty} from '../../../redux/slices/warrantySlice';
-import DiamondIcon from '@mui/icons-material/Diamond';
+import {formatPrice} from '../../../utils';
 
 const {Text} = Typography;
 
@@ -241,12 +232,6 @@ export const InformationRight = ({
 		<div>
 			<div className="border-tintWhite">
 				<h1 className="text-3xl mb-5">{jewelry?.Title}</h1>
-				{/* <div className="my-5 flex">
-					<Rating rating={0} />
-					<p className="ml-5">477 Đánh Giá</p>
-				</div> */}
-				<div></div>
-				{/* <div className="font-semibold my-2">Ngày Giao Hàng Dự Kiến: {metalType?.ship}</div> */}
 
 				<div>
 					<div className="mt-5">
@@ -436,15 +421,18 @@ export const InformationRight = ({
 					</div>
 				</div>
 			</div>
-			<div className="flex justify-between items-center mt-5">
-				<Button
-					type="text"
-					className="border py-7 px-14 font-bold text-lg bg-primary rounded hover:bg-second w-full uppercase"
-					onClick={handleAddToCart}
-				>
-					{jewelryId ? 'Cập Nhật Giỏ Hàng' : 'THÊM VÀO GIỎ Hàng'}
-				</Button>
-			</div>
+			{jewelry?.Status === 1 && (
+				<div className="flex justify-between items-center mt-5">
+					<Button
+						type="text"
+						className="border py-7 px-14 font-bold text-lg bg-primary rounded hover:bg-second w-full uppercase"
+						onClick={handleAddToCart}
+					>
+						{jewelryId ? 'Cập Nhật Giỏ Hàng' : 'THÊM VÀO GIỎ Hàng'}
+					</Button>
+				</div>
+			)}
+
 			<div className="my-10">
 				<h2 className="font-bold text-xl pb-3">Đơn Hàng Của Bạn Bao Gồm:</h2>
 				<div className="flex bg-offWhite p-5">

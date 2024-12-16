@@ -240,6 +240,11 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 
 	const sub2Columns = [
 		{
+			title: 'SKU',
+			dataIndex: 'SerialCode',
+			key: 'carat',
+		},
+		{
 			title: 'Ly (Carat)',
 			dataIndex: 'Carat',
 			key: 'carat',
@@ -504,6 +509,19 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 								</Button>
 								<Button danger className="" onClick={handleCancelOrder}>
 									Hủy Đơn
+								</Button>
+							</Space>
+						)}
+						{orderStatus === 4 && order?.Order !== null && (
+							<Space>
+								<Button
+									type="text"
+									className="bg-primary text-white"
+									onClick={() => {
+										navigate(`/my-orders/${order?.Order?.Id}`);
+									}}
+								>
+									Chi Tiết Đơn Hàng
 								</Button>
 							</Space>
 						)}
