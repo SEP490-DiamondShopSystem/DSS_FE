@@ -86,6 +86,8 @@ const mapAttributes = (data, attributes) => {
 		JewelryThumbnail: data?.Jewelry?.Model?.Thumbnail?.MediaPath,
 		DefaultPrice: data?.ReviewPrice?.DefaultPrice,
 		FinalPrice: data?.ReviewPrice?.FinalPrice,
+		DiscountAmountSaved: data?.ReviewPrice?.DiscountAmountSaved,
+		PromotionAmountSaved: data?.ReviewPrice?.PromotionAmountSaved,
 		TitleJewelry: data?.Jewelry?.Title,
 
 		// Using the helper function to map diamond attributes
@@ -938,8 +940,14 @@ const CheckoutPage = () => {
 											{/* Kiểm tra và hiển thị thông tin sản phẩm */}
 											{item.JewelryId && (
 												<div>
-													<div className="mb-1 text-gray-800 font-semibold">
+													<div className="mb-2 text-gray-800 font-semibold">
 														{item.TitleJewelry}
+													</div>
+													<div className="text-gray-700 text-sm mr-1 mb-2">
+														Mã sê-ri:
+														<span className="text-gray-900 font-semibold">
+															{item.SerialCode}
+														</span>
 													</div>
 													<div className="text-gray-700 text-sm mr-1">
 														{item?.FinalPrice === item.DefaultPrice ? (
@@ -950,15 +958,43 @@ const CheckoutPage = () => {
 																</span>
 															</p>
 														) : (
-															<p className="text-gray-700 text-sm py-3 ml-1">
-																Giá:
-																<span className="text-gray-900 font-semibold ml-1 line-through text-gray">
-																	{formatPrice(item.DefaultPrice)}
-																</span>
-																<span className="text-gray-900 font-semibold ml-1">
-																	{formatPrice(item.FinalPrice)}
-																</span>
-															</p>
+															<>
+																{item.PromotionAmountSaved !==
+																	0 && (
+																	<p className="text-gray-700 text-sm py-3 ml-1 mb-2">
+																		Giá Khuyến Mãi:
+																		<span className="text-gray-900 font-semibold ml-1">
+																			{formatPrice(
+																				item.PromotionAmountSaved
+																			)}
+																		</span>
+																	</p>
+																)}
+
+																{item.DiscountAmountSaved !== 0 && (
+																	<p className="text-gray-700 text-sm py-2 ml-1 mb-2">
+																		Giá Giảm:
+																		<span className="text-gray-900 font-semibold ml-1">
+																			{formatPrice(
+																				item.DiscountAmountSaved
+																			)}
+																		</span>
+																	</p>
+																)}
+																<p className="text-gray-700 text-sm py-3 ml-1 mb-2">
+																	Giá:
+																	<span className="text-gray-900 font-semibold ml-1 line-through text-gray">
+																		{formatPrice(
+																			item.DefaultPrice
+																		)}
+																	</span>
+																	<span className="text-gray-900 font-semibold ml-1">
+																		{formatPrice(
+																			item.FinalPrice
+																		)}
+																	</span>
+																</p>
+															</>
 														)}
 													</div>
 												</div>
@@ -1042,27 +1078,60 @@ const CheckoutPage = () => {
 											{/* Kiểm tra và hiển thị thông tin sản phẩm */}
 											{item.JewelryId ? (
 												<div>
-													<div className="mb-1 text-gray-800 font-semibold">
+													<div className="mb-2 text-gray-800 font-semibold">
 														{item.TitleJewelry}
+													</div>
+													<div className="text-gray-700 text-sm mr-1 mb-2">
+														Mã sê-ri:
+														<span className="text-gray-900 font-semibold">
+															{item.SerialCode}
+														</span>
 													</div>
 													<div className="text-gray-700 text-sm mr-1">
 														{item?.FinalPrice === item.DefaultPrice ? (
-															<p className="text-gray-700 text-sm py-3 ml-1">
-																Giá:
+															<p className="text-gray-700 text-sm py-3 ml-1 mb-2">
+																Tổng Giá:
 																<span className="text-gray-900 font-semibold ml-1">
 																	{formatPrice(item.DefaultPrice)}
 																</span>
 															</p>
 														) : (
-															<p className="text-gray-700 text-sm py-3 ml-1">
-																Giá:
-																<span className="text-gray-900 font-semibold ml-1 line-through text-gray">
-																	{formatPrice(item.DefaultPrice)}
-																</span>
-																<span className="text-gray-900 font-semibold ml-1">
-																	{formatPrice(item.FinalPrice)}
-																</span>
-															</p>
+															<>
+																{item.PromotionAmountSaved !==
+																	0 && (
+																	<p className="text-gray-700 text-sm mb-2 ml-1">
+																		Giá Khuyến Mãi:
+																		<span className="text-gray-900 font-semibold ml-1">
+																			{formatPrice(
+																				item.PromotionAmountSaved
+																			)}
+																		</span>
+																	</p>
+																)}
+																{item.DiscountAmountSaved !== 0 && (
+																	<p className="text-gray-700 text-sm ml-1 mb-2">
+																		Giá Giảm:
+																		<span className="text-gray-900 font-semibold ml-1">
+																			{formatPrice(
+																				item.DiscountAmountSaved
+																			)}
+																		</span>
+																	</p>
+																)}
+																<p className="text-gray-700 text-sm ml-1 mb-2">
+																	Tổng Giá:
+																	<span className="text-gray-900 font-semibold ml-1 line-through text-gray">
+																		{formatPrice(
+																			item.DefaultPrice
+																		)}
+																	</span>
+																	<span className="text-gray-900 font-semibold ml-1">
+																		{formatPrice(
+																			item.FinalPrice
+																		)}
+																	</span>
+																</p>
+															</>
 														)}
 													</div>
 													{/* <div className="text-gray-700 text-sm mr-1">
@@ -1082,34 +1151,62 @@ const CheckoutPage = () => {
 												</div>
 											) : item.Carat ? (
 												<div>
-													<div className="mb-1 text-gray-800 font-semibold">
+													<div className="mb-2 text-gray-800 font-semibold">
 														{item?.Title}
+													</div>
+													<div className="text-gray-700 text-sm mr-1 mb-2">
+														SKU:
+														<span className="text-gray-900 font-semibold">
+															{item.SerialCodeDiamond}
+														</span>
 													</div>
 													<div className="text-gray-700 text-sm mr-1">
 														{item?.FinalPrice === item.DefaultPrice ? (
-															<p className="text-gray-700 text-sm py-3 ml-1">
+															<p className="text-gray-700 text-sm ml-1 mb-2">
 																Giá:
 																<span className="text-gray-900 font-semibold ml-1">
 																	{formatPrice(item.DefaultPrice)}
 																</span>
 															</p>
 														) : (
-															<p className="text-gray-700 text-sm py-3 ml-1">
-																Giá:
-																<span className="text-gray-900 font-semibold ml-1 line-through text-gray">
-																	{formatPrice(item.DefaultPrice)}
-																</span>
-																<span className="text-gray-900 font-semibold ml-1">
-																	{formatPrice(item.FinalPrice)}
-																</span>
-															</p>
+															<>
+																{item.PromotionAmountSaved !==
+																	0 && (
+																	<p className="text-gray-700 text-sm ml-1 mb-2">
+																		Giá Khuyến Mãi:
+																		<span className="text-gray-900 font-semibold ml-1">
+																			{formatPrice(
+																				item.PromotionAmountSaved
+																			)}
+																		</span>
+																	</p>
+																)}
+																{item.DiscountAmountSaved !== 0 && (
+																	<p className="text-gray-700 text-sm ml-1 mb-2">
+																		Giá Giảm:
+																		<span className="text-gray-900 font-semibold ml-1">
+																			{formatPrice(
+																				item.DiscountAmountSaved
+																			)}
+																		</span>
+																	</p>
+																)}
+
+																<p className="text-gray-700 text-sm ml-1 mb-2">
+																	Tổng Giá:
+																	<span className="text-gray-900 font-semibold ml-1 line-through text-gray">
+																		{formatPrice(
+																			item.DefaultPrice
+																		)}
+																	</span>
+																	<span className="text-gray-900 font-semibold ml-1">
+																		{formatPrice(
+																			item.FinalPrice
+																		)}
+																	</span>
+																</p>
+															</>
 														)}
-													</div>
-													<div className="text-gray-700 text-sm mr-1">
-														SKU:
-														<span className="text-gray-900 font-semibold py-3">
-															{item.SerialCodeDiamond}
-														</span>
 													</div>
 												</div>
 											) : (
@@ -1126,70 +1223,86 @@ const CheckoutPage = () => {
 						<div className="bg-white p-6 rounded-lg shadow-lg space-y-4">
 							{/* Total and Savings Section */}
 							<div className="p-4 border rounded-lg bg-gray-50">
+								{cartList?.OrderPrices?.DefaultPrice !== 0 && (
+									<div className="flex justify-between mb-1">
+										<span className="font-semibold">Giá Gốc</span>{' '}
+										<span>
+											{formatPrice(cartList?.OrderPrices?.DefaultPrice || 0)}
+										</span>
+									</div>
+								)}
 								<div className="flex justify-between mb-1">
-									<span className="font-semibold">Giá Gốc</span>{' '}
-									<span>
-										{formatPrice(cartList?.OrderPrices?.DefaultPrice || 0)}
-									</span>
-								</div>
-								<div className="mb-2">
 									<div className="mb-1 flex justify-between w-full">
 										<span className="font-semibold">Phí Vận Chuyển</span>{' '}
 										<span>
 											{formatPrice(
-												cartList?.ShippingPrice?.DefaultPrice || 0
+												cartList?.OrderPrices?.FinalShippingPrice || 0
+											)}{' '}
+											(-
+											{formatPrice(
+												cartList?.OrderPrices?.ShippingPriceSaved || 0
 											)}
+											)
 										</span>
 									</div>
 								</div>
 
-								<div className="mb-2">
-									<div className="mb-1 flex justify-between w-full">
-										<span className="font-semibold">Giảm Giá</span>{' '}
-										<span>
-											{cartList?.OrderPrices?.DiscountAmountSaved !== 0 &&
-												'-'}
-											{formatPrice(
-												cartList?.OrderPrices?.DiscountAmountSaved || 0
-											)}
-										</span>
+								{cartList?.OrderPrices?.DiscountAmountSaved !== 0 && (
+									<div className="flex justify-between mb-1">
+										<div className="mb-1 flex justify-between w-full">
+											<span className="font-semibold">Giảm Giá</span>{' '}
+											<span>
+												-
+												{formatPrice(
+													cartList?.OrderPrices?.DiscountAmountSaved || 0
+												)}
+											</span>
+										</div>
 									</div>
-								</div>
-								<div className="mb-2">
-									<div className="flex justify-between w-full">
-										<span className="font-semibold">Khuyến Mãi</span>{' '}
-										<span>
-											{cartList?.OrderPrices?.PromotionAmountSaved !== 0 &&
-												'-'}
-											{formatPrice(
-												cartList?.OrderPrices?.PromotionAmountSaved || 0
-											)}
-										</span>
+								)}
+								{cartList?.OrderPrices?.PromotionAmountSaved !== 0 && (
+									<div className="flex justify-between mb-1">
+										<div className="mb-1 flex justify-between w-full">
+											<span className="font-semibold">Khuyến Mãi</span>{' '}
+											<span>
+												-
+												{formatPrice(
+													cartList?.OrderPrices?.PromotionAmountSaved || 0
+												)}
+											</span>
+										</div>
 									</div>
-								</div>
-								<div className="mb-2">
-									<div className="mb-1 flex justify-between w-full">
-										<span className="font-semibold">Bảo Hành</span>{' '}
-										<span>
-											{formatPrice(
-												cartList?.OrderPrices?.TotalWarrantyPrice || 0
-											)}
-										</span>
+								)}
+								{cartList?.OrderPrices?.TotalWarrantyPrice !== 0 && (
+									<div className="flex justify-between mb-1">
+										<div className="mb-1 flex justify-between w-full">
+											<span className="font-semibold">Bảo Hành</span>{' '}
+											<span>
+												{formatPrice(
+													cartList?.OrderPrices?.TotalWarrantyPrice || 0
+												)}
+											</span>
+										</div>
 									</div>
-								</div>
-								<div className="mb-2">
-									<div className="mb-1 flex justify-between w-full">
-										<span className="font-semibold">Khách Hàng Thân Thiết</span>
+								)}
+								{cartList?.OrderPrices?.UserRankDiscountAmount !== 0 && (
+									<div className="flex justify-between mb-1">
+										<div className="mb-1 flex justify-between w-full">
+											<span className="font-semibold">
+												Khách Hàng Thân Thiết
+											</span>
 
-										<span>
-											{cartList?.OrderPrices?.UserRankDiscountAmount !== 0 &&
-												'-'}
-											{formatPrice(
-												cartList?.OrderPrices?.UserRankDiscountAmount || 0
-											)}
-										</span>
+											<span>
+												{cartList?.OrderPrices?.UserRankDiscountAmount !==
+													0 && '-'}
+												{formatPrice(
+													cartList?.OrderPrices?.UserRankDiscountAmount ||
+														0
+												)}
+											</span>
+										</div>
 									</div>
-								</div>
+								)}
 
 								<div className="flex text-sm text-gray-600 my-2">
 									<span className="mr-2">📅 Thời gian giao hàng dự kiến</span>

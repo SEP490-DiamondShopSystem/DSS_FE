@@ -47,13 +47,14 @@ import {OrderLog} from './OrderLog';
 import {OrderPayment} from './OrderPayment';
 import InformationUser from './InformationUser';
 import {getTransactionByOrderId} from '../../../redux/slices/transactionSlice';
-import {useParams} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 
 const {Text, Title} = Typography;
 
 export const OrderDetailModal = () => {
 	const {id} = useParams();
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const loading = useSelector(LoadingOrderSelector);
 	const loadingReview = useSelector(LoadingReviewSelector);
 	const reviewDetail = useSelector(ReviewSelector);
@@ -87,6 +88,9 @@ export const OrderDetailModal = () => {
 		paymentMethod: order?.PaymentMethod?.MappedName,
 		shippingAddress: order?.ShippingAddress,
 		status: order?.Status,
+		warrantyPrice: formatPrice(item?.WarrantyPrice || 0),
+		discountSavedAmount: formatPrice(item?.DiscountSavedAmount || 0),
+		promotionSavedAmount: formatPrice(item?.PromotionSavedAmount || 0),
 		shippingFee: formatPrice(order?.ShippingFee || 0),
 		totalPrice: formatPrice(order?.TotalPrice || 0),
 		totalRefund: formatPrice(order?.TotalRefund || 0),
@@ -117,6 +121,39 @@ export const OrderDetailModal = () => {
 			render: (text) => <div className="flex justify-center">{text}</div>,
 		},
 		{
+			title: 'Giá Bảo Hành',
+			dataIndex: 'warrantyPrice',
+			key: 'warrantyPrice',
+			align: 'center',
+			render: (_, record) => (
+				<div className="flex flex-col items-center">
+					<div>{record.warrantyPrice}</div>
+				</div>
+			),
+		},
+		{
+			title: 'Giá Giảm',
+			dataIndex: 'discountSavedAmount',
+			key: 'discountSavedAmount',
+			align: 'center',
+			render: (_, record) => (
+				<div className="flex flex-col items-center">
+					<div>{record.discountSavedAmount}</div>
+				</div>
+			),
+		},
+		{
+			title: 'Giá Khuyến Mãi',
+			dataIndex: 'promotionSavedAmount',
+			key: 'promotionSavedAmount',
+			align: 'center',
+			render: (_, record) => (
+				<div className="flex flex-col items-center">
+					<div>{record.promotionSavedAmount}</div>
+				</div>
+			),
+		},
+		{
 			title: 'Giá Sản Phẩm',
 			dataIndex: 'price',
 			key: 'price',
@@ -128,7 +165,7 @@ export const OrderDetailModal = () => {
 			),
 		},
 		{
-			title: 'HT Giao Hàng',
+			title: 'Hình Thức Giao Hàng',
 			dataIndex: 'IsCollectAtShop',
 			key: 'IsCollectAtShop',
 			align: 'center',
@@ -266,17 +303,27 @@ export const OrderDetailModal = () => {
 
 	const handleDeleteReview = () => {
 		if (reviewContent) {
-			dispatch(deleteReviewAction(reviewContent.Id))
-				.unwrap()
-				.then((res) => {
-					setReviewContent(null);
-					setRating(0);
-					message.success('Đánh giá đã được xóa');
-					setIsModalVisible(false);
-				})
-				.catch((error) => {
-					message.error(error?.data?.detail);
-				});
+			Modal.confirm({
+				title: 'Xác nhận xóa đánh giá',
+				content: 'Bạn có chắc chắn muốn xóa đánh giá này không?',
+				okText: 'Xóa',
+				centered: true,
+				cancelText: 'Hủy',
+				onOk: () => {
+					dispatch(deleteReviewAction(reviewContent.Id))
+						.unwrap()
+						.then((res) => {
+							setReviewContent(null);
+							setRating(0);
+							message.success('Đánh giá đã được xóa');
+							setIsModalVisible(false);
+						})
+						.catch((error) => {
+							message.error(error?.data?.detail);
+						});
+				},
+				onCancel: () => {},
+			});
 		}
 	};
 
@@ -287,6 +334,10 @@ export const OrderDetailModal = () => {
 	const handleReviewRequest = (id) => {
 		setJewelryId(id);
 		setIsReviewModalVisible(true);
+	};
+
+	const handleFileRemove = (file) => {
+		setImageFiles((prev) => prev.filter((item) => item.uid !== file.uid));
 	};
 
 	const submitCancelOrder = (values) => {
@@ -482,7 +533,12 @@ export const OrderDetailModal = () => {
 								Tổng cộng: {formatPrice(order?.TotalPrice)}
 							</div>
 						</div>
-						<Button type="text" className="text-primary" icon={<LeftOutlined />}>
+						<Button
+							onClick={() => navigate('/my-orders')}
+							type="text"
+							className="text-primary"
+							icon={<LeftOutlined />}
+						>
 							Quay lại danh sách đơn hàng của tôi
 						</Button>
 						{/* Cancel Order Modal */}
@@ -538,8 +594,9 @@ export const OrderDetailModal = () => {
 										listType="picture"
 										fileList={fileList}
 										onChange={handleFileChange}
+										onRemove={handleFileRemove}
 										beforeUpload={(file) => {
-											setImageFiles((fileList) => [...fileList, file]);
+											setImageFiles((prev) => [...prev, file]);
 											return false;
 										}}
 										maxCount={3}
@@ -579,6 +636,7 @@ export const OrderDetailModal = () => {
 				title="Thông tin Đánh Giá"
 				visible={isModalVisible}
 				onCancel={handleCancel}
+				centered
 				footer={[
 					<Button
 						key="delete"

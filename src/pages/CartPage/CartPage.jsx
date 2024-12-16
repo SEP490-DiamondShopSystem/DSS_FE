@@ -452,18 +452,21 @@ const CartPage = () => {
 								</div>
 							)}
 
-							{cartList?.OrderPrices?.FinalShippingPrice !== 0 && (
-								<div className="flex justify-between mb-1">
-									<div className="mb-1 flex justify-between w-full">
-										<span className="font-semibold">Phí Vận Chuyển</span>{' '}
-										<span>
-											{formatPrice(
-												cartList?.OrderPrices?.FinalShippingPrice || 0
-											)}
-										</span>
-									</div>
+							<div className="flex justify-between mb-1">
+								<div className="mb-1 flex justify-between w-full">
+									<span className="font-semibold">Phí Vận Chuyển</span>{' '}
+									<span>
+										{formatPrice(
+											cartList?.OrderPrices?.FinalShippingPrice || 0
+										)}{' '}
+										( -
+										{formatPrice(
+											cartList?.OrderPrices?.ShippingPriceSaved || 0
+										)}
+										)
+									</span>
 								</div>
-							)}
+							</div>
 
 							{cartList?.OrderPrices?.DiscountAmountSaved !== 0 && (
 								<div className="flex justify-between mb-1">

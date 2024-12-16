@@ -3430,3 +3430,11 @@ video {
 	--tw-text-opacity: 1;
 	color: rgb(112 112 112 / var(--tw-text-opacity, 1)) /* #707070 */;
 }
+
+.mb-2 {
+	margin-bottom: 0.5rem /* 8px */;
+}
+
+.mr-1 {
+	margin-right: 0.25rem /* 4px */;
+}
