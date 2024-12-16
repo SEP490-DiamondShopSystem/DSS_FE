@@ -127,7 +127,8 @@ export const DiamondJewelryList = () => {
 										className="shadow-lg bg-white rounded-lg hover:border-2 border-2 border-white cursor-pointer hover:border-black"
 										onClick={() =>
 											navigate(
-												`/jewelry-model/search/${jewelry.JewelryModelId}`
+												`/jewelry-model/search/${jewelry.JewelryModelId}`,
+												{state: {jewelry}}
 											)
 										}
 									>

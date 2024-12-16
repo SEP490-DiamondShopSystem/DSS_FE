@@ -240,7 +240,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 
 	const sub2Columns = [
 		{
-			title: 'SKU',
+			title: 'Mã sê-ri',
 			dataIndex: 'SerialCode',
 			key: 'carat',
 		},

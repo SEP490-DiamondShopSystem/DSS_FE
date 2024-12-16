@@ -51,7 +51,7 @@ const LockProduct = () => {
 								>
 									<Card.Meta
 										title={product.Title}
-										description={`SKU: ${
+										description={`Mã sê-ri: ${
 											product.DiamondShape.ShapeName
 										} | Giá: ${formatPrice(product.SalePrice)} `} // You can modify this description
 									/>
