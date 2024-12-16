@@ -467,7 +467,7 @@ const CheckoutPage = () => {
 		});
 
 		const orderRequestDto = {
-			isAtShop: isAtShop, // Use the new state here
+			isAtShop: isAtShop,
 			paymentType: paymentForm,
 			paymentId: paymentMethod,
 			paymentName: 'zalopay',
@@ -524,7 +524,7 @@ const CheckoutPage = () => {
 					showOrderSuccessModal();
 				})
 				.catch((error) => {
-					message.error(error?.detail);
+					message.error(error?.data?.detail);
 				});
 		}
 	};

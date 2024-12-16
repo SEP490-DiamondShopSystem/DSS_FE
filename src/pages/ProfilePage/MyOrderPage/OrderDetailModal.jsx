@@ -275,7 +275,7 @@ export const OrderDetailModal = () => {
 					setIsModalVisible(false);
 				})
 				.catch((error) => {
-					message.error(error?.detail || error?.data?.detail);
+					message.error(error?.data?.detail);
 				});
 		}
 	};
