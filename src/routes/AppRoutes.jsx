@@ -49,10 +49,12 @@ import WarrantyPolicyPage from '../pages/PortalPage/WarrantyPolicy';
 import LoyalCustomerPolicyPage from '../pages/PortalPage/CustomerPolicy';
 import {OrderDetailModal} from '../pages/ProfilePage/MyOrderPage/OrderDetailModal';
 import DiscountPage from '../pages/DiscountPage/DiscountPage';
+import Breadcrumbs from '../components/Breadcrumb';
 export const AppRouters = () => {
 	return (
 		<>
 			<ScrollToTop />
+			<Breadcrumbs />
 			<Routes>
 				<Route path="/" element={<HomePage />} />
 				<Route path="/jewelry" element={<HomeJewelryPage />} />
