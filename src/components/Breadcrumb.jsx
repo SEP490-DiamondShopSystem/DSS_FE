@@ -50,6 +50,8 @@ const Breadcrumbs = () => {
 		'order/:id': 'Chi tiết đơn hàng',
 		'order-status/:id': 'Trạng thái đơn hàng',
 		'payment-result/:id': 'Kết quả thanh toán',
+		customize: 'Yêu cầu thiết kế',
+		'diamond-jewelry': 'Trang sức',
 		'*': 'Không tìm thấy trang',
 	};
 

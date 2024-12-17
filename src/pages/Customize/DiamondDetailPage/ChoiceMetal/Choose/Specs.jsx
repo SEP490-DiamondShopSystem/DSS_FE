@@ -120,6 +120,13 @@ export const Specs = ({
 
 	const handleBackStep = () => {
 		setStep((prev) => prev - 1);
+		setCustomizeDiamond((prev) => ({
+			...prev,
+			culet: '',
+			polish: '',
+			symmetry: '',
+			girdle: '',
+		}));
 	};
 
 	const textSymmetry = <span>Độ đối xứng</span>;
