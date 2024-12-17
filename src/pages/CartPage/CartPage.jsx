@@ -437,6 +437,7 @@ const CartPage = () => {
 						className="w-full"
 						onChange={handlePromoChange}
 						allowClear
+						placeholder="Chọn khuyến mãi"
 						notFoundContent="Chưa Có Khuyến Mãi Nào Áp Dụng Được Cho Các Sản Phẩm Này"
 					>
 						{promo &&
@@ -451,7 +452,10 @@ const CartPage = () => {
 											promotion?.IsApplicable ? 'text-darkGreen' : 'text-red'
 										}`}
 									>
-										{promotion.PromotionDto.Description}
+										{promotion.PromotionDto.Description} -{' '}
+										{promotion?.IsApplicable
+											? 'Có sản phẩm được áp dụng'
+											: promotion?.ErrorMessage}
 									</div>
 								</Select.Option>
 							))}

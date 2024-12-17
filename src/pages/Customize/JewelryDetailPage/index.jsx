@@ -78,6 +78,11 @@ const JewelryCustomDetail = () => {
 		{
 			title: 'Chọn Thông Số Vỏ',
 			disabled: stepChoose !== 0 && stepChoose !== 1,
+			onClick: () => {
+				if (stepChoose !== 0) {
+					setSelectedDiamonds([]);
+				}
+			},
 		},
 		...(jewelry?.MainDiamonds?.length > 0
 			? [
