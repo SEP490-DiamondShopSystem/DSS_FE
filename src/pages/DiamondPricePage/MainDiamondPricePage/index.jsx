@@ -7,6 +7,7 @@ import {
 	updateDiamondPrices,
 	deleteDiamondPrice,
 } from '../../../redux/slices/diamondPriceSlice';
+import {fetchDiamondPriceRule} from '../../../redux/slices/configSlice';
 import {getPriceBoardSelector, LoadingDiamondPriceSelector} from '../../../redux/selectors';
 import Loading from '../../../components/Loading';
 
@@ -49,9 +50,22 @@ const MainDiamondPricePage = () => {
 	const [isUpdateRangeModalVisible, setIsUpdateRangeModalVisible] = useState(false);
 	const [selectedRange, setSelectedRange] = useState(null);
 	const [criteriaRangeToDelete, setCriteriaRangeToDelete] = useState(null);
+	const [criteriaTitle, setCriteriaTitle] = useState('');
 
 	useEffect(() => {
+		// Fetch price board
 		dispatch(fetchPriceBoard({shapeId, isLabDiamond, isSideDiamond: false}));
+
+		// Fetch diamond price rule to set title
+		dispatch(fetchDiamondPriceRule()).then((response) => {
+			const data = response.payload;
+			// Set title based on shapeId
+			setCriteriaTitle(
+				shapeId === 1
+					? data.DefaultRoundCriteriaPriceBoard
+					: data.DefaultFancyCriteriaPriceBoard
+			);
+		});
 	}, [dispatch, shapeId, isLabDiamond, cut]);
 
 	const handleShapeChange = (event) => {
@@ -436,7 +450,7 @@ const MainDiamondPricePage = () => {
 		return (
 			<div className="container mx-auto p-6 bg-offWhite rounded-lg shadow-lg">
 				<h1 className="text-5xl font-bold text-center text-blue-600">
-					Bảng Giá Kim Cương Chính{' '}
+					{criteriaTitle || 'Bảng Giá Kim Cương Chính'}{' '}
 				</h1>
 				<div className="flex flex-wrap gap-4 items-center justify-between p-4 bg-offWhite rounded-lg shadow-md">
 					{/* Shape Selection */}
@@ -489,12 +503,11 @@ const MainDiamondPricePage = () => {
 	}
 
 	return (
-		<div className="container gap-4 mx-auto p-6 bg-white rounded-lg shadow-lg">
-			<h1 className="text-5xl font-bold text-center text-blue-600">
+		<div className="container gap-4 my-3 mx-auto bg-white rounded-lg">
+			<h1 className="text-5xl pb-4 font-bold text-center text-blue-600">
 				Bảng Giá Kim Cương Chính{' '}
 			</h1>
 			<div className="flex flex-wrap gap-4 items-center justify-between p-4 bg-offWhite rounded-lg shadow-md">
-				{/* Shape Selection */}
 				<div className="flex sm:flex-row items-center gap-2">
 					<label htmlFor="cutSelect" className="text-lg font-semibold text-gray-800">
 						Hình Dáng:
@@ -511,7 +524,6 @@ const MainDiamondPricePage = () => {
 					</select>
 				</div>
 
-				{/* Lab Diamond Checkbox */}
 				<div className="flex items-center gap-2">
 					<input
 						type="checkbox"
@@ -525,7 +537,6 @@ const MainDiamondPricePage = () => {
 					</label>
 				</div>
 
-				{/* Clear Filters Button */}
 				<div className="flex gap-4">
 					<button
 						onClick={clearFilters}

@@ -7,6 +7,7 @@ import {
 	updateDiamondPrices,
 	deleteDiamondPrice,
 } from '../../../redux/slices/diamondPriceSlice';
+import {fetchDiamondPriceRule} from '../../../redux/slices/configSlice';
 import {getPriceBoardSelector, LoadingDiamondPriceSelector} from '../../../redux/selectors';
 import {message} from 'antd';
 import Loading from '../../../components/Loading';
@@ -44,6 +45,7 @@ const SideDiamondPricePage = () => {
 	const [isCreating, setIsCreating] = useState(false);
 	const [listPrices, setListPrices] = useState([]);
 	const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+	const [sideDiamondTitle, setSideDiamondTile] = useState(null);
 
 	useEffect(() => {
 		dispatch(fetchPriceBoard({isLabDiamond, isSideDiamond}));
