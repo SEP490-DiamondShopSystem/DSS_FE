@@ -130,15 +130,15 @@ export const FilterDiamond = ({filters, setFilters, handleReset, findShape}) => 
 								range
 								marks={{
 									0: '0',
-									1000000000: '100M',
-									5000000000: '500M',
-									10000000000: '1000M',
-									15000000000: '15000M',
-									20000000000: '20000M',
+									50000000: '50M',
+									200000000: '200M',
+									500000000: '500M',
+									700000000: '700M',
+									1000000000: '1000M',
 								}}
 								step={null}
 								min={filter?.Price?.Min}
-								max={filter?.Price?.Max}
+								max={1000000000}
 								value={[
 									filters?.price?.minPrice ?? filter?.Price?.Min,
 									filters?.price?.maxPrice ?? filter?.Price?.Max,

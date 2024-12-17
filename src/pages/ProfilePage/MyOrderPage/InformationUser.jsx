@@ -1,7 +1,7 @@
 import {Tag} from 'antd';
 import React from 'react';
 
-const InformationUser = ({order}) => {
+const InformationUser = ({order, transaction}) => {
 	if (!order || !order.Account) {
 		return <div>Không có thông tin khách hàng</div>;
 	}
@@ -53,6 +53,7 @@ const InformationUser = ({order}) => {
 				<strong>Trạng thái đơn hàng:</strong>{' '}
 				<Tag color={status.color}>{status?.label?.toUpperCase() || 'Không xác định'}</Tag>
 			</div>
+
 			{Status === 3 && (
 				<>
 					<div className="mb-2">

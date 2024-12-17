@@ -28,8 +28,6 @@ export const DiamondJewelryList = () => {
 		price: {minPrice: 0, maxPrice: 40000000},
 	});
 
-	console.log('jewelries', jewelries);
-
 	const fetchJewelryData = debounce(() => {
 		dispatch(
 			getAllJewelryModel({
@@ -129,7 +127,8 @@ export const DiamondJewelryList = () => {
 										className="shadow-lg bg-white rounded-lg hover:border-2 border-2 border-white cursor-pointer hover:border-black"
 										onClick={() =>
 											navigate(
-												`/jewelry-model/search/${jewelry.JewelryModelId}`
+												`/jewelry-model/search/${jewelry.JewelryModelId}`,
+												{state: {jewelry}}
 											)
 										}
 									>

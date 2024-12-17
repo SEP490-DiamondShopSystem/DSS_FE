@@ -34,8 +34,6 @@ export const ProductList = () => {
 		MainDiamond: undefined,
 	});
 
-	console.log('pageSize', pageSize);
-
 	useEffect(() => {
 		const saved = localStorage.getItem('jewelry');
 		if (saved) {

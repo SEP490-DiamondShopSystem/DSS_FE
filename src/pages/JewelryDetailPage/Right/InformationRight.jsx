@@ -72,6 +72,7 @@ export const InformationRight = ({
 	const handleSelectMetal = (metal) => {
 		setSelectedMetal(metal);
 		setSize(null);
+		setSelectedSideDiamond(null);
 		localStorage.setItem('selectedMetal', JSON.stringify(metal));
 	};
 
@@ -118,8 +119,6 @@ export const InformationRight = ({
 
 	const someSize = filteredGroups[0]?.SizeGroups?.some((size) => size?.IsInStock);
 
-	console.log('selectedSideDiamond', selectedSideDiamond);
-
 	return (
 		<div>
 			<div className="border-tintWhite">
@@ -162,11 +161,11 @@ export const InformationRight = ({
 						))}
 					</div>
 				</div>
-				{selectedSideDiamond && selectedSideDiamond?.SideDiamondId !== null && (
+				{uniqueSideDiamonds && (
 					<>
 						<div className="my-5 flex items-center">
 							<div className="font-semibold">Kim Cương Tấm</div>
-							{selectedSideDiamond !== null && (
+							{selectedSideDiamond !== undefined && (
 								<div className={`font-semibold text-xl pl-4 text-primary`}>
 									Số Lượng: {selectedSideDiamond?.Quantity} - Carat:{' '}
 									{selectedSideDiamond?.CaratWeight}
@@ -175,38 +174,43 @@ export const InformationRight = ({
 						</div>
 						<div>
 							<div className="flex">
-								{uniqueSideDiamonds?.map((diamond, i) => (
-									<div
-										key={i}
-										className={`
-								${
-									selectedSideDiamond.Quantity === diamond?.Quantity &&
-									selectedSideDiamond.CaratWeight === diamond?.CaratWeight
-										? 'border-2 border-black' // Cả Quantity và CaratWeight giống nhau
-										: selectedSideDiamond.Quantity !== diamond?.Quantity &&
-										  selectedSideDiamond.CaratWeight === diamond?.CaratWeight
-										? 'border-2 border-black' // Quantity khác nhau nhưng CaratWeight giống nhau
-										: selectedSideDiamond.Quantity === diamond?.Quantity &&
-										  selectedSideDiamond.CaratWeight !== diamond?.CaratWeight
-										? 'border-2 border-black' // Quantity giống nhau nhưng CaratWeight khác nhau
-										: 'border-2 border-white' // Cả Quantity và CaratWeight đều khác nhau
-								}
+								{uniqueSideDiamonds?.map((diamond, i) => {
+									// Kiểm tra nếu tất cả SizeGroups có IsInStock là false
+									const isOutOfStock = diamond?.SizeGroups?.every(
+										(size) => !size.IsInStock
+									);
 
-						my-2 py-2 px-4 rounded-lg cursor-pointer hover:bg-offWhite`}
-										onClick={() => handleSelectSideDiamond(diamond)} // Save selected diamond on click
-									>
-										<div className={`rounded-full p-1 flex items-center`}>
-											<p className="">{diamond?.CaratWeight}ct</p>
+									return (
+										<div
+											key={i}
+											className={`
+          ${
+				selectedSideDiamond?.Quantity === diamond?.Quantity &&
+				selectedSideDiamond?.CaratWeight === diamond?.CaratWeight
+					? 'border-2 border-black' // Cả Quantity và CaratWeight giống nhau
+					: 'border-2 border-white' // Cả Quantity và CaratWeight đều khác nhau
+			}
+
+          my-2 py-2 px-4 rounded-lg cursor-pointer hover:bg-offWhite
+          ${isOutOfStock ? 'opacity-50 cursor-not-allowed' : ''}
+        `}
+											onClick={() =>
+												!isOutOfStock && handleSelectSideDiamond(diamond)
+											} // Disable click nếu out of stock
+										>
+											<div className={`rounded-full p-1 flex items-center`}>
+												<p>{diamond?.CaratWeight}ct</p>
+											</div>
 										</div>
-									</div>
-								))}
+									);
+								})}
 							</div>
 						</div>
 					</>
 				)}
 			</div>
 			<div className="border-y border-tintWhite my-5">
-				{someSize && (
+				{someSize && selectedSideDiamond && (
 					<>
 						<div className="mt-5 flex items-center">
 							<div className="font-semibold">Chọn kích thước:</div>

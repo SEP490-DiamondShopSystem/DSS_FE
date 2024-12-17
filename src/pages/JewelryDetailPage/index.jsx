@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from 'react';
-
 import {Steps} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
-import {useParams} from 'react-router-dom';
+import {useLocation, useParams} from 'react-router-dom';
 import LoginModal from '../../components/LogModal/LoginModal';
 import {GetJewelryDetailSelector, LoadingJewelrySelector} from '../../redux/selectors';
 import {getJewelryDetail} from '../../redux/slices/jewelrySlice';
@@ -16,16 +15,22 @@ import {getJewelryNoDiamond} from '../../redux/slices/reviewSlice';
 const JewelryDetailPage = () => {
 	const {id} = useParams();
 	const dispatch = useDispatch();
+	const location = useLocation();
+	const jewelryFromList = location.state?.jewelry;
 	const loading = useSelector(LoadingJewelrySelector);
 
 	const [size, setSize] = useState(null);
 	const [jewelry, setJewelry] = useState();
 	const [selectedMetal, setSelectedMetal] = useState(null);
 	const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
-	const [selectedSideDiamond, setSelectedSideDiamond] = useState();
+	const [selectedSideDiamond, setSelectedSideDiamond] = useState(null);
 	const [jewelrySelected, setJewelrySelected] = useState();
 	const [uniqueMetals, setUniqueMetals] = useState([]);
 	const [uniqueSideDiamonds, setUniqueSideDiamonds] = useState([]);
+
+	console.log('jewelryFromList', jewelryFromList);
+	console.log('selectedSideDiamond', selectedSideDiamond);
+	console.log('selectedMetal', selectedMetal);
 
 	const items = [
 		{
@@ -43,7 +48,7 @@ const JewelryDetailPage = () => {
 			.then((res) => {
 				setJewelry(res);
 			});
-	}, []);
+	}, [dispatch, id]);
 
 	useEffect(() => {
 		if (size) {
@@ -60,42 +65,36 @@ const JewelryDetailPage = () => {
 					setJewelrySelected(res);
 				});
 		}
-	}, [id, selectedMetal, size, selectedSideDiamond]);
+	}, [id, selectedMetal, size, selectedSideDiamond, dispatch]);
 
 	const hideLoginModal = () => setIsLoginModalVisible(false);
 
 	const filterMetalGroups = (metalGroups, selectedMetal, selectedSideDiamond) => {
-		// Check if metalGroups is defined and is an array
 		if (!Array.isArray(metalGroups)) {
 			console.warn('metalGroups is undefined or not an array');
-			return []; // Return an empty array if metalGroups is undefined or not an array
+			return [];
 		}
 
 		return metalGroups
 			.map((group) => {
-				// Check if group matches the selected MetalId
 				const isMatchingMetal = group.MetalId === selectedMetal?.Id;
-
-				// Check if group matches the selected SideDiamondId (if provided)
 				const isMatchingSideDiamond = selectedSideDiamond
 					? group.SideDiamondId === selectedSideDiamond.Id
-					: true; // If no SideDiamondId is provided, consider it a match
+					: true;
 
-				// If both metal and side diamond match (or only metal if no SideDiamondId), add details
 				if (isMatchingMetal && isMatchingSideDiamond) {
 					return {
 						...group,
 						MetalDetails: selectedMetal,
-						SideDiamondDetails: selectedSideDiamond || null, // Set SideDiamondDetails to null if not provided
+						SideDiamondDetails: selectedSideDiamond || null,
 					};
 				}
 
-				return null; // return null if no match
+				return null;
 			})
-			.filter((item) => item !== null); // filter out unmatched items
+			.filter((item) => item !== null);
 	};
 
-	// Usage with individual selected items
 	const filteredGroups = filterMetalGroups(
 		jewelry?.MetalGroups,
 		selectedMetal,
@@ -112,21 +111,19 @@ const JewelryDetailPage = () => {
 	}, [filteredGroups, size]);
 
 	useEffect(() => {
-		// Lọc MetalGroups có SizeGroups với IsInStock = true và gộp MetalName
 		const filteredMetals = jewelry?.MetalGroups?.filter((group) =>
 			group?.SizeGroups?.some((size) => size?.IsInStock)
 		).map((group) => {
 			const metal = jewelry?.Metals?.find((m) => m?.Id === group?.MetalId);
 			return {
 				...group,
-				OriginalName: group?.Name, // Lưu tên cũ vào OriginalName
-				Name: metal ? metal?.Name : 'Unknown Metal', // Gán MetalName thành Name
+				OriginalName: group?.Name,
+				Name: metal ? metal?.Name : 'Unknown Metal',
 				Price: metal?.Price,
 				Id: group?.MetalId,
 			};
 		});
 
-		// Loại bỏ MetalName (giờ là Name) trùng lặp
 		const uniqueFilteredMetals = [];
 		const seenNames = new Set();
 
@@ -141,33 +138,56 @@ const JewelryDetailPage = () => {
 	}, [jewelry]);
 
 	useEffect(() => {
-		// Lọc MetalGroups có SizeGroups với IsInStock = true và gộp MetalName
-		const filteredSideDiamonds = jewelry?.MetalGroups?.filter((group) =>
-			group?.SizeGroups?.some((size) => size?.IsInStock)
-		).map((group) => {
-			const sideDiamond = jewelry?.SideDiamonds?.find((m) => m?.Id === group?.SideDiamondId);
-			return {
-				...group,
-				OriginalName: group?.Name, // Lưu tên cũ vào OriginalName
-				Quantity: sideDiamond?.Quantity,
-				CaratWeight: sideDiamond?.CaratWeight,
-				Id: group?.SideDiamondId,
-			};
-		});
+		if (selectedMetal && jewelry) {
+			const filteredSideDiamonds = jewelry.MetalGroups.filter(
+				(group) => group.MetalId === selectedMetal.MetalId
+			).map((group) => {
+				const sideDiamond = jewelry.SideDiamonds.find((m) => m.Id === group.SideDiamondId);
+				return {
+					...group,
+					OriginalName: group.Name,
+					Quantity: sideDiamond?.Quantity,
+					CaratWeight: sideDiamond?.CaratWeight,
+					Id: group.SideDiamondId,
+				};
+			});
 
-		// Loại bỏ MetalName (giờ là Name) trùng lặp
-		const uniqueFilteredMetals = [];
-		const seenNames = new Set();
+			const uniqueFilteredSideDiamonds = [];
+			const seenSideDiamondIds = new Set();
 
-		filteredSideDiamonds?.forEach((sideDiamond) => {
-			if (!seenNames?.has(sideDiamond?.SideDiamondId)) {
-				seenNames?.add(sideDiamond?.SideDiamondId);
-				uniqueFilteredMetals?.push(sideDiamond);
+			filteredSideDiamonds.forEach((sideDiamond) => {
+				if (!seenSideDiamondIds.has(sideDiamond.SideDiamondId)) {
+					seenSideDiamondIds.add(sideDiamond.SideDiamondId);
+					uniqueFilteredSideDiamonds.push(sideDiamond);
+				}
+			});
+
+			setUniqueSideDiamonds(uniqueFilteredSideDiamonds);
+		}
+	}, [selectedMetal, jewelry]);
+
+	useEffect(() => {
+		if (jewelryFromList) {
+			const {SideDiamondOptId, MetalId} = jewelryFromList;
+
+			const sideDiamond = uniqueSideDiamonds.find(
+				(diamond) => diamond.Id === SideDiamondOptId
+			);
+
+			console.log('Found side diamond:', sideDiamond);
+
+			if (!selectedSideDiamond && sideDiamond) {
+				setSelectedSideDiamond(sideDiamond);
 			}
-		});
-		setSelectedSideDiamond(filteredSideDiamonds?.[0] || null);
-		setUniqueSideDiamonds(uniqueFilteredMetals);
-	}, [jewelry]);
+
+			const metal = uniqueMetals.find((metal) => metal.Id === MetalId);
+			console.log('Found metal:', metal);
+
+			if (!selectedMetal && metal) {
+				setSelectedMetal(metal);
+			}
+		}
+	}, [jewelryFromList, uniqueSideDiamonds, uniqueMetals, selectedMetal, selectedSideDiamond]);
 
 	return (
 		<>
@@ -176,7 +196,6 @@ const JewelryDetailPage = () => {
 			) : (
 				<div className="px-4 md:px-32 md:mt-10">
 					<Steps items={items} current={0} className="w-full md:w-auto" />
-
 					<div className="flex flex-col md:flex-row bg-white my-10 md:my-20 rounded-lg shadow-lg">
 						<div className="w-full md:w-1/2 p-4 md:p-6">
 							<ImageGallery diamondJewelry={jewelry} selectedMetal={selectedMetal} />
@@ -205,8 +224,6 @@ const JewelryDetailPage = () => {
 							/>
 						</div>
 					</div>
-
-					{/* <ProductReviews /> */}
 					<LoginModal isOpen={isLoginModalVisible} onClose={hideLoginModal} />
 				</div>
 			)}

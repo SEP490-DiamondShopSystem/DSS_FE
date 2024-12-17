@@ -142,7 +142,7 @@ const MyOrderPage = () => {
 							<EyeFilled />
 						</Button>
 					</Tooltip>
-					{record?.status === 'Chờ Xử Lý' && record?.DepositFee === 0 && (
+					{record?.status === 'Chờ Xử Lý' && (
 						<Tooltip title={'Thanh Toán'}>
 							<Button
 								type="text"
@@ -240,13 +240,10 @@ const MyOrderPage = () => {
 					window.open(res?.PaymentUrl, '_blank');
 				})
 				.catch((error) => {
-					message.error(error?.detail || error?.title);
+					message.error(error?.data?.detail || error?.data);
 				});
 		} else {
-			Modal.confirm({
-				title: 'Vui lòng vào đơn hàng để thanh toán',
-				centered: true,
-			});
+			navigate(`/my-orders/${order?.orderId}`, {state: {scrollTo: 'transaction'}});
 		}
 	};
 

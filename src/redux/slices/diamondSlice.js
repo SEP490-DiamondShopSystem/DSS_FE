@@ -25,8 +25,6 @@ export const getAllDiamond = createAsyncThunk(
 			let url = '/Diamond/Page';
 			const queryParams = new URLSearchParams();
 
-			console.log('start', start);
-
 			if (pageSize) queryParams.append('pageSize', pageSize);
 			if (start !== null && start !== undefined) queryParams.append('start', start);
 			if (shapeId) queryParams.append('shapeId', shapeId);

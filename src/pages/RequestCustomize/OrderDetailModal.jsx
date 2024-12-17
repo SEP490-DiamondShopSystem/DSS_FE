@@ -115,6 +115,54 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 				return <Tag color={color}>{statusLabel.toUpperCase()}</Tag>;
 			},
 		},
+		...(order?.JewelryModel
+			? [
+					{
+						title: 'Giá Kim Cương Tấm',
+						key: 'SD_Price',
+						dataIndex: 'JewelryModel',
+						align: 'center',
+						render: (jewelry) =>
+							jewelry?.SD_Price && `${formatPrice(jewelry?.SD_Price)}`,
+					},
+			  ]
+			: []),
+		...(order?.JewelryModel
+			? [
+					{
+						title: 'Giá Gia Công',
+						key: 'CraftmanFee',
+						dataIndex: 'JewelryModel',
+						align: 'center',
+						render: (jewelry) =>
+							jewelry?.CraftmanFee && `${formatPrice(jewelry?.CraftmanFee)}`,
+					},
+			  ]
+			: []),
+		...(order?.Status !== 4
+			? [
+					{
+						title: 'Tổng Giá Mẫu',
+						key: 'SettingPrice',
+						dataIndex: 'JewelryModel',
+						align: 'center',
+						render: (jewelry) =>
+							jewelry?.SettingPrice && `${formatPrice(jewelry?.SettingPrice)}`,
+					},
+			  ]
+			: []),
+		...(order?.Status === 4
+			? [
+					{
+						title: 'Giá Trang Sức',
+						key: 'SettingPrice',
+						dataIndex: 'Jewelry',
+						align: 'center',
+						render: (jewelry) =>
+							jewelry?.TotalPrice && `${formatPrice(jewelry.TotalPrice)}`,
+					},
+			  ]
+			: []),
 	];
 
 	const subColumns = [
@@ -191,6 +239,11 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 	];
 
 	const sub2Columns = [
+		{
+			title: 'Mã sê-ri',
+			dataIndex: 'SerialCode',
+			key: 'carat',
+		},
 		{
 			title: 'Ly (Carat)',
 			dataIndex: 'Carat',
@@ -456,6 +509,19 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 								</Button>
 								<Button danger className="" onClick={handleCancelOrder}>
 									Hủy Đơn
+								</Button>
+							</Space>
+						)}
+						{orderStatus === 4 && order?.Order !== null && (
+							<Space>
+								<Button
+									type="text"
+									className="bg-primary text-white"
+									onClick={() => {
+										navigate(`/my-orders/${order?.Order?.Id}`);
+									}}
+								>
+									Chi Tiết Đơn Hàng
 								</Button>
 							</Space>
 						)}

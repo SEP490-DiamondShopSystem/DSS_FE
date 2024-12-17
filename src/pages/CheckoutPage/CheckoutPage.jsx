@@ -1,5 +1,6 @@
-import {CheckCircleOutlined} from '@ant-design/icons';
-import {Button, Form, Input, message, Modal, Radio, Select, Checkbox} from 'antd';
+import {CheckCircleOutlined, EyeOutlined, InfoCircleFilled} from '@ant-design/icons';
+import DiamondIcon from '@mui/icons-material/Diamond';
+import {Button, Checkbox, Form, Input, message, Modal, Popover, Radio, Select} from 'antd';
 import React, {useEffect, useMemo, useState} from 'react';
 import {FaPhoneAlt, FaRegAddressBook, FaRegEnvelope} from 'react-icons/fa';
 import {useDispatch, useSelector} from 'react-redux';
@@ -12,20 +13,16 @@ import {
 	GetLoadingCustomizeSelector,
 	GetOrderWarrantySelector,
 	GetPromotionAbleSelector,
+	GetShopLocationSelector,
 	GetUserDetailSelector,
 	LoadingOrderSelector,
 	selectDistances,
 	selectLoading,
-	GetShopLocationSelector,
 } from '../../redux/selectors';
 import {handleCartValidate} from '../../redux/slices/cartSlice';
+import {getConfigOrder} from '../../redux/slices/configSlice';
 import {handleOrderCustomizeCheckout} from '../../redux/slices/customizeSlice';
-import {
-	fetchDistances,
-	fetchDistrict,
-	fetchWard,
-	handleCalculateLocation,
-} from '../../redux/slices/distanceSlice';
+import {fetchDistances, fetchDistrict, fetchWard} from '../../redux/slices/distanceSlice';
 import {getShopLocation} from '../../redux/slices/locationSlice';
 import {handleCheckoutOrder} from '../../redux/slices/orderSlice';
 import {getAllPayment} from '../../redux/slices/paymentSlice';
@@ -33,7 +30,6 @@ import {checkPromoCart, getAllPromo} from '../../redux/slices/promotionSlice';
 import {getAllWarranty} from '../../redux/slices/warrantySlice';
 import {formatPrice} from '../../utils';
 import {enums} from '../../utils/constant';
-import {fetchOrderRule, getConfigOrder} from '../../redux/slices/configSlice';
 
 const {Option} = Select;
 
@@ -78,6 +74,7 @@ const mapAttributes = (data, attributes) => {
 		SideDiamonds: data?.Jewelry?.SideDiamonds,
 		SizeId: data?.Jewelry?.SizeId,
 		Weight: data?.Jewelry?.Weight,
+		DiamondJewelry: data?.Jewelry?.Diamonds,
 		JewelryModel: data.JewelryModel,
 		PromotionId: data.PromotionId,
 		RequirementQualifedId: data.RequirementQualifedId,
@@ -86,6 +83,8 @@ const mapAttributes = (data, attributes) => {
 		JewelryThumbnail: data?.Jewelry?.Model?.Thumbnail?.MediaPath,
 		DefaultPrice: data?.ReviewPrice?.DefaultPrice,
 		FinalPrice: data?.ReviewPrice?.FinalPrice,
+		DiscountAmountSaved: data?.ReviewPrice?.DiscountAmountSaved,
+		PromotionAmountSaved: data?.ReviewPrice?.PromotionAmountSaved,
 		TitleJewelry: data?.Jewelry?.Title,
 
 		// Using the helper function to map diamond attributes
@@ -106,6 +105,7 @@ const mapAttributes = (data, attributes) => {
 		DiscountPrice: data?.Diamond?.DiscountPrice,
 		DiamondTruePrice: data?.Diamond?.TruePrice,
 		DiamondPriceOffset: data?.Diamond?.PriceOffset,
+		DiamondId: data?.Diamond?.Id,
 		Title: data?.Diamond?.Title,
 		IsLabDiamond: data?.IsLabDiamond,
 		CriteriaId: data?.Diamond?.DiamondPrice?.CriteriaId,
@@ -321,7 +321,7 @@ const CheckoutPage = () => {
 				promotionId: promoCustomizeId || null,
 				items: [transformedData],
 				accountId: userDetail?.Id,
-				isAtShopOrder: isAtShopOrder,
+				isAtShopOrder: isAtShop,
 			};
 
 			// Nếu userAddress có dữ liệu, thêm vào payload
@@ -375,7 +375,7 @@ const CheckoutPage = () => {
 				promotionId: promoId != undefined ? promoId : null,
 				items: transformedData,
 				accountId: userDetail?.Id,
-				isAtShopOrder: isAtShopOrder,
+				isAtShopOrder: isAtShop,
 			};
 
 			// Nếu userAddress có dữ liệu, thêm vào payload
@@ -438,6 +438,7 @@ const CheckoutPage = () => {
 
 			onOk() {
 				navigate('/my-orders');
+				localStorage.setItem('lastVisitedPage', 'Đơn hàng của tôi');
 			},
 		});
 	};
@@ -467,7 +468,7 @@ const CheckoutPage = () => {
 		});
 
 		const orderRequestDto = {
-			isAtShop: isAtShop, // Use the new state here
+			isAtShop: isAtShop,
 			paymentType: paymentForm,
 			paymentId: paymentMethod,
 			paymentName: 'zalopay',
@@ -524,7 +525,7 @@ const CheckoutPage = () => {
 					showOrderSuccessModal();
 				})
 				.catch((error) => {
-					message.error(error?.detail);
+					message.error(error?.data?.detail);
 				});
 		}
 	};
@@ -601,6 +602,34 @@ const CheckoutPage = () => {
 	const handlePromoChange = (value) => {
 		setPromoCustomizeId(value);
 	};
+
+	const handleViewCart = (jewelryId, diamondId) => {
+		if (jewelryId) {
+			navigate(`/completed-jewelry/${jewelryId}`, {state: {jewelryId}});
+		} else if (diamondId) {
+			navigate(`/diamond-detail/${diamondId}`, {state: {diamondId}});
+		} else {
+			console.error('No jewelry or diamond ID provided.');
+		}
+	};
+
+	const text = <span>Kim Cương</span>;
+	const content = (
+		<div>
+			{mappedProducts?.map((item, index) => (
+				<div className=" flex flex-col p-5 rounded-lg" key={item.Id}>
+					<div className="flex-1 mx-5 sm:mt-0">
+						<div className="mr-3">
+							<DiamondIcon />
+						</div>
+						{item?.DiamondJewelry?.map((diamond) => (
+							<div>{diamond?.Title}</div>
+						))}
+					</div>
+				</div>
+			))}
+		</div>
+	);
 
 	return (
 		<div className="min-h-screen flex justify-center items-center bg-gray-100 md:mx-40 my-20">
@@ -938,8 +967,14 @@ const CheckoutPage = () => {
 											{/* Kiểm tra và hiển thị thông tin sản phẩm */}
 											{item.JewelryId && (
 												<div>
-													<div className="mb-1 text-gray-800 font-semibold">
+													<div className="mb-2 text-gray-800 font-semibold">
 														{item.TitleJewelry}
+													</div>
+													<div className="text-gray-700 text-sm mr-1 mb-2">
+														Mã sê-ri:
+														<span className="text-gray-900 font-semibold">
+															{item.SerialCode}
+														</span>
 													</div>
 													<div className="text-gray-700 text-sm mr-1">
 														{item?.FinalPrice === item.DefaultPrice ? (
@@ -950,15 +985,43 @@ const CheckoutPage = () => {
 																</span>
 															</p>
 														) : (
-															<p className="text-gray-700 text-sm py-3 ml-1">
-																Giá:
-																<span className="text-gray-900 font-semibold ml-1 line-through text-gray">
-																	{formatPrice(item.DefaultPrice)}
-																</span>
-																<span className="text-gray-900 font-semibold ml-1">
-																	{formatPrice(item.FinalPrice)}
-																</span>
-															</p>
+															<>
+																{item.PromotionAmountSaved !==
+																	0 && (
+																	<p className="text-gray-700 text-sm py-3 ml-1 mb-2">
+																		Giá Khuyến Mãi:
+																		<span className="text-gray-900 font-semibold ml-1">
+																			{formatPrice(
+																				item.PromotionAmountSaved
+																			)}
+																		</span>
+																	</p>
+																)}
+
+																{item.DiscountAmountSaved !== 0 && (
+																	<p className="text-gray-700 text-sm py-2 ml-1 mb-2">
+																		Giá Giảm:
+																		<span className="text-gray-900 font-semibold ml-1">
+																			{formatPrice(
+																				item.DiscountAmountSaved
+																			)}
+																		</span>
+																	</p>
+																)}
+																<p className="text-gray-700 text-sm py-3 ml-1 mb-2">
+																	Giá:
+																	<span className="text-gray-900 font-semibold ml-1 line-through text-gray">
+																		{formatPrice(
+																			item.DefaultPrice
+																		)}
+																	</span>
+																	<span className="text-gray-900 font-semibold ml-1">
+																		{formatPrice(
+																			item.FinalPrice
+																		)}
+																	</span>
+																</p>
+															</>
 														)}
 													</div>
 												</div>
@@ -1041,75 +1104,187 @@ const CheckoutPage = () => {
 										<div className="flex-1 mx-5">
 											{/* Kiểm tra và hiển thị thông tin sản phẩm */}
 											{item.JewelryId ? (
-												<div>
-													<div className="mb-1 text-gray-800 font-semibold">
-														{item.TitleJewelry}
-													</div>
-													<div className="text-gray-700 text-sm mr-1">
-														{item?.FinalPrice === item.DefaultPrice ? (
-															<p className="text-gray-700 text-sm py-3 ml-1">
-																Giá:
-																<span className="text-gray-900 font-semibold ml-1">
-																	{formatPrice(item.DefaultPrice)}
-																</span>
-															</p>
-														) : (
-															<p className="text-gray-700 text-sm py-3 ml-1">
-																Giá:
-																<span className="text-gray-900 font-semibold ml-1 line-through text-gray">
-																	{formatPrice(item.DefaultPrice)}
-																</span>
-																<span className="text-gray-900 font-semibold ml-1">
-																	{formatPrice(item.FinalPrice)}
-																</span>
-															</p>
-														)}
-													</div>
-													{/* <div className="text-gray-700 text-sm mr-1">
-														SKU:
-														<span className="text-gray-900 font-semibold py-3">
-															{item.SerialCode}
-														</span>
-													</div> */}
-													{item.CategoryName === 'Ring' && (
-														<div className="flex items-center mt-2">
-															<label className="mr-2 text-gray-700">
-																Kích thước nhẫn:
-															</label>
-															<p>{item?.SizeId}</p>
+												<div className="flex items-center">
+													<div>
+														<div className="mb-1 text-gray-800 font-semibold">
+															{item.TitleJewelry}{' '}
+															{/* {item?.DiamondJewelry?.length > 0 && (
+															<Popover
+																placement="topLeft"
+																title={text}
+																content={content}
+															>
+																<InfoCircleFilled />
+															</Popover>
+														)} */}
 														</div>
-													)}
+														<div className="text-gray-700 text-sm mr-1 mb-2">
+															Mã sê-ri:
+															<span className="text-gray-900 font-semibold ml-1">
+																{item.SerialCode}
+															</span>
+														</div>
+														<div className="text-gray-700 text-sm mr-1">
+															{item?.FinalPrice ===
+															item.DefaultPrice ? (
+																<p className="text-gray-700 text-sm py-3 ml-1 mb-2">
+																	Tổng Giá:
+																	<span className="text-gray-900 font-semibold ml-1">
+																		{formatPrice(
+																			item.DefaultPrice
+																		)}
+																	</span>
+																</p>
+															) : (
+																<>
+																	{item.PromotionAmountSaved !==
+																		0 && (
+																		<p className="text-gray-700 text-sm mb-2 ml-1">
+																			Giá Khuyến Mãi:
+																			<span className="text-gray-900 font-semibold ml-1">
+																				{formatPrice(
+																					item.PromotionAmountSaved
+																				)}
+																			</span>
+																		</p>
+																	)}
+																	{item.DiscountAmountSaved !==
+																		0 && (
+																		<p className="text-gray-700 text-sm ml-1 mb-2">
+																			Giá Giảm:
+																			<span className="text-gray-900 font-semibold ml-1">
+																				{formatPrice(
+																					item.DiscountAmountSaved
+																				)}
+																			</span>
+																		</p>
+																	)}
+																	<p className="text-gray-700 text-sm ml-1 mb-2">
+																		Tổng Giá:
+																		<span className="text-gray-900 font-semibold ml-1 line-through text-gray">
+																			{formatPrice(
+																				item.DefaultPrice
+																			)}
+																		</span>
+																		<span className="text-gray-900 font-semibold ml-1">
+																			{formatPrice(
+																				item.FinalPrice
+																			)}
+																		</span>
+																	</p>
+																</>
+															)}
+														</div>
+													</div>
+													<div>
+														<Button
+															className="cursor-pointer px-3 mr-2"
+															onClick={() => {
+																if (item.JewelryId) {
+																	handleViewCart(
+																		item.JewelryId,
+																		null
+																	);
+																} else if (
+																	item.DiamondId !== undefined
+																) {
+																	handleViewCart(
+																		null,
+																		item.DiamondId
+																	);
+																}
+															}}
+														>
+															<EyeOutlined />
+														</Button>
+													</div>
 												</div>
 											) : item.Carat ? (
-												<div>
-													<div className="mb-1 text-gray-800 font-semibold">
-														{item?.Title}
+												<div className="flex items-center">
+													<div>
+														<div className="mb-2 text-gray-800 font-semibold">
+															{item?.Title}
+														</div>
+														<div className="text-gray-700 text-sm mr-1 mb-2">
+															Mã sê-ri:
+															<span className="text-gray-900 font-semibold ml-1">
+																{item.SerialCodeDiamond}
+															</span>
+														</div>
+														<div className="text-gray-700 text-sm mr-1">
+															{item?.FinalPrice ===
+															item.DefaultPrice ? (
+																<p className="text-gray-700 text-sm ml-1 mb-2">
+																	Giá:
+																	<span className="text-gray-900 font-semibold ml-1">
+																		{formatPrice(
+																			item.DefaultPrice
+																		)}
+																	</span>
+																</p>
+															) : (
+																<>
+																	{item.PromotionAmountSaved !==
+																		0 && (
+																		<p className="text-gray-700 text-sm ml-1 mb-2">
+																			Giá Khuyến Mãi:
+																			<span className="text-gray-900 font-semibold ml-1">
+																				{formatPrice(
+																					item.PromotionAmountSaved
+																				)}
+																			</span>
+																		</p>
+																	)}
+																	{item.DiscountAmountSaved !==
+																		0 && (
+																		<p className="text-gray-700 text-sm ml-1 mb-2">
+																			Giá Giảm:
+																			<span className="text-gray-900 font-semibold ml-1">
+																				{formatPrice(
+																					item.DiscountAmountSaved
+																				)}
+																			</span>
+																		</p>
+																	)}
+
+																	<p className="text-gray-700 text-sm ml-1 mb-2">
+																		Tổng Giá:
+																		<span className="text-gray-900 font-semibold ml-1 line-through text-gray">
+																			{formatPrice(
+																				item.DefaultPrice
+																			)}
+																		</span>
+																		<span className="text-gray-900 font-semibold ml-1">
+																			{formatPrice(
+																				item.FinalPrice
+																			)}
+																		</span>
+																	</p>
+																</>
+															)}
+														</div>
 													</div>
-													<div className="text-gray-700 text-sm mr-1">
-														{item?.FinalPrice === item.DefaultPrice ? (
-															<p className="text-gray-700 text-sm py-3 ml-1">
-																Giá:
-																<span className="text-gray-900 font-semibold ml-1">
-																	{formatPrice(item.DefaultPrice)}
-																</span>
-															</p>
-														) : (
-															<p className="text-gray-700 text-sm py-3 ml-1">
-																Giá:
-																<span className="text-gray-900 font-semibold ml-1 line-through text-gray">
-																	{formatPrice(item.DefaultPrice)}
-																</span>
-																<span className="text-gray-900 font-semibold ml-1">
-																	{formatPrice(item.FinalPrice)}
-																</span>
-															</p>
-														)}
-													</div>
-													<div className="text-gray-700 text-sm mr-1">
-														SKU:
-														<span className="text-gray-900 font-semibold py-3">
-															{item.SerialCodeDiamond}
-														</span>
+													<div>
+														<Button
+															className="cursor-pointer px-3 mr-2"
+															onClick={() => {
+																if (item.JewelryId) {
+																	handleViewCart(
+																		item.JewelryId,
+																		null
+																	);
+																} else if (
+																	item.DiamondId !== undefined
+																) {
+																	handleViewCart(
+																		null,
+																		item.DiamondId
+																	);
+																}
+															}}
+														>
+															<EyeOutlined />
+														</Button>
 													</div>
 												</div>
 											) : (
@@ -1126,70 +1301,96 @@ const CheckoutPage = () => {
 						<div className="bg-white p-6 rounded-lg shadow-lg space-y-4">
 							{/* Total and Savings Section */}
 							<div className="p-4 border rounded-lg bg-gray-50">
+								{cartList?.OrderPrices?.DefaultPrice !== 0 && (
+									<div className="flex justify-between mb-1">
+										<span className="font-semibold">Giá Gốc</span>{' '}
+										<span>
+											{formatPrice(cartList?.OrderPrices?.DefaultPrice || 0)}
+										</span>
+									</div>
+								)}
+
 								<div className="flex justify-between mb-1">
-									<span className="font-semibold">Giá Gốc</span>{' '}
-									<span>
-										{formatPrice(cartList?.OrderPrices?.DefaultPrice || 0)}
-									</span>
-								</div>
-								<div className="mb-2">
 									<div className="mb-1 flex justify-between w-full">
 										<span className="font-semibold">Phí Vận Chuyển</span>{' '}
-										<span>
-											{formatPrice(
-												cartList?.ShippingPrice?.DefaultPrice || 0
-											)}
-										</span>
+										{cartList?.OrderPrices?.FinalShippingPrice ===
+										cartList?.OrderPrices?.ShippingPriceSaved ? (
+											<span>
+												{formatPrice(
+													cartList?.OrderPrices?.FinalShippingPrice || 0
+												)}
+											</span>
+										) : (
+											<span>
+												{formatPrice(
+													cartList?.OrderPrices?.FinalShippingPrice || 0
+												)}{' '}
+												(-
+												{formatPrice(
+													cartList?.OrderPrices?.ShippingPriceSaved || 0
+												)}
+												)
+											</span>
+										)}
 									</div>
 								</div>
 
-								<div className="mb-2">
-									<div className="mb-1 flex justify-between w-full">
-										<span className="font-semibold">Giảm Giá</span>{' '}
-										<span>
-											{cartList?.OrderPrices?.DiscountAmountSaved !== 0 &&
-												'-'}
-											{formatPrice(
-												cartList?.OrderPrices?.DiscountAmountSaved || 0
-											)}
-										</span>
+								{cartList?.OrderPrices?.DiscountAmountSaved !== 0 && (
+									<div className="flex justify-between mb-1">
+										<div className="mb-1 flex justify-between w-full">
+											<span className="font-semibold">Giảm Giá</span>{' '}
+											<span>
+												-
+												{formatPrice(
+													cartList?.OrderPrices?.DiscountAmountSaved || 0
+												)}
+											</span>
+										</div>
 									</div>
-								</div>
-								<div className="mb-2">
-									<div className="flex justify-between w-full">
-										<span className="font-semibold">Khuyến Mãi</span>{' '}
-										<span>
-											{cartList?.OrderPrices?.PromotionAmountSaved !== 0 &&
-												'-'}
-											{formatPrice(
-												cartList?.OrderPrices?.PromotionAmountSaved || 0
-											)}
-										</span>
+								)}
+								{cartList?.OrderPrices?.PromotionAmountSaved !== 0 && (
+									<div className="flex justify-between mb-1">
+										<div className="mb-1 flex justify-between w-full">
+											<span className="font-semibold">Khuyến Mãi</span>{' '}
+											<span>
+												-
+												{formatPrice(
+													cartList?.OrderPrices?.PromotionAmountSaved || 0
+												)}
+											</span>
+										</div>
 									</div>
-								</div>
-								<div className="mb-2">
-									<div className="mb-1 flex justify-between w-full">
-										<span className="font-semibold">Bảo Hành</span>{' '}
-										<span>
-											{formatPrice(
-												cartList?.OrderPrices?.TotalWarrantyPrice || 0
-											)}
-										</span>
+								)}
+								{cartList?.OrderPrices?.TotalWarrantyPrice !== 0 && (
+									<div className="flex justify-between mb-1">
+										<div className="mb-1 flex justify-between w-full">
+											<span className="font-semibold">Bảo Hành</span>{' '}
+											<span>
+												{formatPrice(
+													cartList?.OrderPrices?.TotalWarrantyPrice || 0
+												)}
+											</span>
+										</div>
 									</div>
-								</div>
-								<div className="mb-2">
-									<div className="mb-1 flex justify-between w-full">
-										<span className="font-semibold">Khách Hàng Thân Thiết</span>
+								)}
+								{cartList?.OrderPrices?.UserRankDiscountAmount !== 0 && (
+									<div className="flex justify-between mb-1">
+										<div className="mb-1 flex justify-between w-full">
+											<span className="font-semibold">
+												Khách Hàng Thân Thiết
+											</span>
 
-										<span>
-											{cartList?.OrderPrices?.UserRankDiscountAmount !== 0 &&
-												'-'}
-											{formatPrice(
-												cartList?.OrderPrices?.UserRankDiscountAmount || 0
-											)}
-										</span>
+											<span>
+												{cartList?.OrderPrices?.UserRankDiscountAmount !==
+													0 && '-'}
+												{formatPrice(
+													cartList?.OrderPrices?.UserRankDiscountAmount ||
+														0
+												)}
+											</span>
+										</div>
 									</div>
-								</div>
+								)}
 
 								<div className="flex text-sm text-gray-600 my-2">
 									<span className="mr-2">📅 Thời gian giao hàng dự kiến</span>

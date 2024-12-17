@@ -1,23 +1,23 @@
 import React, {useEffect, useMemo, useState} from 'react';
 
-import {DeleteOutlined, EyeOutlined} from '@ant-design/icons';
-import {Button, Divider, Image, message, Select, Space} from 'antd';
+import {DeleteOutlined, EyeOutlined, InfoCircleFilled} from '@ant-design/icons';
+import DiamondIcon from '@mui/icons-material/Diamond';
+import {Button, Divider, Image, message, Popover, Select, Space} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
+import logo from '../../assets/logo-short-ex.png';
 import {getUserId} from '../../components/GetUserId';
 import Loading from '../../components/Loading';
 import {
 	GetCartSelector,
 	GetPromotionAbleSelector,
-	GetPromotionSelector,
 	GetUserDetailSelector,
 	LoadingCartSelector,
 } from '../../redux/selectors';
-import {handleCartValidate, removeFromCartFinish} from '../../redux/slices/cartSlice';
+import {handleCartValidate} from '../../redux/slices/cartSlice';
 import {checkPromoCart, getAllPromo} from '../../redux/slices/promotionSlice';
 import {formatPrice} from '../../utils';
 import {enums} from '../../utils/constant';
-import logo from '../../assets/logo-short-ex.png';
 
 const getEnumKey = (enumObj, value) => {
 	return enumObj
@@ -60,6 +60,7 @@ const mapAttributes = (data, attributes) => {
 		ShippingDate: data?.Jewelry?.ShippingDate,
 		SideDiamonds: data?.Jewelry?.SideDiamonds,
 		TitleJewelry: data?.Jewelry?.Title,
+		DiamondJewelry: data?.Jewelry?.Diamonds,
 		JewelryThumbnail: data?.Jewelry?.Model?.Thumbnail?.MediaPath,
 		SizeId: data?.Jewelry?.SizeId,
 		Weight: data?.Jewelry?.Weight,
@@ -248,8 +249,26 @@ const CartPage = () => {
 		setPromoId(value);
 	};
 
+	const text = <span>Kim Cương</span>;
+	const content = (
+		<div>
+			{mappedProducts?.map((item, index) => (
+				<div className=" flex flex-col p-5 rounded-lg" key={item.Id}>
+					<div className="flex-1 mx-5 sm:mt-0">
+						<div className="mr-3">
+							<DiamondIcon />
+						</div>
+						{item?.DiamondJewelry?.map((diamond) => (
+							<div>{diamond?.Title}</div>
+						))}
+					</div>
+				</div>
+			))}
+		</div>
+	);
+
 	return (
-		<div className="mt-5 p-8 bg-gray-50 min-h-screen mx-5 md:mx-16 lg:mx-32 my-10 flex flex-col md:flex-row">
+		<div className="mt-5 p-8 bg-gray-50 mx-5 md:mx-16 lg:mx-32 my-10 flex flex-col md:flex-row">
 			{/* Left Segment: Engagement Ring, Loose Diamond, Promotions */}
 			<div className="md:w-2/3 flex-1 lg:mr-8 space-y-8 shadow-lg bg-white rounded-lg">
 				{mappedProducts?.length > 0 ? (
@@ -281,7 +300,7 @@ const CartPage = () => {
 											{item.JewelryId ? (
 												<div>
 													<p className="mb-1 text-gray-800 font-semibold">
-														{item.TitleJewelry}
+														{item.TitleJewelry}{' '}
 													</p>
 													{item?.FinalPrice === item.DefaultPrice ? (
 														<p className="text-gray-700 text-sm py-3 ml-1">
@@ -323,7 +342,7 @@ const CartPage = () => {
 														{item?.Title}
 													</p>
 													<p className="text-gray-700 text-sm mt-3">
-														SKU:
+														Mã sê-ri:
 														<span className="text-gray-900 font-semibold ml-1">
 															{item?.SerialCodeDiamond}
 														</span>
@@ -439,76 +458,116 @@ const CartPage = () => {
 					</Select>
 				</div>
 			</div>
+			{cartList?.Products?.length > 0 && (
+				<div className="md:w-1/3 lg:mt-0 flex-shrink-0 w-full lg:w-1/3 p-6 md:mx-5 shadow-lg bg-white rounded-lg lg:sticky lg:top-8">
+					<div className="bg-white p-4 mx-5 my-5 rounded-lg shadow-lg space-y-6">
+						<div className="space-y-4">
+							{cartList?.OrderPrices?.DefaultPrice !== 0 && (
+								<div className="flex justify-between mb-1">
+									<span className="font-semibold">Giá Gốc</span>{' '}
+									<span>
+										{formatPrice(cartList?.OrderPrices?.DefaultPrice || 0)}
+									</span>
+								</div>
+							)}
 
-			{/* Right Segment: Price Summary */}
-			<div className="md:w-1/3 lg:mt-0 flex-shrink-0 w-full lg:w-1/3 p-6 md:mx-5 shadow-lg bg-white rounded-lg lg:sticky lg:top-8">
-				<div className="bg-white p-4 mx-5 my-5 rounded-lg shadow-lg space-y-6">
-					<div className="space-y-4">
-						<div className="flex justify-between mb-1">
-							<span className="font-semibold">Giá Gốc</span>{' '}
-							<span>{formatPrice(cartList?.OrderPrices?.DefaultPrice || 0)}</span>
-						</div>
-						<div className="flex justify-between mb-1">
-							<div className="mb-1 flex justify-between w-full">
-								<span className="font-semibold">Phí Vận Chuyển</span>{' '}
-								<span>{formatPrice(cartList?.ShippingPrice?.FinalPrice || 0)}</span>
-							</div>
-						</div>
-						<div className="flex justify-between mb-1">
-							<div className="mb-1 flex justify-between w-full">
-								<span className="font-semibold">Giảm Giá</span>{' '}
-								<span>
-									{cartList?.OrderPrices?.DiscountAmountSaved !== 0 && '-'}
-									{formatPrice(cartList?.OrderPrices?.DiscountAmountSaved || 0)}
-								</span>
-							</div>
-						</div>
-						<div className="flex justify-between mb-1">
-							<div className="mb-1 flex justify-between w-full">
-								<span className="font-semibold">Khuyến Mãi</span>{' '}
-								<span>
-									{cartList?.OrderPrices?.DiscountAmountSaved !== Number(0) &&
-										'-'}
-									{formatPrice(cartList?.OrderPrices?.PromotionAmountSaved || 0)}
-								</span>
-							</div>
-						</div>
-						<div className="flex justify-between mb-1">
-							<div className="mb-1 flex justify-between w-full">
-								<span className="font-semibold">Bảo Hành</span>{' '}
-								<span>
-									{formatPrice(cartList?.OrderPrices?.TotalWarrantyPrice || 0)}
-								</span>
-							</div>
-						</div>
-						<div className="flex justify-between mb-1">
-							<div className="mb-1 flex justify-between w-full">
-								<span className="font-semibold">Khách Hàng Thân Thiết</span>
-
-								<span>
-									{cartList?.OrderPrices?.UserRankDiscountAmount !== 0 && '-'}
-									{formatPrice(
-										cartList?.OrderPrices?.UserRankDiscountAmount || 0
+							<div className="flex justify-between mb-1">
+								<div className="mb-1 flex justify-between w-full">
+									<span className="font-semibold">Phí Vận Chuyển</span>{' '}
+									{cartList?.OrderPrices?.FinalShippingPrice ===
+									cartList?.OrderPrices?.ShippingPriceSaved ? (
+										<span>
+											{formatPrice(
+												cartList?.OrderPrices?.FinalShippingPrice || 0
+											)}
+										</span>
+									) : (
+										<span>
+											{formatPrice(
+												cartList?.OrderPrices?.FinalShippingPrice || 0
+											)}{' '}
+											(-
+											{formatPrice(
+												cartList?.OrderPrices?.ShippingPriceSaved || 0
+											)}
+											)
+										</span>
 									)}
-								</span>
+								</div>
 							</div>
+
+							{cartList?.OrderPrices?.DiscountAmountSaved !== 0 && (
+								<div className="flex justify-between mb-1">
+									<div className="mb-1 flex justify-between w-full">
+										<span className="font-semibold">Giảm Giá</span>{' '}
+										<span>
+											-
+											{formatPrice(
+												cartList?.OrderPrices?.DiscountAmountSaved || 0
+											)}
+										</span>
+									</div>
+								</div>
+							)}
+							{cartList?.OrderPrices?.PromotionAmountSaved !== 0 && (
+								<div className="flex justify-between mb-1">
+									<div className="mb-1 flex justify-between w-full">
+										<span className="font-semibold">Khuyến Mãi</span>{' '}
+										<span>
+											-
+											{formatPrice(
+												cartList?.OrderPrices?.PromotionAmountSaved || 0
+											)}
+										</span>
+									</div>
+								</div>
+							)}
+							{cartList?.OrderPrices?.TotalWarrantyPrice !== 0 && (
+								<div className="flex justify-between mb-1">
+									<div className="mb-1 flex justify-between w-full">
+										<span className="font-semibold">Bảo Hành</span>{' '}
+										<span>
+											{formatPrice(
+												cartList?.OrderPrices?.TotalWarrantyPrice || 0
+											)}
+										</span>
+									</div>
+								</div>
+							)}
+
+							{cartList?.OrderPrices?.UserRankDiscountAmount !== 0 && (
+								<div className="flex justify-between mb-1">
+									<div className="mb-1 flex justify-between w-full">
+										<span className="font-semibold">Khách Hàng Thân Thiết</span>
+
+										<span>
+											{cartList?.OrderPrices?.UserRankDiscountAmount !== 0 &&
+												'-'}
+											{formatPrice(
+												cartList?.OrderPrices?.UserRankDiscountAmount || 0
+											)}
+										</span>
+									</div>
+								</div>
+							)}
+
+							<Divider />
+							<p className="flex justify-between text-gray-900 font-semibold">
+								<span>Tổng Giá</span>{' '}
+								<span>{formatPrice(cartList?.OrderPrices?.FinalPrice || 0)}</span>
+							</p>
 						</div>
-						<Divider />
-						<p className="flex justify-between text-gray-900 font-semibold">
-							<span>Tổng Giá</span>{' '}
-							<span>{formatPrice(cartList?.OrderPrices?.FinalPrice || 0)}</span>
-						</p>
 					</div>
+					<Button
+						className="mr-10 px-6 py-2 bg-primary rounded-lg uppercase font-semibold w-full h-12"
+						style={{padding: '13px 0px 11px 0px'}}
+						onClick={handleCheckoutNavigate}
+						disabled={mappedProducts?.length === 0}
+					>
+						Thanh Toán
+					</Button>
 				</div>
-				<Button
-					className="mr-10 px-6 py-2 bg-primary rounded-lg uppercase font-semibold w-full h-12"
-					style={{padding: '13px 0px 11px 0px'}}
-					onClick={handleCheckoutNavigate}
-					disabled={mappedProducts?.length === 0}
-				>
-					Thanh Toán
-				</Button>
-			</div>
+			)}
 		</div>
 	);
 };
