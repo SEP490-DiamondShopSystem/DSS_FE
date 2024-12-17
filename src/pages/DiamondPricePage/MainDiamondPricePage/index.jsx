@@ -449,9 +449,11 @@ const MainDiamondPricePage = () => {
 	if (!priceBoard || !priceBoard.PriceTables || priceBoard.PriceTables.length === 0) {
 		return (
 			<div className="container mx-auto p-6 bg-offWhite rounded-lg shadow-lg">
-				<h1 className="text-5xl font-bold text-center text-blue-600">
-					{criteriaTitle || 'Bảng Giá Kim Cương Chính'}{' '}
+				<h1 className="text-5xl w-full pb-4 font-bold text-center text-blue-600">
+					Bảng Giá Kim Cương Chính
 				</h1>
+				<p className="text-lg text-center text-gray">{criteriaTitle}</p>
+
 				<div className="flex flex-wrap gap-4 items-center justify-between p-4 bg-offWhite rounded-lg shadow-md">
 					{/* Shape Selection */}
 					<div className="flex sm:flex-row items-center gap-2">
@@ -505,8 +507,9 @@ const MainDiamondPricePage = () => {
 	return (
 		<div className="container gap-4 my-3 mx-auto bg-white rounded-lg">
 			<h1 className="text-5xl pb-4 font-bold text-center text-blue-600">
-				Bảng Giá Kim Cương Chính{' '}
+				Bảng Giá Kim Cương Chính
 			</h1>
+			<p className="text-lg text-center text-gray">{criteriaTitle}</p>
 			<div className="flex flex-wrap gap-4 items-center justify-between p-4 bg-offWhite rounded-lg shadow-md">
 				<div className="flex sm:flex-row items-center gap-2">
 					<label htmlFor="cutSelect" className="text-lg font-semibold text-gray-800">
@@ -586,7 +589,6 @@ const MainDiamondPricePage = () => {
 					</tbody>
 				</table>
 			</div>
-
 			{isEditing && (
 				<div className="mt-4 text-center">
 					{editedCells.length > 0 ? (

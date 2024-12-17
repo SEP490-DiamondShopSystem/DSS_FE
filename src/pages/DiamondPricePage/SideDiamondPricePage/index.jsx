@@ -45,10 +45,20 @@ const SideDiamondPricePage = () => {
 	const [isCreating, setIsCreating] = useState(false);
 	const [listPrices, setListPrices] = useState([]);
 	const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-	const [sideDiamondTitle, setSideDiamondTile] = useState(null);
+	const [criteriaTitle, setCriteriaTitle] = useState('');
 
 	useEffect(() => {
 		dispatch(fetchPriceBoard({isLabDiamond, isSideDiamond}));
+		// Fetch diamond price rule to set title
+		dispatch(fetchDiamondPriceRule()).then((response) => {
+			const data = response.payload;
+			// Set title based on shapeId
+			setCriteriaTitle(
+				isSideDiamond === true
+					? data.DefaultSideDiamondCriteriaPriceBoard
+					: data.DefaultSideDiamondCriteriaPriceBoard
+			);
+		});
 	}, [dispatch, isLabDiamond, isSideDiamond]);
 
 	const handleCheckboxChange = (criteriaId) => {
@@ -317,7 +327,7 @@ const SideDiamondPricePage = () => {
 		return (
 			<div className="container mx-auto p-6 bg-offWhite rounded-lg shadow-lg">
 				<h1 className="text-5xl font-bold mb-6 text-center text-blue-600">
-					Bảng Giá Kim Cương Tấm
+					{criteriaTitle || 'Bảng Giá Kim Cương Tấm'}{' '}
 				</h1>
 				<div className="flex flex-wrap gap-4 items-center justify-between p-4 ">
 					{/* Lab Diamond Checkbox */}
@@ -349,8 +359,11 @@ const SideDiamondPricePage = () => {
 	}
 
 	return (
-		<div className="container gap-4 mx-auto p-6 bg-white rounded-lg shadow-lg">
-			<h1 className="text-5xl font-bold text-center text-blue-600">Bảng Giá Kim Cương Tấm</h1>
+		<div className="container gap-4 my-3 mx-auto bg-white rounded-lg">
+			<h1 className="text-5xl pb-4 font-bold text-center text-blue-600">
+				Bảng Giá Kim Cương Tấm
+			</h1>
+			<p className="text-lg text-center text-gray">{criteriaTitle} </p>
 			<div className="flex flex-wrap gap-4 items-center justify-between p-4 bg-offWhite rounded-lg shadow-md">
 				{/* Lab Diamond Checkbox */}
 				<div className="flex items-center gap-2">
@@ -417,7 +430,6 @@ const SideDiamondPricePage = () => {
 					</tbody>
 				</table>
 			</div>
-
 			{isEditing && (
 				<div className="mt-4 text-center">
 					{editedCells.length > 0 ? (
