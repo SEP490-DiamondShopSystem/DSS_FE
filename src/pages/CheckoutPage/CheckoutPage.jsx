@@ -1063,6 +1063,7 @@ const CheckoutPage = () => {
 									<Select
 										className="w-full"
 										onChange={handlePromoChange}
+										placeholder="Chọn khuyến mãi"
 										allowClear
 									>
 										{promo &&
