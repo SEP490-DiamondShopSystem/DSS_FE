@@ -41,7 +41,7 @@ export const list = [
 	{
 		icon: faTag,
 		title: 'Giảm giá',
-		subtitle: 'Cho mọi đơn hàng giảm trên 20%',
+		subtitle: 'Khám phá các giảm giá và khuyến mãi của chúng tôi',
 	},
 	{
 		icon: faHeadphones,

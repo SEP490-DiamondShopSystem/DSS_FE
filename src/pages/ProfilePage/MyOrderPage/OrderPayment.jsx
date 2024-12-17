@@ -15,7 +15,7 @@ export const OrderPayment = ({order, setTransfer}) => {
 	const dispatch = useDispatch();
 	const loading = useSelector(LoadingPaymentSelector);
 	const [ruleBank, setRuleBank] = useState();
-
+	console.log(order);
 	const [fileList, setFileList] = useState([]);
 
 	useEffect(() => {
@@ -96,14 +96,22 @@ export const OrderPayment = ({order, setTransfer}) => {
 									{ruleBank?.AccountName || 'PHAM XUAN HUY'}
 								</p>
 								<p>
-									<strong className="text-gray-700">Ghi chú:</strong>{' '}
-									{'Vui lòng ghi mã đơn hàng vào nội dung chuyển khoản.'}
+									<strong className="text-gray-700">
+										Nội dung chuyển khoản:
+									</strong>{' '}
+									{order?.Account?.LastName} {order?.Account?.FirstName}
+									{'-'}
+									{order?.Account?.PhoneNumber}
+									{'-'}
+									{order?.OrderCode}
 								</p>
-								<p className="font-semibold">
-									<strong className="text-gray-700">Số tiền cần chuyển:</strong>{' '}
-									{order?.DepositFee !== 0
-										? formatPrice(order?.DepositFee)
-										: formatPrice(order?.TotalPrice)}
+								<p className="font-bold">
+									<span className="text-black">Số tiền cần chuyển:</span>{' '}
+									<strong className="text-darkGreen  text-xl">
+										{order?.DepositFee !== 0
+											? formatPrice(order?.DepositFee)
+											: formatPrice(order?.TotalPrice)}
+									</strong>
 								</p>
 							</div>
 							<div className="mt-4 sm:mt-0 sm:ml-10 flex justify-center">

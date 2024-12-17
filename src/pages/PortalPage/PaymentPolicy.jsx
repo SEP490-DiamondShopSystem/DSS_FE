@@ -113,7 +113,7 @@ const PaymentPolicyPage = () => {
 							{')'}
 						</strong>
 						<br />
-						Để lại thông tin: [HỌ VÀ TÊN] [ SĐT] [MÓN HÀNG].
+						Để lại thông tin: [HỌ VÀ TÊN] [ SĐT] [MÃ ĐƠN HÀNG].
 					</Text>
 					<Text className="block text-gray-600 mb-2">
 						Khách hàng phải chuyển <strong>MỘT</strong> giao dịch duy nhất và đúng số
