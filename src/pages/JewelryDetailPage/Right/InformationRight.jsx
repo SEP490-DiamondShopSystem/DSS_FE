@@ -161,7 +161,7 @@ export const InformationRight = ({
 						))}
 					</div>
 				</div>
-				{uniqueSideDiamonds && (
+				{uniqueSideDiamonds && diamondJewelry?.SideDiamonds?.length > 0 && (
 					<>
 						<div className="my-5 flex items-center">
 							<div className="font-semibold">Kim Cương Tấm</div>
@@ -225,7 +225,7 @@ export const InformationRight = ({
 										(group) => group.IsInStock === true
 									).map((group) => (
 										<Option key={group?.Size} value={group?.Size}>
-											<p className="font-semibold">{group?.Size}</p>
+											<p className="font-semibold">{group?.Size}mm</p>
 										</Option>
 									))}
 								</Select>

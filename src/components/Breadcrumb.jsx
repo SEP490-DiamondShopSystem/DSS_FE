@@ -53,6 +53,7 @@ const Breadcrumbs = () => {
 		customize: 'Yêu cầu thiết kế',
 		'diamond-jewelry': 'Trang sức',
 		'*': 'Không tìm thấy trang',
+		'completed-jewelry': 'Trang sức đã hoàn thành',
 	};
 
 	// Tách đường dẫn hiện tại thành các đoạn
