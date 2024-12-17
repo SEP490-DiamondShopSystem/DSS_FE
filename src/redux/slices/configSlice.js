@@ -37,6 +37,18 @@ export const fetchAccountRule = createAsyncThunk(
 		}
 	}
 );
+
+export const fetchDiamondPriceRule = createAsyncThunk(
+	'config/fetchDiamondPriceRule',
+	async (_, {rejectWithValue}) => {
+		try {
+			const response = await api.get('/Configuration/DiamondPriceRule');
+			return response;
+		} catch (error) {
+			return rejectWithValue(error);
+		}
+	}
+);
 export const fetchFrontendDisplayRule = createAsyncThunk(
 	'config/fetchFrontendDisplayRule',
 	async (_, {rejectWithValue}) => {
@@ -110,7 +122,7 @@ export const configSlice = createSlice({
 		userDetail: null,
 		accountVerify: null,
 		accountRule: {},
-
+		diamondPriceRule: {},
 		diamondRule: {},
 		frontendDisplayRule: {},
 		promotionRule: {},
@@ -160,6 +172,18 @@ export const configSlice = createSlice({
 				state.loading = false;
 			})
 			.addCase(fetchDiamondRule.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload;
+			})
+			.addCase(fetchDiamondPriceRule.pending, (state) => {
+				state.loading = true;
+				state.error = null;
+			})
+			.addCase(fetchDiamondPriceRule.fulfilled, (state, action) => {
+				state.diamondPriceRule = action.payload;
+				state.loading = false;
+			})
+			.addCase(fetchDiamondPriceRule.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload;
 			})
