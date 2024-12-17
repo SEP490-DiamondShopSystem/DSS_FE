@@ -322,6 +322,8 @@ const CheckoutPage = () => {
 				items: [transformedData],
 				accountId: userDetail?.Id,
 				isAtShopOrder: isAtShop,
+				paymentType: paymentForm,
+				isCustomOrder: idCustomize ? true : false,
 			};
 
 			// Nếu userAddress có dữ liệu, thêm vào payload
@@ -376,6 +378,8 @@ const CheckoutPage = () => {
 				items: transformedData,
 				accountId: userDetail?.Id,
 				isAtShopOrder: isAtShop,
+				paymentType: paymentForm,
+				isCustomOrder: idCustomize ? true : false,
 			};
 
 			// Nếu userAddress có dữ liệu, thêm vào payload
@@ -405,6 +409,7 @@ const CheckoutPage = () => {
 		defaultAddress,
 		userInfo,
 		isAtShopOrder,
+		paymentForm,
 	]);
 
 	useEffect(() => {
@@ -954,80 +959,101 @@ const CheckoutPage = () => {
 						{idCustomize ? (
 							<div className="shadow-xl p-5 rounded-lg">
 								{mappedProducts?.map((item, index) => (
-									<div className="flex mt-4 " key={item.Id}>
-										<div className="mr-4 flex-shrink-0">
-											<img
-												src={
-													item?.DiamondThumbnail || item?.JewelryThumbnail
-												}
-												className="w-32 h-32 object-cover rounded-lg border"
-											/>
-										</div>
-										<div className="flex-1 mx-5">
-											{/* Kiểm tra và hiển thị thông tin sản phẩm */}
-											{item.JewelryId && (
-												<div>
-													<div className="mb-2 text-gray-800 font-semibold">
-														{item.TitleJewelry}
-													</div>
-													<div className="text-gray-700 text-sm mr-1 mb-2">
-														Mã sê-ri:
-														<span className="text-gray-900 font-semibold">
-															{item.SerialCode}
-														</span>
-													</div>
-													<div className="text-gray-700 text-sm mr-1">
-														{item?.FinalPrice === item.DefaultPrice ? (
-															<p className="text-gray-700 text-sm py-3 ml-1">
-																Giá:
-																<span className="text-gray-900 font-semibold ml-1">
-																	{formatPrice(item.DefaultPrice)}
-																</span>
-															</p>
-														) : (
-															<>
-																{item.PromotionAmountSaved !==
-																	0 && (
-																	<p className="text-gray-700 text-sm py-3 ml-1 mb-2">
-																		Giá Khuyến Mãi:
-																		<span className="text-gray-900 font-semibold ml-1">
-																			{formatPrice(
-																				item.PromotionAmountSaved
-																			)}
-																		</span>
-																	</p>
-																)}
-
-																{item.DiscountAmountSaved !== 0 && (
-																	<p className="text-gray-700 text-sm py-2 ml-1 mb-2">
-																		Giá Giảm:
-																		<span className="text-gray-900 font-semibold ml-1">
-																			{formatPrice(
-																				item.DiscountAmountSaved
-																			)}
-																		</span>
-																	</p>
-																)}
-																<p className="text-gray-700 text-sm py-3 ml-1 mb-2">
+									<>
+										<div className="flex mt-4 " key={item.Id}>
+											<div className="mr-4 flex-shrink-0">
+												<img
+													src={
+														item?.DiamondThumbnail ||
+														item?.JewelryThumbnail
+													}
+													className="w-32 h-32 object-cover rounded-lg border"
+												/>
+											</div>
+											<div className="flex-1 mx-5">
+												{/* Kiểm tra và hiển thị thông tin sản phẩm */}
+												{item.JewelryId && (
+													<div>
+														<div className="mb-2 text-gray-800 font-semibold">
+															{item.TitleJewelry}
+														</div>
+														<div className="text-gray-700 text-sm mr-1 mb-2">
+															Mã sê-ri:
+															<span className="text-gray-900 font-semibold">
+																{item.SerialCode}
+															</span>
+														</div>
+														<div className="text-gray-700 text-sm mr-1">
+															{item?.FinalPrice ===
+															item.DefaultPrice ? (
+																<p className="text-gray-700 text-sm py-3 ml-1">
 																	Giá:
-																	<span className="text-gray-900 font-semibold ml-1 line-through text-gray">
+																	<span className="text-gray-900 font-semibold ml-1">
 																		{formatPrice(
 																			item.DefaultPrice
 																		)}
 																	</span>
-																	<span className="text-gray-900 font-semibold ml-1">
-																		{formatPrice(
-																			item.FinalPrice
-																		)}
-																	</span>
 																</p>
-															</>
-														)}
+															) : (
+																<>
+																	{item.PromotionAmountSaved !==
+																		0 && (
+																		<p className="text-gray-700 text-sm py-3 ml-1 mb-2">
+																			Giá Khuyến Mãi:
+																			<span className="text-gray-900 font-semibold ml-1">
+																				{formatPrice(
+																					item.PromotionAmountSaved
+																				)}
+																			</span>
+																		</p>
+																	)}
+
+																	{item.DiscountAmountSaved !==
+																		0 && (
+																		<p className="text-gray-700 text-sm py-2 ml-1 mb-2">
+																			Giá Giảm:
+																			<span className="text-gray-900 font-semibold ml-1">
+																				{formatPrice(
+																					item.DiscountAmountSaved
+																				)}
+																			</span>
+																		</p>
+																	)}
+																	<p className="text-gray-700 text-sm py-3 ml-1 mb-2">
+																		Giá:
+																		<span className="text-gray-900 font-semibold ml-1 line-through text-gray">
+																			{formatPrice(
+																				item.DefaultPrice
+																			)}
+																		</span>
+																		<span className="text-gray-900 font-semibold ml-1">
+																			{formatPrice(
+																				item.FinalPrice
+																			)}
+																		</span>
+																	</p>
+																</>
+															)}
+														</div>
 													</div>
-												</div>
-											)}
+												)}
+											</div>
 										</div>
-									</div>
+										<div>
+											<Button
+												className="cursor-pointer px-3 mr-2"
+												onClick={() => {
+													if (item.JewelryId) {
+														handleViewCart(item.JewelryId, null);
+													} else if (item.DiamondId !== undefined) {
+														handleViewCart(null, item.DiamondId);
+													}
+												}}
+											>
+												<EyeOutlined />
+											</Button>
+										</div>
+									</>
 								))}
 								<div className="mt-5">
 									<label>Chọn bảo hành trang sức</label>
@@ -1063,6 +1089,7 @@ const CheckoutPage = () => {
 									<Select
 										className="w-full"
 										onChange={handlePromoChange}
+										placeholder="Chọn khuyến mãi"
 										allowClear
 									>
 										{promo &&
@@ -1387,6 +1414,18 @@ const CheckoutPage = () => {
 													cartList?.OrderPrices?.UserRankDiscountAmount ||
 														0
 												)}
+											</span>
+										</div>
+									</div>
+								)}
+								{cartList?.DepositAmount !== 0 && (
+									<div className="flex justify-between mb-1">
+										<div className="mb-1 flex justify-between w-full">
+											<span className="font-semibold">Trả Trước</span>
+
+											<span>
+												{cartList?.DepositAmount !== 0 && '-'}
+												{formatPrice(cartList?.DepositAmount || 0)}
 											</span>
 										</div>
 									</div>

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {InfoCircleFilled} from '@ant-design/icons';
-import {Button, Image, Modal, Popover, Radio} from 'antd';
+import {Button, Image, message, Modal, Popover, Radio} from 'antd';
 import {Polish} from './Polish';
 import girdle from '../../../../../assets/advanceDiamond/Girdle .jpeg';
 import culet from '../../../../../assets/advanceDiamond/Culet.jpg';
@@ -87,7 +87,7 @@ export const Specs = ({
 
 	const handleNextStep = () => {
 		if (!customizeDiamond) {
-			alert('Please select a diamond before continuing.'); // Alert if no diamond is selected
+			message.warning('Vui lòng chọn một viên kim cương trước khi tiếp tục.'); // Alert if no diamond is selected
 			return;
 		}
 
@@ -120,6 +120,13 @@ export const Specs = ({
 
 	const handleBackStep = () => {
 		setStep((prev) => prev - 1);
+		setCustomizeDiamond((prev) => ({
+			...prev,
+			culet: '',
+			polish: '',
+			symmetry: '',
+			girdle: '',
+		}));
 	};
 
 	const textSymmetry = <span>Độ đối xứng</span>;

@@ -81,7 +81,8 @@ export const OrderDetailModal = () => {
 		key: i,
 		orderDate: order?.CreatedDate || 'N/A',
 		productName: item?.Name,
-		price: formatPrice(item?.PurchasedPrice || 0),
+		OriginalPrice: formatPrice(item?.OriginalPrice || 0),
+		PurchasedPrice: formatPrice(item?.PurchasedPrice || 0),
 		jewelryId: item?.JewelryId || null,
 		diamondId: item?.DiamondId || null,
 		Jewelry: item?.Jewelry || null,
@@ -134,7 +135,7 @@ export const OrderDetailModal = () => {
 			),
 		},
 		{
-			title: 'Giá Giảm',
+			title: 'Giảm Giá Sản Phẩm',
 			dataIndex: 'discountSavedAmount',
 			key: 'discountSavedAmount',
 			align: 'center',
@@ -145,7 +146,7 @@ export const OrderDetailModal = () => {
 			),
 		},
 		{
-			title: 'Giá Khuyến Mãi',
+			title: 'Khuyến Mãi Sản Phẩm',
 			dataIndex: 'promotionSavedAmount',
 			key: 'promotionSavedAmount',
 			align: 'center',
@@ -156,13 +157,24 @@ export const OrderDetailModal = () => {
 			),
 		},
 		{
-			title: 'Giá Sản Phẩm',
+			title: 'Giá Gốc',
 			dataIndex: 'price',
 			key: 'price',
 			align: 'center',
 			render: (_, record) => (
 				<div className="flex flex-col items-center">
-					<div>{record.price}</div>
+					<div>{record.OriginalPrice}</div>
+				</div>
+			),
+		},
+		{
+			title: 'Giá Đã Giảm',
+			dataIndex: 'price',
+			key: 'price',
+			align: 'center',
+			render: (_, record) => (
+				<div className="flex flex-col items-center">
+					<div>{record.PurchasedPrice}</div>
 				</div>
 			),
 		},
@@ -228,28 +240,6 @@ export const OrderDetailModal = () => {
 							// Jewelry === null hoặc không thỏa điều kiện
 							return null;
 						},
-					},
-			  ]
-			: []),
-
-		...(orderInvoice
-			? [
-					{
-						title: 'Hóa Đơn',
-						dataIndex: 'jewelryId',
-						key: 'jewelryId',
-						align: 'center',
-						render: (_, record) => (
-							<div className="flex justify-center">
-								<Button
-									type="text"
-									icon={<FileTextOutlined />}
-									onClick={handleInvoice}
-								>
-									Hóa Đơn
-								</Button>
-							</div>
-						),
 					},
 			  ]
 			: []),
@@ -481,9 +471,22 @@ export const OrderDetailModal = () => {
 						</div>
 
 						<div className="flex justify-between mt-10">
-							<Title level={3} className="text-xl font-semibold">
-								Chi tiết đơn hàng
-							</Title>
+							<div className="flex">
+								<Title level={3} className="text-xl font-semibold">
+									Chi tiết đơn hàng
+								</Title>
+								{orderInvoice && (
+									<div className="flex justify-center ml-5">
+										<Button
+											type="text"
+											icon={<FileTextOutlined />}
+											onClick={handleInvoice}
+										>
+											Hóa Đơn
+										</Button>
+									</div>
+								)}
+							</div>
 							{statusOrder === 1 && order?.Transactions?.length === 0 && (
 								<Button
 									type="text"
@@ -534,6 +537,11 @@ export const OrderDetailModal = () => {
 							<div className="mb-2">
 								Phí giao hàng: {formatPrice(order?.ShippingFee)}
 							</div>
+							{order?.OrderAmountSaved !== 0 && (
+								<div className="mb-2">
+									Đơn hàng đã giảm: -{formatPrice(order?.OrderAmountSaved)}
+								</div>
+							)}
 							{order?.UserRankAmountSaved !== 0 && (
 								<div>
 									Khách hàng thân thiết: -
