@@ -77,8 +77,6 @@ export const OrderDetailModal = () => {
 	const [statusOrder, setStatusOrder] = useState();
 	const [cancelled, setCancelled] = useState();
 
-	console.log('order', order);
-
 	const data = order?.Items?.map((item, i) => ({
 		key: i,
 		orderDate: order?.CreatedDate || 'N/A',

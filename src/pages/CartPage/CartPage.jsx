@@ -237,8 +237,6 @@ const CartPage = () => {
 		});
 	};
 
-	console.log('promo', promo);
-
 	const handleCheckoutNavigate = () => {
 		if (mappedProducts.length > 0) {
 			navigate(`/checkout`, {state: {promoId}});

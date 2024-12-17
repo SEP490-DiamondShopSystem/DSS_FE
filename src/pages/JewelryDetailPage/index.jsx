@@ -28,10 +28,6 @@ const JewelryDetailPage = () => {
 	const [uniqueMetals, setUniqueMetals] = useState([]);
 	const [uniqueSideDiamonds, setUniqueSideDiamonds] = useState([]);
 
-	console.log('jewelryFromList', jewelryFromList);
-	console.log('selectedSideDiamond', selectedSideDiamond);
-	console.log('selectedMetal', selectedMetal);
-
 	const items = [
 		{
 			title: 'Chọn Vỏ',
@@ -174,14 +170,11 @@ const JewelryDetailPage = () => {
 				(diamond) => diamond.Id === SideDiamondOptId
 			);
 
-			console.log('Found side diamond:', sideDiamond);
-
 			if (!selectedSideDiamond && sideDiamond) {
 				setSelectedSideDiamond(sideDiamond);
 			}
 
 			const metal = uniqueMetals.find((metal) => metal.Id === MetalId);
-			console.log('Found metal:', metal);
 
 			if (!selectedMetal && metal) {
 				setSelectedMetal(metal);
