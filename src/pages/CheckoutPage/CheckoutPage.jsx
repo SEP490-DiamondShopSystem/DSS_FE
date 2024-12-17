@@ -322,6 +322,8 @@ const CheckoutPage = () => {
 				items: [transformedData],
 				accountId: userDetail?.Id,
 				isAtShopOrder: isAtShop,
+				paymentType: paymentForm,
+				isCustomOrder: idCustomize ? true : false,
 			};
 
 			// Nếu userAddress có dữ liệu, thêm vào payload
@@ -376,6 +378,8 @@ const CheckoutPage = () => {
 				items: transformedData,
 				accountId: userDetail?.Id,
 				isAtShopOrder: isAtShop,
+				paymentType: paymentForm,
+				isCustomOrder: idCustomize ? true : false,
 			};
 
 			// Nếu userAddress có dữ liệu, thêm vào payload
@@ -405,6 +409,7 @@ const CheckoutPage = () => {
 		defaultAddress,
 		userInfo,
 		isAtShopOrder,
+		paymentForm,
 	]);
 
 	useEffect(() => {
@@ -1409,6 +1414,18 @@ const CheckoutPage = () => {
 													cartList?.OrderPrices?.UserRankDiscountAmount ||
 														0
 												)}
+											</span>
+										</div>
+									</div>
+								)}
+								{cartList?.DepositAmount !== 0 && (
+									<div className="flex justify-between mb-1">
+										<div className="mb-1 flex justify-between w-full">
+											<span className="font-semibold">Trả Trước</span>
+
+											<span>
+												{cartList?.DepositAmount !== 0 && '-'}
+												{formatPrice(cartList?.DepositAmount || 0)}
 											</span>
 										</div>
 									</div>
