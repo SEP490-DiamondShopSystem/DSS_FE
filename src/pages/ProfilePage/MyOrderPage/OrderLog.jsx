@@ -43,7 +43,7 @@ export const OrderLog = ({orderLogs}) => {
 			<Timeline className="p-6 bg-white rounded-lg shadow-md max-w-lg mx-auto mt-7">
 				{orderLogs
 					?.slice()
-					?.reverse()
+
 					?.map((log) => (
 						<Timeline.Item
 							key={log.Id}
