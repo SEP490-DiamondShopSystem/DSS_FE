@@ -27,7 +27,7 @@ const DiamondChoosePage = () => {
 	const [pageSize, setPageSize] = useState(2);
 	const [start, setStart] = useState(1);
 	const [filters, setFilters] = useState({
-		price: {minPrice: 0, maxPrice: 200000000},
+		price: {minPrice: 0, maxPrice: 1000000000},
 	});
 	const [selectedIndex, setSelectedIndex] = useState(0);
 	const [diamond, setDiamond] = useState();
@@ -59,7 +59,7 @@ const DiamondChoosePage = () => {
 				SizeId: jewelryModel?.size,
 				SideDiamondOptId: jewelryModel?.selectedSideDiamond?.Id || null,
 				MinPrice: filters?.price?.minPrice,
-				MaxPrice: filters?.price?.maxPrice,
+				MaxPrice: filters?.price?.maxPrice === 1000000000 ? null : filters?.price?.maxPrice,
 			})
 		)
 			.unwrap()
