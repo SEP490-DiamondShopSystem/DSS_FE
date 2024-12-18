@@ -129,7 +129,7 @@ const JewelryDetailPage = () => {
 				uniqueFilteredMetals?.push(metal);
 			}
 		});
-		setSelectedMetal(uniqueFilteredMetals?.[0] || null);
+		// setSelectedMetal(uniqueFilteredMetals?.[0] || null);
 		setUniqueMetals(uniqueFilteredMetals);
 	}, [jewelry]);
 
@@ -163,24 +163,35 @@ const JewelryDetailPage = () => {
 	}, [selectedMetal, jewelry]);
 
 	useEffect(() => {
-		if (jewelryFromList) {
+		if (jewelryFromList && uniqueMetals) {
 			const {SideDiamondOptId, MetalId} = jewelryFromList;
+			console.log('SideDiamondOptId', SideDiamondOptId);
+			console.log('MetalId', MetalId);
 
 			const sideDiamond = uniqueSideDiamonds.find(
-				(diamond) => diamond.Id === SideDiamondOptId
+				(diamond) => diamond?.Id === SideDiamondOptId
 			);
+
+			console.log('sideDiamond', sideDiamond);
 
 			if (!selectedSideDiamond && sideDiamond) {
 				setSelectedSideDiamond(sideDiamond);
 			}
 
-			const metal = uniqueMetals.find((metal) => metal.Id === MetalId);
+			const metal = uniqueMetals?.find((metal) => metal?.Id === MetalId);
+
+			console.log('metal', metal);
 
 			if (!selectedMetal && metal) {
 				setSelectedMetal(metal);
 			}
 		}
 	}, [jewelryFromList, uniqueSideDiamonds, uniqueMetals, selectedMetal, selectedSideDiamond]);
+
+	console.log('uniqueSideDiamonds', uniqueSideDiamonds);
+	console.log('uniqueMetals', uniqueMetals);
+	console.log('selectedMetal', selectedMetal);
+	console.log('diamondJewelry', jewelry);
 
 	return (
 		<>
