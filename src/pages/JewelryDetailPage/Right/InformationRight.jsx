@@ -306,7 +306,22 @@ export const InformationRight = ({
 						}`}
 					>
 						<div className="flex justify-between px-4 py-2">
-							<span>{diamondJewelry?.Model?.Category?.Description}</span>
+							<div class="product-details">
+								<h2>
+									{' '}
+									{diamondJewelry?.Name} {selectedMetal?.Name || selectedMetal}
+								</h2>
+								<ul>
+									<li>
+										<strong>Chất liệu:</strong> {selectedMetal?.Name} tinh
+										khiết, mang lại vẻ đẹp sang trọng và thời thượng.
+									</li>
+									<li>
+										<strong>Đặc biệt:</strong> Hoàn hảo cho các dịp đặc biệt,
+										biểu tượng của tình yêu vĩnh cửu và sự tinh tế đẳng cấp.
+									</li>
+								</ul>
+							</div>
 						</div>
 					</div>
 				</div>

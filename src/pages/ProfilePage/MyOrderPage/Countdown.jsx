@@ -15,7 +15,7 @@ const CountdownTimer = ({expiredDate}) => {
 		} else {
 			return (
 				<span className="font-semibold">
-					{days}d {hours}h {minutes}m {seconds}s
+					{hours}giờ {minutes}phút {seconds}giây
 				</span>
 			);
 		}

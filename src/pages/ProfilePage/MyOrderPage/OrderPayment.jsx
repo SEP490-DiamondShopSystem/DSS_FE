@@ -16,7 +16,6 @@ export const OrderPayment = ({order, setTransfer}) => {
 	const dispatch = useDispatch();
 	const loading = useSelector(LoadingPaymentSelector);
 	const [ruleBank, setRuleBank] = useState();
-	console.log(order);
 	const [fileList, setFileList] = useState([]);
 
 	useEffect(() => {

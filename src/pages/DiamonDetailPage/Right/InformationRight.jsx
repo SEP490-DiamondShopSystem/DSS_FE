@@ -131,7 +131,7 @@ export const InformationRight = ({
 					// onClick={toggleSidebar}
 					onClick={handleAddToCart}
 				>
-					{diamondId ? 'Cập Nhật Đơn Hàng' : 'Thêm Vào giỏ hàng'}
+					{diamondId ? 'Cập Nhật giỏ Hàng' : 'Thêm Vào giỏ hàng'}
 				</Button>
 			</div>
 

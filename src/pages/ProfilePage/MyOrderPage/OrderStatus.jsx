@@ -11,6 +11,9 @@ export const OrderStatus = ({orderStatus, order}) => {
 	const [indexCancelled, setIndexCancelled] = useState(0);
 	const [indexRejected, setIndexRejected] = useState(0);
 
+	console.log('indexRejected', indexRejected);
+	console.log('currentStep', currentStep);
+
 	useEffect(() => {
 		if (orderLogList) {
 			setOrderLogs(orderLogList);
@@ -75,17 +78,17 @@ export const OrderStatus = ({orderStatus, order}) => {
 			title:
 				currentStep === 0
 					? 'Chờ Xác Nhận'
-					: orderStatus === 3 && indexRejected === 1
+					: indexRejected === 1 || indexRejected === 0
 					? 'Đã Bị Từ Chối'
-					: orderStatus === 4 && indexCancelled === 1
+					: indexCancelled === 1 || indexCancelled === 0
 					? 'Đã Hủy'
 					: 'Đã Xác Nhận',
 			description:
 				currentStep === 0
 					? 'Đơn hàng đang chờ xác nhận từ cửa hàng.'
-					: orderStatus === 3 && indexRejected === 1
+					: indexRejected === 1 || indexRejected === 0
 					? `Đơn hàng đã bị từ chối. Lý Do: ${order?.CancelledReason}`
-					: orderStatus === 4 && indexCancelled === 1
+					: indexCancelled === 1 || indexCancelled === 0
 					? `Đơn hàng đã bị hủy. Lý Do: ${order?.CancelledReason}`
 					: 'Đơn hàng đã xác nhận.',
 		},
@@ -175,6 +178,12 @@ export const OrderStatus = ({orderStatus, order}) => {
 		steps[2].status = 'wait';
 		steps[3].status = 'wait';
 		// steps[4].status = 'wait';
+	} else if (currentStep === 2 && orderStatus === 3 && indexRejected === 0) {
+		steps[0].status = 'error';
+		steps[1].status = 'wait';
+		steps[2].status = 'wait';
+		steps[3].status = 'wait';
+		// steps[4].status = 'wait';
 	} else if (currentStep === 2 && orderStatus === 3 && indexRejected === 2) {
 		steps[0].status = 'finish';
 		steps[1].status = 'error';
@@ -204,6 +213,11 @@ export const OrderStatus = ({orderStatus, order}) => {
 		steps[2].status = 'error';
 		steps[3].status = 'wait';
 		// steps[4].status = 'wait';
+	} else if (currentStep === 3 && orderStatus === 4 && indexCancelled === 0) {
+		steps[0].status = 'error';
+		steps[1].status = 'wait';
+		steps[2].status = 'wait';
+		steps[3].status = 'wait';
 	} else if (currentStep === 3 && orderStatus === 4 && indexCancelled === 1) {
 		steps[0].status = 'error';
 		steps[1].status = 'wait';
