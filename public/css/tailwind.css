@@ -3467,3 +3467,7 @@ video {
 		padding-right: 1.5rem /* 24px */;
 	}
 }
+
+.h-48 {
+	height: 12rem /* 192px */;
+}
