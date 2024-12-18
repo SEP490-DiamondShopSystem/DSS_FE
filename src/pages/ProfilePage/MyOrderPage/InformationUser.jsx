@@ -76,7 +76,7 @@ const InformationUser = ({order, transaction}) => {
 				</>
 			)}
 			<div className="mb-2">
-				<strong>Số lần giao hàng thất bại do lỗi người dùng:</strong> {ShipFailedCount}
+				<strong>Số lần giao hàng thất bại do lỗi khách hàng:</strong> {ShipFailedCount}
 			</div>
 		</div>
 	);
