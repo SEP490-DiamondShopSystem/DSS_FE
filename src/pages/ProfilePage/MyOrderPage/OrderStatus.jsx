@@ -11,9 +11,6 @@ export const OrderStatus = ({orderStatus, order}) => {
 	const [indexCancelled, setIndexCancelled] = useState(0);
 	const [indexRejected, setIndexRejected] = useState(0);
 
-	console.log('indexRejected', indexRejected);
-	console.log('currentStep', currentStep);
-
 	useEffect(() => {
 		if (orderLogList) {
 			setOrderLogs(orderLogList);

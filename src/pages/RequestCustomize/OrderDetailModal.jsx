@@ -167,7 +167,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 
 	const subColumns = [
 		{
-			title: 'Ly (Carat)',
+			title: 'Carat',
 			dataIndex: 'CaratFrom',
 			key: 'caratRange',
 			render: (CaratFrom, record) => `${CaratFrom} - ${record.CaratTo}`,
@@ -245,7 +245,7 @@ export const OrderDetailModal = ({openDetail, toggleDetailModal, selectedOrder})
 			key: 'carat',
 		},
 		{
-			title: 'Ly (Carat)',
+			title: 'Carat',
 			dataIndex: 'Carat',
 			key: 'carat',
 		},

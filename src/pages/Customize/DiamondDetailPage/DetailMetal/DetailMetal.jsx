@@ -124,7 +124,7 @@ export const DetailMetalDiamond = ({
 						</p>
 						<Divider />
 						<div className="flex items-center justify-between my-2 pr-5">
-							<p className="font-semibold ">Ly (Carat):</p>
+							<p className="font-semibold ">Carat:</p>
 							<p>
 								{diamond?.caratFrom} - {diamond?.caratTo}
 							</p>

@@ -15,6 +15,7 @@ const InformationUser = ({order, transaction}) => {
 		Status,
 		PaymentStatus,
 		PaymentType,
+		ShipFailedCount,
 	} = order;
 
 	const paymentStatusMap = {
@@ -74,6 +75,9 @@ const InformationUser = ({order, transaction}) => {
 					</div>
 				</>
 			)}
+			<div className="mb-2">
+				<strong>Số lần giao hàng thất bại do lỗi người dùng:</strong> {ShipFailedCount}
+			</div>
 		</div>
 	);
 };

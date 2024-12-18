@@ -34,14 +34,14 @@ export const Carat = ({
 		<div>
 			<div className="flex items-center justify-center mt-10">
 				<label className=" font-semibold text-xl">
-					Chọn Ly (Carat){' '}
+					Chọn Carat{' '}
 					<Popover placement="topLeft" title={text} content={content}>
 						<InfoCircleFilled />
 					</Popover>
 				</label>
 			</div>
 			<div className="my-10 text-primary text-lg font-semibold flex justify-center items-center">
-				Kim Cương Được Chọn Ly (Carat): {caratFromShape} - {caratToShape}
+				Kim Cương Được Chọn Carat: {caratFromShape} - {caratToShape}
 			</div>
 			<div className="mx-20 my-10">
 				<Slider

@@ -1,7 +1,6 @@
 import {
 	CalendarOutlined,
 	CheckCircleOutlined,
-	ClockCircleFilled,
 	CloseCircleFilled,
 	CloseCircleOutlined,
 	DeliveredProcedureOutlined,
@@ -13,11 +12,9 @@ import {Button, DatePicker, Space, Table, Tag, Tooltip, Typography} from 'antd';
 import React, {useEffect, useState} from 'react';
 import {Helmet} from 'react-helmet';
 import {useDispatch, useSelector} from 'react-redux';
-import {useNavigate} from 'react-router-dom';
 import NavbarProfile from '../../components/NavbarProfile';
 import {GetAllRequestCustomizeSelector} from '../../redux/selectors';
 import {getAllRequestUser} from '../../redux/slices/customizeSlice';
-import {convertToVietnamDate} from '../../utils';
 import {enums} from '../../utils/constant';
 import {OrderDetailModal} from './OrderDetailModal';
 
@@ -25,14 +22,14 @@ const {Text} = Typography;
 const {RangePicker} = DatePicker;
 
 const orderStatus = [
-	{icon: <OrderedListOutlined />, name: 'Tổng đơn thiết kế', status: '', order: 1},
-	{icon: <HourglassOutlined />, name: 'Đơn chờ xử lí', status: '1', order: 2},
-	{icon: <HourglassOutlined />, name: 'Đã có giá', status: '2', order: 2},
-	{icon: <CheckCircleOutlined />, name: 'Đang yêu cầu', status: '3', order: 3},
-	{icon: <DeliveredProcedureOutlined />, name: 'Chấp nhận', status: '4', order: 4},
-	{icon: <CloseCircleFilled />, name: 'Cửa hàng từ chối', status: '5', order: 5},
-	{icon: <CloseCircleOutlined />, name: 'Khách hàng từ chối', status: '6', order: 6},
-	{icon: <CloseCircleOutlined />, name: 'Khách hàng hủy đơn', status: '7', order: 6},
+	{icon: <OrderedListOutlined />, name: 'Tổng Yêu Cầu Thiết Kế', status: '', order: 1},
+	{icon: <HourglassOutlined />, name: 'Đơn Chờ Xử Lí', status: '1', order: 2},
+	{icon: <HourglassOutlined />, name: 'Đã Có Giá', status: '2', order: 2},
+	{icon: <CheckCircleOutlined />, name: 'Đang Yêu Cầu', status: '3', order: 3},
+	{icon: <DeliveredProcedureOutlined />, name: 'Chấp Nhận', status: '4', order: 4},
+	{icon: <CloseCircleFilled />, name: 'Cửa Hàng Từ Chối', status: '5', order: 5},
+	{icon: <CloseCircleOutlined />, name: 'Khách Hàng Từ Chối', status: '6', order: 6},
+	{icon: <CloseCircleOutlined />, name: 'Khách Hàng Hủy Đơn', status: '7', order: 6},
 ];
 
 const RequestCustomize = () => {
@@ -201,7 +198,7 @@ const RequestCustomize = () => {
 						{orderStatus.map((statusItem) => (
 							<div
 								key={statusItem.status}
-								className={`flex flex-col sm:flex-row items-center justify-center sm:justify-around shadow-xl py-2 sm:py-3 px-4 sm:px-12 border-gray hover:border-black w-full sm:w-auto ${
+								className={`flex flex-col sm:flex-row items-center justify-center sm:justify-around shadow-xl py-2 sm:py-3 px-4 sm:px-6 border-gray hover:border-black w-full sm:w-auto ${
 									status === statusItem.status ? 'bg-primary' : 'bg-white'
 								} rounded-lg cursor-pointer border ${
 									status === statusItem.status ? 'border-black' : 'border-white'

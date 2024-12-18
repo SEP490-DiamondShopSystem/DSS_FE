@@ -415,7 +415,7 @@ export const InformationLeft = ({diamond, diamondId}) => {
 					</div>
 				</div>
 				<div className="flex justify-between px-4 border-b border-tintWhite py-2">
-					<span className="text-gray-600">Ly (Carat)</span>
+					<span className="text-gray-600">Carat</span>
 					<div className="flex items-center">
 						<span className="text-gray-800 flex items-center mr-2">
 							{diamond.Carat}{' '}

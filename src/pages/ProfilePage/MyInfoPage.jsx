@@ -369,7 +369,7 @@ const MyInfoPage = () => {
 								)}
 								<Button
 									danger
-									onClick={() => handleDeleteAddress(record.Street, record.Id)}
+									onClick={() => handleDeleteAddress(record?.Street, record?.Id)}
 								>
 									<DeleteFilled />
 								</Button>
