@@ -77,14 +77,12 @@ export const BannerDiamond = () => {
 					<Col xs={24} sm={18} md={8} lg={8} xl={8}>
 						{/* Make the content visible only on medium and larger screens */}
 						<div className="text-end p-8 max-w-lg hidden md:block">
-							<h2 className="text-xl font-bold mb-4">
-								GIẢM GIÁ ĐẾN 40% TRANG SỨC, 25% NHẪN CƯỚI
-							</h2>
+							
 							<h2 className="text-3xl font-bold mb-4">
 								Chúc mừng cửa hàng khai trương!
 							</h2>
 							<div className="my-4">
-								Khám phá những tính năng tuyệt vời và nội dung phù hợp dành riêng
+								Khám phá những món trang sức và kim cương phù hợp dành riêng
 								cho bạn.
 							</div>
 							<div className="flex flex-col sm:flex-row justify-end ">

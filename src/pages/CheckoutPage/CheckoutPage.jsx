@@ -520,7 +520,7 @@ const CheckoutPage = () => {
 					showOrderSuccessModal();
 				})
 				.catch((error) => {
-					message.error(error?.detail);
+					message.error(error?.data?.detail);
 				});
 		} else {
 			dispatch(handleCheckoutOrder({createOrderInfo, billingDetail}))

@@ -29,6 +29,8 @@ export const DiamondJewelryList = () => {
 		price: {minPrice: 0, maxPrice: 1000000000},
 	});
 
+	console.log('hasMore', hasMore);
+
 	const fetchJewelryData = debounce(() => {
 		dispatch(
 			getAllJewelryModel({
@@ -44,13 +46,26 @@ export const DiamondJewelryList = () => {
 			.unwrap()
 			.then((res) => {
 				if (res?.Values?.length > 0) {
+					// Nếu có dữ liệu mới, thêm vào danh sách
 					setJewelries((prev) =>
 						page === 1 ? [...res.Values] : [...prev, ...res.Values]
 					);
 					setCurrentPage(res?.CurrentPage);
+
+					// Kiểm tra nếu tổng số trang đã đạt tới trang hiện tại thì setHasMore(false)
+					if (res?.CurrentPage === currentPage) {
+						setHasMore(false); // Không còn dữ liệu để tải
+					} else {
+						setHasMore(true); // Vẫn còn dữ liệu
+					}
 				} else {
-					setHasMore(false); // Không còn dữ liệu mới
+					// Trường hợp không có dữ liệu trả về
+					setHasMore(false);
 				}
+			})
+			.catch(() => {
+				// Nếu xảy ra lỗi, đảm bảo setHasMore là false
+				setHasMore(false);
 			});
 	}, 500);
 
