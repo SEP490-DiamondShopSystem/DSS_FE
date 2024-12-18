@@ -75,7 +75,10 @@ const ShippingPolicy = () => {
 						Cước phí giao hàng sẽ được tính dựa theo địa chỉ nhận hàng.
 					</Text>
 					<Text className="block text-gray-600">
-						Thời gian nhận hàng có thể chậm hơn dự kiến.
+						Thời gian nhận hàng có thể chậm hơn dự kiến là{' '}
+						<span className="text-indigo-600">
+							{orderRule?.ExpectedDeliveryDate || 'X'}
+						</span>{' '} ngày
 					</Text>
 				</div>
 
