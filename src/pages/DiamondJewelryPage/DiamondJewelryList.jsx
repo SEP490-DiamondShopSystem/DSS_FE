@@ -48,7 +48,7 @@ export const DiamondJewelryList = () => {
 					setJewelries((prev) =>
 						page === 1 ? [...res.Values] : [...prev, ...res.Values]
 					);
-					setCurrentPage(res?.CurrentPage);
+					setCurrentPage(res?.CurrentPage + 1);
 
 					// Kiểm tra nếu tổng số trang đã đạt tới trang hiện tại thì setHasMore(false)
 					if (res?.CurrentPage === currentPage) {
