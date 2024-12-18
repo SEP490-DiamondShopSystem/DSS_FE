@@ -235,7 +235,7 @@ export const InformationRight = ({
 					<div className="mt-5">
 						{jewelry?.Diamonds?.length > 0 && (
 							<Text strong style={{fontSize: '18px'}}>
-								Kim Cương:
+								Kim Cương Chính:
 							</Text>
 						)}
 						{jewelry &&

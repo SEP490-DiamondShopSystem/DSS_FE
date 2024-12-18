@@ -3,14 +3,12 @@ import React, {useEffect, useState} from 'react';
 import {MinusOutlined, PlusOutlined} from '@ant-design/icons';
 import {faRefresh, faTruck} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {Button, message, Rate, Select} from 'antd';
+import {Button, Rate, Select} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
-import {getUserId} from '../../../components/GetUserId';
-import {GetAllReviewSelector, UserInfoSelector} from '../../../redux/selectors';
-import {convertToVietnamDate, formatPrice, Rating} from '../../../utils';
-import JewelryPopup from '../Popup/ProductReviews';
+import {GetAllReviewSelector} from '../../../redux/selectors';
 import {getAllJewelryModelReview} from '../../../redux/slices/reviewSlice';
+import {formatPrice} from '../../../utils';
 import ProductReviews from '../Popup/ProductReviews';
 
 const {Option} = Select;

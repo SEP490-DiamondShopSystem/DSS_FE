@@ -260,15 +260,15 @@ export const FilterJewelryDiamond = ({
 						range
 						marks={{
 							0: '0',
-							1000000: '10M',
-							50000000: '50M',
 							100000000: '100M',
-							150000000: '150M',
-							200000000: '200M',
+							300000000: '300M',
+							500000000: '500M',
+							700000000: '700M',
+							1000000000: '1000M',
 						}}
 						step={null}
 						min={0}
-						max={filters?.price?.maxPrice}
+						max={1000000000}
 						value={[filters?.price?.minPrice, filters?.price?.maxPrice]}
 						onChange={handlePriceChange}
 						className="w-full mx-4"
@@ -539,7 +539,7 @@ export const FilterDiamondJewelry = ({handleFilter, setFilters, filters, handleR
 
 	const [metals, setMetals] = useState();
 	const [categories, setCategories] = useState();
-	const [range, setRange] = useState([0, 40000000]);
+	const [range, setRange] = useState([0, 1000000000]);
 
 	useEffect(() => {
 		dispatch(getAllJewelryMetal());
@@ -626,17 +626,17 @@ export const FilterDiamondJewelry = ({handleFilter, setFilters, filters, handleR
 					<Slider
 						range
 						min={0}
-						max={40000000}
+						max={1000000000}
 						defaultValue={range}
 						onChange={handlePriceChange}
 						className="w-full sm:w-64 mx-4"
 						marks={{
 							0: '0',
-							5000000: '5M',
-							10000000: '10M',
-							20000000: '20M',
-							30000000: '30M',
-							40000000: '40M',
+							100000000: '100M',
+							400000000: '400M',
+							600000000: '600M',
+							800000000: '800M',
+							1000000000: '1000M',
 						}}
 						step={null}
 					/>

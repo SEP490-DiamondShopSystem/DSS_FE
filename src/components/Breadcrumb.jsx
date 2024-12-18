@@ -54,6 +54,7 @@ const Breadcrumbs = () => {
 		'diamond-jewelry': 'Trang sức',
 		'*': 'Không tìm thấy trang',
 		'completed-jewelry': 'Trang sức đã hoàn thành',
+		'diamond-choose': 'Chọn kim cương',
 	};
 
 	// Tách đường dẫn hiện tại thành các đoạn
@@ -87,7 +88,7 @@ const Breadcrumbs = () => {
 	];
 
 	return (
-		<div className="bg-gray-100 p-4 rounded-md shadow-md">
+		<div className="bg-gray-100 p-4 px-40 rounded-md shadow-md">
 			<Breadcrumb>{breadcrumbItems}</Breadcrumb>
 		</div>
 	);

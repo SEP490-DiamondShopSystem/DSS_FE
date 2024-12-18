@@ -1,16 +1,15 @@
-import React, {useEffect, useState} from 'react';
 import {Steps} from 'antd';
+import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useLocation, useParams} from 'react-router-dom';
+import Loading from '../../components/Loading';
 import LoginModal from '../../components/LogModal/LoginModal';
-import {GetJewelryDetailSelector, LoadingJewelrySelector} from '../../redux/selectors';
+import {LoadingJewelrySelector} from '../../redux/selectors';
 import {getJewelryDetail} from '../../redux/slices/jewelrySlice';
+import {getJewelryNoDiamond} from '../../redux/slices/reviewSlice';
 import {ImageGallery} from './Left/ImageGallery';
 import {InformationLeft} from './Left/InformationLeft';
 import {InformationRight} from './Right/InformationRight';
-import ProductReviews from './Popup/ProductReviews';
-import Loading from '../../components/Loading';
-import {getJewelryNoDiamond} from '../../redux/slices/reviewSlice';
 
 const JewelryDetailPage = () => {
 	const {id} = useParams();
@@ -187,11 +186,6 @@ const JewelryDetailPage = () => {
 			}
 		}
 	}, [jewelryFromList, uniqueSideDiamonds, uniqueMetals, selectedMetal, selectedSideDiamond]);
-
-	console.log('uniqueSideDiamonds', uniqueSideDiamonds);
-	console.log('uniqueMetals', uniqueMetals);
-	console.log('selectedMetal', selectedMetal);
-	console.log('diamondJewelry', jewelry);
 
 	return (
 		<>

@@ -959,7 +959,7 @@ const CheckoutPage = () => {
 						{idCustomize ? (
 							<div className="shadow-xl p-5 rounded-lg">
 								{mappedProducts?.map((item, index) => (
-									<>
+									<div>
 										<div className="flex mt-4 " key={item.Id}>
 											<div className="mr-4 flex-shrink-0">
 												<img
@@ -1053,7 +1053,7 @@ const CheckoutPage = () => {
 												<EyeOutlined />
 											</Button>
 										</div>
-									</>
+									</div>
 								))}
 								<div className="mt-5">
 									<label>Chọn bảo hành trang sức</label>
@@ -1131,7 +1131,7 @@ const CheckoutPage = () => {
 										<div className="flex-1 mx-5">
 											{/* Kiểm tra và hiển thị thông tin sản phẩm */}
 											{item.JewelryId ? (
-												<div className="flex items-center">
+												<div className="relative flex items-center">
 													<div>
 														<div className="mb-1 text-gray-800 font-semibold">
 															{item.TitleJewelry}{' '}
@@ -1203,7 +1203,7 @@ const CheckoutPage = () => {
 															)}
 														</div>
 													</div>
-													<div>
+													<div className="absolute right-0">
 														<Button
 															className="cursor-pointer px-3 mr-2"
 															onClick={() => {
@@ -1227,7 +1227,7 @@ const CheckoutPage = () => {
 													</div>
 												</div>
 											) : item.Carat ? (
-												<div className="flex items-center">
+												<div className="relative flex items-center">
 													<div>
 														<div className="mb-2 text-gray-800 font-semibold">
 															{item?.Title}
@@ -1291,7 +1291,7 @@ const CheckoutPage = () => {
 															)}
 														</div>
 													</div>
-													<div>
+													<div className="absolute right-0">
 														<Button
 															className="cursor-pointer px-3 mr-2"
 															onClick={() => {
@@ -1418,18 +1418,6 @@ const CheckoutPage = () => {
 										</div>
 									</div>
 								)}
-								{cartList?.DepositAmount !== 0 && (
-									<div className="flex justify-between mb-1">
-										<div className="mb-1 flex justify-between w-full">
-											<span className="font-semibold">Trả Trước</span>
-
-											<span>
-												{cartList?.DepositAmount !== 0 && '-'}
-												{formatPrice(cartList?.DepositAmount || 0)}
-											</span>
-										</div>
-									</div>
-								)}
 
 								<div className="flex text-sm text-gray-600 my-2">
 									<span className="mr-2">📅 Thời gian giao hàng dự kiến</span>
@@ -1441,6 +1429,15 @@ const CheckoutPage = () => {
 									<p>Tổng:</p>
 									<p>{formatPrice(cartList?.OrderPrices?.FinalPrice)}</p>
 								</div>
+								{cartList?.DepositAmount !== 0 && (
+									<div className="flex justify-between my-2">
+										<div className="mb-1 flex justify-between w-full">
+											<span className="font-semibold">Trả Trước (COD)</span>
+
+											<span>{formatPrice(cartList?.DepositAmount || 0)}</span>
+										</div>
+									</div>
+								)}
 							</div>
 
 							{/* Order Button Section */}
