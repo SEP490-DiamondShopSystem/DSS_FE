@@ -51,7 +51,7 @@ const JewelryDetailPage = () => {
 				getJewelryNoDiamond({
 					ModelId: id,
 					MetalId: selectedMetal?.Id,
-					SizeId: size,
+					SizeId: jewelry?.Unit === 'centimeter' ? size * 10 : size,
 					SideDiamondOptId: selectedSideDiamond?.Id,
 				})
 			)

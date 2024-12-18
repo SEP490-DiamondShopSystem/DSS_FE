@@ -111,6 +111,8 @@ export const InformationRight = ({
 		}
 	};
 
+	console.log('diamondJewelry', diamondJewelry);
+
 	// Tính điểm trung bình
 	const averageRating =
 		reviews?.reduce((total, review) => total + review.StarRating, 0) / reviewLength || 0;
@@ -215,7 +217,7 @@ export const InformationRight = ({
 							<div className="font-semibold text-xl pl-4 text-primary">
 								<Select
 									value={size}
-									style={{width: 120}}
+									// style={{width: 120}}
 									onChange={handleChange}
 									placeholder="Chọn kích cỡ"
 								>
@@ -223,7 +225,9 @@ export const InformationRight = ({
 										(group) => group.IsInStock === true
 									).map((group) => (
 										<Option key={group?.Size} value={group?.Size}>
-											<p className="font-semibold">{group?.Size}mm</p>
+											<p className="font-semibold">
+												{group?.Size} {diamondJewelry?.Unit}
+											</p>
 										</Option>
 									))}
 								</Select>
