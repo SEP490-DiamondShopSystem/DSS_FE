@@ -169,7 +169,7 @@ export const FilterDiamond = ({filters, setFilters, handleReset, findShape}) => 
 
 					{/* Color Range Slider */}
 					<div className="ml-4 min-w-72">
-						<p className="my-4">Color:</p>
+						<p className="my-4">Màu Sắc (Color):</p>
 						<Slider
 							range
 							marks={marks}
@@ -183,7 +183,7 @@ export const FilterDiamond = ({filters, setFilters, handleReset, findShape}) => 
 
 					{/* Clarity Range Slider */}
 					<div className="ml-4 min-w-72">
-						<p className="my-4">Clarity:</p>
+						<p className="my-4">Độ Tinh Khuyết (Clarity):</p>
 						<Slider
 							range
 							marks={marksClarity}
@@ -197,7 +197,7 @@ export const FilterDiamond = ({filters, setFilters, handleReset, findShape}) => 
 
 					{/* Cut Range Slider */}
 					<div className="ml-4 min-w-72">
-						<p className="my-4">Cut:</p>
+						<p className="my-4">Chế Tác (Cut):</p>
 						<Slider
 							range
 							marks={marksCut}

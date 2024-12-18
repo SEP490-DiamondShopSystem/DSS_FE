@@ -20,12 +20,14 @@ import {OrderInvoiceModal} from './OrderInvoiceModal';
 const {Title} = Typography;
 
 const orderStatus = [
-	{icon: <OrderedListOutlined />, name: 'Tổng đơn hàng', status: '', order: 1},
-	{icon: <HourglassOutlined />, name: 'Chờ xử lí', status: '1', order: 3},
-	{icon: <DeliveredProcedureOutlined />, name: 'Đang vận chuyển', status: '6', order: 4},
+	{icon: <OrderedListOutlined />, name: 'Tổng Đơn Hàng', status: '', order: 1},
+	{icon: <HourglassOutlined />, name: 'Chờ Xử Lí', status: '1', order: 3},
+	{icon: <HourglassOutlined />, name: 'Đang Xử Lí', status: '2', order: 3},
+	{icon: <HourglassOutlined />, name: 'Đã Chuẩn Bị', status: '5', order: 3},
+	{icon: <DeliveredProcedureOutlined />, name: 'Đang Giao Hàng', status: '6', order: 4},
 	{icon: <CheckCircleOutlined />, name: 'Thành Công', status: '8', order: 10},
-	{icon: <CloseCircleFilled />, name: 'Đã hủy', status: '4', order: 10},
-	{icon: <CloseCircleFilled />, name: 'Từ chối', status: '3', order: 10},
+	{icon: <CloseCircleFilled />, name: 'Hủy Đơn', status: '4', order: 10},
+	{icon: <CloseCircleFilled />, name: 'Từ Chối', status: '3', order: 10},
 ];
 
 const MyOrderPage = () => {
@@ -252,7 +254,7 @@ const MyOrderPage = () => {
 	};
 
 	return (
-		<div>
+		<div className="">
 			<Helmet>
 				<title>Đơn Hàng Của Tôi</title>
 			</Helmet>
@@ -265,11 +267,11 @@ const MyOrderPage = () => {
 					</Select>
 				</div>
 			</Space>
-			<div className="flex flex-wrap items-center font-medium mt-10">
+			<div className="flex flex-wrap items-center font-medium mt-10 gap-5">
 				{orderStatus.map((statusItem) => (
 					<div
 						key={statusItem.status}
-						className={`flex flex-col mr-2 sm:flex-row items-center justify-center sm:justify-start shadow-xl py-2 sm:py-3 px-4 sm:px-12 border-gray hover:border-black w-full sm:w-auto ${
+						className={`flex flex-col sm:flex-row items-center justify-center sm:justify-start shadow-xl py-2 sm:py-3 px-4 sm:px-6 border-gray hover:border-black w-full sm:w-auto ${
 							status === statusItem.status ? 'bg-primary' : 'bg-white'
 						} rounded-lg cursor-pointer border ${
 							status === statusItem.status ? 'border-black' : 'border-white'

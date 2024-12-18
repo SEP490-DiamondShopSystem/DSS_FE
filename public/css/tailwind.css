@@ -3460,3 +3460,10 @@ video {
 	padding-left: 11rem /* 176px */;
 	padding-right: 11rem /* 176px */;
 }
+
+@media (min-width: 640px) {
+	.sm\:px-6 {
+		padding-left: 1.5rem /* 24px */;
+		padding-right: 1.5rem /* 24px */;
+	}
+}
