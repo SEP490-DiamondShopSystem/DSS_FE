@@ -41,33 +41,30 @@ export const OrderLog = ({orderLogs}) => {
 				Trạng Thái Đơn Hàng
 			</Title>
 			<Timeline className="p-6 bg-white rounded-lg shadow-md max-w-lg mx-auto mt-7">
-				{orderLogs
-					?.slice()
-
-					?.map((log) => (
-						<Timeline.Item
-							key={log.Id}
-							color={
-								log?.Status === 4 || log?.Status === 3 || log?.Status === 7
-									? 'red'
-									: 'blue'
-							}
-						>
-							<div>
-								<p>{log.Message}</p>
-								<p>{log.CreatedDate}</p>
-								{log?.Status === 2 || log?.Status === 6 ? (
-									<Button
-										type="link"
-										className="text-primary"
-										onClick={() => handleViewDetails(log)}
-									>
-										Xem Chi Tiết
-									</Button>
-								) : null}
-							</div>
-						</Timeline.Item>
-					))}
+				{orderLogs?.slice()?.map((log) => (
+					<Timeline.Item
+						key={log.Id}
+						color={
+							log?.Status === 4 || log?.Status === 3 || log?.Status === 7
+								? 'red'
+								: 'blue'
+						}
+					>
+						<div>
+							<p>{log.Message}</p>
+							<p>{log.CreatedDate}</p>
+							{log?.Status === 2 || log?.Status === 6 ? (
+								<Button
+									type="link"
+									className="text-primary"
+									onClick={() => handleViewDetails(log)}
+								>
+									Xem Chi Tiết
+								</Button>
+							) : null}
+						</div>
+					</Timeline.Item>
+				))}
 			</Timeline>
 			<Modal
 				title="Chi tiết trạng thái"

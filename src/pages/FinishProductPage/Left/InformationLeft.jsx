@@ -589,58 +589,50 @@ export const InformationLeft = ({jewelryDetail, diamondDetail, jewelry, diamond,
 							<span className="text-gray-600">Kích Thước</span>
 							<span className="text-gray-800">{diamond?.Measurement}</span>
 						</div>
-						{jewelry?.SideDiamond && (
-							<div className="bg-gray-50 rounded-lg w-full">
-								<div className="flex justify-center items-center text-xl font-semibold my-10">
-									<span>Thông Số Kim Cương Tấm</span>
-								</div>
-								<div class="flex justify-between px-4 border-b border-tintWhite py-2">
-									<span className="text-gray-600">Ly(Carat)</span>
-									<span className="text-gray-800">
-										{jewelry?.SideDiamond?.Carat}
-									</span>
-								</div>
-
-								<div className="flex justify-between px-4 border-b border-tintWhite py-2">
-									<span className="text-gray-600">Độ Tinh Khiết (Clarity)</span>
-									<span className="text-gray-800 flex items-center">
-										{Object.keys(enums.Clarity).find(
-											(key) =>
-												enums.Clarity[key] ===
-												jewelry?.SideDiamond?.ClarityMin
-										)}
-										-{' '}
-										{Object.keys(enums.Clarity).find(
-											(key) =>
-												enums.Clarity[key] ===
-												jewelry?.SideDiamond?.ClarityMax
-										)}
-									</span>
-								</div>
-								<div className="flex justify-between px-4 border-b border-tintWhite py-2">
-									<span className="text-gray-600">Màu Sắc (Color)</span>
-									<span className="text-gray-800 flex items-center">
-										{Object.keys(enums.Color).find(
-											(key) =>
-												enums.Color[key] === jewelry?.SideDiamond?.ColorMin
-										)}
-										-{' '}
-										{Object.keys(enums.Color).find(
-											(key) =>
-												enums.Color[key] === jewelry?.SideDiamond?.ColorMax
-										)}
-									</span>
-								</div>
-								<div className="flex justify-between px-4 border-b border-tintWhite py-2">
-									<span className="text-gray-600">Số lượng</span>
-									<span className="text-gray-800 flex items-center">
-										{jewelry?.SideDiamond?.Quantity}
-									</span>
-								</div>
-							</div>
-						)}
 					</>
 				))}
+				{jewelry?.SideDiamond && (
+					<div className="bg-gray-50 rounded-lg w-full">
+						<div className="flex justify-center items-center text-xl font-semibold my-10">
+							<span>Thông Số Kim Cương Tấm</span>
+						</div>
+						<div class="flex justify-between px-4 border-b border-tintWhite py-2">
+							<span className="text-gray-600">Ly(Carat)</span>
+							<span className="text-gray-800">{jewelry?.SideDiamond?.Carat}</span>
+						</div>
+
+						<div className="flex justify-between px-4 border-b border-tintWhite py-2">
+							<span className="text-gray-600">Độ Tinh Khiết (Clarity)</span>
+							<span className="text-gray-800 flex items-center">
+								{Object.keys(enums.Clarity).find(
+									(key) => enums.Clarity[key] === jewelry?.SideDiamond?.ClarityMin
+								)}
+								-{' '}
+								{Object.keys(enums.Clarity).find(
+									(key) => enums.Clarity[key] === jewelry?.SideDiamond?.ClarityMax
+								)}
+							</span>
+						</div>
+						<div className="flex justify-between px-4 border-b border-tintWhite py-2">
+							<span className="text-gray-600">Màu Sắc (Color)</span>
+							<span className="text-gray-800 flex items-center">
+								{Object.keys(enums.Color).find(
+									(key) => enums.Color[key] === jewelry?.SideDiamond?.ColorMin
+								)}
+								-{' '}
+								{Object.keys(enums.Color).find(
+									(key) => enums.Color[key] === jewelry?.SideDiamond?.ColorMax
+								)}
+							</span>
+						</div>
+						<div className="flex justify-between px-4 border-b border-tintWhite py-2">
+							<span className="text-gray-600">Số lượng</span>
+							<span className="text-gray-800 flex items-center">
+								{jewelry?.SideDiamond?.Quantity}
+							</span>
+						</div>
+					</div>
+				)}
 			</div>
 			{jewelry?.Diamonds?.length > 0 ? (
 				<>
