@@ -38,8 +38,6 @@ export const ChoiceMetal = ({
 	const dispatch = useDispatch();
 	const [note, setNote] = useState('');
 
-	console.log('diamondJewelry', diamondJewelry);
-
 	const items = [
 		{
 			title: 'Chọn mẫu',

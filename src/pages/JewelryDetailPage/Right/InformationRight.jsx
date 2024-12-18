@@ -111,8 +111,6 @@ export const InformationRight = ({
 		}
 	};
 
-	console.log('diamondJewelry', diamondJewelry);
-
 	// Tính điểm trung bình
 	const averageRating =
 		reviews?.reduce((total, review) => total + review.StarRating, 0) / reviewLength || 0;

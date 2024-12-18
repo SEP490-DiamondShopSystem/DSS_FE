@@ -19,8 +19,6 @@ export const Size = ({
 		setStep(2);
 	};
 
-	console.log(filteredGroups, filteredGroups);
-
 	return (
 		<div>
 			<div>

@@ -164,22 +164,16 @@ const JewelryDetailPage = () => {
 	useEffect(() => {
 		if (jewelryFromList && uniqueMetals) {
 			const {SideDiamondOptId, MetalId} = jewelryFromList;
-			console.log('SideDiamondOptId', SideDiamondOptId);
-			console.log('MetalId', MetalId);
 
 			const sideDiamond = uniqueSideDiamonds.find(
 				(diamond) => diamond?.Id === SideDiamondOptId
 			);
-
-			console.log('sideDiamond', sideDiamond);
 
 			if (!selectedSideDiamond && sideDiamond) {
 				setSelectedSideDiamond(sideDiamond);
 			}
 
 			const metal = uniqueMetals?.find((metal) => metal?.Id === MetalId);
-
-			console.log('metal', metal);
 
 			if (!selectedMetal && metal) {
 				setSelectedMetal(metal);

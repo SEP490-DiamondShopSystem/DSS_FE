@@ -49,8 +49,6 @@ const DiamondChoosePage = () => {
 		dispatch(getDiamondFilter());
 	}, []);
 
-	console.log('jewelryModel', jewelryModel);
-
 	const fetchJewelryData = debounce(() => {
 		dispatch(
 			getAllJewelry({

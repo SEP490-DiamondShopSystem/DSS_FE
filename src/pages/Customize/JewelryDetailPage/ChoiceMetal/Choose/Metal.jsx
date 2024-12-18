@@ -23,8 +23,6 @@ export const Metal = ({
 		setStep((prev) => prev + 1);
 	};
 
-	console.log('filteredGroups', filteredGroups);
-
 	return (
 		<div>
 			<div>
