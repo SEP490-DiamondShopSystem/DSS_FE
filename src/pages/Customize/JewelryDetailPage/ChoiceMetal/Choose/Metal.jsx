@@ -94,7 +94,9 @@ export const Metal = ({
 											style={{width: 1000}}
 										>
 											<div className="flex items-center justify-between  m-5">
-												<p className="">{metal?.SizeId}mm</p>
+												<p className="">
+													{metal?.SizeId} {metal?.Size?.Unit}
+												</p>
 											</div>
 											{/* <p className="font-semibold">{formatPrice(metal.Price)}</p> */}
 										</div>

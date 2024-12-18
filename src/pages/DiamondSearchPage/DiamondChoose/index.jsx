@@ -56,7 +56,10 @@ const DiamondChoosePage = () => {
 				CurrentPage: start,
 				ModelId: jewelryModel?.jewelryModelId,
 				MetalId: jewelryModel?.selectedMetal?.Id,
-				SizeId: jewelryModel?.size,
+				SizeId:
+					jewelryModel?.Unit === 'centimeter'
+						? jewelryModel?.size * 10
+						: jewelryModel?.size,
 				SideDiamondOptId: jewelryModel?.selectedSideDiamond?.Id || null,
 				MinPrice: filters?.price?.minPrice,
 				MaxPrice: filters?.price?.maxPrice === 1000000000 ? null : filters?.price?.maxPrice,

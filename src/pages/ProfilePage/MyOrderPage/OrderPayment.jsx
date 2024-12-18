@@ -8,6 +8,7 @@ import {getUserOrderTransaction} from '../../../redux/slices/orderSlice';
 import {handleAddTransfer} from '../../../redux/slices/paymentSlice';
 import Loading from '../../../components/Loading';
 import {formatPrice} from '../../../utils';
+import CountdownTimer from './Countdown';
 
 const {Title} = Typography;
 
@@ -15,7 +16,6 @@ export const OrderPayment = ({order, setTransfer}) => {
 	const dispatch = useDispatch();
 	const loading = useSelector(LoadingPaymentSelector);
 	const [ruleBank, setRuleBank] = useState();
-	console.log(order);
 	const [fileList, setFileList] = useState([]);
 
 	useEffect(() => {
@@ -114,6 +114,10 @@ export const OrderPayment = ({order, setTransfer}) => {
 									</strong>
 								</p>
 							</div>
+							<div className="my-5">
+								<span>Thời gian hết hạn thanh toán: </span>
+								<CountdownTimer expiredDate={order?.ExpiredDate} />
+							</div>
 							<div className="mt-4 sm:mt-0 sm:ml-10 flex justify-center">
 								<Image
 									preview={false}
@@ -174,6 +178,10 @@ export const OrderPayment = ({order, setTransfer}) => {
 						</p>
 						<div className="my-5 text-gray-600">
 							Bấm nút bên dưới để chuyển đến cổng thanh toán ZaloPay:
+						</div>
+						<div className="my-5">
+							<span>Thời gian hết hạn thanh toán: </span>
+							<CountdownTimer expiredDate={order?.ExpiredDate} />
 						</div>
 						<button
 							onClick={handleZaloPay}

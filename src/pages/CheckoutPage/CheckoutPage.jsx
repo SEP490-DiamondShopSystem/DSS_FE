@@ -520,7 +520,7 @@ const CheckoutPage = () => {
 					showOrderSuccessModal();
 				})
 				.catch((error) => {
-					message.error(error?.detail);
+					message.error(error?.data?.detail);
 				});
 		} else {
 			dispatch(handleCheckoutOrder({createOrderInfo, billingDetail}))
@@ -875,7 +875,7 @@ const CheckoutPage = () => {
 											>
 												<Radio
 													value="1"
-													className="border p-4 rounded-md hover:border-blue-500 transition duration-300 mb-4"
+													className="border font-semibold p-4 rounded-md hover:border-blue-500 transition duration-300 mb-4"
 													disabled={
 														cartList?.OrderPrices?.FinalPrice >
 														orderRule?.MaxOrderAmountForFullPayment
@@ -885,9 +885,9 @@ const CheckoutPage = () => {
 												</Radio>
 												<Radio
 													value="2"
-													className="border p-4 rounded-md hover:border-blue-500 transition duration-300 mb-4"
+													className="border font-semibold p-4 rounded-md hover:border-blue-500 transition duration-300 mb-4"
 												>
-													Thanh Toán Khi Nhận Hàng
+													Thanh Toán Khi Nhận Hàng (COD)
 												</Radio>
 											</Radio.Group>
 										</div>
@@ -918,7 +918,7 @@ const CheckoutPage = () => {
 															return (
 																<Radio
 																	value={method.Id}
-																	className="border p-4 rounded-md hover:border-blue-500 transition duration-300 mb-4"
+																	className="border font-semibold p-4 rounded-md hover:border-blue-500 transition duration-300 mb-4"
 																	disabled={isDisabled}
 																>
 																	{method?.MappedName}
@@ -1340,17 +1340,17 @@ const CheckoutPage = () => {
 								<div className="flex justify-between mb-1">
 									<div className="mb-1 flex justify-between w-full">
 										<span className="font-semibold">Phí Vận Chuyển</span>{' '}
-										{cartList?.OrderPrices?.FinalShippingPrice ===
+										{cartList?.OrderPrices?.TotalShippingPrice !==
 										cartList?.OrderPrices?.ShippingPriceSaved ? (
 											<span>
 												{formatPrice(
-													cartList?.OrderPrices?.FinalShippingPrice || 0
+													cartList?.OrderPrices?.TotalShippingPrice || 0
 												)}
 											</span>
 										) : (
 											<span>
 												{formatPrice(
-													cartList?.OrderPrices?.FinalShippingPrice || 0
+													cartList?.OrderPrices?.TotalShippingPrice || 0
 												)}{' '}
 												(-
 												{formatPrice(

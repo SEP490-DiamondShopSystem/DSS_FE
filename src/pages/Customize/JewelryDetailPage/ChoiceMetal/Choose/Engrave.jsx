@@ -26,49 +26,49 @@ export const Engrave = ({
 	const [textFont, setTextFont] = useState(fontFamily || 'Lucida Sans');
 	const [textContent, setTextContent] = useState('');
 
-	useEffect(() => {
-		const fabricCanvas = new fabric.Canvas(canvasRef.current, {
-			width: 500,
-			height: 500,
-		});
-		setCanvas(fabricCanvas);
+	// useEffect(() => {
+	// 	const fabricCanvas = new fabric.Canvas(canvasRef.current, {
+	// 		width: 500,
+	// 		height: 500,
+	// 	});
+	// 	setCanvas(fabricCanvas);
 
-		const imgElement = new Image();
-		imgElement.src = ring;
-		imgElement.onload = () => {
-			const fabricImg = new fabric.Image(imgElement);
-			fabricImg.scaleToWidth(500);
-			fabricImg.set({left: 0, top: 80, selectable: false});
-			fabricCanvas.add(fabricImg);
+	// 	const imgElement = new Image();
+	// 	imgElement.src = ring;
+	// 	imgElement.onload = () => {
+	// 		const fabricImg = new fabric.Image(imgElement);
+	// 		fabricImg.scaleToWidth(500);
+	// 		fabricImg.set({left: 0, top: 80, selectable: false});
+	// 		fabricCanvas.add(fabricImg);
 
-			const path = new fabric.Path('M153,242 C172,348 387,366 427,248', {
-				fill: '',
-				stroke: 'transparent',
-			});
+	// 		const path = new fabric.Path('M153,242 C172,348 387,366 427,248', {
+	// 			fill: '',
+	// 			stroke: 'transparent',
+	// 		});
 
-			const initialText = new fabric.Text(textContent, {
-				fontSize,
-				fontFamily: textFont,
-				fill: textColor,
-				path,
-				left: 0,
-				top: 0,
-				textAlign: 'center',
-				originX: 'center',
-				originY: 'center',
-				selectable: false,
-			});
+	// 		const initialText = new fabric.Text(textContent, {
+	// 			fontSize,
+	// 			fontFamily: textFont,
+	// 			fill: textColor,
+	// 			path,
+	// 			left: 0,
+	// 			top: 0,
+	// 			textAlign: 'center',
+	// 			originX: 'center',
+	// 			originY: 'center',
+	// 			selectable: false,
+	// 		});
 
-			fabricCanvas.add(path);
-			fabricCanvas.add(initialText);
-			setTextObject(initialText);
-			fabricCanvas.renderAll();
-		};
+	// 		fabricCanvas.add(path);
+	// 		fabricCanvas.add(initialText);
+	// 		setTextObject(initialText);
+	// 		fabricCanvas.renderAll();
+	// 	};
 
-		return () => {
-			fabricCanvas.dispose();
-		};
-	}, [textContent]);
+	// 	return () => {
+	// 		fabricCanvas.dispose();
+	// 	};
+	// }, [textContent]);
 
 	useEffect(() => {
 		if (textObject && canvas) {
@@ -89,19 +89,18 @@ export const Engrave = ({
 		}
 	}, [textContent, fontSize, textFont, textColor, textObject, canvas]);
 
-	const handleExportImage = () => {
-		if (canvas) {
-			setTimeout(() => {
-				const dataURL = canvas.toDataURL({
-					format: 'png',
-					multiplier: 1,
-				});
-				setImageData(dataURL);
-			}, 100);
-		}
-		setFontFamily(textFont);
-		setTextValue(textContent);
-	};
+	// const handleExportImage = () => {
+	// 	if (canvas) {
+	// 		setTimeout(() => {
+	// 			const dataURL = canvas.toDataURL({
+	// 				format: 'png',
+	// 				multiplier: 1,
+	// 			});
+	// 			setImageData(dataURL);
+	// 		}, 100);
+	// 	}
+
+	// };
 
 	const uploadImage = async () => {
 		if (!imageData) return;
@@ -161,10 +160,10 @@ export const Engrave = ({
 				</Select>
 			</div>
 
-			<canvas ref={canvasRef} className="border" />
+			{/* <canvas ref={canvasRef} className="border" /> */}
 
 			<div className="flex flex-col">
-				<span className="my-5">Nhấn nút "Hoàn Thành" để khắc chữ</span>
+				{/* <span className="my-5">Nhấn nút "Hoàn Thành" để khắc chữ</span> */}
 				<span>Có thể bỏ qua khắc chữ!</span>
 			</div>
 
@@ -176,18 +175,23 @@ export const Engrave = ({
 				>
 					Quay lại
 				</Button>
-				<Button
+				{/* <Button
 					type="text"
 					className="bg-primary w-32 uppercase font-semibold"
 					onClick={handleExportImage}
 					disabled={textContent === ''}
 				>
 					Hoàn Thành
-				</Button>
+				</Button> */}
 				<Button
 					type="text"
 					className="bg-primary w-32 uppercase font-semibold"
-					onClick={() => setStep(3)}
+					// disabled={!textContent}
+					onClick={() => {
+						setStep(3);
+						setFontFamily(textFont);
+						setTextValue(textContent);
+					}}
 				>
 					Tiếp Tục
 				</Button>
