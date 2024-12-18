@@ -203,20 +203,20 @@ export const DiamondList = ({
 									</div>
 								)}
 							</div>
+							<div className="flex justify-center mt-4">
+								<Pagination
+									current={start}
+									pageSize={pageSize}
+									total={totalPage || 0} // Ensure total count is provided
+									onChange={(page, pageSize) => {
+										setStart(page);
+										setPageSize(pageSize);
+									}}
+									// showSizeChanger
+								/>
+							</div>
 						</>
 					)}
-					<div className="flex justify-center mt-4">
-						<Pagination
-							current={start}
-							pageSize={pageSize}
-							total={totalPage || 0} // Ensure total count is provided
-							onChange={(page, pageSize) => {
-								setStart(page);
-								setPageSize(pageSize);
-							}}
-							// showSizeChanger
-						/>
-					</div>
 				</>
 			)}
 		</div>

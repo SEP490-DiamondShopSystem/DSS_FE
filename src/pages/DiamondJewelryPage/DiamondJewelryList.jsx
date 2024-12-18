@@ -20,12 +20,13 @@ export const DiamondJewelryList = () => {
 	const [jewelries, setJewelries] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
 	const [page, setPage] = useState(1);
+	const [currentPage, setCurrentPage] = useState();
 	const [filters, setFilters] = useState({
 		Type: undefined,
 		IsRhodiumFinished: undefined,
 		IsEngravable: undefined,
 		Metal: undefined,
-		price: {minPrice: 0, maxPrice: 40000000},
+		price: {minPrice: 0, maxPrice: 1000000000},
 	});
 
 	const fetchJewelryData = debounce(() => {
@@ -34,7 +35,7 @@ export const DiamondJewelryList = () => {
 				Category: filters.Type,
 				metalId: filters.Metal,
 				minPrice: filters.price.minPrice,
-				maxPrice: filters.price.maxPrice,
+				maxPrice: filters.price.maxPrice === 1000000000 ? null : filters.price.maxPrice,
 				IsRhodiumFinished: filters?.IsRhodiumFinished,
 				IsEngravable: filters?.IsEngravable,
 				page,
@@ -46,6 +47,7 @@ export const DiamondJewelryList = () => {
 					setJewelries((prev) =>
 						page === 1 ? [...res.Values] : [...prev, ...res.Values]
 					);
+					setCurrentPage(res?.CurrentPage);
 				} else {
 					setHasMore(false); // Không còn dữ liệu mới
 				}
@@ -90,7 +92,7 @@ export const DiamondJewelryList = () => {
 
 	const loadMoreData = () => {
 		setTimeout(() => {
-			setPage((prev) => prev + 1);
+			setPage(currentPage);
 		}, 300);
 	};
 
