@@ -78,21 +78,21 @@ const PaymentPolicyPage = () => {
 						</span>{' '}
 						cho đơn hàng thiết kế). Số tiền còn lại thanh toán bằng hình thức đã chọn.
 					</Text>
+					<Text className="block text-gray-600 mb-2">
+						<strong className="text-gray-700">
+							c. Không hỗ trợ giao hàng cho đơn trên{' '}
+							{formatNumber(orderRule?.MaxOrderAmountForDelivery) || 'X'} VND
+						</strong>
+						.
+					</Text>
 				</div>
 
 				<div className="mb-8">
 					<Title level={4} className="text-gray-700 mb-2">
 						2. Thanh Toán ZaloPay
 					</Title>
-					<Text className="block text-gray-600 mb-2">
-						Hỗ trợ thanh toán khi nhận hàng cho đơn dưới{' '}
-						<span className="text-indigo-600">
-							{formatNumber(orderRule?.MaxOrderAmountForDelivery) || 'X'} VND
-						</span>
-						.
-					</Text>
 					<Text className="block text-gray-600">
-						Hỗ trợ thanh toán hết cho đơn dưới{' '}
+						Hỗ trợ thanh toán đủ cho đơn dưới{' '}
 						<span className="text-indigo-600">
 							{formatNumber(orderRule?.MaxOrderAmountForFullPayment) || 'X'} VND
 						</span>
