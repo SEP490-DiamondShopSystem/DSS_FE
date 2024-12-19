@@ -31,7 +31,7 @@ export const Footer = () => {
 								<div>
 									<FontAwesomeIcon icon={faMapMarkerAlt} className="mr-2" />
 								</div>
-								<div>89 Đ. Võ Văn Ngân, Bình Thọ, Thủ Đức, Hồ Chí Minh</div>
+								<div>Lô E2a-7, Đường D1, Đ. D1, Long Thạnh Mỹ, Thành Phố Thủ Đức, Hồ Chí Minh 700000</div>
 							</p>
 							<p className="text-gray-600 mt-2 flex items-center">
 								<div>
